@@ -5,6 +5,7 @@ let api = null;
 const TOKEN_STORAGE_KEY = "ynab_access_token";
 
 export let getBudgets = null;
+export let getBudget = null;
 export let getCategories = null;
 
 export const getAuthorizeToken = () => {
@@ -39,6 +40,11 @@ export const initializeYnabApi = token => {
   getBudgets = makeCachedCall({
     apiCall: api.budgets.getBudgets.bind(api.budgets),
     storageKey: "ynab_budgets",
+    onFailure: handleFailure
+  });
+  getBudget = makeCachedCall({
+    apiCall: api.budgets.getBudgetById.bind(api.budgets),
+    storageKey: "ynab_budget_details",
     onFailure: handleFailure
   });
   getCategories = makeCachedCall({

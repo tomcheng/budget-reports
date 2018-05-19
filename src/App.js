@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import get from "lodash/get";
 import { clientId, redirectUri } from "./ynabConfig";
-import { getBudgets, getCategories } from "./ynabRepo";
+import { getBudgets, getBudget, getCategories } from "./ynabRepo";
 import CategoryGroup from "./components/CategoryGroup";
 
 const AUTHORIZE_URL =
@@ -30,6 +30,7 @@ class App extends Component {
           { budgets, selectedBudgetId: get(budgets, [0, "id"]) },
           () => {
             this.state.budgets.forEach(({ id }) => {
+              getBudget(id).then(args => console.log(args))
               getCategories(id).then(({ categoryGroups }) => {
                 this.setState(state => ({
                   ...state,
