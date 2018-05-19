@@ -1,4 +1,8 @@
 import get from "lodash/get";
+import { mapKeysDeep } from "./utils";
+import camelCase from "lodash/camelCase";
+
+const camelCaseKeys = obj => mapKeysDeep(obj, (val, key) => camelCase(key));
 
 const getStorage = key => {
   const raw = localStorage.getItem(key);
@@ -14,12 +18,12 @@ export const makeCachedCall = ({ apiCall, storageKey, onFailure }) => param => {
   const cached = param ? get(cachedAll, param) : cachedAll;
 
   if (cached) {
-    return Promise.resolve(cached);
+    return Promise.resolve(camelCaseKeys(cached));
   } else {
     return apiCall(param)
       .then(({ data }) => {
         setStorage(storageKey, param ? { ...cachedAll, [param]: data } : data);
-        return data;
+        return camelCaseKeys(data);
       })
       .catch(onFailure);
   }

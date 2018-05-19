@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import get from "lodash/get";
 import { clientId, redirectUri } from "./ynabConfig";
 import { getBudgets, getCategories } from "./ynabRepo";
+import CategoryGroup from "./components/CategoryGroup";
 
 const AUTHORIZE_URL =
   "https://app.youneedabudget.com/oauth/authorize?client_id=" +
@@ -18,7 +19,7 @@ class App extends Component {
 
   state = {
     budgets: [],
-    category_groups: {},
+    categoryGroups: {},
     selectedBudgetId: null
   };
 
@@ -29,12 +30,12 @@ class App extends Component {
           { budgets, selectedBudgetId: get(budgets, [0, "id"]) },
           () => {
             this.state.budgets.forEach(({ id }) => {
-              getCategories(id).then(({ category_groups }) => {
+              getCategories(id).then(({ categoryGroups }) => {
                 this.setState(state => ({
                   ...state,
-                  category_groups: {
-                    ...state.category_groups,
-                    [id]: category_groups
+                  categoryGroups: {
+                    ...state.categoryGroups,
+                    [id]: categoryGroups
                   }
                 }));
               });
@@ -55,7 +56,7 @@ class App extends Component {
 
   render() {
     const { isAuthorized } = this.props;
-    const { budgets, selectedBudgetId, category_groups } = this.state;
+    const { budgets, selectedBudgetId, categoryGroups } = this.state;
 
     if (!isAuthorized) {
       return (
@@ -75,9 +76,12 @@ class App extends Component {
             {name}
           </div>
         ))}
-        {category_groups[selectedBudgetId] &&
-          category_groups[selectedBudgetId].map(group => (
-            <div key={group.id}>{group.name}</div>
+        {categoryGroups[selectedBudgetId] &&
+          categoryGroups[selectedBudgetId].map(categoryGroup => (
+            <CategoryGroup
+              key={categoryGroup.id}
+              categoryGroup={categoryGroup}
+            />
           ))}
       </div>
     );

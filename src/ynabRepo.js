@@ -44,10 +44,6 @@ export const initializeYnabApi = token => {
   getCategories = makeCachedCall({
     apiCall: api.categories.getCategories.bind(api.categories),
     storageKey: "ynab_categories",
-    onFailure: handleFailure,
-    updater: ({ params, cached, data }) => ({
-      ...cached,
-      [params]: data
-    })
+    onFailure: handleFailure
   });
 };
