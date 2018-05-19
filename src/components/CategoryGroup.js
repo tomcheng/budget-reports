@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import Category from "./Category";
 
 class CategoryGroup extends Component {
   static propTypes = {
@@ -7,7 +8,12 @@ class CategoryGroup extends Component {
       id: PropTypes.string.isRequired,
       categories: PropTypes.arrayOf(
         PropTypes.shape({
-          id: PropTypes.string.isRequired
+          id: PropTypes.string.isRequired,
+          categories: PropTypes.arrayOf(
+            PropTypes.shape({
+              id: PropTypes.string.isRequired
+            })
+          ).isRequired
         })
       ).isRequired
     }).isRequired
@@ -28,7 +34,9 @@ class CategoryGroup extends Component {
       <div>
         <div onClick={this.handleToggle}>{name}</div>
         {expanded &&
-          categories.map(({ name, id }) => <div key={id}>{name}</div>)}
+          categories.map(category => (
+            <Category key={category.id} category={category} />
+          ))}
       </div>
     );
   }
