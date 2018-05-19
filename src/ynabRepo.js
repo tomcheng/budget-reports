@@ -47,9 +47,4 @@ export const initializeYnabApi = token => {
     storageKey: "ynab_budget_details",
     onFailure: handleFailure
   });
-  getCategories = makeCachedCall({
-    apiCall: api.categories.getCategories.bind(api.categories),
-    storageKey: "ynab_categories",
-    onFailure: handleFailure
-  });
 };

@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import get from "lodash/get";
+import keyBy from "lodash/keyBy";
+import values from "lodash/values";
 import { clientId, redirectUri } from "./ynabConfig";
 import { getBudgets, getBudget, getCategories } from "./ynabRepo";
 import CategoryGroup from "./components/CategoryGroup";
@@ -18,8 +20,7 @@ class App extends Component {
   };
 
   state = {
-    budgets: [],
-    categoryGroups: {},
+    budgets: {},
     selectedBudgetId: null
   };
 
@@ -27,16 +28,21 @@ class App extends Component {
     if (this.props.isAuthorized) {
       getBudgets().then(({ budgets }) => {
         this.setState(
-          { budgets, selectedBudgetId: get(budgets, [0, "id"]) },
+          {
+            budgets: keyBy(budgets, "id"),
+            selectedBudgetId: get(budgets, [0, "id"])
+          },
           () => {
-            this.state.budgets.forEach(({ id }) => {
-              getBudget(id).then(args => console.log(args))
-              getCategories(id).then(({ categoryGroups }) => {
+            budgets.forEach(({ id }) => {
+              getBudget(id).then(({ budget }) => {
                 this.setState(state => ({
                   ...state,
-                  categoryGroups: {
-                    ...state.categoryGroups,
-                    [id]: categoryGroups
+                  budgets: {
+                    ...state.budgets,
+                    [id]: {
+                      ...state.budgets[id],
+                      details: budget
+                    }
                   }
                 }));
               });
@@ -57,7 +63,7 @@ class App extends Component {
 
   render() {
     const { isAuthorized } = this.props;
-    const { budgets, selectedBudgetId, categoryGroups } = this.state;
+    const { budgets, selectedBudgetId } = this.state;
 
     if (!isAuthorized) {
       return (
@@ -65,9 +71,20 @@ class App extends Component {
       );
     }
 
+    const selectedCategoryGroups = get(budgets, [
+      selectedBudgetId,
+      "details",
+      "categoryGroups"
+    ]);
+    const selectedCategories = get(budgets, [
+      selectedBudgetId,
+      "details",
+      "categories"
+    ]);
+
     return (
       <div>
-        {budgets.map(({ id, name }) => (
+        {values(budgets).map(({ id, name }) => (
           <div
             key={id}
             onClick={() => {
@@ -77,11 +94,14 @@ class App extends Component {
             {name}
           </div>
         ))}
-        {categoryGroups[selectedBudgetId] &&
-          categoryGroups[selectedBudgetId].map(categoryGroup => (
+        {selectedCategoryGroups &&
+          selectedCategoryGroups.map(categoryGroup => (
             <CategoryGroup
               key={categoryGroup.id}
               categoryGroup={categoryGroup}
+              categories={selectedCategories.filter(
+                c => c.categoryGroupId === categoryGroup.id
+              )}
             />
           ))}
       </div>

@@ -5,18 +5,13 @@ import Category from "./Category";
 class CategoryGroup extends Component {
   static propTypes = {
     categoryGroup: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      categories: PropTypes.arrayOf(
-        PropTypes.shape({
-          id: PropTypes.string.isRequired,
-          categories: PropTypes.arrayOf(
-            PropTypes.shape({
-              id: PropTypes.string.isRequired
-            })
-          ).isRequired
-        })
-      ).isRequired
-    }).isRequired
+      name: PropTypes.string.isRequired
+    }).isRequired,
+    categories: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired
+      })
+    ).isRequired
   };
 
   state = {
@@ -28,11 +23,11 @@ class CategoryGroup extends Component {
   };
 
   render() {
-    const { name, categories } = this.props.categoryGroup;
+    const { categoryGroup, categories } = this.props;
     const { expanded } = this.state;
     return (
       <div>
-        <div onClick={this.handleToggle}>{name}</div>
+        <div onClick={this.handleToggle}>{categoryGroup.name}</div>
         {expanded &&
           categories.map(category => (
             <Category key={category.id} category={category} />
