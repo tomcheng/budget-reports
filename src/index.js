@@ -1,7 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { getAuthorizeToken, initializeYnabApi } from "./ynabRepo";
 import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const token = getAuthorizeToken();
+
+if (token) {
+  initializeYnabApi(token);
+}
+
+ReactDOM.render(
+  <App isAuthorized={!!token} />,
+  document.getElementById("root")
+);
+
 registerServiceWorker();
