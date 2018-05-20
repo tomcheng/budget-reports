@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import moment from "moment";
 import get from "lodash/get";
 import keyBy from "lodash/keyBy";
 import { getBudgets, getBudget, AUTHORIZE_URL } from "../ynabRepo";
@@ -19,7 +20,8 @@ class App extends Component {
     budgetIds: [],
     budgets: {},
     selectedBudgetId: null,
-    selectedCategoryId: null
+    selectedCategoryId: null,
+    currentMonth: moment().format("YYYY-MM")
   };
 
   componentDidMount() {
@@ -45,7 +47,8 @@ class App extends Component {
                   ...state.budgets,
                   [id]: {
                     ...state.budgets[id],
-                    details: budget
+                    ...budget,
+                    payees: keyBy(budget.payees, "id")
                   }
                 }
               }));
@@ -75,7 +78,8 @@ class App extends Component {
       budgetIds,
       budgets,
       selectedBudgetId,
-      selectedCategoryId
+      selectedCategoryId,
+      currentMonth
     } = this.state;
 
     if (!isAuthorized) {
@@ -95,16 +99,34 @@ class App extends Component {
       );
     }
 
+    const selectedBudget = budgets[selectedBudgetId];
+
     if (!selectedCategoryId) {
       return (
         <Budget
-          budget={budgets[selectedBudgetId]}
+          budget={selectedBudget}
           onSelectCategory={this.handleSelectCategory}
         />
       );
     }
 
-    return <Category />;
+    const category = selectedBudget.categories.find(
+      c => c.id === selectedCategoryId
+    );
+    const transactions = selectedBudget.transactions.filter(
+      t => t.categoryId === category.id && t.date.slice(0, 7) === currentMonth
+    );
+
+    return (
+      <Category
+        category={category}
+        transactions={transactions}
+        payees={selectedBudget.payees}
+        onClearCategory={() => {
+          this.handleSelectCategory(null);
+        }}
+      />
+    );
   }
 }
 

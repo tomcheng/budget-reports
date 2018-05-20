@@ -2,6 +2,7 @@ import mapValues from "lodash/mapValues";
 import mapKeys from "lodash/mapKeys";
 import isObject from "lodash/isObject";
 import isArray from "lodash/isArray";
+import { utils } from "ynab";
 
 export const mapKeysDeep = (obj, cb) => {
   if (isArray(obj)) {
@@ -12,3 +13,5 @@ export const mapKeysDeep = (obj, cb) => {
     return obj;
   }
 };
+
+export const formatCurrency = utils.convertMilliUnitsToCurrencyAmount;
