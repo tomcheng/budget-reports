@@ -5,7 +5,7 @@ import SpendingChart from "./SpendingChart";
 const Category = ({ category, transactions, payees }) => (
   <div>
     <div>{category.name}</div>
-    <SpendingChart transactions={transactions} />
+    <SpendingChart transactions={transactions} budgeted={category.budgeted} />
     {transactions.map(({ id, payeeId, date, amount }) => (
       <div key={id}>
         <div>{payees[payeeId].name}</div>
@@ -18,6 +18,7 @@ const Category = ({ category, transactions, payees }) => (
 
 Category.propTypes = {
   category: PropTypes.shape({
+    budgeted: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired
   }).isRequired,
   payees: PropTypes.objectOf(

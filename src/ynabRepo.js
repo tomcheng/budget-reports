@@ -63,6 +63,12 @@ export const initializeYnabApi = token => {
     formatter: ({ budget }) => ({
       budget: {
         ...budget,
+        categories: budget.categories.map(c => ({
+          ...c,
+          activity: formatCurrency(c.activity),
+          balance: formatCurrency(c.balance),
+          budgeted: formatCurrency(c.budgeted)
+        })),
         payees: keyBy(budget.payees, "id"),
         transactions: budget.transactions.map(t => ({
           ...t,
