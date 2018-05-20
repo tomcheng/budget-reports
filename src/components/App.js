@@ -7,6 +7,7 @@ import Unauthorized from "./Unauthorized";
 import Loading from "./Loading";
 import Budgets from "./Budgets";
 import Budget from "./Budget";
+import Category from "./Category";
 
 class App extends Component {
   static propTypes = {
@@ -102,7 +103,7 @@ class App extends Component {
     }
 
     if (selected.type === "category") {
-      return <div>Show category here.</div>;
+      return <Category />;
     }
 
     return null;
