@@ -5,6 +5,7 @@ import keyBy from "lodash/keyBy";
 import values from "lodash/values";
 import { clientId, redirectUri } from "../ynabConfig";
 import { getBudgets, getBudget } from "../ynabRepo";
+import Unauthorized from "./Unauthorized";
 import CategoryGroup from "./CategoryGroup";
 
 const AUTHORIZE_URL =
@@ -59,7 +60,7 @@ class App extends Component {
     });
   }
 
-  handleClickAuthorize = () => {
+  handleAuthorize = () => {
     window.location.replace(AUTHORIZE_URL);
   };
 
@@ -77,7 +78,7 @@ class App extends Component {
 
     if (!isAuthorized) {
       return (
-        <button onClick={this.handleClickAuthorize}>Authorize YNAB</button>
+        <Unauthorized onAuthorize={this.handleAuthorize} />
       );
     }
 
