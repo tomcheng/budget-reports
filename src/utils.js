@@ -15,3 +15,24 @@ export const mapKeysDeep = (obj, cb) => {
 };
 
 export const formatCurrency = utils.convertMilliUnitsToCurrencyAmount;
+
+export const getStorage = key => {
+  const raw = localStorage.getItem(key);
+  return raw ? JSON.parse(raw) : null;
+};
+
+export const setStorage = (key, obj) => {
+  localStorage.setItem(key, JSON.stringify(obj));
+};
+
+export const upsertBy = (arr, key, obj) => {
+  let exists = false;
+  const newArr = arr.map(i => {
+    if (i[key] === obj[key]) {
+      exists = true;
+      return obj;
+    }
+    return i;
+  });
+  return exists ? newArr : newArr.concat(obj);
+};

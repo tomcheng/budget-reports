@@ -2,9 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import SpendingChart from "./SpendingChart";
 
-const Category = ({ category, currentMonth, payees, transactions }) => (
+const Category = ({ category, currentMonth, payees, transactions, onRefreshData }) => (
   <div>
     <div>{category.name}</div>
+    <div>
+      <button onClick={onRefreshData}>Refresh Data</button>
+    </div>
     <SpendingChart
       budgeted={category.budgeted}
       currentMonth={currentMonth}
@@ -39,7 +42,8 @@ Category.propTypes = {
       id: PropTypes.string.isRequired,
       payeeId: PropTypes.string.isRequired
     })
-  ).isRequired
+  ).isRequired,
+  onRefreshData: PropTypes.func.isRequired,
 };
 
 export default Category;

@@ -1,6 +1,6 @@
 import { api as YnabApi } from "ynab";
 import keyBy from "lodash/keyBy";
-import { formatCurrency } from "./utils";
+import { formatCurrency, getStorage } from "./utils";
 import { makeCachedCall } from "./repoUtils";
 import { clientId, redirectUri } from "./ynabConfig";
 
@@ -16,6 +16,7 @@ const TOKEN_STORAGE_KEY = "ynab_access_token";
 
 export let getBudgets = null;
 export let getBudget = null;
+export let getUpdatedBudget = null;
 
 export const getAuthorizeToken = () => {
   if (window.location.hash[1] === "/") {
@@ -79,4 +80,12 @@ export const initializeYnabApi = token => {
     storageKey: "ynab_budget_details",
     onFailure: handleFailure
   });
+
+  getUpdatedBudget = id => {
+    const details = getStorage("ynab_budget_details");
+    const budgetDetails = details[id];
+    const serverKnowledge = budgetDetails.server_knowledge;
+
+    return api.budgets.getBudgetById(id, serverKnowledge).catch(handleFailure);
+  };
 };

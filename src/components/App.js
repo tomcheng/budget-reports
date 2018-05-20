@@ -4,7 +4,12 @@ import { Route, Switch } from "react-router-dom";
 import moment from "moment";
 import get from "lodash/get";
 import keyBy from "lodash/keyBy";
-import { getBudgets, getBudget, AUTHORIZE_URL } from "../ynabRepo";
+import {
+  getBudgets,
+  getBudget,
+  getUpdatedBudget,
+  AUTHORIZE_URL
+} from "../ynabRepo";
 import Unauthorized from "./Unauthorized";
 import Loading from "./Loading";
 import NotFound from "./NotFound";
@@ -58,6 +63,10 @@ class App extends Component {
     });
   }
 
+  handleRefreshData = budgetId => {
+    getUpdatedBudget(budgetId);
+  };
+
   handleAuthorize = () => {
     window.location.replace(AUTHORIZE_URL);
   };
@@ -101,15 +110,14 @@ class App extends Component {
             path="/budgets/:budgetId/categories/:categoryId"
             exact
             render={({ match }) => {
-              const budget = budgets[match.params.budgetId];
+              const { budgetId, categoryId } = match.params;
+              const budget = budgets[budgetId];
 
               if (!budget.categories) {
                 return <Loading />;
               }
 
-              const category = budget.categories.find(
-                c => c.id === match.params.categoryId
-              );
+              const category = budget.categories.find(c => c.id === categoryId);
 
               if (!category) {
                 return <NotFound />;
@@ -117,7 +125,7 @@ class App extends Component {
 
               const transactions = budget.transactions.filter(
                 t =>
-                  t.categoryId === category.id &&
+                  t.categoryId === categoryId &&
                   t.date.slice(0, 7) === currentMonth
               );
 
@@ -125,8 +133,9 @@ class App extends Component {
                 <Category
                   category={category}
                   currentMonth={currentMonth}
-                  transactions={transactions}
                   payees={budget.payees}
+                  transactions={transactions}
+                  onRefreshData={() => { this.handleRefreshData(budgetId) }}
                 />
               );
             }}
