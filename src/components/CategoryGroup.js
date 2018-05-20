@@ -11,7 +11,8 @@ class CategoryGroup extends Component {
       PropTypes.shape({
         id: PropTypes.string.isRequired
       })
-    ).isRequired
+    ).isRequired,
+    onSelectCategory: PropTypes.func.isRequired
   };
 
   state = {
@@ -23,14 +24,18 @@ class CategoryGroup extends Component {
   };
 
   render() {
-    const { categoryGroup, categories } = this.props;
+    const { categoryGroup, categories, onSelectCategory } = this.props;
     const { expanded } = this.state;
     return (
       <div>
         <div onClick={this.handleToggle}>{categoryGroup.name}</div>
         {expanded &&
           categories.map(category => (
-            <Category key={category.id} category={category} />
+            <Category
+              key={category.id}
+              category={category}
+              onSelectCategory={onSelectCategory}
+            />
           ))}
       </div>
     );

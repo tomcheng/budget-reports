@@ -6,7 +6,6 @@ const TOKEN_STORAGE_KEY = "ynab_access_token";
 
 export let getBudgets = null;
 export let getBudget = null;
-export let getCategories = null;
 
 export const getAuthorizeToken = () => {
   let token = null;

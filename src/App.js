@@ -4,7 +4,7 @@ import get from "lodash/get";
 import keyBy from "lodash/keyBy";
 import values from "lodash/values";
 import { clientId, redirectUri } from "./ynabConfig";
-import { getBudgets, getBudget, getCategories } from "./ynabRepo";
+import { getBudgets, getBudget } from "./ynabRepo";
 import CategoryGroup from "./components/CategoryGroup";
 
 const AUTHORIZE_URL =
@@ -21,36 +21,42 @@ class App extends Component {
 
   state = {
     budgets: {},
+    selected: null,
     selectedBudgetId: null
   };
 
   componentDidMount() {
-    if (this.props.isAuthorized) {
-      getBudgets().then(({ budgets }) => {
-        this.setState(
-          {
-            budgets: keyBy(budgets, "id"),
-            selectedBudgetId: get(budgets, [0, "id"])
-          },
-          () => {
-            budgets.forEach(({ id }) => {
-              getBudget(id).then(({ budget }) => {
-                this.setState(state => ({
-                  ...state,
-                  budgets: {
-                    ...state.budgets,
-                    [id]: {
-                      ...state.budgets[id],
-                      details: budget
-                    }
-                  }
-                }));
-              });
-            });
-          }
-        );
-      });
+    if (!this.props.isAuthorized) {
+      return;
     }
+
+    getBudgets().then(({ budgets }) => {
+      this.setState(
+        {
+          budgets: keyBy(budgets, "id"),
+          selected: {
+            type: "budget",
+            id: get(budgets, [0, "id"])
+          }
+        },
+        () => {
+          budgets.forEach(({ id }) => {
+            getBudget(id).then(({ budget }) => {
+              this.setState(state => ({
+                ...state,
+                budgets: {
+                  ...state.budgets,
+                  [id]: {
+                    ...state.budgets[id],
+                    details: budget
+                  }
+                }
+              }));
+            });
+          });
+        }
+      );
+    });
   }
 
   handleClickAuthorize = () => {
@@ -58,12 +64,16 @@ class App extends Component {
   };
 
   handleClickBudget = id => {
-    getCategories(id).then();
+    this.setState({ selected: { type: "budget", id } });
+  };
+
+  handleSelectCategory = id => {
+    this.setState({ selected: { type: "category", id } });
   };
 
   render() {
     const { isAuthorized } = this.props;
-    const { budgets, selectedBudgetId } = this.state;
+    const { budgets, selected } = this.state;
 
     if (!isAuthorized) {
       return (
@@ -71,13 +81,21 @@ class App extends Component {
       );
     }
 
+    if (!selected) {
+      return <div>Loading...</div>;
+    }
+
+    if (selected.type === "category") {
+      return <div>Show category here.</div>;
+    }
+
     const selectedCategoryGroups = get(budgets, [
-      selectedBudgetId,
+      selected.id,
       "details",
       "categoryGroups"
     ]);
     const selectedCategories = get(budgets, [
-      selectedBudgetId,
+      selected.id,
       "details",
       "categories"
     ]);
@@ -102,6 +120,7 @@ class App extends Component {
               categories={selectedCategories.filter(
                 c => c.categoryGroupId === categoryGroup.id
               )}
+              onSelectCategory={this.handleSelectCategory}
             />
           ))}
       </div>
