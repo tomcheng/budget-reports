@@ -2,10 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import SpendingChart from "./SpendingChart";
 
-const Category = ({ category, transactions, payees }) => (
+const Category = ({ category, currentMonth, payees, transactions }) => (
   <div>
     <div>{category.name}</div>
-    <SpendingChart transactions={transactions} budgeted={category.budgeted} />
+    <SpendingChart
+      budgeted={category.budgeted}
+      currentMonth={currentMonth}
+      transactions={transactions}
+    />
     {transactions.map(({ id, payeeId, date, amount }) => (
       <div key={id}>
         <div>{payees[payeeId].name}</div>
@@ -21,6 +25,7 @@ Category.propTypes = {
     budgeted: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired
   }).isRequired,
+  currentMonth: PropTypes.string.isRequired,
   payees: PropTypes.objectOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,

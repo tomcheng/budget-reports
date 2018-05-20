@@ -124,6 +124,7 @@ class App extends Component {
               return (
                 <Category
                   category={category}
+                  currentMonth={currentMonth}
                   transactions={transactions}
                   payees={budget.payees}
                 />
