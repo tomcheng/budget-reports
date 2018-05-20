@@ -18,7 +18,8 @@ class App extends Component {
     budgetsLoaded: false,
     budgetIds: [],
     budgets: {},
-    selected: null
+    selectedBudgetId: null,
+    selectedCategoryId: null
   };
 
   componentDidMount() {
@@ -32,13 +33,8 @@ class App extends Component {
           budgetsLoaded: true,
           budgetIds: budgets.map(b => b.id),
           budgets: keyBy(budgets, "id"),
-          selected:
-            budgets.length === 1
-              ? {
-                  type: "budget",
-                  id: get(budgets, [0, "id"])
-                }
-              : null
+          selectedBudgetId:
+            budgets.length === 1 ? get(budgets, [0, "id"]) : null
         },
         () => {
           budgets.forEach(({ id }) => {
@@ -65,16 +61,22 @@ class App extends Component {
   };
 
   handleSelectBudget = id => {
-    this.setState({ selected: { type: "budget", id } });
+    this.setState({ selectedBudgetId: id });
   };
 
   handleSelectCategory = id => {
-    this.setState({ selected: { type: "category", id } });
+    this.setState({ selectedCategoryId: id });
   };
 
   render() {
     const { isAuthorized } = this.props;
-    const { budgetsLoaded, budgetIds, budgets, selected } = this.state;
+    const {
+      budgetsLoaded,
+      budgetIds,
+      budgets,
+      selectedBudgetId,
+      selectedCategoryId
+    } = this.state;
 
     if (!isAuthorized) {
       return <Unauthorized onAuthorize={this.handleAuthorize} />;
@@ -84,7 +86,7 @@ class App extends Component {
       return <Loading />;
     }
 
-    if (!selected) {
+    if (!selectedBudgetId) {
       return (
         <Budgets
           budgets={budgetIds.map(id => budgets[id])}
@@ -93,20 +95,16 @@ class App extends Component {
       );
     }
 
-    if (selected.type === "budget") {
+    if (!selectedCategoryId) {
       return (
         <Budget
-          budget={budgets[selected.id]}
+          budget={budgets[selectedBudgetId]}
           onSelectCategory={this.handleSelectCategory}
         />
       );
     }
 
-    if (selected.type === "category") {
-      return <Category />;
-    }
-
-    return null;
+    return <Category />;
   }
 }
 
