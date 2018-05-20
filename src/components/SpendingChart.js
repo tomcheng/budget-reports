@@ -9,28 +9,36 @@ import Chart from "./Chart";
 
 const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
   const daysInMonth = moment(currentMonth).daysInMonth();
-  const currentDay = parseInt(moment().format("D"), 10);
-  const dates = range(1, currentDay + 1).map(day =>
+  const today = moment();
+  const dates = range(1, daysInMonth + 1).map(day =>
     moment(`${currentMonth}-${padStart(day, 2, "0")}`)
   );
   const transactionsByDate = groupBy(transactions, "date");
   let cumulative = 0;
   const data = dates.map(date => {
+    if (date.isAfter(today)) {
+      return null;
+    }
+
     const transactionsForDate =
       transactionsByDate[date.format("YYYY-MM-DD")] || [];
     cumulative += -sumBy(transactionsForDate, "amount");
-    return [date.valueOf(), cumulative];
+    return cumulative;
   });
-  const firstDay = moment(`${currentMonth}-01`).valueOf();
-  const lastDay = moment(`${currentMonth}-${daysInMonth}`).valueOf();
+  const xAxisLabels = dates.map((m, index) => {
+    if (index === 0 || index === dates.length - 1 || m.isSame(today, "day")) {
+      return m.format("D");
+    }
+    return "";
+  });
+  const lineData = dates.map(
+    (_, index) => index / (dates.length - 1) * budgeted
+  );
 
   return (
     <div>
       <Chart
         options={{
-          chart: {
-            type: "spline"
-          },
           credits: {
             enabled: false
           },
@@ -41,12 +49,12 @@ const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
             text: null
           },
           xAxis: {
-            type: "datetime",
-            dateTimeLabelFormats: {
-              day: "%b %e",
+            categories: xAxisLabels,
+            labels: {
+              autoRotation: false,
+              padding: 0
             },
-            min: firstDay,
-            max: lastDay,
+            tickLength: 0,
             title: {
               text: null
             }
@@ -55,8 +63,10 @@ const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
             title: {
               text: null
             },
+            showFirstLabel: false,
             min: 0,
             max: budgeted,
+            tickInterval: budgeted,
             tickLength: 0
           },
           tooltip: {
@@ -75,11 +85,11 @@ const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
               color: "#aaa",
               dashStyle: "Dot",
               lineWidth: 1,
-              data: [[firstDay, 0], [lastDay, budgeted]],
+              data: lineData,
               enableMouseTracking: false,
               marker: { enabled: false }
             },
-            { data, enableMouseTracking: false, color: "#6CF" }
+            { type: "spline", data, enableMouseTracking: false, color: "#6CF" }
           ]
         }}
       />
