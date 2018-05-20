@@ -13,17 +13,22 @@ const setStorage = (key, obj) => {
   localStorage.setItem(key, JSON.stringify(obj));
 };
 
-export const makeCachedCall = ({ apiCall, storageKey, onFailure }) => param => {
+export const makeCachedCall = ({
+  apiCall,
+  storageKey,
+  onFailure,
+  formatter = a => a
+}) => param => {
   const cachedAll = getStorage(storageKey);
   const cached = param ? get(cachedAll, param) : cachedAll;
 
   if (cached) {
-    return Promise.resolve(camelCaseKeys(cached));
+    return Promise.resolve(formatter(camelCaseKeys(cached)));
   } else {
     return apiCall(param)
       .then(({ data }) => {
         setStorage(storageKey, param ? { ...cachedAll, [param]: data } : data);
-        return camelCaseKeys(data);
+        return formatter(camelCaseKeys(data));
       })
       .catch(onFailure);
   }

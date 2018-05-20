@@ -1,4 +1,6 @@
 import { api as YnabApi } from "ynab";
+import keyBy from "lodash/keyBy";
+import { formatCurrency } from "./utils";
 import { makeCachedCall } from "./repoUtils";
 import { clientId, redirectUri } from "./ynabConfig";
 
@@ -16,7 +18,8 @@ export let getBudgets = null;
 export let getBudget = null;
 
 export const getAuthorizeToken = () => {
-  if (window.location.hash[1] === "/") { // It's probably a route
+  if (window.location.hash[1] === "/") {
+    // It's probably a route
     return sessionStorage.getItem(TOKEN_STORAGE_KEY);
   }
 
@@ -48,13 +51,25 @@ const handleFailure = () => {
 
 export const initializeYnabApi = token => {
   api = new YnabApi(token);
+
   getBudgets = makeCachedCall({
     apiCall: api.budgets.getBudgets.bind(api.budgets),
     storageKey: "ynab_budgets",
     onFailure: handleFailure
   });
+
   getBudget = makeCachedCall({
     apiCall: api.budgets.getBudgetById.bind(api.budgets),
+    formatter: ({ budget }) => ({
+      budget: {
+        ...budget,
+        payees: keyBy(budget.payees, "id"),
+        transactions: budget.transactions.map(t => ({
+          ...t,
+          amount: formatCurrency(t.amount)
+        }))
+      }
+    }),
     storageKey: "ynab_budget_details",
     onFailure: handleFailure
   });

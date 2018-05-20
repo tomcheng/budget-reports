@@ -47,8 +47,7 @@ class App extends Component {
                   ...state.budgets,
                   [id]: {
                     ...state.budgets[id],
-                    ...budget,
-                    payees: keyBy(budget.payees, "id")
+                    ...budget
                   }
                 }
               }));

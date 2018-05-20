@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { formatCurrency } from "../utils";
 import SpendingChart from "./SpendingChart";
 
 const Category = ({ category, transactions, payees }) => (
@@ -11,7 +10,7 @@ const Category = ({ category, transactions, payees }) => (
       <div key={id}>
         <div>{payees[payeeId].name}</div>
         <div>{date}</div>
-        <div>{formatCurrency(amount)}</div>
+        <div>{amount}</div>
       </div>
     ))}
   </div>
