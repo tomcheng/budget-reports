@@ -6,6 +6,7 @@ import values from "lodash/values";
 import { clientId, redirectUri } from "../ynabConfig";
 import { getBudgets, getBudget } from "../ynabRepo";
 import Unauthorized from "./Unauthorized";
+import Loading from "./Loading";
 import CategoryGroup from "./CategoryGroup";
 
 const AUTHORIZE_URL =
@@ -77,13 +78,11 @@ class App extends Component {
     const { budgets, selected } = this.state;
 
     if (!isAuthorized) {
-      return (
-        <Unauthorized onAuthorize={this.handleAuthorize} />
-      );
+      return <Unauthorized onAuthorize={this.handleAuthorize} />;
     }
 
     if (!selected) {
-      return <div>Loading...</div>;
+      return <Loading />;
     }
 
     if (selected.type === "category") {
