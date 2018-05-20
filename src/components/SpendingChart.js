@@ -21,6 +21,7 @@ const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
     cumulative += -sumBy(transactionsForDate, "amount");
     return [date.valueOf(), cumulative];
   });
+  const firstDay = moment(`${currentMonth}-01`).valueOf();
   const lastDay = moment(`${currentMonth}-${daysInMonth}`).valueOf();
 
   return (
@@ -41,6 +42,10 @@ const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
           },
           xAxis: {
             type: "datetime",
+            dateTimeLabelFormats: {
+              day: "%b %e",
+            },
+            min: firstDay,
             max: lastDay,
             title: {
               text: null
@@ -51,7 +56,8 @@ const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
               text: null
             },
             min: 0,
-            max: budgeted
+            max: budgeted,
+            tickLength: 0
           },
           tooltip: {
             enabled: false
@@ -63,8 +69,18 @@ const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
               }
             }
           },
-          colors: ["#6CF"],
-          series: [{ data }]
+          series: [
+            {
+              type: "line",
+              color: "#aaa",
+              dashStyle: "Dot",
+              lineWidth: 1,
+              data: [[firstDay, 0], [lastDay, budgeted]],
+              enableMouseTracking: false,
+              marker: { enabled: false }
+            },
+            { data, enableMouseTracking: false, color: "#6CF" }
+          ]
         }}
       />
     </div>
