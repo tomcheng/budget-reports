@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import get from "lodash/get";
 import keyBy from "lodash/keyBy";
-import values from "lodash/values";
 import { clientId, redirectUri } from "../ynabConfig";
 import { getBudgets, getBudget } from "../ynabRepo";
+import Budgets from "./Budgets";
 import Unauthorized from "./Unauthorized";
 import Loading from "./Loading";
 import CategoryGroup from "./CategoryGroup";
@@ -22,6 +22,7 @@ class App extends Component {
   };
 
   state = {
+    budgetIds: [],
     budgets: {},
     selected: null,
     selectedBudgetId: null
@@ -35,11 +36,15 @@ class App extends Component {
     getBudgets().then(({ budgets }) => {
       this.setState(
         {
+          budgetIds: budgets.map(b => b.id),
           budgets: keyBy(budgets, "id"),
-          selected: {
-            type: "budget",
-            id: get(budgets, [0, "id"])
-          }
+          selected:
+            budgets.length === 1
+              ? {
+                  type: "budget",
+                  id: get(budgets, [0, "id"])
+                }
+              : null
         },
         () => {
           budgets.forEach(({ id }) => {
@@ -65,7 +70,7 @@ class App extends Component {
     window.location.replace(AUTHORIZE_URL);
   };
 
-  handleClickBudget = id => {
+  handleSelectBudget = id => {
     this.setState({ selected: { type: "budget", id } });
   };
 
@@ -75,7 +80,7 @@ class App extends Component {
 
   render() {
     const { isAuthorized } = this.props;
-    const { budgets, selected } = this.state;
+    const { budgetIds, budgets, selected } = this.state;
 
     if (!isAuthorized) {
       return <Unauthorized onAuthorize={this.handleAuthorize} />;
@@ -102,16 +107,12 @@ class App extends Component {
 
     return (
       <div>
-        {values(budgets).map(({ id, name }) => (
-          <div
-            key={id}
-            onClick={() => {
-              this.handleClickBudget(id);
-            }}
-          >
-            {name}
-          </div>
-        ))}
+        {budgetIds.length > 1 && (
+          <Budgets
+            budgets={budgetIds.map(id => budgets[id])}
+            onSelectBudget={this.handleSelectBudget}
+          />
+        )}
         {selectedCategoryGroups &&
           selectedCategoryGroups.map(categoryGroup => (
             <CategoryGroup
