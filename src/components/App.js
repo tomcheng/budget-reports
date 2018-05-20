@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { Route, Switch } from "react-router-dom";
 import moment from "moment";
 import get from "lodash/get";
 import keyBy from "lodash/keyBy";
 import { getBudgets, getBudget, AUTHORIZE_URL } from "../ynabRepo";
 import Unauthorized from "./Unauthorized";
 import Loading from "./Loading";
+import NotFound from "./NotFound";
 import Budgets from "./Budgets";
 import Budget from "./Budget";
 import Category from "./Category";
@@ -19,8 +21,6 @@ class App extends Component {
     budgetsLoaded: false,
     budgetIds: [],
     budgets: {},
-    selectedBudgetId: null,
-    selectedCategoryId: null,
     currentMonth: moment().format("YYYY-MM")
   };
 
@@ -63,24 +63,9 @@ class App extends Component {
     window.location.replace(AUTHORIZE_URL);
   };
 
-  handleSelectBudget = id => {
-    this.setState({ selectedBudgetId: id });
-  };
-
-  handleSelectCategory = id => {
-    this.setState({ selectedCategoryId: id });
-  };
-
   render() {
     const { isAuthorized } = this.props;
-    const {
-      budgetsLoaded,
-      budgetIds,
-      budgets,
-      selectedBudgetId,
-      selectedCategoryId,
-      currentMonth
-    } = this.state;
+    const { budgetsLoaded, budgetIds, budgets, currentMonth } = this.state;
 
     if (!isAuthorized) {
       return <Unauthorized onAuthorize={this.handleAuthorize} />;
@@ -90,42 +75,65 @@ class App extends Component {
       return <Loading />;
     }
 
-    if (!selectedBudgetId) {
-      return (
-        <Budgets
-          budgets={budgetIds.map(id => budgets[id])}
-          onSelectBudget={this.handleSelectBudget}
-        />
-      );
-    }
-
-    const selectedBudget = budgets[selectedBudgetId];
-
-    if (!selectedCategoryId) {
-      return (
-        <Budget
-          budget={selectedBudget}
-          onSelectCategory={this.handleSelectCategory}
-        />
-      );
-    }
-
-    const category = selectedBudget.categories.find(
-      c => c.id === selectedCategoryId
-    );
-    const transactions = selectedBudget.transactions.filter(
-      t => t.categoryId === category.id && t.date.slice(0, 7) === currentMonth
-    );
-
     return (
-      <Category
-        category={category}
-        transactions={transactions}
-        payees={selectedBudget.payees}
-        onClearCategory={() => {
-          this.handleSelectCategory(null);
-        }}
-      />
+      <div>
+        <Switch>
+          <Route
+            path="/"
+            exact
+            render={() => (
+              <Budgets budgets={budgetIds.map(id => budgets[id])} />
+            )}
+          />
+          <Route
+            path="/budgets/:budgetId"
+            exact
+            render={({ match }) => {
+              const budget = budgets[match.params.budgetId];
+
+              if (!budget) {
+                return <NotFound />;
+              }
+
+              return <Budget budget={budget} currentUrl={match.url} />;
+            }}
+          />
+          <Route
+            path="/budgets/:budgetId/categories/:categoryId"
+            exact
+            render={({ match }) => {
+              const budget = budgets[match.params.budgetId];
+
+              if (!budget.categories) {
+                return <Loading />;
+              }
+
+              const category = budget.categories.find(
+                c => c.id === match.params.categoryId
+              );
+
+              if (!category) {
+                return <NotFound />;
+              }
+
+              const transactions = budget.transactions.filter(
+                t =>
+                  t.categoryId === category.id &&
+                  t.date.slice(0, 7) === currentMonth
+              );
+
+              return (
+                <Category
+                  category={category}
+                  transactions={transactions}
+                  payees={budget.payees}
+                />
+              );
+            }}
+          />
+          <Route component={NotFound} />
+        </Switch>
+      </div>
     );
   }
 }

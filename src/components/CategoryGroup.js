@@ -12,7 +12,7 @@ class CategoryGroup extends Component {
         id: PropTypes.string.isRequired
       })
     ).isRequired,
-    onSelectCategory: PropTypes.func.isRequired
+    currentUrl: PropTypes.string.isRequired
   };
 
   state = {
@@ -24,7 +24,7 @@ class CategoryGroup extends Component {
   };
 
   render() {
-    const { categoryGroup, categories, onSelectCategory } = this.props;
+    const { categoryGroup, categories, currentUrl } = this.props;
     const { expanded } = this.state;
     return (
       <div>
@@ -34,7 +34,7 @@ class CategoryGroup extends Component {
             <CategoryListItem
               key={category.id}
               category={category}
-              onSelectCategory={onSelectCategory}
+              currentUrl={currentUrl}
             />
           ))}
       </div>

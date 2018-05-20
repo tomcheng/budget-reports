@@ -16,23 +16,27 @@ export let getBudgets = null;
 export let getBudget = null;
 
 export const getAuthorizeToken = () => {
-  let token = null;
+  if (window.location.hash[1] === "/") { // It's probably a route
+    return sessionStorage.getItem(TOKEN_STORAGE_KEY);
+  }
+
   const search = window.location.hash
     .substring(1)
     .replace(/&/g, '","')
     .replace(/=/g, '":"');
 
-  if (search && search !== "") {
-    const params = JSON.parse(
-      '{"' + search + '"}',
-      (key, value) => (key === "" ? value : decodeURIComponent(value))
-    );
-    token = params["access_token"];
-    sessionStorage.setItem(TOKEN_STORAGE_KEY, token);
-    window.location.hash = "";
-  } else {
-    token = sessionStorage.getItem(TOKEN_STORAGE_KEY);
+  if (!search) {
+    return sessionStorage.getItem(TOKEN_STORAGE_KEY);
   }
+
+  const params = JSON.parse(
+    '{"' + search + '"}',
+    (key, value) => (key === "" ? value : decodeURIComponent(value))
+  );
+  const token = params["access_token"];
+
+  sessionStorage.setItem(TOKEN_STORAGE_KEY, token);
+  window.location.hash = "";
 
   return token;
 };

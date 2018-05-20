@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import CategoryGroup from "./CategoryGroup";
 
-const Budget = ({ budget, onSelectCategory }) => {
+const Budget = ({ budget, currentUrl }) => {
   if (!budget.categoryGroups || !budget.categories) {
     return null;
   }
@@ -16,7 +16,7 @@ const Budget = ({ budget, onSelectCategory }) => {
           categories={budget.categories.filter(
             c => c.categoryGroupId === categoryGroup.id
           )}
-          onSelectCategory={onSelectCategory}
+          currentUrl={currentUrl}
         />
       ))}
     </div>
@@ -36,7 +36,7 @@ Budget.propTypes = {
       })
     )
   }).isRequired,
-  onSelectCategory: PropTypes.func.isRequired
+  currentUrl: PropTypes.string.isRequired
 };
 
 export default Budget;

@@ -3,9 +3,8 @@ import PropTypes from "prop-types";
 import { formatCurrency } from "../utils";
 import SpendingChart from "./SpendingChart";
 
-const Category = ({ category, transactions, payees, onClearCategory }) => (
+const Category = ({ category, transactions, payees }) => (
   <div>
-    <div onClick={onClearCategory}>Back</div>
     <div>{category.name}</div>
     <SpendingChart transactions={transactions} />
     {transactions.map(({ id, payeeId, date, amount }) => (
@@ -35,8 +34,7 @@ Category.propTypes = {
       id: PropTypes.string.isRequired,
       payeeId: PropTypes.string.isRequired
     })
-  ).isRequired,
-  onClearCategory: PropTypes.func.isRequired,
+  ).isRequired
 };
 
 export default Category;

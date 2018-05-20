@@ -1,17 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
-const Budgets = ({ budgets, onSelectBudget }) => (
+const Budgets = ({ budgets }) => (
   <div>
     {budgets.map(({ id, name }) => (
-      <div
-        key={id}
-        onClick={() => {
-          onSelectBudget(id);
-        }}
-      >
+      <Link key={id} to={`/budgets/${id}`}>
         {name}
-      </div>
+      </Link>
     ))}
   </div>
 );
@@ -22,8 +18,7 @@ Budgets.propTypes = {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired
     })
-  ).isRequired,
-  onSelectBudget: PropTypes.func.isRequired
+  ).isRequired
 };
 
 export default Budgets;
