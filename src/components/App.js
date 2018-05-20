@@ -2,19 +2,11 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import get from "lodash/get";
 import keyBy from "lodash/keyBy";
-import { clientId, redirectUri } from "../ynabConfig";
-import { getBudgets, getBudget } from "../ynabRepo";
-import Budgets from "./Budgets";
+import { getBudgets, getBudget, AUTHORIZE_URL } from "../ynabRepo";
 import Unauthorized from "./Unauthorized";
 import Loading from "./Loading";
-import CategoryGroup from "./CategoryGroup";
-
-const AUTHORIZE_URL =
-  "https://app.youneedabudget.com/oauth/authorize?client_id=" +
-  clientId +
-  "&redirect_uri=" +
-  redirectUri +
-  "&response_type=token";
+import Budgets from "./Budgets";
+import Budget from "./Budget";
 
 class App extends Component {
   static propTypes = {
@@ -22,10 +14,10 @@ class App extends Component {
   };
 
   state = {
+    budgetsLoaded: false,
     budgetIds: [],
     budgets: {},
-    selected: null,
-    selectedBudgetId: null
+    selected: null
   };
 
   componentDidMount() {
@@ -36,6 +28,7 @@ class App extends Component {
     getBudgets().then(({ budgets }) => {
       this.setState(
         {
+          budgetsLoaded: true,
           budgetIds: budgets.map(b => b.id),
           budgets: keyBy(budgets, "id"),
           selected:
@@ -80,52 +73,39 @@ class App extends Component {
 
   render() {
     const { isAuthorized } = this.props;
-    const { budgetIds, budgets, selected } = this.state;
+    const { budgetsLoaded, budgetIds, budgets, selected } = this.state;
 
     if (!isAuthorized) {
       return <Unauthorized onAuthorize={this.handleAuthorize} />;
     }
 
-    if (!selected) {
+    if (!budgetsLoaded) {
       return <Loading />;
+    }
+
+    if (!selected) {
+      return (
+        <Budgets
+          budgets={budgetIds.map(id => budgets[id])}
+          onSelectBudget={this.handleSelectBudget}
+        />
+      );
+    }
+
+    if (selected.type === "budget") {
+      return (
+        <Budget
+          budget={budgets[selected.id]}
+          onSelectCategory={this.handleSelectCategory}
+        />
+      );
     }
 
     if (selected.type === "category") {
       return <div>Show category here.</div>;
     }
 
-    const selectedCategoryGroups = get(budgets, [
-      selected.id,
-      "details",
-      "categoryGroups"
-    ]);
-    const selectedCategories = get(budgets, [
-      selected.id,
-      "details",
-      "categories"
-    ]);
-
-    return (
-      <div>
-        {budgetIds.length > 1 && (
-          <Budgets
-            budgets={budgetIds.map(id => budgets[id])}
-            onSelectBudget={this.handleSelectBudget}
-          />
-        )}
-        {selectedCategoryGroups &&
-          selectedCategoryGroups.map(categoryGroup => (
-            <CategoryGroup
-              key={categoryGroup.id}
-              categoryGroup={categoryGroup}
-              categories={selectedCategories.filter(
-                c => c.categoryGroupId === categoryGroup.id
-              )}
-              onSelectCategory={this.handleSelectCategory}
-            />
-          ))}
-      </div>
-    );
+    return null;
   }
 }
 

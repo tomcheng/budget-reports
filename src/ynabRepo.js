@@ -1,5 +1,13 @@
 import { api as YnabApi } from "ynab";
 import { makeCachedCall } from "./repoUtils";
+import { clientId, redirectUri } from "./ynabConfig";
+
+export const AUTHORIZE_URL =
+  "https://app.youneedabudget.com/oauth/authorize?client_id=" +
+  clientId +
+  "&redirect_uri=" +
+  redirectUri +
+  "&response_type=token";
 
 let api = null;
 const TOKEN_STORAGE_KEY = "ynab_access_token";
