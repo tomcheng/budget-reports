@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { getAuthorizeToken, initializeYnabApi } from "./ynabRepo";
-import App from "./App";
+import App from "./components/App";
 import registerServiceWorker from "./registerServiceWorker";
 
 const token = getAuthorizeToken();

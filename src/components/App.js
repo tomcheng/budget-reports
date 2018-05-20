@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import get from "lodash/get";
 import keyBy from "lodash/keyBy";
 import values from "lodash/values";
-import { clientId, redirectUri } from "./ynabConfig";
-import { getBudgets, getBudget } from "./ynabRepo";
-import CategoryGroup from "./components/CategoryGroup";
+import { clientId, redirectUri } from "../ynabConfig";
+import { getBudgets, getBudget } from "../ynabRepo";
+import CategoryGroup from "./CategoryGroup";
 
 const AUTHORIZE_URL =
   "https://app.youneedabudget.com/oauth/authorize?client_id=" +
