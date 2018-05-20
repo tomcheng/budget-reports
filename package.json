@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "highcharts": "6.1.0",
+    "highcharts-react-official": "1.1.0",
     "lodash": "4.17.10",
     "moment": "2.22.1",
     "prop-types": "15.6.1",

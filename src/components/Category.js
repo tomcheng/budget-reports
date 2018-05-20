@@ -1,11 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { formatCurrency } from "../utils";
+import SpendingChart from "./SpendingChart";
 
 const Category = ({ category, transactions, payees, onClearCategory }) => (
   <div>
     <div onClick={onClearCategory}>Back</div>
     <div>{category.name}</div>
+    <SpendingChart transactions={transactions} />
     {transactions.map(({ id, payeeId, date, amount }) => (
       <div key={id}>
         <div>{payees[payeeId].name}</div>
