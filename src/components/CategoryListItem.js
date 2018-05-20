@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const Category = ({ category, onSelectCategory }) => (
+const CategoryListItem = ({ category, onSelectCategory }) => (
   <div onClick={() => onSelectCategory(category.id)}>{category.name}</div>
 );
 
-Category.propTypes = {
+CategoryListItem.propTypes = {
   category: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired
@@ -13,4 +13,4 @@ Category.propTypes = {
   onSelectCategory: PropTypes.func.isRequired
 };
 
-export default Category;
+export default CategoryListItem;

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Category from "./Category";
+import CategoryListItem from "./CategoryListItem";
 
 class CategoryGroup extends Component {
   static propTypes = {
@@ -31,7 +31,7 @@ class CategoryGroup extends Component {
         <div onClick={this.handleToggle}>{categoryGroup.name}</div>
         {expanded &&
           categories.map(category => (
-            <Category
+            <CategoryListItem
               key={category.id}
               category={category}
               onSelectCategory={onSelectCategory}
