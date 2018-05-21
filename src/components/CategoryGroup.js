@@ -1,15 +1,14 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
 import sumBy from "lodash/sumBy";
 import AnimateHeight from "react-animate-height-auto";
+import FontAwesomeIcon from "@fortawesome/react-fontawesome";
+import faChevronRight from "@fortawesome/fontawesome-free-solid/faChevronRight";
 import CategoryListItem from "./CategoryListItem";
 import ListItem from "./ListItem";
 import CategorySummary from "./CategorySummary";
 
-const StyledListItem = styled(ListItem)`
-  font-weight: 600;
-`;
+const TOGGLE_ICON_SPACING = 20;
 
 class CategoryGroup extends Component {
   static propTypes = {
@@ -19,6 +18,8 @@ class CategoryGroup extends Component {
     }).isRequired,
     categories: PropTypes.arrayOf(
       PropTypes.shape({
+        activity: PropTypes.number.isRequired,
+        balance: PropTypes.number.isRequired,
         id: PropTypes.string.isRequired
       })
     ).isRequired,
@@ -38,23 +39,33 @@ class CategoryGroup extends Component {
 
     return (
       <Fragment>
-        <StyledListItem
+        <ListItem
+          style={{ fontWeight: 600 }}
           onClick={() => {
             onToggleGroup(categoryGroup.id);
           }}
         >
-          {categoryGroup.name}
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div style={{ width: TOGGLE_ICON_SPACING, fontWeight: 400, color: "#888", fontSize: 10 }}>
+              <FontAwesomeIcon
+                icon={faChevronRight}
+                transform={{ rotate: expanded ? 90 : 0 }}
+              />
+            </div>
+            {categoryGroup.name}
+          </div>
           <CategorySummary
             activity={sumBy(categories, "activity")}
             balance={sumBy(categories, "balance")}
           />
-        </StyledListItem>
+        </ListItem>
         <AnimateHeight isExpanded={expanded}>
           {categories.map(category => (
             <CategoryListItem
               key={category.id}
               category={category}
               currentUrl={currentUrl}
+              leftSpacing={TOGGLE_ICON_SPACING}
             />
           ))}
         </AnimateHeight>

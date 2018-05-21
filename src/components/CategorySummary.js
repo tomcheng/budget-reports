@@ -14,7 +14,7 @@ const Container = styled.div`
 const CategorySummary = ({ activity, balance }) => (
   <Container>
     <SummaryChart progress={-activity / (balance - activity || 1)} />
-    {round(balance, 2)}
+    {round(balance)}
   </Container>
 );
 

@@ -6,7 +6,7 @@ const ListItem = styled.div`
   align-items: center;
   height: 60px;
   padding: 0 20px;
-  border-bottom: 1px solid #eee;
+  border-top: 1px solid #eee;
   white-space: pre;
   user-select: none;
 `;
