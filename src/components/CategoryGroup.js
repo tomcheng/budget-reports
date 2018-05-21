@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import AnimateHeight from "react-animate-height-auto";
 import CategoryListItem from "./CategoryListItem";
 import ListItem from "./ListItem";
 
@@ -38,14 +39,15 @@ class CategoryGroup extends Component {
         <StyledListItem onClick={this.handleToggle}>
           {categoryGroup.name}
         </StyledListItem>
-        {expanded &&
-          categories.map(category => (
+        <AnimateHeight isExpanded={expanded}>
+          {categories.map(category => (
             <CategoryListItem
               key={category.id}
               category={category}
               currentUrl={currentUrl}
             />
           ))}
+        </AnimateHeight>
       </Fragment>
     );
   }
