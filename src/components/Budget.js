@@ -2,6 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import CategoryGroup from "./CategoryGroup";
 
+const GROUPS_TO_HIDE = [
+  "Internal Master Category",
+  "Credit Card Payments",
+  "Hidden Categories"
+];
+
 const Budget = ({ budget, currentUrl }) => {
   if (!budget.categoryGroups || !budget.categories) {
     return null;
@@ -9,16 +15,18 @@ const Budget = ({ budget, currentUrl }) => {
 
   return (
     <div>
-      {budget.categoryGroups.map(categoryGroup => (
-        <CategoryGroup
-          key={categoryGroup.id}
-          categoryGroup={categoryGroup}
-          categories={budget.categories.filter(
-            c => c.categoryGroupId === categoryGroup.id
-          )}
-          currentUrl={currentUrl}
-        />
-      ))}
+      {budget.categoryGroups
+        .filter(g => !GROUPS_TO_HIDE.includes(g.name))
+        .map(categoryGroup => (
+          <CategoryGroup
+            key={categoryGroup.id}
+            categoryGroup={categoryGroup}
+            categories={budget.categories.filter(
+              c => c.categoryGroupId === categoryGroup.id
+            )}
+            currentUrl={currentUrl}
+          />
+        ))}
     </div>
   );
 };
