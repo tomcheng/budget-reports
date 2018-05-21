@@ -1,3 +1,4 @@
+import camelCase from "lodash/camelCase";
 import mapValues from "lodash/mapValues";
 import mapKeys from "lodash/mapKeys";
 import isObject from "lodash/isObject";
@@ -13,6 +14,8 @@ export const mapKeysDeep = (obj, cb) => {
     return obj;
   }
 };
+
+export const camelCaseKeys = obj => mapKeysDeep(obj, (val, key) => camelCase(key));
 
 export const formatCurrency = utils.convertMilliUnitsToCurrencyAmount;
 

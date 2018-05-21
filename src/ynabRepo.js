@@ -1,7 +1,6 @@
 import { api as YnabApi } from "ynab";
-import keyBy from "lodash/keyBy";
-import { formatCurrency, getStorage } from "./utils";
-import { makeCachedCall } from "./repoUtils";
+import { getStorage } from "./utils";
+import { makeCachedCall, sanitizeBudget } from "./repoUtils";
 import { clientId, redirectUri } from "./ynabConfig";
 
 export const AUTHORIZE_URL =
@@ -61,22 +60,7 @@ export const initializeYnabApi = token => {
 
   getBudget = makeCachedCall({
     apiCall: api.budgets.getBudgetById.bind(api.budgets),
-    formatter: ({ budget }) => ({
-      budget: {
-        ...budget,
-        categories: budget.categories.map(c => ({
-          ...c,
-          activity: formatCurrency(c.activity),
-          balance: formatCurrency(c.balance),
-          budgeted: formatCurrency(c.budgeted)
-        })),
-        payees: keyBy(budget.payees, "id"),
-        transactions: budget.transactions.map(t => ({
-          ...t,
-          amount: formatCurrency(t.amount)
-        }))
-      }
-    }),
+    formatter: ({ budget }) => ({ budget: sanitizeBudget(budget) }),
     storageKey: "ynab_budget_details",
     onFailure: handleFailure
   });
@@ -85,7 +69,14 @@ export const initializeYnabApi = token => {
     const details = getStorage("ynab_budget_details");
     const budgetDetails = details[id];
     const serverKnowledge = budgetDetails.server_knowledge;
+    console.log("details:", details);
 
-    return api.budgets.getBudgetById(id, serverKnowledge).catch(handleFailure);
+    return api.budgets
+      .getBudgetById(id, serverKnowledge)
+      .then(({ data }) => {
+        console.log(data);
+        return data;
+      })
+      .catch(handleFailure);
   };
 };

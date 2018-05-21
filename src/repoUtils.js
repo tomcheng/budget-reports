@@ -1,8 +1,7 @@
 import get from "lodash/get";
-import { mapKeysDeep, getStorage, setStorage } from "./utils";
-import camelCase from "lodash/camelCase";
-
-const camelCaseKeys = obj => mapKeysDeep(obj, (val, key) => camelCase(key));
+import { camelCaseKeys, getStorage, setStorage } from "./utils";
+import { formatCurrency } from "./utils";
+import keyBy from "lodash/keyBy";
 
 export const makeCachedCall = ({
   apiCall,
@@ -24,3 +23,18 @@ export const makeCachedCall = ({
       .catch(onFailure);
   }
 };
+
+export const sanitizeBudget = budget => ({
+  ...budget,
+  categories: budget.categories.map(c => ({
+    ...c,
+    activity: formatCurrency(c.activity),
+    balance: formatCurrency(c.balance),
+    budgeted: formatCurrency(c.budgeted)
+  })),
+  payees: keyBy(budget.payees, "id"),
+  transactions: budget.transactions.map(t => ({
+    ...t,
+    amount: formatCurrency(t.amount)
+  }))
+});
