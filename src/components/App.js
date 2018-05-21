@@ -64,7 +64,8 @@ class App extends Component {
                   ...state.budgets,
                   [id]: {
                     ...state.budgets[id],
-                    ...budget
+                    ...budget,
+                    detailsLoaded: true
                   }
                 }
               }));
@@ -126,6 +127,10 @@ class App extends Component {
                 return <NotFound />;
               }
 
+              if (!budget.detailsLoaded) {
+                return <Loading />;
+              }
+
               return <Budget budget={budget} currentUrl={match.url} />;
             }}
           />
@@ -135,6 +140,10 @@ class App extends Component {
             render={({ match }) => {
               const { budgetId, categoryId } = match.params;
               const budget = budgets[budgetId];
+
+              if (!budget) {
+                return <NotFound />
+              }
 
               if (!budget.categories) {
                 return <Loading />;
@@ -158,7 +167,9 @@ class App extends Component {
                   currentMonth={currentMonth}
                   payees={budget.payees}
                   transactions={transactions}
-                  onRefreshData={() => { this.handleRefreshData(budgetId) }}
+                  onRefreshData={() => {
+                    this.handleRefreshData(budgetId);
+                  }}
                 />
               );
             }}
