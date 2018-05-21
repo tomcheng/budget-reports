@@ -45,7 +45,7 @@ class App extends Component {
         },
         () => {
           budgets.forEach(({ id }) => {
-            getBudget(id).then(({ budget }) => {
+            getBudget(id).then(budget => {
               this.setState(state => ({
                 ...state,
                 budgets: {
@@ -64,7 +64,18 @@ class App extends Component {
   }
 
   handleRefreshData = budgetId => {
-    getUpdatedBudget(budgetId);
+    getUpdatedBudget(budgetId).then(budget => {
+      this.setState(state => ({
+        ...state,
+        budgets: {
+          ...state.budgets,
+          [budgetId]: {
+            ...state.budgets[budgetId],
+            ...budget
+          }
+        }
+      }));
+    });
   };
 
   handleAuthorize = () => {

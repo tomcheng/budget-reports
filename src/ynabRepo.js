@@ -1,6 +1,6 @@
 import { api as YnabApi } from "ynab";
-import { getStorage } from "./utils";
-import { makeCachedCall, sanitizeBudget } from "./repoUtils";
+import { camelCaseKeys, getStorage, setStorage } from "./utils";
+import { makeCachedCall, sanitizeBudget, mergeBudgets } from "./repoUtils";
 import { clientId, redirectUri } from "./ynabConfig";
 
 export const AUTHORIZE_URL =
@@ -60,7 +60,7 @@ export const initializeYnabApi = token => {
 
   getBudget = makeCachedCall({
     apiCall: api.budgets.getBudgetById.bind(api.budgets),
-    formatter: ({ budget }) => ({ budget: sanitizeBudget(budget) }),
+    formatter: ({ budget }) => sanitizeBudget(budget),
     storageKey: "ynab_budget_details",
     onFailure: handleFailure
   });
@@ -69,13 +69,19 @@ export const initializeYnabApi = token => {
     const details = getStorage("ynab_budget_details");
     const budgetDetails = details[id];
     const serverKnowledge = budgetDetails.server_knowledge;
-    console.log("details:", details);
 
     return api.budgets
       .getBudgetById(id, serverKnowledge)
       .then(({ data }) => {
-        console.log(data);
-        return data;
+        const newDetails = {
+          ...details,
+          [id]: {
+            budget: mergeBudgets(details[id].budget, data.budget),
+            server_knowledge: data.server_knowledge
+          }
+        };
+        setStorage("ynab_budget_details", newDetails);
+        return sanitizeBudget(camelCaseKeys(newDetails[id].budget));
       })
       .catch(handleFailure);
   };

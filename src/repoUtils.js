@@ -1,5 +1,5 @@
 import get from "lodash/get";
-import { camelCaseKeys, getStorage, setStorage } from "./utils";
+import { camelCaseKeys, getStorage, setStorage, upsertBy } from "./utils";
 import { formatCurrency } from "./utils";
 import keyBy from "lodash/keyBy";
 
@@ -36,5 +36,37 @@ export const sanitizeBudget = budget => ({
   transactions: budget.transactions.map(t => ({
     ...t,
     amount: formatCurrency(t.amount)
+  }))
+});
+
+const applyDeltas = (arr, deltas, key = "id", updater) =>
+  deltas.reduce((acc, curr) => upsertBy(acc, key, curr, updater), arr);
+
+const arraysToUpdate = [
+  "accounts",
+  "categories",
+  "category_groups",
+  "payee_locations",
+  "payees",
+  "scheduled_subtransactions",
+  "scheduled_transactions",
+  "subtransactions",
+  "transactions"
+];
+
+export const mergeBudgets = (budget, deltas) => ({
+  ...budget,
+  ...deltas,
+  ...arraysToUpdate.reduce(
+    (acc, curr) => ({
+      ...acc,
+      [curr]: applyDeltas(budget[curr], deltas[curr])
+    }),
+    {}
+  ),
+  months: applyDeltas(budget.months, deltas.months, "month", (prev, curr) => ({
+    ...prev,
+    ...curr,
+    categories: applyDeltas(prev.categories, curr.categories)
   }))
 });

@@ -15,7 +15,8 @@ export const mapKeysDeep = (obj, cb) => {
   }
 };
 
-export const camelCaseKeys = obj => mapKeysDeep(obj, (val, key) => camelCase(key));
+export const camelCaseKeys = obj =>
+  mapKeysDeep(obj, (val, key) => camelCase(key));
 
 export const formatCurrency = utils.convertMilliUnitsToCurrencyAmount;
 
@@ -28,14 +29,14 @@ export const setStorage = (key, obj) => {
   localStorage.setItem(key, JSON.stringify(obj));
 };
 
-export const upsertBy = (arr, key, obj) => {
+export const upsertBy = (arr, key, obj, updater = (prev, curr) => curr) => {
   let exists = false;
-  const newArr = arr.map(i => {
-    if (i[key] === obj[key]) {
+  const newArr = arr.map(item => {
+    if (item[key] === obj[key]) {
       exists = true;
-      return obj;
+      return updater(item, obj);
     }
-    return i;
+    return item;
   });
   return exists ? newArr : newArr.concat(obj);
 };
