@@ -23,6 +23,10 @@ const Container = styled.div`
   color: #444;
   font-size: 14px;
   line-height: 22px;
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 `;
 
 class App extends Component {

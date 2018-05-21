@@ -1,11 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import ListItem from "./ListItem";
 
 const CategoryListItem = ({ category, currentUrl }) => (
-  <div>
-    <Link to={`${currentUrl}/categories/${category.id}`}>{category.name}</Link>
-  </div>
+  <Link to={`${currentUrl}/categories/${category.id}`}>
+    <ListItem>{category.name}</ListItem>
+  </Link>
 );
 
 CategoryListItem.propTypes = {
