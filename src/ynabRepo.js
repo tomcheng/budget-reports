@@ -1,4 +1,4 @@
-import { api as YnabApi } from "ynab";
+import * as ynab from "ynab";
 import { camelCaseKeys, getStorage, setStorage } from "./utils";
 import { makeCachedCall, sanitizeBudget, mergeBudgets } from "./repoUtils";
 import { clientId, redirectUri } from "./ynabConfig";
@@ -10,7 +10,6 @@ export const AUTHORIZE_URL =
   redirectUri +
   "&response_type=token";
 
-let api = null;
 const TOKEN_STORAGE_KEY = "ynab_access_token";
 
 export let getBudgets = null;
@@ -50,7 +49,7 @@ const handleFailure = () => {
 };
 
 export const initializeYnabApi = token => {
-  api = new YnabApi(token);
+  const api = new ynab.api(token);
 
   getBudgets = makeCachedCall({
     apiCall: api.budgets.getBudgets.bind(api.budgets),
