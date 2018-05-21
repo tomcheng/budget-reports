@@ -1,5 +1,6 @@
 {
   "name": "budget-reports",
+  "homepage": "https://tomcheng.github.io/budget-reports",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -13,7 +14,7 @@
     "react-router": "4.2.0",
     "react-router-dom": "4.2.2",
     "styled-components": "3.2.6",
-    "ynab": "0.16.0"
+    "ynab": "https://github.com/tomcheng/ynab-sdk-js/tarball/master"
   },
   "scripts": {
     "start": "react-scripts start",
