@@ -5,6 +5,7 @@ import { Route, Switch } from "react-router-dom";
 import moment from "moment";
 import get from "lodash/get";
 import keyBy from "lodash/keyBy";
+import sortBy from "lodash/sortBy";
 import {
   getBudgets,
   getBudget,
@@ -142,10 +143,10 @@ class App extends Component {
               const budget = budgets[budgetId];
 
               if (!budget) {
-                return <NotFound />
+                return <NotFound />;
               }
 
-              if (!budget.categories) {
+              if (!budget.detailsLoaded) {
                 return <Loading />;
               }
 
@@ -155,11 +156,14 @@ class App extends Component {
                 return <NotFound />;
               }
 
-              const transactions = budget.transactions.filter(
-                t =>
-                  t.categoryId === categoryId &&
-                  t.date.slice(0, 7) === currentMonth
-              );
+              const transactions = sortBy(
+                budget.transactions.filter(
+                  transaction =>
+                    transaction.categoryId === categoryId &&
+                    transaction.date.slice(0, 7) === currentMonth
+                ),
+                "date"
+              ).reverse();
 
               return (
                 <Category
