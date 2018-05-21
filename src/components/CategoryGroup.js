@@ -1,9 +1,11 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import sumBy from "lodash/sumBy";
 import AnimateHeight from "react-animate-height-auto";
 import CategoryListItem from "./CategoryListItem";
 import ListItem from "./ListItem";
+import CategorySummary from "./CategorySummary";
 
 const StyledListItem = styled(ListItem)`
   font-weight: 600;
@@ -42,6 +44,10 @@ class CategoryGroup extends Component {
           }}
         >
           {categoryGroup.name}
+          <CategorySummary
+            activity={sumBy(categories, "activity")}
+            balance={sumBy(categories, "balance")}
+          />
         </StyledListItem>
         <AnimateHeight isExpanded={expanded}>
           {categories.map(category => (
