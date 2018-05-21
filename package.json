@@ -12,7 +12,6 @@
     "react-dom": "16.3.2",
     "react-router": "4.2.0",
     "react-router-dom": "4.2.2",
-    "react-scripts": "1.1.4",
     "styled-components": "3.2.6",
     "ynab": "0.16.0"
   },
@@ -20,9 +19,12 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "devDependencies": {
+    "react-scripts": "1.1.4",
     "gh-pages": "1.1.0"
   }
 }
