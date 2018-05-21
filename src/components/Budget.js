@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { getExpandedGroups, setExpandedGroups } from "../uiRepo";
 import CategoryGroup from "./CategoryGroup";
 
 const GROUPS_TO_HIDE = [
@@ -20,23 +21,30 @@ class Budget extends Component {
         PropTypes.shape({
           categoryGroupId: PropTypes.string.isRequired
         })
-      ).isRequired
+      ).isRequired,
+      id: PropTypes.string.isRequired
     }).isRequired,
     currentUrl: PropTypes.string.isRequired
   };
 
-  state = {
-    expandedGroups: {}
-  };
+  constructor(props) {
+    super();
+    this.state = { expandedGroups: getExpandedGroups(props.budget.id) };
+  }
 
   handleToggleGroup = id => {
-    this.setState(state => ({
-      ...state,
-      expandedGroups: {
-        ...state.expandedGroups,
-        [id]: !state.expandedGroups[id]
+    this.setState(
+      state => ({
+        ...state,
+        expandedGroups: {
+          ...state.expandedGroups,
+          [id]: !state.expandedGroups[id]
+        }
+      }),
+      () => {
+        setExpandedGroups(this.props.budget.id, this.state.expandedGroups);
       }
-    }));
+    );
   };
 
   render() {
