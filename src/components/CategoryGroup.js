@@ -12,6 +12,7 @@ const StyledListItem = styled(ListItem)`
 class CategoryGroup extends Component {
   static propTypes = {
     categoryGroup: PropTypes.shape({
+      id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired
     }).isRequired,
     categories: PropTypes.arrayOf(
@@ -19,24 +20,27 @@ class CategoryGroup extends Component {
         id: PropTypes.string.isRequired
       })
     ).isRequired,
-    currentUrl: PropTypes.string.isRequired
-  };
-
-  state = {
-    expanded: false
-  };
-
-  handleToggle = () => {
-    this.setState(state => ({ ...state, expanded: !state.expanded }));
+    currentUrl: PropTypes.string.isRequired,
+    expanded: PropTypes.bool.isRequired,
+    onToggleGroup: PropTypes.func.isRequired
   };
 
   render() {
-    const { categoryGroup, categories, currentUrl } = this.props;
-    const { expanded } = this.state;
+    const {
+      categoryGroup,
+      categories,
+      currentUrl,
+      expanded,
+      onToggleGroup
+    } = this.props;
 
     return (
       <Fragment>
-        <StyledListItem onClick={this.handleToggle}>
+        <StyledListItem
+          onClick={() => {
+            onToggleGroup(categoryGroup.id);
+          }}
+        >
           {categoryGroup.name}
         </StyledListItem>
         <AnimateHeight isExpanded={expanded}>

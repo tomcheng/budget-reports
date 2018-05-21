@@ -25,8 +25,23 @@ class Budget extends Component {
     currentUrl: PropTypes.string.isRequired
   };
 
+  state = {
+    expandedGroups: {}
+  };
+
+  handleToggleGroup = id => {
+    this.setState(state => ({
+      ...state,
+      expandedGroups: {
+        ...state.expandedGroups,
+        [id]: !state.expandedGroups[id]
+      }
+    }));
+  };
+
   render() {
     const { budget, currentUrl } = this.props;
+    const { expandedGroups } = this.state;
 
     return budget.categoryGroups
       .filter(g => !GROUPS_TO_HIDE.includes(g.name))
@@ -38,6 +53,8 @@ class Budget extends Component {
             c => c.categoryGroupId === categoryGroup.id
           )}
           currentUrl={currentUrl}
+          expanded={!!expandedGroups[categoryGroup.id]}
+          onToggleGroup={this.handleToggleGroup}
         />
       ));
   }
