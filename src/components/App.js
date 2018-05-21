@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 import { Route, Switch } from "react-router-dom";
 import moment from "moment";
 import get from "lodash/get";
@@ -16,6 +17,13 @@ import NotFound from "./NotFound";
 import Budgets from "./Budgets";
 import Budget from "./Budget";
 import Category from "./Category";
+
+const Container = styled.div`
+  font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  color: #444;
+  font-size: 14px;
+  line-height: 22px;
+`;
 
 class App extends Component {
   static propTypes = {
@@ -95,7 +103,7 @@ class App extends Component {
     }
 
     return (
-      <div>
+      <Container>
         <Switch>
           <Route
             path="/"
@@ -153,7 +161,7 @@ class App extends Component {
           />
           <Route component={NotFound} />
         </Switch>
-      </div>
+      </Container>
     );
   }
 }

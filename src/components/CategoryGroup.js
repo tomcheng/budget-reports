@@ -1,6 +1,18 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 import CategoryListItem from "./CategoryListItem";
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  height: 60px;
+  padding: 0 20px;
+  border-bottom: 1px solid #eee;
+  font-weight: 600;
+  white-space: pre;
+  user-select: none;
+`;
 
 class CategoryGroup extends Component {
   static propTypes = {
@@ -27,8 +39,8 @@ class CategoryGroup extends Component {
     const { categoryGroup, categories, currentUrl } = this.props;
     const { expanded } = this.state;
     return (
-      <div>
-        <div onClick={this.handleToggle}>{categoryGroup.name}</div>
+      <Fragment>
+        <Container onClick={this.handleToggle}>{categoryGroup.name}</Container>
         {expanded &&
           categories.map(category => (
             <CategoryListItem
@@ -37,7 +49,7 @@ class CategoryGroup extends Component {
               currentUrl={currentUrl}
             />
           ))}
-      </div>
+      </Fragment>
     );
   }
 }

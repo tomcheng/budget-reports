@@ -13,22 +13,18 @@ const Budget = ({ budget, currentUrl }) => {
     return null;
   }
 
-  return (
-    <div>
-      {budget.categoryGroups
-        .filter(g => !GROUPS_TO_HIDE.includes(g.name))
-        .map(categoryGroup => (
-          <CategoryGroup
-            key={categoryGroup.id}
-            categoryGroup={categoryGroup}
-            categories={budget.categories.filter(
-              c => c.categoryGroupId === categoryGroup.id
-            )}
-            currentUrl={currentUrl}
-          />
-        ))}
-    </div>
-  );
+  return budget.categoryGroups
+    .filter(g => !GROUPS_TO_HIDE.includes(g.name))
+    .map(categoryGroup => (
+      <CategoryGroup
+        key={categoryGroup.id}
+        categoryGroup={categoryGroup}
+        categories={budget.categories.filter(
+          c => c.categoryGroupId === categoryGroup.id
+        )}
+        currentUrl={currentUrl}
+      />
+    ));
 };
 
 Budget.propTypes = {
