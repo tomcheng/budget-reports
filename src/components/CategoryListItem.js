@@ -12,13 +12,14 @@ const StyledListItem = styled(ListItem)`
   border-top: 0;
 `;
 
-const CategoryListItem = ({ category, currentUrl, leftSpacing }) => (
+const CategoryListItem = ({ category, currentUrl, leftSpacing, monthProgress }) => (
   <Link to={`${currentUrl}/categories/${category.id}`}>
     <StyledListItem>
       <div style={{ paddingLeft: leftSpacing }}>{category.name}</div>
       <CategorySummary
         activity={category.activity}
         balance={category.balance}
+        monthProgress={monthProgress}
       />
     </StyledListItem>
   </Link>
@@ -32,7 +33,8 @@ CategoryListItem.propTypes = {
     name: PropTypes.string.isRequired
   }).isRequired,
   currentUrl: PropTypes.string.isRequired,
-  leftSpacing: PropTypes.number.isRequired
+  leftSpacing: PropTypes.number.isRequired,
+  monthProgress: PropTypes.number.isRequired
 };
 
 export default CategoryListItem;

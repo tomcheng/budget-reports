@@ -11,16 +11,20 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
-const CategorySummary = ({ activity, balance }) => (
+const CategorySummary = ({ activity, balance, monthProgress }) => (
   <Container>
-    <SummaryChart progress={-activity / (balance - activity || 1)} />
+    <SummaryChart
+      progress={-activity / (balance - activity || 1)}
+      indicator={monthProgress}
+    />
     {round(balance)}
   </Container>
 );
 
 CategorySummary.propTypes = {
   activity: PropTypes.number.isRequired,
-  balance: PropTypes.number.isRequired
+  balance: PropTypes.number.isRequired,
+  monthProgress: PropTypes.number.isRequired
 };
 
 export default CategorySummary;

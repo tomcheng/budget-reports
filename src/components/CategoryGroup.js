@@ -25,6 +25,7 @@ class CategoryGroup extends Component {
     ).isRequired,
     currentUrl: PropTypes.string.isRequired,
     expanded: PropTypes.bool.isRequired,
+    monthProgress: PropTypes.number.isRequired,
     onToggleGroup: PropTypes.func.isRequired
   };
 
@@ -34,6 +35,7 @@ class CategoryGroup extends Component {
       categories,
       currentUrl,
       expanded,
+      monthProgress,
       onToggleGroup
     } = this.props;
 
@@ -57,6 +59,7 @@ class CategoryGroup extends Component {
           <CategorySummary
             activity={sumBy(categories, "activity")}
             balance={sumBy(categories, "balance")}
+            monthProgress={monthProgress}
           />
         </ListItem>
         <AnimateHeight isExpanded={expanded}>
@@ -66,6 +69,7 @@ class CategoryGroup extends Component {
               category={category}
               currentUrl={currentUrl}
               leftSpacing={TOGGLE_ICON_SPACING}
+              monthProgress={monthProgress}
             />
           ))}
         </AnimateHeight>

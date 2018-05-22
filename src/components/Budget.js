@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import moment from "moment";
 import { getExpandedGroups, setExpandedGroups } from "../uiRepo";
 import CategoryGroup from "./CategoryGroup";
 
@@ -24,6 +25,7 @@ class Budget extends Component {
       ).isRequired,
       id: PropTypes.string.isRequired
     }).isRequired,
+    currentMonth: PropTypes.string.isRequired,
     currentUrl: PropTypes.string.isRequired
   };
 
@@ -48,8 +50,14 @@ class Budget extends Component {
   };
 
   render() {
-    const { budget, currentUrl } = this.props;
+    const { budget, currentUrl, currentMonth } = this.props;
     const { expandedGroups } = this.state;
+    const currentMonthCategories = budget.months.find(
+      m => m.month === currentMonth + "-01"
+    ).categories;
+
+    const daysInMonth = moment(currentMonth).daysInMonth();
+    const dayOfMonth = parseInt(moment().format("D"), 10);
 
     return budget.categoryGroups
       .filter(g => !GROUPS_TO_HIDE.includes(g.name))
@@ -63,6 +71,7 @@ class Budget extends Component {
           currentUrl={currentUrl}
           expanded={!!expandedGroups[categoryGroup.id]}
           onToggleGroup={this.handleToggleGroup}
+          monthProgress={(dayOfMonth - 0.5) / daysInMonth}
         />
       ));
   }

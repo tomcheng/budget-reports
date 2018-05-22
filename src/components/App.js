@@ -132,7 +132,13 @@ class App extends Component {
                 return <Loading />;
               }
 
-              return <Budget budget={budget} currentUrl={match.url} />;
+              return (
+                <Budget
+                  budget={budget}
+                  currentUrl={match.url}
+                  currentMonth={currentMonth}
+                />
+              );
             }}
           />
           <Route
