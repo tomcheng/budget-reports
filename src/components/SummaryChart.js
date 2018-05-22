@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { primaryColor } from "../styleVariables";
 
 const CHART_HEIGHT = 3;
 const CHART_WIDTH = 80;
@@ -15,7 +16,7 @@ const Container = styled.div`
 const Progress = styled.div`
   height: ${CHART_HEIGHT}px;
   width: ${props => props.progress * 100}%;
-  background-color: #4399ff;
+  background-color: ${primaryColor};
 `;
 
 const Marker = styled.div`

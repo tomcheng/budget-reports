@@ -1,11 +1,32 @@
 import React from "react";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 import groupBy from "lodash/groupBy";
 import padStart from "lodash/padStart";
 import range from "lodash/range";
 import sumBy from "lodash/sumBy";
+import head from "lodash/head";
+import last from "lodash/last";
 import moment from "moment";
+import { primaryColor } from "../styleVariables";
 import Chart from "./Chart";
+
+const Label = styled.div`
+  font-size: 11px;
+  line-height: 14px;
+  color: #888;
+`;
+
+const BudgetedLine = styled(Label)`
+  text-align: right;
+`;
+
+const DateLabels = styled(Label)`
+  border-top: 1px solid #ddd;
+  padding-top: 5px;
+  display: flex;
+  justify-content: space-between;
+`;
 
 const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
   const daysInMonth = moment(currentMonth).daysInMonth();
@@ -25,60 +46,26 @@ const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
     cumulative += -sumBy(transactionsForDate, "amount");
     return cumulative;
   });
-  const xAxisLabels = dates.map((m, index) => {
-    if (index === 0 || index === dates.length - 1 || m.isSame(today, "day")) {
-      return m.format("D");
-    }
-    return "";
-  });
   const lineData = dates.map(
     (_, index) => index / (dates.length - 1) * budgeted
   );
 
   return (
     <div>
+      <BudgetedLine>Budgeted: ${budgeted}</BudgetedLine>
       <Chart
         options={{
-          credits: {
-            enabled: false
+          chart: {
+            spacing: [0, 0, 0, 0],
+            height: 180
           },
-          legend: {
-            enabled: false
-          },
-          title: {
-            text: null
-          },
-          xAxis: {
-            categories: xAxisLabels,
-            labels: {
-              autoRotation: false,
-              padding: 0
-            },
-            tickLength: 0,
-            title: {
-              text: null
-            }
-          },
-          yAxis: {
-            title: {
-              text: null
-            },
-            showFirstLabel: false,
-            min: 0,
-            max: budgeted,
-            tickInterval: budgeted,
-            tickLength: 0
-          },
-          tooltip: {
-            enabled: false
-          },
-          plotOptions: {
-            spline: {
-              marker: {
-                enabled: false
-              }
-            }
-          },
+          credits: { enabled: false },
+          legend: { enabled: false },
+          title: { text: "" },
+          subtitle: { text: "" },
+          xAxis: { visible: false },
+          yAxis: { visible: false, endOnTick: false },
+          tooltip: { enabled: false },
           series: [
             {
               type: "line",
@@ -89,10 +76,20 @@ const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
               enableMouseTracking: false,
               marker: { enabled: false }
             },
-            { type: "spline", data, enableMouseTracking: false, color: "#6CF" }
+            {
+              type: "spline",
+              data,
+              enableMouseTracking: false,
+              color: primaryColor,
+              marker: { enabled: false }
+            }
           ]
         }}
       />
+      <DateLabels>
+        <div>{head(dates).format("MMM D")}</div>
+        <div>{last(dates).format("MMM D")}</div>
+      </DateLabels>
     </div>
   );
 };

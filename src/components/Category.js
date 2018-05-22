@@ -1,18 +1,38 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 import SpendingChart from "./SpendingChart";
 
-const Category = ({ category, currentMonth, payees, transactions, onRefreshData }) => (
-  <div>
-    <div>{category.name}</div>
-    <div>
-      <button onClick={onRefreshData}>Refresh Data</button>
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 20px;
+  font-weight: 600;
+`;
+
+const Category = ({
+  category,
+  currentMonth,
+  payees,
+  transactions,
+  onRefreshData
+}) => (
+  <Fragment>
+    <Header>
+      <div>{category.name}</div>
+      <div>
+        <button onClick={onRefreshData}>Refresh Data</button>
+      </div>
+    </Header>
+    <div style={{ padding: "0 20px 20px" }}>
+      <SpendingChart
+        budgeted={category.budgeted}
+        currentMonth={currentMonth}
+        transactions={transactions}
+      />
     </div>
-    <SpendingChart
-      budgeted={category.budgeted}
-      currentMonth={currentMonth}
-      transactions={transactions}
-    />
     {transactions.map(({ id, payeeId, date, amount }) => (
       <div key={id}>
         <div>{payees[payeeId].name}</div>
@@ -20,7 +40,7 @@ const Category = ({ category, currentMonth, payees, transactions, onRefreshData 
         <div>{amount}</div>
       </div>
     ))}
-  </div>
+  </Fragment>
 );
 
 Category.propTypes = {
@@ -43,7 +63,7 @@ Category.propTypes = {
       payeeId: PropTypes.string.isRequired
     })
   ).isRequired,
-  onRefreshData: PropTypes.func.isRequired,
+  onRefreshData: PropTypes.func.isRequired
 };
 
 export default Category;
