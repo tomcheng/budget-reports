@@ -52,9 +52,6 @@ class Budget extends Component {
   render() {
     const { budget, currentUrl, currentMonth } = this.props;
     const { expandedGroups } = this.state;
-    const currentMonthCategories = budget.months.find(
-      m => m.month === currentMonth + "-01"
-    ).categories;
 
     const daysInMonth = moment(currentMonth).daysInMonth();
     const dayOfMonth = parseInt(moment().format("D"), 10);

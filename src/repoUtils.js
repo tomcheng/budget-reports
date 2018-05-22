@@ -1,7 +1,8 @@
 import get from "lodash/get";
+import keyBy from "lodash/keyBy";
+import moment from "moment";
 import { camelCaseKeys, getStorage, setStorage, upsertBy } from "./utils";
 import { formatCurrency } from "./utils";
-import keyBy from "lodash/keyBy";
 
 export const makeCachedCall = ({
   apiCall,
@@ -24,20 +25,33 @@ export const makeCachedCall = ({
   }
 };
 
-export const sanitizeBudget = budget => ({
-  ...budget,
-  categories: budget.categories.map(c => ({
-    ...c,
-    activity: formatCurrency(c.activity),
-    balance: formatCurrency(c.balance),
-    budgeted: formatCurrency(c.budgeted)
-  })),
-  payees: keyBy(budget.payees, "id"),
-  transactions: budget.transactions.map(t => ({
-    ...t,
-    amount: formatCurrency(t.amount)
-  }))
-});
+export const sanitizeBudget = (
+  budget,
+  currentMonth = moment().format("YYYY-MM")
+) => {
+  const categoriesFromMonth = keyBy(
+    budget.months.find(m => m.month === currentMonth + "-01").categories,
+    "id"
+  );
+
+  return {
+    ...budget,
+    categories: budget.categories.map(c => {
+      const mergedCategory = { ...c, ...categoriesFromMonth[c.id] };
+      return {
+        ...mergedCategory,
+        activity: formatCurrency(mergedCategory.activity),
+        balance: formatCurrency(mergedCategory.balance),
+        budgeted: formatCurrency(mergedCategory.budgeted)
+      };
+    }),
+    payees: keyBy(budget.payees, "id"),
+    transactions: budget.transactions.map(t => ({
+      ...t,
+      amount: formatCurrency(t.amount)
+    }))
+  };
+};
 
 const applyDeltas = (arr, deltas, key = "id", updater) =>
   deltas.reduce((acc, curr) => upsertBy(acc, key, curr, updater), arr);

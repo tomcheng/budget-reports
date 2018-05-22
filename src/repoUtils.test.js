@@ -3,16 +3,19 @@ import { sanitizeBudget, mergeBudgets } from "./repoUtils";
 describe("sanitizeBudget", () => {
   const budget = {
     payees: [{ id: "foo" }],
-    categories: [{ activity: 1000, balance: 2000, budgeted: 3000 }],
-    transactions: [{ amount: 1000 }]
+    categories: [{ id: "cat", activity: 1000, balance: 2000, budgeted: 3000 }],
+    transactions: [{ amount: 1000 }],
+    months: [
+      { month: "2018-05-01", categories: [{ id: "cat", balance: 5000 }] }
+    ]
   };
 
   it("sanitizes data", () => {
-    const result = sanitizeBudget(budget);
+    const result = sanitizeBudget(budget, "2018-05");
 
     expect(result.payees).toEqual({ foo: { id: "foo" } });
     expect(result.categories).toEqual([
-      { activity: 1, balance: 2, budgeted: 3 }
+      { id: "cat", activity: 1, balance: 5, budgeted: 3 }
     ]);
     expect(result.transactions).toEqual([{ amount: 1 }]);
   });
