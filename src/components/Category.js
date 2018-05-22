@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import SpendingChart from "./SpendingChart";
+import Transaction from "./Transaction";
 
 const Header = styled.div`
   display: flex;
@@ -33,13 +34,16 @@ const Category = ({
         transactions={transactions}
       />
     </div>
-    {transactions.map(({ id, payeeId, date, amount }) => (
-      <div key={id}>
-        <div>{payees[payeeId].name}</div>
-        <div>{date}</div>
-        <div>{amount}</div>
-      </div>
-    ))}
+    <div style={{ padding: "0 20px 20px" }}>
+      {transactions.map(({ id, payeeId, date, amount }) => (
+        <Transaction
+          key={id}
+          payee={payees[payeeId]}
+          date={date}
+          amount={amount}
+        />
+      ))}
+    </div>
   </Fragment>
 );
 
