@@ -10,7 +10,7 @@ import CategorySummary from "./CategorySummary";
 
 const TOGGLE_ICON_SPACING = 20;
 
-class CategoryGroup extends Component {
+class CategoryGroupListItem extends Component {
   static propTypes = {
     categoryGroup: PropTypes.shape({
       id: PropTypes.string.isRequired,
@@ -78,4 +78,4 @@ class CategoryGroup extends Component {
   }
 }
 
-export default CategoryGroup;
+export default CategoryGroupListItem;

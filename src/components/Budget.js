@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import { getExpandedGroups, setExpandedGroups } from "../uiRepo";
 import Loading from "./Loading";
-import CategoryGroup from "./CategoryGroup";
+import CategoryGroupListItem from "./CategoryGroupListItem";
 
 const GROUPS_TO_HIDE = [
   "Internal Master Category",
@@ -71,7 +71,7 @@ class Budget extends Component {
     return budget.categoryGroups
       .filter(g => !GROUPS_TO_HIDE.includes(g.name))
       .map(categoryGroup => (
-        <CategoryGroup
+        <CategoryGroupListItem
           key={categoryGroup.id}
           categoryGroup={categoryGroup}
           categories={budget.categories.filter(
