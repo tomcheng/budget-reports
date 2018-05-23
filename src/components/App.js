@@ -98,23 +98,23 @@ class App extends Component {
 
     return (
       <Container>
-        <Switch>
-          <Route
-            path="/"
-            exact
-            render={() => (
-              <Budgets
-                budgetsLoaded={budgetsLoaded}
-                budgets={budgetIds.map(id => budgets[id])}
-                onRequestBudgets={this.handleRequestBudgets}
-              />
-            )}
-          />
-          <Route
-            path="/budgets/:budgetId"
-            exact
-            render={({ match }) => (
-              <ErrorBoundary>
+        <ErrorBoundary>
+          <Switch>
+            <Route
+              path="/"
+              exact
+              render={() => (
+                <Budgets
+                  budgetsLoaded={budgetsLoaded}
+                  budgets={budgetIds.map(id => budgets[id])}
+                  onRequestBudgets={this.handleRequestBudgets}
+                />
+              )}
+            />
+            <Route
+              path="/budgets/:budgetId"
+              exact
+              render={({ match }) => (
                 <Budget
                   budget={budgetDetails[match.params.budgetId]}
                   budgetId={match.params.budgetId}
@@ -122,25 +122,25 @@ class App extends Component {
                   currentMonth={currentMonth}
                   onRequestBudgetDetails={this.handleRequestBudgetDetails}
                 />
-              </ErrorBoundary>
-            )}
-          />
-          <Route
-            path="/budgets/:budgetId/categories/:categoryId"
-            exact
-            render={({ match }) => (
-              <Category
-                budget={budgetDetails[match.params.budgetId]}
-                budgetId={match.params.budgetId}
-                categoryId={match.params.categoryId}
-                currentMonth={currentMonth}
-                onRefreshData={this.handleRefreshData}
-                onRequestBudgetDetails={this.handleRequestBudgetDetails}
-              />
-            )}
-          />
-          <Route component={NotFound} />
-        </Switch>
+              )}
+            />
+            <Route
+              path="/budgets/:budgetId/categories/:categoryId"
+              exact
+              render={({ match }) => (
+                <Category
+                  budget={budgetDetails[match.params.budgetId]}
+                  budgetId={match.params.budgetId}
+                  categoryId={match.params.categoryId}
+                  currentMonth={currentMonth}
+                  onRefreshData={this.handleRefreshData}
+                  onRequestBudgetDetails={this.handleRequestBudgetDetails}
+                />
+              )}
+            />
+            <Route component={NotFound} />
+          </Switch>
+        </ErrorBoundary>
       </Container>
     );
   }
