@@ -1,8 +1,8 @@
 import get from "lodash/get";
 import keyBy from "lodash/keyBy";
 import moment from "moment";
-import { camelCaseKeys, getStorage, setStorage, upsertBy } from "./utils";
-import { formatCurrency } from "./utils";
+import { getStorage, setStorage, upsertBy } from "./utils";
+import { formatCurrency, camelCaseKeys } from "./utils";
 
 export const makeCachedCall = ({
   apiCall,
@@ -14,12 +14,12 @@ export const makeCachedCall = ({
   const cached = param ? get(cachedAll, param) : cachedAll;
 
   if (cached) {
-    return Promise.resolve(formatter(camelCaseKeys(cached)));
+    return Promise.resolve(formatter(cached));
   } else {
     return apiCall(param)
       .then(({ data }) => {
         setStorage(storageKey, param ? { ...cachedAll, [param]: data } : data);
-        return formatter(camelCaseKeys(data));
+        return formatter(data);
       })
       .catch(onFailure);
   }
@@ -34,7 +34,7 @@ export const sanitizeBudget = (
     "id"
   );
 
-  return {
+  return camelCaseKeys({
     ...budget,
     categories: budget.categories.map(c => {
       const mergedCategory = { ...c, ...categoriesFromMonth[c.id] };
@@ -50,7 +50,7 @@ export const sanitizeBudget = (
       ...t,
       amount: formatCurrency(t.amount)
     }))
-  };
+  });
 };
 
 const applyDeltas = (arr, deltas, key = "id", updater) =>

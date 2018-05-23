@@ -6,7 +6,11 @@ describe("sanitizeBudget", () => {
     categories: [{ id: "cat", activity: 1000, balance: 2000, budgeted: 3000 }],
     transactions: [{ amount: 1000 }],
     months: [
-      { month: "2018-05-01", categories: [{ id: "cat", balance: 5000 }] }
+      {
+        month: "2018-05-01",
+        categories: [{ id: "cat", balance: 5000 }],
+        age_of_money: 30
+      }
     ]
   };
 
@@ -18,6 +22,7 @@ describe("sanitizeBudget", () => {
       { id: "cat", activity: 1, balance: 5, budgeted: 3 }
     ]);
     expect(result.transactions).toEqual([{ amount: 1 }]);
+    expect(result.months[0]).toHaveProperty("ageOfMoney", 30);
   });
 });
 

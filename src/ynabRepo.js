@@ -53,6 +53,7 @@ export const initializeYnabApi = token => {
 
   getBudgets = makeCachedCall({
     apiCall: api.budgets.getBudgets.bind(api.budgets),
+    formatter: camelCaseKeys,
     storageKey: "ynab_budgets",
     onFailure: handleFailure
   });
