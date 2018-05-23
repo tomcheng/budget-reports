@@ -28,15 +28,11 @@ class Budgets extends Component {
       return <Loading />;
     }
 
-    return (
-      <div>
-        {budgets.map(({ id, name }) => (
-          <Link key={id} to={`/budgets/${id}`}>
-            {name}
-          </Link>
-        ))}
+    return budgets.map(({ id, name }) => (
+      <div key={id}>
+        <Link to={`/budgets/${id}`}>{name}</Link>
       </div>
-    );
+    ));
   }
 }
 

@@ -16,10 +16,21 @@ const Title = styled.div`
   font-weight: 600;
 `;
 
+const Actions = styled.div`
+  text-align: right;
+`;
+
+const UpdatedText = styled.div`
+  color: #888;
+  font-size: 11px;
+  line-height: 18px;
+  margin-top: 2px;
+`;
+
 const Header = ({ title, onRefreshData, budgetId }) => (
   <Container>
     <Title>{title}</Title>
-    <div>
+    <Actions>
       <button
         onClick={() => {
           onRefreshData(budgetId);
@@ -27,9 +38,11 @@ const Header = ({ title, onRefreshData, budgetId }) => (
       >
         Refresh
       </button>
-      Updated{" "}
-      {moment(getLastUpdated(budgetId) || undefined).fromNow()}
-    </div>
+      <UpdatedText>
+        Updated{" "}
+        {moment(getLastUpdated(budgetId) || undefined).fromNow()}
+      </UpdatedText>
+    </Actions>
   </Container>
 );
 
