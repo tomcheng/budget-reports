@@ -4,6 +4,7 @@ import sumBy from "lodash/sumBy";
 import AnimateHeight from "react-animate-height-auto";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import faChevronRight from "@fortawesome/fontawesome-free-solid/faChevronRight";
+import { Link } from "react-router-dom";
 import CategoryListItem from "./CategoryListItem";
 import ListItem from "./ListItem";
 import CategorySummary from "./CategorySummary";
@@ -48,13 +49,22 @@ class CategoryGroupListItem extends Component {
           }}
         >
           <div style={{ display: "flex", alignItems: "center" }}>
-            <div style={{ width: TOGGLE_ICON_SPACING, fontWeight: 400, color: "#888", fontSize: 10 }}>
+            <div
+              style={{
+                width: TOGGLE_ICON_SPACING,
+                fontWeight: 400,
+                color: "#888",
+                fontSize: 10
+              }}
+            >
               <FontAwesomeIcon
                 icon={faChevronRight}
                 transform={{ rotate: expanded ? 90 : 0 }}
               />
             </div>
-            {categoryGroup.name}
+            <Link to={`${currentUrl}/category-groups/${categoryGroup.id}`}>
+              {categoryGroup.name}
+            </Link>
           </div>
           <CategorySummary
             activity={sumBy(categories, "activity")}

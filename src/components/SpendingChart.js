@@ -52,7 +52,7 @@ const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
 
   return (
     <div>
-      <BudgetedLine>Budgeted: ${budgeted}</BudgetedLine>
+      <BudgetedLine>Budgeted: ${budgeted.toFixed(2)}</BudgetedLine>
       <Chart
         options={{
           chart: {

@@ -15,6 +15,7 @@ import NotFound from "./NotFound";
 import ErrorBoundary from "./ErrorBoundary";
 import Budgets from "./Budgets";
 import Budget from "./Budget";
+import CategoryGroup from "./CategoryGroup";
 import Category from "./Category";
 
 const Container = styled.div`
@@ -120,6 +121,20 @@ class App extends Component {
                   budgetId={match.params.budgetId}
                   currentUrl={match.url}
                   currentMonth={currentMonth}
+                  onRequestBudgetDetails={this.handleRequestBudgetDetails}
+                />
+              )}
+            />
+            <Route
+              path="/budgets/:budgetId/category-groups/:categoryGroupId"
+              exact
+              render={({ match }) => (
+                <CategoryGroup
+                  budget={budgetDetails[match.params.budgetId]}
+                  budgetId={match.params.budgetId}
+                  categoryGroupId={match.params.categoryGroupId}
+                  currentMonth={currentMonth}
+                  onRefreshData={this.handleRefreshData}
                   onRequestBudgetDetails={this.handleRequestBudgetDetails}
                 />
               )}
