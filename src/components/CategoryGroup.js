@@ -1,21 +1,12 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
 import keyBy from "lodash/keyBy";
 import sortBy from "lodash/sortBy";
 import sumBy from "lodash/sumBy";
 import Loading from "./Loading";
+import Header from "./Header";
 import SpendingChart from "./SpendingChart";
 import Transaction from "./Transaction";
-
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 60px;
-  padding: 0 20px;
-  font-weight: 600;
-`;
 
 class CategoryGroup extends Component {
   static propTypes = {
@@ -87,18 +78,11 @@ class CategoryGroup extends Component {
 
     return (
       <Fragment>
-        <Header>
-          <div>{categoryGroup.name}</div>
-          <div>
-            <button
-              onClick={() => {
-                onRefreshData(budgetId);
-              }}
-            >
-              Refresh Data
-            </button>
-          </div>
-        </Header>
+        <Header
+          title={categoryGroup.name}
+          budgetId={budgetId}
+          onRefreshData={onRefreshData}
+        />
         <div style={{ padding: "0 20px 20px" }}>
           <SpendingChart
             budgeted={sumBy(categories, "budgeted")}
