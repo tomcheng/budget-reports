@@ -121,6 +121,7 @@ class App extends Component {
                   budgetId={match.params.budgetId}
                   currentUrl={match.url}
                   currentMonth={currentMonth}
+                  onRefreshData={this.handleRefreshData}
                   onRequestBudgetDetails={this.handleRequestBudgetDetails}
                 />
               )}
