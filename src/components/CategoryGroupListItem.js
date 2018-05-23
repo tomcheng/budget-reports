@@ -62,15 +62,15 @@ class CategoryGroupListItem extends Component {
                 transform={{ rotate: expanded ? 90 : 0 }}
               />
             </div>
-            <Link to={`${currentUrl}/category-groups/${categoryGroup.id}`}>
-              {categoryGroup.name}
-            </Link>
+            {categoryGroup.name}
           </div>
-          <CategorySummary
-            activity={sumBy(categories, "activity")}
-            balance={sumBy(categories, "balance")}
-            monthProgress={monthProgress}
-          />
+          <Link to={`${currentUrl}/category-groups/${categoryGroup.id}`}>
+            <CategorySummary
+              activity={sumBy(categories, "activity")}
+              balance={sumBy(categories, "balance")}
+              monthProgress={monthProgress}
+            />
+          </Link>
         </ListItem>
         <AnimateHeight isExpanded={expanded}>
           {categories.map(category => (
