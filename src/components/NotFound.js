@@ -1,15 +1,6 @@
-import React, { Fragment } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import ErrorPage from "./ErrorPage";
 
-const NotFound = () => (
-  <Fragment>
-    <div>
-      Not Found
-    </div>
-    <div>
-      <Link to="/">Home</Link>
-    </div>
-  </Fragment>
-);
+const NotFound = () => <ErrorPage message="Page not found" />;
 
 export default NotFound;

@@ -12,6 +12,7 @@ import {
 } from "../ynabRepo";
 import Unauthorized from "./Unauthorized";
 import NotFound from "./NotFound";
+import ErrorBoundary from "./ErrorBoundary";
 import Budgets from "./Budgets";
 import Budget from "./Budget";
 import Category from "./Category";
@@ -113,13 +114,15 @@ class App extends Component {
             path="/budgets/:budgetId"
             exact
             render={({ match }) => (
-              <Budget
-                budget={budgetDetails[match.params.budgetId]}
-                budgetId={match.params.budgetId}
-                currentUrl={match.url}
-                currentMonth={currentMonth}
-                onRequestBudgetDetails={this.handleRequestBudgetDetails}
-              />
+              <ErrorBoundary>
+                <Budget
+                  budget={budgetDetails[match.params.budgetId]}
+                  budgetId={match.params.budgetId}
+                  currentUrl={match.url}
+                  currentMonth={currentMonth}
+                  onRequestBudgetDetails={this.handleRequestBudgetDetails}
+                />
+              </ErrorBoundary>
             )}
           />
           <Route
