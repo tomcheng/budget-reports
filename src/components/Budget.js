@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { getExpandedGroups, setExpandedGroups } from "../uiRepo";
+import Loading from "./Loading";
 import CategoryGroup from "./CategoryGroup";
 
 const GROUPS_TO_HIDE = [
@@ -12,6 +13,10 @@ const GROUPS_TO_HIDE = [
 
 class Budget extends Component {
   static propTypes = {
+    budgetId: PropTypes.string.isRequired,
+    currentMonth: PropTypes.string.isRequired,
+    currentUrl: PropTypes.string.isRequired,
+    onRequestBudgetDetails: PropTypes.func.isRequired,
     budget: PropTypes.shape({
       categoryGroups: PropTypes.arrayOf(
         PropTypes.shape({
@@ -22,16 +27,19 @@ class Budget extends Component {
         PropTypes.shape({
           categoryGroupId: PropTypes.string.isRequired
         })
-      ).isRequired,
-      id: PropTypes.string.isRequired
-    }).isRequired,
-    currentMonth: PropTypes.string.isRequired,
-    currentUrl: PropTypes.string.isRequired
+      ).isRequired
+    })
   };
 
   constructor(props) {
     super();
-    this.state = { expandedGroups: getExpandedGroups(props.budget.id) };
+    this.state = { expandedGroups: getExpandedGroups(props.budgetId) };
+  }
+
+  componentDidMount() {
+    if (!this.props.budget) {
+      this.props.onRequestBudgetDetails(this.props.budgetId);
+    }
   }
 
   handleToggleGroup = id => {
@@ -52,6 +60,10 @@ class Budget extends Component {
   render() {
     const { budget, currentUrl, currentMonth } = this.props;
     const { expandedGroups } = this.state;
+
+    if (!budget) {
+      return <Loading />;
+    }
 
     const daysInMonth = moment(currentMonth).daysInMonth();
     const dayOfMonth = parseInt(moment().format("D"), 10);

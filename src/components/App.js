@@ -3,9 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Route, Switch } from "react-router-dom";
 import moment from "moment";
-import get from "lodash/get";
 import keyBy from "lodash/keyBy";
-import sortBy from "lodash/sortBy";
 import {
   getBudgets,
   getBudget,
@@ -13,7 +11,6 @@ import {
   AUTHORIZE_URL
 } from "../ynabRepo";
 import Unauthorized from "./Unauthorized";
-import Loading from "./Loading";
 import NotFound from "./NotFound";
 import Budgets from "./Budgets";
 import Budget from "./Budget";
@@ -39,54 +36,42 @@ class App extends Component {
     budgetsLoaded: false,
     budgetIds: [],
     budgets: {},
+    budgetDetails: {},
     currentMonth: moment().format("YYYY-MM")
   };
 
-  componentDidMount() {
-    if (!this.props.isAuthorized) {
-      return;
-    }
-
+  handleRequestBudgets = callback => {
     getBudgets().then(({ budgets }) => {
       this.setState(
         {
           budgetsLoaded: true,
           budgetIds: budgets.map(b => b.id),
-          budgets: keyBy(budgets, "id"),
-          selectedBudgetId:
-            budgets.length === 1 ? get(budgets, [0, "id"]) : null
+          budgets: keyBy(budgets, "id")
         },
-        () => {
-          budgets.forEach(({ id }) => {
-            getBudget(id).then(budget => {
-              this.setState(state => ({
-                ...state,
-                budgets: {
-                  ...state.budgets,
-                  [id]: {
-                    ...state.budgets[id],
-                    ...budget,
-                    detailsLoaded: true
-                  }
-                }
-              }));
-            });
-          });
-        }
+        callback
       );
     });
-  }
+  };
+
+  handleRequestBudgetDetails = id => {
+    getBudget(id).then(budget => {
+      this.setState(state => ({
+        ...state,
+        budgetDetails: {
+          ...state.budgetDetails,
+          [id]: budget
+        }
+      }));
+    });
+  };
 
   handleRefreshData = budgetId => {
     getUpdatedBudget(budgetId).then(budget => {
       this.setState(state => ({
         ...state,
-        budgets: {
-          ...state.budgets,
-          [budgetId]: {
-            ...state.budgets[budgetId],
-            ...budget
-          }
+        budgetDetails: {
+          ...state.budgetDetails,
+          [budgetId]: budget
         }
       }));
     });
@@ -98,14 +83,16 @@ class App extends Component {
 
   render() {
     const { isAuthorized } = this.props;
-    const { budgetsLoaded, budgetIds, budgets, currentMonth } = this.state;
+    const {
+      budgetsLoaded,
+      budgetIds,
+      budgets,
+      budgetDetails,
+      currentMonth
+    } = this.state;
 
     if (!isAuthorized) {
       return <Unauthorized onAuthorize={this.handleAuthorize} />;
-    }
-
-    if (!budgetsLoaded) {
-      return <Loading />;
     }
 
     return (
@@ -115,74 +102,39 @@ class App extends Component {
             path="/"
             exact
             render={() => (
-              <Budgets budgets={budgetIds.map(id => budgets[id])} />
+              <Budgets
+                budgetsLoaded={budgetsLoaded}
+                budgets={budgetIds.map(id => budgets[id])}
+                onRequestBudgets={this.handleRequestBudgets}
+              />
             )}
           />
           <Route
             path="/budgets/:budgetId"
             exact
-            render={({ match }) => {
-              const budget = budgets[match.params.budgetId];
-
-              if (!budget) {
-                return <NotFound />;
-              }
-
-              if (!budget.detailsLoaded) {
-                return <Loading />;
-              }
-
-              return (
-                <Budget
-                  budget={budget}
-                  currentUrl={match.url}
-                  currentMonth={currentMonth}
-                />
-              );
-            }}
+            render={({ match }) => (
+              <Budget
+                budget={budgetDetails[match.params.budgetId]}
+                budgetId={match.params.budgetId}
+                currentUrl={match.url}
+                currentMonth={currentMonth}
+                onRequestBudgetDetails={this.handleRequestBudgetDetails}
+              />
+            )}
           />
           <Route
             path="/budgets/:budgetId/categories/:categoryId"
             exact
-            render={({ match }) => {
-              const { budgetId, categoryId } = match.params;
-              const budget = budgets[budgetId];
-
-              if (!budget) {
-                return <NotFound />;
-              }
-
-              if (!budget.detailsLoaded) {
-                return <Loading />;
-              }
-
-              const category = budget.categories.find(c => c.id === categoryId);
-
-              if (!category) {
-                return <NotFound />;
-              }
-
-              const transactions = sortBy(
-                budget.transactions.filter(
-                  transaction =>
-                    transaction.categoryId === categoryId &&
-                    transaction.date.slice(0, 7) === currentMonth
-                ),
-                "date"
-              ).reverse();
-
-              return (
-                <Category
-                  category={category}
-                  currentMonth={currentMonth}
-                  payees={budget.payees}
-                  transactions={transactions}
-                  onRefreshData={() => {
-                    this.handleRefreshData(budgetId);
-                  }}
-                />
-              );
-            }}
+            render={({ match }) => (
+              <Category
+                budget={budgetDetails[match.params.budgetId]}
+                budgetId={match.params.budgetId}
+                categoryId={match.params.categoryId}
+                currentMonth={currentMonth}
+                onRefreshData={this.handleRefreshData}
+                onRequestBudgetDetails={this.handleRequestBudgetDetails}
+              />
+            )}
           />
           <Route component={NotFound} />
         </Switch>
