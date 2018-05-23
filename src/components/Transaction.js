@@ -2,12 +2,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import moment from "moment";
+import Amount from "./Amount";
 
 const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 5px 0 10px;
+  padding: 8px 0;
   
   & + & {
     border-top: 1px dotted #ddd;
@@ -15,8 +16,9 @@ const Container = styled.div`
 `;
 
 const Date = styled.div`
+  margin-top: -4px;
   font-size: 12px;
-  line-height: 14px;
+  line-height: 20px;
   color: #aaa;
 `;
 
@@ -26,7 +28,7 @@ const Transaction = ({ payee, date, amount }) => (
       <div>{payee.name}</div>
       <Date>{moment(date).format("dddd, MMM D")}</Date>
     </div>
-    <div>{-amount}</div>
+    <Amount amount={amount} />
   </Container>
 );
 
