@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { getExpandedGroups, setExpandedGroups } from "../uiRepo";
 import Loading from "./Loading";
-import Header from "./Header";
+import MainLayout from "./MainLayout";
 import CategoryGroupListItem from "./CategoryGroupListItem";
 
 const GROUPS_TO_HIDE = [
@@ -31,7 +31,7 @@ class Budget extends Component {
         })
       ).isRequired,
       name: PropTypes.string.isRequired
-    }),
+    })
   };
 
   constructor(props) {
@@ -72,12 +72,11 @@ class Budget extends Component {
     const dayOfMonth = parseInt(moment().format("D"), 10);
 
     return (
-      <Fragment>
-        <Header
-          title={budget.name}
-          budgetId={budget.id}
-          onRefreshData={onRefreshData}
-        />
+      <MainLayout
+        title={budget.name}
+        onRefreshData={onRefreshData}
+        budgetId={budget.id}
+      >
         {budget.categoryGroups
           .filter(g => !GROUPS_TO_HIDE.includes(g.name))
           .map(categoryGroup => (
@@ -93,7 +92,7 @@ class Budget extends Component {
               monthProgress={(dayOfMonth - 0.5) / daysInMonth}
             />
           ))}
-      </Fragment>
+      </MainLayout>
     );
   }
 }

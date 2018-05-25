@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import keyBy from "lodash/keyBy";
 import sortBy from "lodash/sortBy";
 import Loading from "./Loading";
-import Header from "./Header";
+import MainLayout from "./MainLayout";
 import SpendingChart from "./SpendingChart";
 import Transaction from "./Transaction";
 
@@ -71,12 +71,11 @@ class Category extends Component {
     ).reverse();
 
     return (
-      <Fragment>
-        <Header
-          title={category.name}
-          budgetId={budgetId}
-          onRefreshData={onRefreshData}
-        />
+      <MainLayout
+        title={category.name}
+        budgetId={budgetId}
+        onRefreshData={onRefreshData}
+      >
         <div style={{ padding: "0 20px 20px" }}>
           <SpendingChart
             budgeted={category.budgeted}
@@ -94,7 +93,7 @@ class Category extends Component {
             />
           ))}
         </div>
-      </Fragment>
+      </MainLayout>
     );
   }
 }
