@@ -27,16 +27,17 @@ const Marker = styled.div`
   left: ${props => props.indicator * CHART_WIDTH}px;
 `;
 
-const SummaryChart = ({ progress, indicator }) => (
+const SummaryChart = ({ activity, balance, indicator }) => (
   <Container>
-    <Progress progress={progress} />
+    <Progress progress={-activity / (balance - activity || 1)} />
     <Marker indicator={indicator} />
   </Container>
 );
 
 SummaryChart.propTypes = {
-  indicator: PropTypes.number.isRequired,
-  progress: PropTypes.number.isRequired
+  activity: PropTypes.number.isRequired,
+  balance: PropTypes.number.isRequired,
+  indicator: PropTypes.number.isRequired
 };
 
 export default SummaryChart;

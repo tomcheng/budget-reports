@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import moment from "moment";
+import { SecondaryText, MinorText } from "./typeComponents";
 import Amount from "./Amount";
 
 const Container = styled.div`
@@ -9,26 +10,25 @@ const Container = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 8px 0;
-  
+
   & + & {
     border-top: 1px dotted #ddd;
   }
 `;
 
-const Date = styled.div`
+const Date = styled(MinorText)`
   margin-top: -4px;
-  font-size: 12px;
-  line-height: 20px;
-  color: #aaa;
 `;
 
 const Transaction = ({ payee, date, amount }) => (
   <Container>
     <div>
-      <div>{payee.name}</div>
+      <SecondaryText>{payee.name}</SecondaryText>
       <Date>{moment(date).format("dddd, MMM D")}</Date>
     </div>
-    <Amount amount={amount} />
+    <SecondaryText>
+      <Amount amount={amount} />
+    </SecondaryText>
   </Container>
 );
 

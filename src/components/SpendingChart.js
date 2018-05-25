@@ -9,21 +9,11 @@ import head from "lodash/head";
 import last from "lodash/last";
 import moment from "moment";
 import { primaryColor } from "../styleVariables";
+import { MinorText } from "./typeComponents";
 import Chart from "./Chart";
 
-const Label = styled.div`
-  font-size: 11px;
-  line-height: 14px;
-  color: #888;
-`;
-
-const BudgetedLine = styled(Label)`
-  text-align: right;
-`;
-
-const DateLabels = styled(Label)`
+const DateLabels = styled.div`
   border-top: 1px solid #ddd;
-  padding-top: 5px;
   display: flex;
   justify-content: space-between;
 `;
@@ -52,7 +42,6 @@ const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
 
   return (
     <div style={{ margin: 20 }}>
-      <BudgetedLine>Budgeted: ${budgeted.toFixed(2)}</BudgetedLine>
       <Chart
         options={{
           chart: {
@@ -87,8 +76,8 @@ const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
         }}
       />
       <DateLabels>
-        <div>{head(dates).format("MMM D")}</div>
-        <div>{last(dates).format("MMM D")}</div>
+        <MinorText>{head(dates).format("MMM D")}</MinorText>
+        <MinorText>{last(dates).format("MMM D")}</MinorText>
       </DateLabels>
     </div>
   );

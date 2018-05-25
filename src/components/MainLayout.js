@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import moment from "moment/moment";
 import { getLastUpdated } from "../uiRepo";
+import { PageTitle, MinorText } from "./typeComponents";
 
 const Container = styled.div`
   height: 100vh;
@@ -21,13 +22,6 @@ const Header = styled.div`
   border-bottom: 1px solid #bbb;
 `;
 
-const UpdatedText = styled.div`
-  color: #888;
-  font-size: 11px;
-  line-height: 18px;
-  margin-top: 2px;
-`;
-
 const Content = styled.div`
   flex-grow: 1;
   overflow-y: auto;
@@ -36,7 +30,7 @@ const Content = styled.div`
 const MainLayout = ({ title, onRefreshBudget, budgetId, children }) => (
   <Container>
     <Header>
-      <div style={{ fontWeight: 600 }}>{title}</div>
+      <PageTitle>{title}</PageTitle>
       <div style={{ textAlign: "right" }}>
         <button
           onClick={() => {
@@ -45,9 +39,9 @@ const MainLayout = ({ title, onRefreshBudget, budgetId, children }) => (
         >
           Refresh
         </button>
-        <UpdatedText>
+        <MinorText>
           Updated {moment(getLastUpdated(budgetId) || undefined).fromNow()}
-        </UpdatedText>
+        </MinorText>
       </div>
     </Header>
     <Content>{children}</Content>

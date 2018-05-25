@@ -1,8 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import round from "lodash/round";
 import { Link } from "react-router-dom";
-import CategorySummary from "./CategorySummary";
+import { SecondaryText } from "./typeComponents";
+import SummaryChart from "./SummaryChart";
 
 const ListItem = styled.div`
   display: flex;
@@ -11,20 +13,35 @@ const ListItem = styled.div`
   height: 48px;
   padding: 0 20px;
   border-bottom: 0;
-  font-size: 13px;
-  color: #666;
   user-select: none;
 `;
 
-const CategoryListItem = ({ category, currentUrl, leftSpacing, monthProgress }) => (
+const CategoryListItem = ({
+  category,
+  currentUrl,
+  leftSpacing,
+  monthProgress
+}) => (
   <Link to={`${currentUrl}/categories/${category.id}`}>
     <ListItem>
-      <div style={{ paddingLeft: leftSpacing }}>{category.name}</div>
-      <CategorySummary
-        activity={category.activity}
-        balance={category.balance}
-        monthProgress={monthProgress}
-      />
+      <SecondaryText style={{ paddingLeft: leftSpacing }}>
+        {category.name}
+      </SecondaryText>
+      <div
+        style={{
+          width: 160,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between"
+        }}
+      >
+        <SummaryChart
+          activity={category.activity}
+          balance={category.balance}
+          indicator={monthProgress}
+        />
+        <SecondaryText>{round(category.balance)}</SecondaryText>
+      </div>
     </ListItem>
   </Link>
 );

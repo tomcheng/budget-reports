@@ -4,6 +4,7 @@ import keyBy from "lodash/keyBy";
 import sortBy from "lodash/sortBy";
 import GetBudget from "./GetBudget";
 import MainLayout from "./MainLayout";
+import TopNumbers from "./TopNumbers";
 import SpendingChart from "./SpendingChart";
 import Transactions from "./Transactions";
 
@@ -40,6 +41,7 @@ const Category = ({
           budgetId={budgetId}
           onRefreshBudget={onRefreshBudget}
         >
+          <TopNumbers budgeted={category.budgeted} spent={-category.activity} available={category.balance} />
           <SpendingChart
             budgeted={category.budgeted}
             currentMonth={currentMonth}
@@ -61,6 +63,8 @@ Category.propTypes = {
   budget: PropTypes.shape({
     categories: PropTypes.arrayOf(
       PropTypes.shape({
+        activity: PropTypes.number.isRequired,
+        balance: PropTypes.number.isRequired,
         budgeted: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired
       })

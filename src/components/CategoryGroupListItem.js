@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import round from "lodash/round";
 import sumBy from "lodash/sumBy";
 import AnimateHeight from "react-animate-height-auto";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import faChevronRight from "@fortawesome/fontawesome-free-solid/faChevronRight";
 import { Link } from "react-router-dom";
+import { StrongText } from "./typeComponents";
 import CategoryListItem from "./CategoryListItem";
-import CategorySummary from "./CategorySummary";
+import SummaryChart from "./SummaryChart";
 
 const TOGGLE_ICON_SPACING = 20;
 
@@ -55,11 +57,12 @@ class CategoryGroupListItem extends Component {
       monthProgress,
       onToggleGroup
     } = this.props;
+    const activity = sumBy(categories, "activity");
+    const balance = sumBy(categories, "balance");
 
     return (
       <Container>
         <GroupArea
-          style={{ fontWeight: 600 }}
           onClick={() => {
             onToggleGroup(categoryGroup.id);
           }}
@@ -78,14 +81,24 @@ class CategoryGroupListItem extends Component {
                 transform={{ rotate: expanded ? 90 : 0 }}
               />
             </div>
-            {categoryGroup.name}
+            <StrongText>{categoryGroup.name}</StrongText>
           </div>
           <Link to={`${currentUrl}/category-groups/${categoryGroup.id}`}>
-            <CategorySummary
-              activity={sumBy(categories, "activity")}
-              balance={sumBy(categories, "balance")}
-              monthProgress={monthProgress}
-            />
+            <div
+              style={{
+                width: 160,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between"
+              }}
+            >
+              <SummaryChart
+                activity={activity}
+                balance={balance}
+                indicator={monthProgress}
+              />
+              <StrongText>{round(balance)}</StrongText>
+            </div>
           </Link>
         </GroupArea>
         <AnimateHeight isExpanded={expanded}>
