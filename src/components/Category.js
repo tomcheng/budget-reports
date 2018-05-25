@@ -5,7 +5,7 @@ import sortBy from "lodash/sortBy";
 import GetBudget from "./GetBudget";
 import MainLayout from "./MainLayout";
 import SpendingChart from "./SpendingChart";
-import Transaction from "./Transaction";
+import Transactions from "./Transactions";
 
 const Category = ({
   budget,
@@ -40,23 +40,12 @@ const Category = ({
           budgetId={budgetId}
           onRefreshBudget={onRefreshBudget}
         >
-          <div style={{ padding: "0 20px 20px" }}>
-            <SpendingChart
-              budgeted={category.budgeted}
-              currentMonth={currentMonth}
-              transactions={transactions}
-            />
-          </div>
-          <div style={{ padding: "0 20px 20px" }}>
-            {transactions.map(({ id, payeeId, date, amount }) => (
-              <Transaction
-                key={id}
-                payee={payees[payeeId]}
-                date={date}
-                amount={amount}
-              />
-            ))}
-          </div>
+          <SpendingChart
+            budgeted={category.budgeted}
+            currentMonth={currentMonth}
+            transactions={transactions}
+          />
+          <Transactions transactions={transactions} payees={payees} />
         </MainLayout>
       );
     }}

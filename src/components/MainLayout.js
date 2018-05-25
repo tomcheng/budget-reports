@@ -18,6 +18,7 @@ const Header = styled.div`
   justify-content: space-between;
   height: 60px;
   padding: 0 20px;
+  border-bottom: 1px solid #bbb;
 `;
 
 const UpdatedText = styled.div`
