@@ -2,26 +2,30 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import ListItem from "./ListItem";
 import CategorySummary from "./CategorySummary";
 
-const StyledListItem = styled(ListItem)`
-  color: #666;
-  font-size: 13px;
+const ListItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   height: 48px;
-  border-top: 0;
+  padding: 0 20px;
+  border-bottom: 0;
+  font-size: 13px;
+  color: #666;
+  user-select: none;
 `;
 
 const CategoryListItem = ({ category, currentUrl, leftSpacing, monthProgress }) => (
   <Link to={`${currentUrl}/categories/${category.id}`}>
-    <StyledListItem>
+    <ListItem>
       <div style={{ paddingLeft: leftSpacing }}>{category.name}</div>
       <CategorySummary
         activity={category.activity}
         balance={category.balance}
         monthProgress={monthProgress}
       />
-    </StyledListItem>
+    </ListItem>
   </Link>
 );
 

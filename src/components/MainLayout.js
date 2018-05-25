@@ -1,16 +1,56 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Header from "./Header";
+import styled from "styled-components";
+import moment from "moment/moment";
+import { getLastUpdated } from "../uiRepo";
+
+const Container = styled.div`
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+`;
+
+const Header = styled.div`
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 20px;
+`;
+
+const UpdatedText = styled.div`
+  color: #888;
+  font-size: 11px;
+  line-height: 18px;
+  margin-top: 2px;
+`;
+
+const Content = styled.div`
+  flex-grow: 1;
+  overflow-y: auto;
+`;
 
 const MainLayout = ({ title, onRefreshBudget, budgetId, children }) => (
-  <div>
-    <Header
-      title={title}
-      onRefreshBudget={onRefreshBudget}
-      budgetId={budgetId}
-    />
-    {children}
-  </div>
+  <Container>
+    <Header>
+      <div style={{ fontWeight: 600 }}>{title}</div>
+      <div style={{ textAlign: "right" }}>
+        <button
+          onClick={() => {
+            onRefreshBudget(budgetId);
+          }}
+        >
+          Refresh
+        </button>
+        <UpdatedText>
+          Updated {moment(getLastUpdated(budgetId) || undefined).fromNow()}
+        </UpdatedText>
+      </div>
+    </Header>
+    <Content>{children}</Content>
+  </Container>
 );
 
 MainLayout.propTypes = {

@@ -1,15 +1,31 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 import sumBy from "lodash/sumBy";
 import AnimateHeight from "react-animate-height-auto";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import faChevronRight from "@fortawesome/fontawesome-free-solid/faChevronRight";
 import { Link } from "react-router-dom";
 import CategoryListItem from "./CategoryListItem";
-import ListItem from "./ListItem";
 import CategorySummary from "./CategorySummary";
 
 const TOGGLE_ICON_SPACING = 20;
+
+const Container = styled.div`
+  & + & {
+    border-top: 1px solid #eee;
+  }
+`;
+
+const GroupArea = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  padding: 0 20px;
+  white-space: pre;
+  user-select: none;
+`;
 
 class CategoryGroupListItem extends Component {
   static propTypes = {
@@ -41,8 +57,8 @@ class CategoryGroupListItem extends Component {
     } = this.props;
 
     return (
-      <Fragment>
-        <ListItem
+      <Container>
+        <GroupArea
           style={{ fontWeight: 600 }}
           onClick={() => {
             onToggleGroup(categoryGroup.id);
@@ -71,7 +87,7 @@ class CategoryGroupListItem extends Component {
               monthProgress={monthProgress}
             />
           </Link>
-        </ListItem>
+        </GroupArea>
         <AnimateHeight isExpanded={expanded}>
           {categories.map(category => (
             <CategoryListItem
@@ -83,7 +99,7 @@ class CategoryGroupListItem extends Component {
             />
           ))}
         </AnimateHeight>
-      </Fragment>
+      </Container>
     );
   }
 }
