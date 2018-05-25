@@ -41,7 +41,11 @@ const Category = ({
           budgetId={budgetId}
           onRefreshBudget={onRefreshBudget}
         >
-          <TopNumbers budgeted={category.budgeted} spent={-category.activity} available={category.balance} />
+          <TopNumbers
+            budgeted={category.budgeted}
+            spent={-category.activity}
+            available={category.balance}
+          />
           <SpendingChart
             budgeted={category.budgeted}
             currentMonth={currentMonth}

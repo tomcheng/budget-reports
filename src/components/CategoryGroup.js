@@ -5,6 +5,7 @@ import sortBy from "lodash/sortBy";
 import sumBy from "lodash/sumBy";
 import GetBudget from "./GetBudget";
 import MainLayout from "./MainLayout";
+import TopNumbers from "./TopNumbers";
 import SpendingChart from "./SpendingChart";
 import Transactions from "./Transactions";
 
@@ -40,12 +41,17 @@ const CategoryGroup = ({
         "date"
       ).reverse();
 
+      const budgeted = sumBy(categories, "budgeted");
+      const spent = -sumBy(categories, "activity");
+      const available = sumBy(categories, "balance");
+
       return (
         <MainLayout
           title={categoryGroup.name}
           budgetId={budgetId}
           onRefreshBudget={onRefreshBudget}
         >
+          <TopNumbers budgeted={budgeted} spent={spent} available={available} />
           <SpendingChart
             budgeted={sumBy(categories, "budgeted")}
             currentMonth={currentMonth}
@@ -67,6 +73,8 @@ CategoryGroup.propTypes = {
   budget: PropTypes.shape({
     categories: PropTypes.arrayOf(
       PropTypes.shape({
+        activity: PropTypes.number.isRequired,
+        balance: PropTypes.number.isRequired,
         budgeted: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired
       })
