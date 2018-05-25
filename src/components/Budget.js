@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { getExpandedGroups, setExpandedGroups } from "../uiRepo";
-import Loading from "./Loading";
+import GetBudget from "./GetBudget";
 import MainLayout from "./MainLayout";
 import CategoryGroupListItem from "./CategoryGroupListItem";
 
@@ -17,8 +17,8 @@ class Budget extends Component {
     budgetId: PropTypes.string.isRequired,
     currentMonth: PropTypes.string.isRequired,
     currentUrl: PropTypes.string.isRequired,
-    onRefreshData: PropTypes.func.isRequired,
-    onRequestBudgetDetails: PropTypes.func.isRequired,
+    onRefreshBudget: PropTypes.func.isRequired,
+    onRequestBudget: PropTypes.func.isRequired,
     budget: PropTypes.shape({
       categoryGroups: PropTypes.arrayOf(
         PropTypes.shape({
@@ -39,12 +39,6 @@ class Budget extends Component {
     this.state = { expandedGroups: getExpandedGroups(props.budgetId) };
   }
 
-  componentDidMount() {
-    if (!this.props.budget) {
-      this.props.onRequestBudgetDetails(this.props.budgetId);
-    }
-  }
-
   handleToggleGroup = id => {
     this.setState(
       state => ({
@@ -61,38 +55,49 @@ class Budget extends Component {
   };
 
   render() {
-    const { budget, currentUrl, currentMonth, onRefreshData } = this.props;
+    const {
+      budget,
+      budgetId,
+      currentUrl,
+      currentMonth,
+      onRefreshBudget,
+      onRequestBudget
+    } = this.props;
     const { expandedGroups } = this.state;
-
-    if (!budget) {
-      return <Loading />;
-    }
 
     const daysInMonth = moment(currentMonth).daysInMonth();
     const dayOfMonth = parseInt(moment().format("D"), 10);
 
     return (
-      <MainLayout
-        title={budget.name}
-        onRefreshData={onRefreshData}
-        budgetId={budget.id}
+      <GetBudget
+        budgetId={budgetId}
+        budgetLoaded={!!budget}
+        onRequestBudget={onRequestBudget}
       >
-        {budget.categoryGroups
-          .filter(g => !GROUPS_TO_HIDE.includes(g.name))
-          .map(categoryGroup => (
-            <CategoryGroupListItem
-              key={categoryGroup.id}
-              categoryGroup={categoryGroup}
-              categories={budget.categories.filter(
-                c => c.categoryGroupId === categoryGroup.id
-              )}
-              currentUrl={currentUrl}
-              expanded={!!expandedGroups[categoryGroup.id]}
-              onToggleGroup={this.handleToggleGroup}
-              monthProgress={(dayOfMonth - 0.5) / daysInMonth}
-            />
-          ))}
-      </MainLayout>
+        {() => (
+          <MainLayout
+            title={budget.name}
+            onRefreshBudget={onRefreshBudget}
+            budgetId={budget.id}
+          >
+            {budget.categoryGroups
+              .filter(g => !GROUPS_TO_HIDE.includes(g.name))
+              .map(categoryGroup => (
+                <CategoryGroupListItem
+                  key={categoryGroup.id}
+                  categoryGroup={categoryGroup}
+                  categories={budget.categories.filter(
+                    c => c.categoryGroupId === categoryGroup.id
+                  )}
+                  currentUrl={currentUrl}
+                  expanded={!!expandedGroups[categoryGroup.id]}
+                  onToggleGroup={this.handleToggleGroup}
+                  monthProgress={(dayOfMonth - 0.5) / daysInMonth}
+                />
+              ))}
+          </MainLayout>
+        )}
+      </GetBudget>
     );
   }
 }

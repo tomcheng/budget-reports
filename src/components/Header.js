@@ -27,20 +27,19 @@ const UpdatedText = styled.div`
   margin-top: 2px;
 `;
 
-const Header = ({ title, onRefreshData, budgetId }) => (
+const Header = ({ title, onRefreshBudget, budgetId }) => (
   <Container>
     <Title>{title}</Title>
     <Actions>
       <button
         onClick={() => {
-          onRefreshData(budgetId);
+          onRefreshBudget(budgetId);
         }}
       >
         Refresh
       </button>
       <UpdatedText>
-        Updated{" "}
-        {moment(getLastUpdated(budgetId) || undefined).fromNow()}
+        Updated {moment(getLastUpdated(budgetId) || undefined).fromNow()}
       </UpdatedText>
     </Actions>
   </Container>
@@ -49,7 +48,7 @@ const Header = ({ title, onRefreshData, budgetId }) => (
 Header.propTypes = {
   budgetId: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  onRefreshData: PropTypes.func.isRequired
+  onRefreshBudget: PropTypes.func.isRequired
 };
 
 export default Header;

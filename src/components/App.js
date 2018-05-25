@@ -55,7 +55,7 @@ class App extends Component {
     });
   };
 
-  handleRequestBudgetDetails = id => {
+  handleRequestBudget = id => {
     getBudget(id).then(budget => {
       this.setState(state => ({
         ...state,
@@ -67,13 +67,13 @@ class App extends Component {
     });
   };
 
-  handleRefreshData = budgetId => {
-    getUpdatedBudget(budgetId).then(budget => {
+  handleRefreshBudget = id => {
+    getUpdatedBudget(id).then(budget => {
       this.setState(state => ({
         ...state,
         budgetDetails: {
           ...state.budgetDetails,
-          [budgetId]: budget
+          [id]: budget
         }
       }));
     });
@@ -121,8 +121,8 @@ class App extends Component {
                   budgetId={match.params.budgetId}
                   currentUrl={match.url}
                   currentMonth={currentMonth}
-                  onRefreshData={this.handleRefreshData}
-                  onRequestBudgetDetails={this.handleRequestBudgetDetails}
+                  onRefreshBudget={this.handleRefreshBudget}
+                  onRequestBudget={this.handleRequestBudget}
                 />
               )}
             />
@@ -135,8 +135,8 @@ class App extends Component {
                   budgetId={match.params.budgetId}
                   categoryGroupId={match.params.categoryGroupId}
                   currentMonth={currentMonth}
-                  onRefreshData={this.handleRefreshData}
-                  onRequestBudgetDetails={this.handleRequestBudgetDetails}
+                  onRefreshBudget={this.handleRefreshBudget}
+                  onRequestBudget={this.handleRequestBudget}
                 />
               )}
             />
@@ -149,8 +149,8 @@ class App extends Component {
                   budgetId={match.params.budgetId}
                   categoryId={match.params.categoryId}
                   currentMonth={currentMonth}
-                  onRefreshData={this.handleRefreshData}
-                  onRequestBudgetDetails={this.handleRequestBudgetDetails}
+                  onRefreshBudget={this.handleRefreshBudget}
+                  onRequestBudget={this.handleRequestBudget}
                 />
               )}
             />
