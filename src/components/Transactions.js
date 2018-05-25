@@ -1,17 +1,25 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Transaction from "./Transaction";
+import { StrongText, SecondaryText } from "./typeComponents";
 
 const Transactions = ({ transactions, payees }) => (
   <div style={{ margin: 20 }}>
-    {transactions.map(({ id, payeeId, date, amount }) => (
-      <Transaction
-        key={id}
-        payee={payees[payeeId]}
-        date={date}
-        amount={amount}
-      />
-    ))}
+    <StrongText>Transactions</StrongText>
+    {transactions.length ? (
+      transactions.map(({ id, payeeId, date, amount }) => (
+        <Transaction
+          key={id}
+          payee={payees[payeeId]}
+          date={date}
+          amount={amount}
+        />
+      ))
+    ) : (
+      <SecondaryText style={{ textAlign: "center", margin: 10 }}>
+        No transactions this month
+      </SecondaryText>
+    )}
   </div>
 );
 
