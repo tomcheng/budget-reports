@@ -39,6 +39,12 @@ const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
   const lineData = dates.map(
     (_, index) => index / (dates.length - 1) * budgeted
   );
+  const firstDayOfWeek = parseInt(dates[0].format("d"), 10);
+  const plotBands = range(6).map(num => ({
+    color: "#fafafa",
+    from: num * 7 - 1.5 - firstDayOfWeek,
+    to: num * 7 + 0.5 - firstDayOfWeek
+  }));
 
   return (
     <div style={{ margin: 20 }}>
@@ -52,7 +58,11 @@ const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
           legend: { enabled: false },
           title: { text: "" },
           subtitle: { text: "" },
-          xAxis: { visible: false },
+          xAxis: {
+            labels: { enabled: false },
+            plotBands,
+            tickLength: 0
+          },
           yAxis: { visible: false, endOnTick: false },
           tooltip: { enabled: false },
           series: [
