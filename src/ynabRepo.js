@@ -23,7 +23,7 @@ export let getUpdatedBudget = null;
 export const getAuthorizeToken = () => {
   if (window.location.hash[1] === "/") {
     // It's probably a route
-    return sessionStorage.getItem(TOKEN_STORAGE_KEY);
+    return localStorage.getItem(TOKEN_STORAGE_KEY);
   }
 
   const search = window.location.hash
@@ -32,7 +32,7 @@ export const getAuthorizeToken = () => {
     .replace(/=/g, '":"');
 
   if (!search) {
-    return sessionStorage.getItem(TOKEN_STORAGE_KEY);
+    return localStorage.getItem(TOKEN_STORAGE_KEY);
   }
 
   const params = JSON.parse(
@@ -41,7 +41,7 @@ export const getAuthorizeToken = () => {
   );
   const token = params["access_token"];
 
-  sessionStorage.setItem(TOKEN_STORAGE_KEY, token);
+  localStorage.setItem(TOKEN_STORAGE_KEY, token);
   window.location.hash = "";
 
   return token;
@@ -49,7 +49,7 @@ export const getAuthorizeToken = () => {
 
 const handleFailure = () => {
   // TODO: Don't assume expired auth
-  sessionStorage.removeItem(TOKEN_STORAGE_KEY);
+  localStorage.removeItem(TOKEN_STORAGE_KEY);
   window.location.reload();
 };
 
