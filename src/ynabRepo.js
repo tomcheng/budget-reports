@@ -115,7 +115,7 @@ export const initializeYnabApi = token => {
         setStorage("ynab_budget_details", newDetails);
         setLastUpdated(id);
 
-        return sanitizeBudget(camelCaseKeys(newDetails[id].budget));
+        return sanitizeBudget(newDetails[id].budget);
       })
       .catch(handleFailure);
   };

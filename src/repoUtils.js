@@ -1,4 +1,7 @@
+import flatMap from "lodash/flatMap";
 import keyBy from "lodash/keyBy";
+import omit from "lodash/omit";
+import uniq from "lodash/uniq";
 import moment from "moment";
 import { upsertBy } from "./utils";
 import { formatCurrency, camelCaseKeys } from "./utils";
@@ -10,6 +13,9 @@ export const sanitizeBudget = (
   const categoriesFromMonth = keyBy(
     budget.months.find(m => m.month === currentMonth + "-01").categories,
     "id"
+  );
+  const transactionIdsFromSub = uniq(
+    budget.subtransactions.map(s => s.transaction_id)
   );
 
   return camelCaseKeys({
@@ -24,10 +30,22 @@ export const sanitizeBudget = (
       };
     }),
     payees: keyBy(budget.payees, "id"),
-    transactions: budget.transactions.map(t => ({
-      ...t,
-      amount: formatCurrency(t.amount)
-    }))
+    transactions: flatMap(
+      budget.transactions,
+      t =>
+        transactionIdsFromSub.includes(t.id)
+          ? budget.subtransactions
+              .filter(s => s.transaction_id === t.id)
+              .map(s =>
+                omit({ ...t, ...s, amount: formatCurrency(s.amount) }, [
+                  "transaction_id"
+                ])
+              )
+          : {
+              ...t,
+              amount: formatCurrency(t.amount)
+            }
+    )
   });
 };
 

@@ -4,7 +4,24 @@ describe("sanitizeBudget", () => {
   const budget = {
     payees: [{ id: "foo" }],
     categories: [{ id: "cat", activity: 1000, balance: 2000, budgeted: 3000 }],
-    transactions: [{ amount: 1000 }],
+    subtransactions: [
+      {
+        id: "sub-1",
+        transaction_id: "trans-2",
+        amount: 1000,
+        category_id: "cat-3"
+      },
+      {
+        id: "sub-2",
+        transaction_id: "trans-2",
+        amount: 1000,
+        category_id: "cat-4"
+      }
+    ],
+    transactions: [
+      { id: "trans-1", amount: 1000, category_id: "cat-1" },
+      { id: "trans-2", amount: 2000, category_id: "cat-2" }
+    ],
     months: [
       {
         month: "2018-05-01",
@@ -21,7 +38,11 @@ describe("sanitizeBudget", () => {
     expect(result.categories).toEqual([
       { id: "cat", activity: 1, balance: 5, budgeted: 3 }
     ]);
-    expect(result.transactions).toEqual([{ amount: 1 }]);
+    expect(result.transactions).toEqual([
+      { id: "trans-1", amount: 1, categoryId: "cat-1" },
+      { id: "sub-1", amount: 1, categoryId: "cat-3" },
+      { id: "sub-2", amount: 1, categoryId: "cat-4" }
+    ]);
     expect(result.months[0]).toHaveProperty("ageOfMoney", 30);
   });
 });
