@@ -41,6 +41,8 @@ export const upsertBy = (arr, key, obj, updater = (prev, curr) => curr) => {
   return exists ? newArr : newArr.concat(obj);
 };
 
+export const getBudgetLink = ({ budgetId }) => `/budgets/${budgetId}`;
+
 export const getGroupLink = ({ budgetId, categoryGroupId }) =>
   `/budgets/${budgetId}/category-groups/${categoryGroupId}`;
 

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { getBudgetLink } from "../utils";
 import Loading from "./Loading";
 
 class Budgets extends Component {
@@ -30,7 +31,7 @@ class Budgets extends Component {
 
     return budgets.map(({ id, name }) => (
       <div key={id}>
-        <Link to={`/budgets/${id}`}>{name}</Link>
+        <Link to={getBudgetLink({ budgetId: id })}>{name}</Link>
       </div>
     ));
   }

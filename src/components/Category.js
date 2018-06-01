@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import keyBy from "lodash/keyBy";
 import sortBy from "lodash/sortBy";
 import { Link } from "react-router-dom";
-import { getGroupLink } from "../utils";
+import { getBudgetLink, getGroupLink } from "../utils";
 import GetBudget from "./GetBudget";
 import Layout from "./Layout";
 import { PageTitle } from "./typeComponents";
@@ -47,6 +47,9 @@ const Category = ({
         <Layout>
           <Layout.Header>
             <PageTitle>
+              <Link to={getBudgetLink({ budgetId })}>
+                <Icon icon="arrow-left" />
+              </Link>
               <Link
                 to={getGroupLink({
                   budgetId,

@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 import keyBy from "lodash/keyBy";
 import sortBy from "lodash/sortBy";
 import sumBy from "lodash/sumBy";
-import { getCategoryLink } from "../utils";
+import { getCategoryLink, getBudgetLink } from "../utils";
+import { Link } from "react-router-dom";
 import GetBudget from "./GetBudget";
 import Layout from "./Layout";
 import { PageTitle } from "./typeComponents";
@@ -53,18 +54,23 @@ const CategoryGroup = ({
       return (
         <Layout>
           <Layout.Header>
-            <Dropdown
-              links={categories.map(category => ({
-                to: getCategoryLink({ budgetId, categoryId: category.id }),
-                label: category.name
-              }))}
-            >
-              {({ ref, onClick }) => (
-                <PageTitle innerRef={ref} onClick={onClick}>
-                  {categoryGroup.name} <Icon icon="caret-down" />
-                </PageTitle>
-              )}
-            </Dropdown>
+            <PageTitle>
+              <Link to={getBudgetLink({ budgetId })}>
+                <Icon icon="arrow-left" />
+              </Link>
+              <Dropdown
+                links={categories.map(category => ({
+                  to: getCategoryLink({ budgetId, categoryId: category.id }),
+                  label: category.name
+                }))}
+              >
+                {({ ref, onClick }) => (
+                  <span ref={ref} onClick={onClick}>
+                    {categoryGroup.name} <Icon icon="caret-down" />
+                  </span>
+                )}
+              </Dropdown>
+            </PageTitle>
             <PageActions
               onRefreshBudget={onRefreshBudget}
               budgetId={budgetId}
