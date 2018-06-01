@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
+import get from "lodash/get";
+import groupBy from "lodash/groupBy";
+import maxBy from "lodash/maxBy";
+import sortBy from "lodash/sortBy";
+import { simpleMemoize } from "../utils";
 import { getExpandedGroups, setExpandedGroups } from "../uiRepo";
 import GetBudget from "./GetBudget";
 import Layout from "./Layout";
@@ -55,6 +60,29 @@ class Budget extends Component {
     );
   };
 
+  getSortedCategoryGroups = simpleMemoize(budget => {
+    const categoryToGroup = budget.categories.reduce(
+      (acc, category) => ({ ...acc, [category.id]: category.categoryGroupId }),
+      {}
+    );
+    const transactionsByGroup = groupBy(
+      budget.transactions,
+      t => categoryToGroup[t.categoryId]
+    );
+
+    return sortBy(
+      budget.categoryGroups.filter(
+        group => !GROUPS_TO_HIDE.includes(group.name)
+      ),
+      group =>
+        get(
+          maxBy(transactionsByGroup[group.id], transaction => transaction.date),
+          "date",
+          "0000-00-00"
+        )
+    ).reverse();
+  });
+
   render() {
     const {
       budget,
@@ -84,21 +112,20 @@ class Budget extends Component {
               />
             </Layout.Header>
             <Layout.Content>
-              {budget.categoryGroups
-                .filter(g => !GROUPS_TO_HIDE.includes(g.name))
-                .map(categoryGroup => (
-                  <CategoryGroupListItem
-                    key={categoryGroup.id}
-                    budgetId={budgetId}
-                    categoryGroup={categoryGroup}
-                    categories={budget.categories.filter(
-                      c => c.categoryGroupId === categoryGroup.id
-                    )}
-                    expanded={!!expandedGroups[categoryGroup.id]}
-                    onToggleGroup={this.handleToggleGroup}
-                    monthProgress={(dayOfMonth - 0.5) / daysInMonth}
-                  />
-                ))}
+              {this.getSortedCategoryGroups(budget).map(categoryGroup => (
+                <CategoryGroupListItem
+                  key={categoryGroup.id}
+                  budgetId={budgetId}
+                  categoryGroup={categoryGroup}
+                  categories={budget.categories.filter(
+                    c => c.categoryGroupId === categoryGroup.id
+                  )}
+                  expanded={!!expandedGroups[categoryGroup.id]}
+                  monthProgress={(dayOfMonth - 0.5) / daysInMonth}
+                  transactions={budget.transactions}
+                  onToggleGroup={this.handleToggleGroup}
+                />
+              ))}
             </Layout.Content>
           </Layout>
         )}

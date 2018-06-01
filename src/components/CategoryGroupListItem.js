@@ -5,7 +5,11 @@ import round from "lodash/round";
 import sumBy from "lodash/sumBy";
 import AnimateHeight from "react-animate-height-auto";
 import { Link } from "react-router-dom";
-import { getGroupLink } from "../utils";
+import get from "lodash/get";
+import groupBy from "lodash/groupBy";
+import maxBy from "lodash/maxBy";
+import sortBy from "lodash/sortBy";
+import { getGroupLink, simpleMemoize } from "../utils";
 import { StrongText } from "./typeComponents";
 import Icon from "./Icon";
 import CategoryListItem from "./CategoryListItem";
@@ -45,8 +49,33 @@ class CategoryGroupListItem extends Component {
     ).isRequired,
     expanded: PropTypes.bool.isRequired,
     monthProgress: PropTypes.number.isRequired,
+    transactions: PropTypes.arrayOf(
+      PropTypes.shape({
+        categoryId: PropTypes.string.isRequired,
+        date: PropTypes.string.isRequired
+      })
+    ).isRequired,
     onToggleGroup: PropTypes.func.isRequired
   };
+
+  getSortedCategories = simpleMemoize((categories, allTransactions) => {
+    const categoryIds = categories.map(category => category.id);
+    const transactions = allTransactions.filter(transaction =>
+      categoryIds.includes(transaction.categoryId)
+    );
+    const transactionsByCategory = groupBy(
+      transactions,
+      transaction => transaction.categoryId
+    );
+
+    return sortBy(categories, category =>
+      get(
+        maxBy(transactionsByCategory[category.id], "date"),
+        "date",
+        "0000-00-00"
+      )
+    ).reverse();
+  });
 
   render() {
     const {
@@ -55,6 +84,7 @@ class CategoryGroupListItem extends Component {
       categories,
       expanded,
       monthProgress,
+      transactions,
       onToggleGroup
     } = this.props;
     const activity = sumBy(categories, "activity");
@@ -104,7 +134,7 @@ class CategoryGroupListItem extends Component {
           </Link>
         </GroupArea>
         <AnimateHeight isExpanded={expanded}>
-          {categories.map(category => (
+          {this.getSortedCategories(categories, transactions).map(category => (
             <CategoryListItem
               key={category.id}
               budgetId={budgetId}

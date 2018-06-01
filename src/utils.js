@@ -5,6 +5,23 @@ import isObject from "lodash/isObject";
 import isArray from "lodash/isArray";
 import { utils } from "ynab";
 
+export const simpleMemoize = func => {
+  let lastArgs = null;
+  let lastResult = null;
+  return (...args) => {
+    if (
+      lastArgs !== null &&
+      lastArgs.length === args.length &&
+      args.every((value, index) => value === lastArgs[index])
+    ) {
+      return lastResult;
+    }
+    lastArgs = args;
+    lastResult = func(...args);
+    return lastResult;
+  };
+};
+
 export const mapKeysDeep = (obj, cb) => {
   if (isArray(obj)) {
     return obj.map(innerObj => mapKeysDeep(innerObj, cb));
