@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import round from "lodash/round";
 import { Link } from "react-router-dom";
+import { getCategoryLink } from "../utils";
 import { SecondaryText } from "./typeComponents";
 import SummaryChart from "./SummaryChart";
 
@@ -17,12 +18,12 @@ const ListItem = styled.div`
 `;
 
 const CategoryListItem = ({
+  budgetId,
   category,
-  currentUrl,
   leftSpacing,
   monthProgress
 }) => (
-  <Link to={`${currentUrl}/categories/${category.id}`}>
+  <Link to={getCategoryLink({ budgetId, categoryId: category.id })}>
     <ListItem>
       <SecondaryText style={{ paddingLeft: leftSpacing }}>
         {category.name}
@@ -47,13 +48,13 @@ const CategoryListItem = ({
 );
 
 CategoryListItem.propTypes = {
+  budgetId: PropTypes.string.isRequired,
   category: PropTypes.shape({
     activity: PropTypes.number.isRequired,
     balance: PropTypes.number.isRequired,
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired
   }).isRequired,
-  currentUrl: PropTypes.string.isRequired,
   leftSpacing: PropTypes.number.isRequired,
   monthProgress: PropTypes.number.isRequired
 };

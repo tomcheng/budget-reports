@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import keyBy from "lodash/keyBy";
 import sortBy from "lodash/sortBy";
+import { Link } from "react-router-dom";
+import { getGroupLink } from "../utils";
 import GetBudget from "./GetBudget";
 import Layout from "./Layout";
 import { PageTitle } from "./typeComponents";
@@ -27,6 +29,9 @@ const Category = ({
       const category = budget.categories.find(
         category => category.id === categoryId
       );
+      const categoryGroup = budget.categoryGroups.find(
+        group => group.id === category.categoryGroupId
+      );
       const payees = keyBy(budget.payees, "id");
       const transactions = sortBy(
         budget.transactions.filter(
@@ -40,7 +45,17 @@ const Category = ({
       return (
         <Layout>
           <Layout.Header>
-            <PageTitle>{category.name}</PageTitle>
+            <PageTitle>
+              <Link
+                to={getGroupLink({
+                  budgetId,
+                  categoryGroupId: categoryGroup.id
+                })}
+              >
+                {categoryGroup.name}
+              </Link>{" "}
+              {category.name}
+            </PageTitle>
             <PageActions
               budgetId={budgetId}
               onRefreshBudget={onRefreshBudget}

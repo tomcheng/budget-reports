@@ -119,7 +119,6 @@ class App extends Component {
                 <Budget
                   budget={budgetDetails[match.params.budgetId]}
                   budgetId={match.params.budgetId}
-                  currentUrl={match.url}
                   currentMonth={currentMonth}
                   onRefreshBudget={this.handleRefreshBudget}
                   onRequestBudget={this.handleRequestBudget}

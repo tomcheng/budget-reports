@@ -7,6 +7,7 @@ import AnimateHeight from "react-animate-height-auto";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import faChevronRight from "@fortawesome/fontawesome-free-solid/faChevronRight";
 import { Link } from "react-router-dom";
+import { getGroupLink } from "../utils";
 import { StrongText } from "./typeComponents";
 import CategoryListItem from "./CategoryListItem";
 import SummaryChart from "./SummaryChart";
@@ -31,6 +32,7 @@ const GroupArea = styled.div`
 
 class CategoryGroupListItem extends Component {
   static propTypes = {
+    budgetId: PropTypes.string.isRequired,
     categoryGroup: PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired
@@ -42,7 +44,6 @@ class CategoryGroupListItem extends Component {
         id: PropTypes.string.isRequired
       })
     ).isRequired,
-    currentUrl: PropTypes.string.isRequired,
     expanded: PropTypes.bool.isRequired,
     monthProgress: PropTypes.number.isRequired,
     onToggleGroup: PropTypes.func.isRequired
@@ -50,9 +51,9 @@ class CategoryGroupListItem extends Component {
 
   render() {
     const {
+      budgetId,
       categoryGroup,
       categories,
-      currentUrl,
       expanded,
       monthProgress,
       onToggleGroup
@@ -83,7 +84,9 @@ class CategoryGroupListItem extends Component {
             </div>
             <StrongText>{categoryGroup.name}</StrongText>
           </div>
-          <Link to={`${currentUrl}/category-groups/${categoryGroup.id}`}>
+          <Link
+            to={getGroupLink({ budgetId, categoryGroupId: categoryGroup.id })}
+          >
             <div
               style={{
                 width: 160,
@@ -105,8 +108,8 @@ class CategoryGroupListItem extends Component {
           {categories.map(category => (
             <CategoryListItem
               key={category.id}
+              budgetId={budgetId}
               category={category}
-              currentUrl={currentUrl}
               leftSpacing={TOGGLE_ICON_SPACING}
               monthProgress={monthProgress}
             />

@@ -18,7 +18,6 @@ class Budget extends Component {
   static propTypes = {
     budgetId: PropTypes.string.isRequired,
     currentMonth: PropTypes.string.isRequired,
-    currentUrl: PropTypes.string.isRequired,
     onRefreshBudget: PropTypes.func.isRequired,
     onRequestBudget: PropTypes.func.isRequired,
     budget: PropTypes.shape({
@@ -60,7 +59,6 @@ class Budget extends Component {
     const {
       budget,
       budgetId,
-      currentUrl,
       currentMonth,
       onRefreshBudget,
       onRequestBudget
@@ -91,11 +89,11 @@ class Budget extends Component {
                 .map(categoryGroup => (
                   <CategoryGroupListItem
                     key={categoryGroup.id}
+                    budgetId={budgetId}
                     categoryGroup={categoryGroup}
                     categories={budget.categories.filter(
                       c => c.categoryGroupId === categoryGroup.id
                     )}
-                    currentUrl={currentUrl}
                     expanded={!!expandedGroups[categoryGroup.id]}
                     onToggleGroup={this.handleToggleGroup}
                     monthProgress={(dayOfMonth - 0.5) / daysInMonth}
