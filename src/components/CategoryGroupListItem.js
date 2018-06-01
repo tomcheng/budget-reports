@@ -4,11 +4,10 @@ import styled from "styled-components";
 import round from "lodash/round";
 import sumBy from "lodash/sumBy";
 import AnimateHeight from "react-animate-height-auto";
-import FontAwesomeIcon from "@fortawesome/react-fontawesome";
-import faChevronRight from "@fortawesome/fontawesome-free-solid/faChevronRight";
 import { Link } from "react-router-dom";
 import { getGroupLink } from "../utils";
 import { StrongText } from "./typeComponents";
+import Icon from "./Icon";
 import CategoryListItem from "./CategoryListItem";
 import SummaryChart from "./SummaryChart";
 
@@ -77,8 +76,8 @@ class CategoryGroupListItem extends Component {
                 fontSize: 10
               }}
             >
-              <FontAwesomeIcon
-                icon={faChevronRight}
+              <Icon
+                icon="chevron-right"
                 transform={{ rotate: expanded ? 90 : 0 }}
               />
             </div>
