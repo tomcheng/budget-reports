@@ -1,9 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import moment from "moment/moment";
-import { getLastUpdated } from "../uiRepo";
-import { PageTitle, MinorText } from "./typeComponents";
+import { PageTitle } from "./typeComponents";
+import PageActions from "./PageActions";
 
 const Container = styled.div`
   height: 100vh;
@@ -20,6 +19,7 @@ const Header = styled.div`
   height: 60px;
   padding: 0 20px;
   border-bottom: 1px solid #bbb;
+  white-space: pre;
 `;
 
 const Content = styled.div`
@@ -31,18 +31,7 @@ const MainLayout = ({ title, onRefreshBudget, budgetId, children }) => (
   <Container>
     <Header>
       <PageTitle>{title}</PageTitle>
-      <div style={{ textAlign: "right" }}>
-        <button
-          onClick={() => {
-            onRefreshBudget(budgetId);
-          }}
-        >
-          Refresh
-        </button>
-        <MinorText>
-          Updated {moment(getLastUpdated(budgetId) || undefined).fromNow()}
-        </MinorText>
-      </div>
+      <PageActions onRefreshBudget={onRefreshBudget} budgetId={budgetId} />
     </Header>
     <Content>{children}</Content>
   </Container>
