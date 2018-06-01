@@ -3,9 +3,12 @@ import PropTypes from "prop-types";
 import keyBy from "lodash/keyBy";
 import sortBy from "lodash/sortBy";
 import sumBy from "lodash/sumBy";
+import { getCategoryLink } from "../utils";
 import GetBudget from "./GetBudget";
 import Layout from "./Layout";
 import { PageTitle } from "./typeComponents";
+import Dropdown from "./Dropdown";
+import Icon from "./Icon";
 import PageActions from "./PageActions";
 import TopNumbers from "./TopNumbers";
 import SpendingChart from "./SpendingChart";
@@ -50,11 +53,29 @@ const CategoryGroup = ({
       return (
         <Layout>
           <Layout.Header>
-            <PageTitle>{categoryGroup.name}</PageTitle>
-            <PageActions onRefreshBudget={onRefreshBudget} budgetId={budgetId} />
+            <Dropdown
+              links={categories.map(category => ({
+                to: getCategoryLink({ budgetId, categoryId: category.id }),
+                label: category.name
+              }))}
+            >
+              {({ ref, onClick }) => (
+                <PageTitle innerRef={ref} onClick={onClick}>
+                  {categoryGroup.name} <Icon icon="caret-down" />
+                </PageTitle>
+              )}
+            </Dropdown>
+            <PageActions
+              onRefreshBudget={onRefreshBudget}
+              budgetId={budgetId}
+            />
           </Layout.Header>
           <Layout.Content>
-            <TopNumbers budgeted={budgeted} spent={spent} available={available} />
+            <TopNumbers
+              budgeted={budgeted}
+              spent={spent}
+              available={available}
+            />
             <SpendingChart
               budgeted={sumBy(categories, "budgeted")}
               currentMonth={currentMonth}
