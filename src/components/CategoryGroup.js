@@ -4,7 +4,9 @@ import keyBy from "lodash/keyBy";
 import sortBy from "lodash/sortBy";
 import sumBy from "lodash/sumBy";
 import GetBudget from "./GetBudget";
-import MainLayout from "./MainLayout";
+import Layout from "./Layout";
+import { PageTitle } from "./typeComponents";
+import PageActions from "./PageActions";
 import TopNumbers from "./TopNumbers";
 import SpendingChart from "./SpendingChart";
 import Transactions from "./Transactions";
@@ -46,19 +48,21 @@ const CategoryGroup = ({
       const available = sumBy(categories, "balance");
 
       return (
-        <MainLayout
-          title={categoryGroup.name}
-          budgetId={budgetId}
-          onRefreshBudget={onRefreshBudget}
-        >
-          <TopNumbers budgeted={budgeted} spent={spent} available={available} />
-          <SpendingChart
-            budgeted={sumBy(categories, "budgeted")}
-            currentMonth={currentMonth}
-            transactions={transactions}
-          />
-          <Transactions transactions={transactions} payees={payees} />
-        </MainLayout>
+        <Layout>
+          <Layout.Header>
+            <PageTitle>{categoryGroup.name}</PageTitle>
+            <PageActions onRefreshBudget={onRefreshBudget} budgetId={budgetId} />
+          </Layout.Header>
+          <Layout.Content>
+            <TopNumbers budgeted={budgeted} spent={spent} available={available} />
+            <SpendingChart
+              budgeted={sumBy(categories, "budgeted")}
+              currentMonth={currentMonth}
+              transactions={transactions}
+            />
+            <Transactions transactions={transactions} payees={payees} />
+          </Layout.Content>
+        </Layout>
       );
     }}
   </GetBudget>

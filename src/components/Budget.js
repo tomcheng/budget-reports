@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import { getExpandedGroups, setExpandedGroups } from "../uiRepo";
 import GetBudget from "./GetBudget";
-import MainLayout from "./MainLayout";
+import Layout from "./Layout";
+import { PageTitle } from "./typeComponents";
+import PageActions from "./PageActions";
 import CategoryGroupListItem from "./CategoryGroupListItem";
 
 const GROUPS_TO_HIDE = [
@@ -75,27 +77,32 @@ class Budget extends Component {
         onRequestBudget={onRequestBudget}
       >
         {() => (
-          <MainLayout
-            title={budget.name}
-            onRefreshBudget={onRefreshBudget}
-            budgetId={budget.id}
-          >
-            {budget.categoryGroups
-              .filter(g => !GROUPS_TO_HIDE.includes(g.name))
-              .map(categoryGroup => (
-                <CategoryGroupListItem
-                  key={categoryGroup.id}
-                  categoryGroup={categoryGroup}
-                  categories={budget.categories.filter(
-                    c => c.categoryGroupId === categoryGroup.id
-                  )}
-                  currentUrl={currentUrl}
-                  expanded={!!expandedGroups[categoryGroup.id]}
-                  onToggleGroup={this.handleToggleGroup}
-                  monthProgress={(dayOfMonth - 0.5) / daysInMonth}
-                />
-              ))}
-          </MainLayout>
+          <Layout>
+            <Layout.Header>
+              <PageTitle>{budget.name}</PageTitle>
+              <PageActions
+                budgetId={budget.id}
+                onRefreshBudget={onRefreshBudget}
+              />
+            </Layout.Header>
+            <Layout.Content>
+              {budget.categoryGroups
+                .filter(g => !GROUPS_TO_HIDE.includes(g.name))
+                .map(categoryGroup => (
+                  <CategoryGroupListItem
+                    key={categoryGroup.id}
+                    categoryGroup={categoryGroup}
+                    categories={budget.categories.filter(
+                      c => c.categoryGroupId === categoryGroup.id
+                    )}
+                    currentUrl={currentUrl}
+                    expanded={!!expandedGroups[categoryGroup.id]}
+                    onToggleGroup={this.handleToggleGroup}
+                    monthProgress={(dayOfMonth - 0.5) / daysInMonth}
+                  />
+                ))}
+            </Layout.Content>
+          </Layout>
         )}
       </GetBudget>
     );

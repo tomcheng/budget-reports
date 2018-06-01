@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 import keyBy from "lodash/keyBy";
 import sortBy from "lodash/sortBy";
 import GetBudget from "./GetBudget";
-import MainLayout from "./MainLayout";
+import Layout from "./Layout";
+import { PageTitle } from "./typeComponents";
+import PageActions from "./PageActions";
 import TopNumbers from "./TopNumbers";
 import SpendingChart from "./SpendingChart";
 import Transactions from "./Transactions";
@@ -36,23 +38,28 @@ const Category = ({
       ).reverse();
 
       return (
-        <MainLayout
-          title={category.name}
-          budgetId={budgetId}
-          onRefreshBudget={onRefreshBudget}
-        >
-          <TopNumbers
-            budgeted={category.budgeted}
-            spent={-category.activity}
-            available={category.balance}
-          />
-          <SpendingChart
-            budgeted={category.budgeted}
-            currentMonth={currentMonth}
-            transactions={transactions}
-          />
-          <Transactions transactions={transactions} payees={payees} />
-        </MainLayout>
+        <Layout>
+          <Layout.Header>
+            <PageTitle>{category.name}</PageTitle>
+            <PageActions
+              budgetId={budgetId}
+              onRefreshBudget={onRefreshBudget}
+            />
+          </Layout.Header>
+          <Layout.Content>
+            <TopNumbers
+              budgeted={category.budgeted}
+              spent={-category.activity}
+              available={category.balance}
+            />
+            <SpendingChart
+              budgeted={category.budgeted}
+              currentMonth={currentMonth}
+              transactions={transactions}
+            />
+            <Transactions transactions={transactions} payees={payees} />
+          </Layout.Content>
+        </Layout>
       );
     }}
   </GetBudget>
