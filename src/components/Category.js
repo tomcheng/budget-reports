@@ -7,6 +7,7 @@ import { getGroupLink } from "../utils";
 import GetBudget from "./GetBudget";
 import Layout from "./Layout";
 import { PageTitle } from "./typeComponents";
+import Icon from "./Icon";
 import PageActions from "./PageActions";
 import TopNumbers from "./TopNumbers";
 import SpendingChart from "./SpendingChart";
@@ -54,7 +55,7 @@ const Category = ({
               >
                 {categoryGroup.name}
               </Link>{" "}
-              {category.name}
+              <Icon icon="chevron-right" /> {category.name}
             </PageTitle>
             <PageActions
               budgetId={budgetId}
