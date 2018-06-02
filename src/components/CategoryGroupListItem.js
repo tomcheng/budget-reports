@@ -51,7 +51,7 @@ class CategoryGroupListItem extends Component {
     monthProgress: PropTypes.number.isRequired,
     transactions: PropTypes.arrayOf(
       PropTypes.shape({
-        categoryId: PropTypes.string.isRequired,
+        categoryId: PropTypes.string,
         date: PropTypes.string.isRequired
       })
     ).isRequired,
@@ -60,8 +60,9 @@ class CategoryGroupListItem extends Component {
 
   getSortedCategories = simpleMemoize((categories, allTransactions) => {
     const categoryIds = categories.map(category => category.id);
-    const transactions = allTransactions.filter(transaction =>
-      categoryIds.includes(transaction.categoryId)
+    const transactions = allTransactions.filter(
+      transaction =>
+        transaction.categoryId && categoryIds.includes(transaction.categoryId)
     );
     const transactionsByCategory = groupBy(
       transactions,

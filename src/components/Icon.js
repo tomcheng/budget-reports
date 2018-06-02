@@ -5,11 +5,13 @@ import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import faArrowLeft from "@fortawesome/fontawesome-free-solid/faArrowLeft";
 import faCaretDown from "@fortawesome/fontawesome-free-solid/faCaretDown";
 import faChevronRight from "@fortawesome/fontawesome-free-solid/faChevronRight";
+import faEllipsisV from "@fortawesome/fontawesome-free-solid/faEllipsisV";
 
 const ICONS = {
   "arrow-left": faArrowLeft,
   "caret-down": faCaretDown,
-  "chevron-right": faChevronRight
+  "chevron-right": faChevronRight,
+  "ellipsis-v": faEllipsisV
 };
 
 const Icon = ({ icon, ...other }) => (

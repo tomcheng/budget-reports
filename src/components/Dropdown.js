@@ -44,15 +44,21 @@ const StyledLink = styled(Link)`
 `;
 
 class Dropdown extends Component {
+  static ContentWrapper = DropdownOption;
+
   static propTypes = {
     children: PropTypes.func.isRequired,
+    align: PropTypes.oneOf(["left", "right"]),
+    dropdownContent: PropTypes.node,
     links: PropTypes.arrayOf(
       PropTypes.shape({
         to: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired
       })
-    ).isRequired
+    )
   };
+
+  static defaultProps = { align: "left" };
 
   constructor() {
     super();
@@ -69,8 +75,13 @@ class Dropdown extends Component {
   }
 
   handleClickTrigger = () => {
-    const { x, y, height } = this.trigger.getBoundingClientRect();
-    this.setState({ isOpen: true, top: y + height + TOP_SPACE, left: x });
+    const { x, y, height, width } = this.trigger.getBoundingClientRect();
+    this.setState({
+      isOpen: true,
+      top: y + height + TOP_SPACE,
+      left: x,
+      right: window.innerWidth - x - width
+    });
   };
 
   handleClickOverlay = () => {
@@ -78,8 +89,8 @@ class Dropdown extends Component {
   };
 
   render() {
-    const { links, children } = this.props;
-    const { isOpen, top, left } = this.state;
+    const { links, children, dropdownContent, align } = this.props;
+    const { isOpen, top, left, right } = this.state;
 
     return (
       <Fragment>
@@ -95,12 +106,20 @@ class Dropdown extends Component {
           createPortal(
             <Fragment>
               <Overlay onClick={this.handleClickOverlay} />
-              <DropdownContent style={{ top, left }}>
-                {links.map(({ to, label }) => (
-                  <StyledLink key={to} to={to}>
-                    <DropdownOption>{label}</DropdownOption>
-                  </StyledLink>
-                ))}
+              <DropdownContent
+                style={{
+                  top,
+                  left: align === "left" ? left : null,
+                  right: align === "right" ? right : null
+                }}
+              >
+                {links &&
+                  links.map(({ to, label }) => (
+                    <StyledLink key={to} to={to}>
+                      <DropdownOption>{label}</DropdownOption>
+                    </StyledLink>
+                  ))}
+                {dropdownContent}
               </DropdownContent>
             </Fragment>,
             this.dropdownEl
