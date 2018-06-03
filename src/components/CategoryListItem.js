@@ -12,7 +12,7 @@ const ListItem = styled.div`
   justify-content: space-between;
   align-items: center;
   height: 48px;
-  padding: 0 20px;
+  padding: 0 20px 0 0;
   border-bottom: 0;
   user-select: none;
 `;
