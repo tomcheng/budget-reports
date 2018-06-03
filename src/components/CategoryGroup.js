@@ -83,8 +83,8 @@ const CategoryGroup = ({
               available={available}
             />
             <SpendingChart
-              budgeted={sumBy(categories, "budgeted")}
               currentMonth={currentMonth}
+              total={spent + available}
               transactions={transactions}
             />
             <Transactions transactions={transactions} payees={payees} />

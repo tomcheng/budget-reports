@@ -18,7 +18,7 @@ const DateLabels = styled.div`
   justify-content: space-between;
 `;
 
-const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
+const SpendingChart = ({ total, transactions, currentMonth }) => {
   const daysInMonth = moment(currentMonth).daysInMonth();
   const today = moment();
   const dates = range(1, daysInMonth + 1).map(day =>
@@ -37,7 +37,7 @@ const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
     return cumulative;
   });
   const lineData = dates.map(
-    (_, index) => index / (dates.length - 1) * budgeted
+    (_, index) => index / (dates.length - 1) * total
   );
   const firstDayOfWeek = parseInt(dates[0].format("d"), 10);
   const plotBands = range(6).map(num => ({
@@ -94,8 +94,8 @@ const SpendingChart = ({ budgeted, transactions, currentMonth }) => {
 };
 
 SpendingChart.propTypes = {
-  budgeted: PropTypes.number.isRequired,
   currentMonth: PropTypes.string.isRequired,
+  total: PropTypes.number.isRequired,
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       amount: PropTypes.number.isRequired,
