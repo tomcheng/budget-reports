@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import keyBy from "lodash/keyBy";
-import sortBy from "lodash/sortBy";
 import { Link } from "react-router-dom";
 import { getBudgetLink, getGroupLink } from "../utils";
 import GetBudget from "./GetBudget";
@@ -34,14 +33,13 @@ const Category = ({
         group => group.id === category.categoryGroupId
       );
       const payees = keyBy(budget.payees, "id");
-      const transactions = sortBy(
-        budget.transactions.filter(
+      const transactions = budget.transactions
+        .filter(
           transaction =>
             transaction.categoryId === categoryId &&
             transaction.date.slice(0, 7) === currentMonth
-        ),
-        "date"
-      ).reverse();
+        )
+        .reverse();
 
       return (
         <Layout>

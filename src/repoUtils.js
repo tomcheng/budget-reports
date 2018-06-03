@@ -1,6 +1,7 @@
 import flatMap from "lodash/flatMap";
 import keyBy from "lodash/keyBy";
 import omit from "lodash/omit";
+import sortBy from "lodash/sortBy";
 import uniq from "lodash/uniq";
 import moment from "moment";
 import { upsertBy } from "./utils";
@@ -31,7 +32,7 @@ export const sanitizeBudget = (
     }),
     payees: keyBy(budget.payees, "id"),
     transactions: flatMap(
-      budget.transactions,
+      sortBy(budget.transactions, "date"),
       t =>
         transactionIdsFromSub.includes(t.id)
           ? budget.subtransactions
