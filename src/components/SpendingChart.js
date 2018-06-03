@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import groupBy from "lodash/groupBy";
-import padStart from "lodash/padStart";
 import range from "lodash/range";
 import sumBy from "lodash/sumBy";
 import head from "lodash/head";
@@ -19,10 +18,11 @@ const DateLabels = styled.div`
 `;
 
 const SpendingChart = ({ total, transactions, currentMonth }) => {
+  console.log("total:", total);
   const daysInMonth = moment(currentMonth).daysInMonth();
   const today = moment();
-  const dates = range(1, daysInMonth + 1).map(day =>
-    moment(`${currentMonth}-${padStart(day, 2, "0")}`)
+  const dates = range(-1, daysInMonth).map(day =>
+    moment(currentMonth).add(day, "days")
   );
   const transactionsByDate = groupBy(transactions, "date");
   let cumulative = 0;
@@ -36,9 +36,7 @@ const SpendingChart = ({ total, transactions, currentMonth }) => {
     cumulative += -sumBy(transactionsForDate, "amount");
     return cumulative;
   });
-  const lineData = dates.map(
-    (_, index) => index / (dates.length - 1) * total
-  );
+  const lineData = dates.map((_, index) => index / (dates.length - 1) * total);
   const firstDayOfWeek = parseInt(dates[0].format("d"), 10);
   const plotBands = range(6).map(num => ({
     color: "#fafafa",
