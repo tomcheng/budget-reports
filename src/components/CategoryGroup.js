@@ -64,7 +64,7 @@ const CategoryGroup = ({
                   <div
                     ref={ref}
                     onClick={onClick}
-                    style={{ display: "flex", alignItems: "center", padding: "4px 0" }}
+                    style={{ display: "inline-flex", alignItems: "center", padding: "4px 0" }}
                   >
                     {categoryGroup.name}
                     <div style={{ padding: "0 8px", color: "#444" }}>
