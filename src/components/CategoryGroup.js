@@ -61,9 +61,16 @@ const CategoryGroup = ({
                 }))}
               >
                 {({ ref, onClick }) => (
-                  <span ref={ref} onClick={onClick}>
-                    {categoryGroup.name} <Icon icon="caret-down" />
-                  </span>
+                  <div
+                    ref={ref}
+                    onClick={onClick}
+                    style={{ display: "flex", alignItems: "center", padding: "4px 0" }}
+                  >
+                    {categoryGroup.name}
+                    <div style={{ padding: "0 8px", color: "#444" }}>
+                      <Icon icon="caret-down" />
+                    </div>
+                  </div>
                 )}
               </Dropdown>
             </PageTitle>
