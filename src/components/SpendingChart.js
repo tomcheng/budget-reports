@@ -18,7 +18,6 @@ const DateLabels = styled.div`
 `;
 
 const SpendingChart = ({ total, transactions, currentMonth }) => {
-  console.log("total:", total);
   const daysInMonth = moment(currentMonth).daysInMonth();
   const today = moment();
   const dates = range(-1, daysInMonth).map(day =>
