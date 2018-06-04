@@ -83,9 +83,11 @@ const CategoryGroup = ({
           </Layout.Header>
           <Layout.Body>
             <TopNumbers
-              budgeted={budgeted}
-              spent={spent}
-              available={available}
+              numbers={[
+                { label: "budgeted", value: budgeted },
+                { label: "spent", value: spent },
+                { label: "available", value: available }
+              ]}
             />
             <SpendingChart
               currentMonth={currentMonth}

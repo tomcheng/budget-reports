@@ -12,6 +12,7 @@ import GetBudget from "./GetBudget";
 import Layout from "./Layout";
 import BackToBudget from "./BackToBudget";
 import { PageTitle } from "./typeComponents";
+import TopNumbers from "./TopNumbers";
 import ExpensesVsIncomeChart from "./ExpensesVsIncomeChart";
 import PageActions from "./PageActions";
 
@@ -96,47 +97,57 @@ class ExpensesVsIncome extends Component {
             s => !excludedMonths.includes(s.month)
           );
 
-          return <Layout>
+          return (
+            <Layout>
               <Layout.Header flushLeft>
                 <BackToBudget budgetId={budgetId} />
                 <PageTitle style={{ flexGrow: 1 }}>
                   Expenses vs Income
                 </PageTitle>
-                <PageActions budgetId={budgetId} onRefreshBudget={onRefreshBudget} />
+                <PageActions
+                  budgetId={budgetId}
+                  onRefreshBudget={onRefreshBudget}
+                />
               </Layout.Header>
               <Layout.Body style={{ margin: 20 }}>
                 <div>
                   <label>
-                    <input type="checkbox" checked={excludeOutliers} onChange={this.handleToggleExcludedOutliers} />
-                    Exclude Outliers
+                    <input
+                      type="checkbox"
+                      checked={excludeOutliers}
+                      onChange={this.handleToggleExcludedOutliers}
+                      style={{ marginRight: 8 }}
+                    />
+                    exclude outliers
                   </label>
                 </div>
-                <ExpensesVsIncomeChart data={monthStats} excludedMonths={excludedMonths} />
-                <div>
-                  Average Income:{" "}
-                  {Math.round(
-                    meanBy(truncatedMonthStats, s => s.income)
-                  )}
-                </div>
-                <div>
-                  Average Expenses:{" "}
-                  {
-                    -Math.round(
-                      meanBy(truncatedMonthStats, s => s.expenses)
-                    )
-                  }
-                </div>
-                <div>
-                  Average Net Worth Increase:{" "}
-                  {Math.round(
-                    meanBy(
-                      truncatedMonthStats,
-                      s => s.income + s.expenses
-                    )
-                  )}
-                </div>
+                <TopNumbers
+                  numbers={[
+                    {
+                      label: "avg. income",
+                      value: meanBy(truncatedMonthStats, s => s.income)
+                    },
+                    {
+                      label: "avg. expenses",
+                      value: -meanBy(truncatedMonthStats, s => s.expenses)
+                    },
+                    {
+                      label: "avg. net income",
+                      value: meanBy(
+                        truncatedMonthStats,
+                        s => s.income + s.expenses
+                      )
+                    }
+                  ]}
+                  roundToDollar
+                />
+                <ExpensesVsIncomeChart
+                  data={monthStats}
+                  excludedMonths={excludedMonths}
+                />
               </Layout.Body>
-            </Layout>;
+            </Layout>
+          );
         }}
       </GetBudget>
     );

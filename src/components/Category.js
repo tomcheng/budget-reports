@@ -65,9 +65,11 @@ const Category = ({
           </Layout.Header>
           <Layout.Body>
             <TopNumbers
-              budgeted={category.budgeted}
-              spent={-category.activity}
-              available={category.balance}
+              numbers={[
+                { label: "budgeted", value: category.budgeted },
+                { label: "spend", value: -category.activity },
+                { label: "available", value: category.balance }
+              ]}
             />
             <SpendingChart
               total={category.balance - category.activity}
