@@ -81,7 +81,7 @@ const CategoryGroup = ({
               budgetId={budgetId}
             />
           </Layout.Header>
-          <Layout.Content>
+          <Layout.Body>
             <TopNumbers
               budgeted={budgeted}
               spent={spent}
@@ -93,7 +93,7 @@ const CategoryGroup = ({
               transactions={transactions}
             />
             <Transactions transactions={transactions} payees={payees} />
-          </Layout.Content>
+          </Layout.Body>
         </Layout>
       );
     }}

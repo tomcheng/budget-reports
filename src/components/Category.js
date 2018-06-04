@@ -63,7 +63,7 @@ const Category = ({
               onRefreshBudget={onRefreshBudget}
             />
           </Layout.Header>
-          <Layout.Content>
+          <Layout.Body>
             <TopNumbers
               budgeted={category.budgeted}
               spent={-category.activity}
@@ -75,7 +75,7 @@ const Category = ({
               transactions={transactions}
             />
             <Transactions transactions={transactions} payees={payees} />
-          </Layout.Content>
+          </Layout.Body>
         </Layout>
       );
     }}

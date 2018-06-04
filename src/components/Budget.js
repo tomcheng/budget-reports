@@ -111,7 +111,7 @@ class Budget extends Component {
                 onRefreshBudget={onRefreshBudget}
               />
             </Layout.Header>
-            <Layout.Content>
+            <Layout.Body>
               {this.getSortedCategoryGroups(budget).map(categoryGroup => (
                 <CategoryGroupListItem
                   key={categoryGroup.id}
@@ -126,7 +126,7 @@ class Budget extends Component {
                   onToggleGroup={this.handleToggleGroup}
                 />
               ))}
-            </Layout.Content>
+            </Layout.Body>
           </Layout>
         )}
       </GetBudget>

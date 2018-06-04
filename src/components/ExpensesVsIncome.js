@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import get from "lodash/get";
 import groupBy from "lodash/groupBy";
@@ -9,11 +9,16 @@ import minBy from "lodash/minBy";
 import sortBy from "lodash/sortBy";
 import sumBy from "lodash/sumBy";
 import GetBudget from "./GetBudget";
+import Layout from "./Layout";
+import BackToBudget from "./BackToBudget";
+import { PageTitle } from "./typeComponents";
 import ExpensesVsIncomeChart from "./ExpensesVsIncomeChart";
+import PageActions from "./PageActions";
 
 class ExpensesVsIncome extends Component {
   static propTypes = {
     budgetId: PropTypes.string.isRequired,
+    onRefreshBudget: PropTypes.func.isRequired,
     onRequestBudget: PropTypes.func.isRequired,
     budget: PropTypes.shape({
       id: PropTypes.string.isRequired,
@@ -42,7 +47,7 @@ class ExpensesVsIncome extends Component {
   };
 
   render() {
-    const { budget, budgetId, onRequestBudget } = this.props;
+    const { budget, budgetId, onRefreshBudget, onRequestBudget } = this.props;
     const { excludeOutliers } = this.state;
 
     return (
@@ -91,38 +96,47 @@ class ExpensesVsIncome extends Component {
             s => !excludedMonths.includes(s.month)
           );
 
-          return (
-            <Fragment>
-              <div>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={excludeOutliers}
-                    onChange={this.handleToggleExcludedOutliers}
-                  />
-                  Exclude Outliers
-                </label>
-              </div>
-              <ExpensesVsIncomeChart
-                data={monthStats}
-                excludedMonths={excludedMonths}
-              />
-              <div>
-                Average Income:{" "}
-                {Math.round(meanBy(truncatedMonthStats, s => s.income))}
-              </div>
-              <div>
-                Average Expenses:{" "}
-                {-Math.round(meanBy(truncatedMonthStats, s => s.expenses))}
-              </div>
-              <div>
-                Average Net Worth Increase:{" "}
-                {Math.round(
-                  meanBy(truncatedMonthStats, s => s.income + s.expenses)
-                )}
-              </div>
-            </Fragment>
-          );
+          return <Layout>
+              <Layout.Header flushLeft>
+                <BackToBudget budgetId={budgetId} />
+                <PageTitle style={{ flexGrow: 1 }}>
+                  Expenses vs Income
+                </PageTitle>
+                <PageActions budgetId={budgetId} onRefreshBudget={onRefreshBudget} />
+              </Layout.Header>
+              <Layout.Body style={{ margin: 20 }}>
+                <div>
+                  <label>
+                    <input type="checkbox" checked={excludeOutliers} onChange={this.handleToggleExcludedOutliers} />
+                    Exclude Outliers
+                  </label>
+                </div>
+                <ExpensesVsIncomeChart data={monthStats} excludedMonths={excludedMonths} />
+                <div>
+                  Average Income:{" "}
+                  {Math.round(
+                    meanBy(truncatedMonthStats, s => s.income)
+                  )}
+                </div>
+                <div>
+                  Average Expenses:{" "}
+                  {
+                    -Math.round(
+                      meanBy(truncatedMonthStats, s => s.expenses)
+                    )
+                  }
+                </div>
+                <div>
+                  Average Net Worth Increase:{" "}
+                  {Math.round(
+                    meanBy(
+                      truncatedMonthStats,
+                      s => s.income + s.expenses
+                    )
+                  )}
+                </div>
+              </Layout.Body>
+            </Layout>;
         }}
       </GetBudget>
     );

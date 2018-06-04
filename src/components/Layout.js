@@ -23,14 +23,14 @@ const Header = styled.div`
 Header.propTypes = { flushLeft: PropTypes.bool };
 Header.defaultProps = { flushLeft: false };
 
-const Content = styled.div`
+const Body = styled.div`
   flex-grow: 1;
   overflow-y: auto;
 `;
 
 class Layout extends Component {
   static Header = Header;
-  static Content = Content;
+  static Body = Body;
   static propTypes = {
     children: PropTypes.node.isRequired
   };
