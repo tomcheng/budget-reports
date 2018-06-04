@@ -24,6 +24,11 @@ describe("sanitizeBudget", () => {
     ],
     months: [
       {
+        month: "2018-06-01",
+        categories: [{ id: "cat", balance: 5000 }],
+        age_of_money: 30
+      },
+      {
         month: "2018-05-01",
         categories: [{ id: "cat", balance: 5000 }],
         age_of_money: 30
@@ -44,6 +49,10 @@ describe("sanitizeBudget", () => {
       { id: "sub-2", amount: 1, categoryId: "cat-4", date: "2018-05-01" }
     ]);
     expect(result.months[0]).toHaveProperty("ageOfMoney", 30);
+    expect(result.months.map(({ month }) => month)).toEqual([
+      "2018-05-01",
+      "2018-06-01"
+    ]);
   });
 });
 

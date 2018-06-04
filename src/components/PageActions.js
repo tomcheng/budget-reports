@@ -7,29 +7,35 @@ import Icon from "./Icon";
 import Dropdown from "./Dropdown";
 
 const PageActions = ({ budgetId, onRefreshBudget }) => (
-    <Dropdown
-      align="right"
-      dropdownContent={
-        <Dropdown.ContentWrapper>
-          <button
-            onClick={() => {
-              onRefreshBudget(budgetId);
-            }}
-          >
-            Refresh
-          </button>
-          <MinorText>
-            Updated {moment(getLastUpdated(budgetId) || undefined).fromNow()}
-          </MinorText>
-        </Dropdown.ContentWrapper>
+  <Dropdown
+    align="right"
+    links={[
+      {
+        to: `/budgets/${budgetId}/expenses-vs-income`,
+        label: "Expenses vs Income"
       }
-    >
-      {({ onClick, ref }) => (
-        <span onClick={onClick} ref={ref}>
-          <Icon icon="ellipsis-v" />
-        </span>
-      )}
-    </Dropdown>
+    ]}
+    dropdownContent={
+      <Dropdown.ContentWrapper>
+        <button
+          onClick={() => {
+            onRefreshBudget(budgetId);
+          }}
+        >
+          Refresh
+        </button>
+        <MinorText>
+          Updated {moment(getLastUpdated(budgetId) || undefined).fromNow()}
+        </MinorText>
+      </Dropdown.ContentWrapper>
+    }
+  >
+    {({ onClick, ref }) => (
+      <span onClick={onClick} ref={ref}>
+        <Icon icon="ellipsis-v" />
+      </span>
+    )}
+  </Dropdown>
 );
 
 PageActions.propTypes = {

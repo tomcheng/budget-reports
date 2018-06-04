@@ -51,17 +51,12 @@ const SpendingChart = ({ total, transactions, currentMonth }) => {
             spacing: [0, 0, 0, 0],
             height: 180
           },
-          credits: { enabled: false },
-          legend: { enabled: false },
-          title: { text: "" },
-          subtitle: { text: "" },
           xAxis: {
             labels: { enabled: false },
             plotBands,
             tickLength: 0
           },
           yAxis: { visible: false, endOnTick: false },
-          tooltip: { enabled: false },
           series: [
             {
               type: "line",

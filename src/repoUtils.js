@@ -31,6 +31,7 @@ export const sanitizeBudget = (
       };
     }),
     payees: keyBy(budget.payees, "id"),
+    months: sortBy(budget.months, "month"),
     transactions: flatMap(
       sortBy(budget.transactions, "date").reverse(),
       t =>

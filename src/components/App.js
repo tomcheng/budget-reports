@@ -15,6 +15,7 @@ import NotFound from "./NotFound";
 import ErrorBoundary from "./ErrorBoundary";
 import Budgets from "./Budgets";
 import Budget from "./Budget";
+import ExpensesVsIncome from "./ExpensesVsIncome";
 import CategoryGroup from "./CategoryGroup";
 import Category from "./Category";
 
@@ -120,6 +121,18 @@ class App extends Component {
                   budget={budgetDetails[match.params.budgetId]}
                   budgetId={match.params.budgetId}
                   currentMonth={currentMonth}
+                  onRefreshBudget={this.handleRefreshBudget}
+                  onRequestBudget={this.handleRequestBudget}
+                />
+              )}
+            />
+            <Route
+              path="/budgets/:budgetId/expenses-vs-income"
+              exact
+              render={({ match }) => (
+                <ExpensesVsIncome
+                  budget={budgetDetails[match.params.budgetId]}
+                  budgetId={match.params.budgetId}
                   onRefreshBudget={this.handleRefreshBudget}
                   onRequestBudget={this.handleRequestBudget}
                 />
