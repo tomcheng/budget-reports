@@ -7,7 +7,7 @@ import GetBudget from "./GetBudget";
 import Layout from "./Layout";
 import BackToBudget from "./BackToBudget";
 import { PageTitle } from "./typeComponents";
-import Icon from "./Icon";
+import Separator from "./Separator";
 import PageActions from "./PageActions";
 import TopNumbers from "./TopNumbers";
 import SpendingChart from "./SpendingChart";
@@ -46,7 +46,9 @@ const Category = ({
         <Layout>
           <Layout.Header flushLeft>
             <BackToBudget budgetId={budgetId} />
-            <PageTitle style={{ flexGrow: 1 }}>
+            <PageTitle
+              style={{ flexGrow: 1, display: "flex", alignItems: "center" }}
+            >
               <Link
                 to={getGroupLink({
                   budgetId,
@@ -54,8 +56,9 @@ const Category = ({
                 })}
               >
                 {categoryGroup.name}
-              </Link>{" "}
-              <Icon icon="chevron-right" /> {category.name}
+              </Link>
+              <Separator />
+              {category.name}
             </PageTitle>
             <PageActions
               budgetId={budgetId}
