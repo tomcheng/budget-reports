@@ -32,16 +32,19 @@ const ExpensesVsIncomeChart = ({ data, excludedMonths }) => {
         series: [
           {
             name: "Income",
-            data: data.map(property("income"))
+            data: data.map(property("income")),
+            enableMouseTracking: false,
           },
           {
             name: "Expenses",
-            data: data.map(property("expenses"))
+            data: data.map(property("expenses")),
+            enableMouseTracking: false,
           },
           {
             type: "line",
             name: "Net Income",
-            data: data.map(d => d.income + d.expenses)
+            data: data.map(d => d.income + d.expenses),
+            enableMouseTracking: false,
           }
         ]
       }}
