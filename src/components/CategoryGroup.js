@@ -2,11 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import keyBy from "lodash/keyBy";
 import sumBy from "lodash/sumBy";
-import { getCategoryLink, getBudgetLink } from "../utils";
-import { Link } from "react-router-dom";
+import { getCategoryLink } from "../utils";
 import GetBudget from "./GetBudget";
 import Layout from "./Layout";
 import { PageTitle } from "./typeComponents";
+import BackToBudget from "./BackToBudget";
 import Dropdown from "./Dropdown";
 import Icon from "./Icon";
 import PageActions from "./PageActions";
@@ -51,11 +51,9 @@ const CategoryGroup = ({
 
       return (
         <Layout>
-          <Layout.Header>
-            <PageTitle>
-              <Link to={getBudgetLink({ budgetId })}>
-                <Icon icon="arrow-left" />
-              </Link>
+          <Layout.Header flushLeft>
+            <BackToBudget budgetId={budgetId} />
+            <PageTitle style={{ flexGrow: 1 }}>
               <Dropdown
                 links={categories.map(category => ({
                   to: getCategoryLink({ budgetId, categoryId: category.id }),

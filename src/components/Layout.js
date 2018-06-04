@@ -16,9 +16,12 @@ const Header = styled.div`
   justify-content: space-between;
   height: 60px;
   padding: 0 20px;
+  padding-left: ${props => (props.flushLeft ? 0 : 20)}px;
   border-bottom: 1px solid #bbb;
   white-space: pre;
 `;
+Header.propTypes = { flushLeft: PropTypes.bool };
+Header.defaultProps = { flushLeft: false };
 
 const Content = styled.div`
   flex-grow: 1;

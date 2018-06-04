@@ -2,9 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import keyBy from "lodash/keyBy";
 import { Link } from "react-router-dom";
-import { getBudgetLink, getGroupLink } from "../utils";
+import { getGroupLink } from "../utils";
 import GetBudget from "./GetBudget";
 import Layout from "./Layout";
+import BackToBudget from "./BackToBudget";
 import { PageTitle } from "./typeComponents";
 import Icon from "./Icon";
 import PageActions from "./PageActions";
@@ -43,11 +44,9 @@ const Category = ({
 
       return (
         <Layout>
-          <Layout.Header>
-            <PageTitle>
-              <Link to={getBudgetLink({ budgetId })}>
-                <Icon icon="arrow-left" />
-              </Link>
+          <Layout.Header flushLeft>
+            <BackToBudget budgetId={budgetId} />
+            <PageTitle style={{ flexGrow: 1 }}>
               <Link
                 to={getGroupLink({
                   budgetId,
