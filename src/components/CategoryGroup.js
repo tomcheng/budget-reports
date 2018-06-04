@@ -37,13 +37,11 @@ const CategoryGroup = ({
       const categoryIds = categories.map(category => category.id);
 
       const payees = keyBy(budget.payees, "id");
-      const transactions = budget.transactions
-        .filter(
-          transaction =>
-            categoryIds.includes(transaction.categoryId) &&
-            transaction.date.slice(0, 7) === currentMonth
-        )
-        .reverse();
+      const transactions = budget.transactions.filter(
+        transaction =>
+          categoryIds.includes(transaction.categoryId) &&
+          transaction.date.slice(0, 7) === currentMonth
+      );
 
       const budgeted = sumBy(categories, "budgeted");
       const spent = -sumBy(categories, "activity");
@@ -64,7 +62,11 @@ const CategoryGroup = ({
                   <div
                     ref={ref}
                     onClick={onClick}
-                    style={{ display: "inline-flex", alignItems: "center", padding: "4px 0" }}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      padding: "4px 0"
+                    }}
                   >
                     {categoryGroup.name}
                     <div style={{ padding: "0 8px", color: "#444" }}>

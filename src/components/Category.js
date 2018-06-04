@@ -34,13 +34,11 @@ const Category = ({
         group => group.id === category.categoryGroupId
       );
       const payees = keyBy(budget.payees, "id");
-      const transactions = budget.transactions
-        .filter(
-          transaction =>
-            transaction.categoryId === categoryId &&
-            transaction.date.slice(0, 7) === currentMonth
-        )
-        .reverse();
+      const transactions = budget.transactions.filter(
+        transaction =>
+          transaction.categoryId === categoryId &&
+          transaction.date.slice(0, 7) === currentMonth
+      );
 
       return (
         <Layout>

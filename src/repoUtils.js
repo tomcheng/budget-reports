@@ -32,7 +32,7 @@ export const sanitizeBudget = (
     }),
     payees: keyBy(budget.payees, "id"),
     transactions: flatMap(
-      sortBy(budget.transactions, "date"),
+      sortBy(budget.transactions, "date").reverse(),
       t =>
         transactionIdsFromSub.includes(t.id)
           ? budget.subtransactions

@@ -39,9 +39,9 @@ describe("sanitizeBudget", () => {
       { id: "cat", activity: 1, balance: 5, budgeted: 3 }
     ]);
     expect(result.transactions).toEqual([
-      { id: "sub-1", amount: 1, categoryId: "cat-3", date: "2018-05-01" },
-      { id: "sub-2", amount: 1, categoryId: "cat-4", date: "2018-05-01" },
       { id: "trans-1", amount: 1, categoryId: "cat-1", date: "2018-05-02" },
+      { id: "sub-1", amount: 1, categoryId: "cat-3", date: "2018-05-01" },
+      { id: "sub-2", amount: 1, categoryId: "cat-4", date: "2018-05-01" }
     ]);
     expect(result.months[0]).toHaveProperty("ageOfMoney", 30);
   });
