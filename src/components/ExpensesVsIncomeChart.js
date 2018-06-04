@@ -55,7 +55,7 @@ const ExpensesVsIncomeChart = ({ data, excludedMonths }) => {
 ExpensesVsIncomeChart.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
-      expense: PropTypes.number.isRequired,
+      expenses: PropTypes.number.isRequired,
       income: PropTypes.number.isRequired,
       month: PropTypes.string.isRequired
     })

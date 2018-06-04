@@ -12,6 +12,7 @@ import GetBudget from "./GetBudget";
 import Layout from "./Layout";
 import BackToBudget from "./BackToBudget";
 import { PageTitle } from "./typeComponents";
+import Toggle from "./Toggle";
 import TopNumbers from "./TopNumbers";
 import ExpensesVsIncomeChart from "./ExpensesVsIncomeChart";
 import PageActions from "./PageActions";
@@ -38,7 +39,11 @@ class ExpensesVsIncome extends Component {
     })
   };
 
-  state = { excludeOutliers: true };
+  state = {
+    excludeOutliers: true,
+    excludeFirstMonth: true,
+    excludeCurrentMonth: false
+  };
 
   handleToggleExcludedOutliers = () => {
     this.setState(state => ({
@@ -47,9 +52,27 @@ class ExpensesVsIncome extends Component {
     }));
   };
 
+  handleToggleExcludeFirstMonth = () => {
+    this.setState(state => ({
+      ...state,
+      excludeFirstMonth: !state.excludeFirstMonth
+    }));
+  };
+
+  handleExcludeCurrentMonth = () => {
+    this.setState(state => ({
+      ...state,
+      excludeCurrentMonth: !state.excludeCurrentMonth
+    }));
+  };
+
   render() {
     const { budget, budgetId, onRefreshBudget, onRequestBudget } = this.props;
-    const { excludeOutliers } = this.state;
+    const {
+      excludeOutliers,
+      excludeFirstMonth,
+      excludeCurrentMonth
+    } = this.state;
 
     return (
       <GetBudget
@@ -62,7 +85,8 @@ class ExpensesVsIncome extends Component {
             budget.transactions,
             transaction => transaction.date.slice(0, 7)
           );
-          const monthStats = sortBy(
+
+          let monthStats = sortBy(
             map(transactionsByMonth, (transactions, month) => ({
               month,
               income: sumBy(
@@ -81,7 +105,16 @@ class ExpensesVsIncome extends Component {
               )
             })),
             "month"
-          ).slice(1);
+          );
+
+          if (excludeFirstMonth) {
+            monthStats = monthStats.slice(1);
+          }
+
+          if (excludeCurrentMonth) {
+            monthStats = monthStats.slice(0, monthStats.length - 1);
+          }
+
           const excludedMonths = [];
 
           if (excludeOutliers) {
@@ -110,17 +143,21 @@ class ExpensesVsIncome extends Component {
                 />
               </Layout.Header>
               <Layout.Body style={{ margin: 20 }}>
-                <div>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={excludeOutliers}
-                      onChange={this.handleToggleExcludedOutliers}
-                      style={{ marginRight: 8 }}
-                    />
-                    exclude outliers
-                  </label>
-                </div>
+                <Toggle
+                  label="exclude outliers"
+                  value={excludeOutliers}
+                  onToggle={this.handleToggleExcludedOutliers}
+                />
+                <Toggle
+                  label="exclude first month"
+                  value={excludeFirstMonth}
+                  onToggle={this.handleToggleExcludeFirstMonth}
+                />
+                <Toggle
+                  label="exclude current month"
+                  value={excludeCurrentMonth}
+                  onToggle={this.handleExcludeCurrentMonth}
+                />
                 <TopNumbers
                   numbers={[
                     {
