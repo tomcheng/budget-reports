@@ -1,44 +1,53 @@
 import React from "react";
 import PropTypes from "prop-types";
+import moment from "moment";
+import findIndex from "lodash/findIndex";
 import property from "lodash/property";
+import { plotBandColor } from "../styleVariables";
 import Chart from "./Chart";
 
-const ExpensesVsIncomeChart = ({ data }) => (
-  <Chart
-    options={{
-      chart: {
-        type: "column"
-      },
-      xAxis: [{ categories: data.map(property("month")) }],
-      yAxis: {
-        title: {
-          text: null
-        }
-      },
-
-      plotOptions: {
-        series: {
-          stacking: "normal"
-        }
-      },
-      series: [
-        {
-          name: "Income",
-          data: data.map(property("income"))
+const ExpensesVsIncomeChart = ({ data, excludedMonths }) => {
+  const plotBands = excludedMonths.map(month => {
+    const index = findIndex(data, d => d.month === month);
+    return { color: plotBandColor, from: index - 0.5, to: index + 0.5 };
+  });
+  return (
+    <Chart
+      options={{
+        chart: { type: "column" },
+        xAxis: {
+          categories: data.map(d => moment(d.month).format("MMM YY")),
+          plotBands
         },
-        {
-          name: "Expenses",
-          data: data.map(property("expenses"))
+        yAxis: {
+          title: {
+            text: null
+          }
         },
-        {
-          type: "line",
-          name: "Net Income",
-          data: data.map(d => d.income + d.expenses)
-        }
-      ]
-    }}
-  />
-);
+        plotOptions: {
+          series: {
+            stacking: "normal"
+          }
+        },
+        series: [
+          {
+            name: "Income",
+            data: data.map(property("income"))
+          },
+          {
+            name: "Expenses",
+            data: data.map(property("expenses"))
+          },
+          {
+            type: "line",
+            name: "Net Income",
+            data: data.map(d => d.income + d.expenses)
+          }
+        ]
+      }}
+    />
+  );
+};
 
 ExpensesVsIncomeChart.propTypes = {
   data: PropTypes.arrayOf(
@@ -47,7 +56,8 @@ ExpensesVsIncomeChart.propTypes = {
       income: PropTypes.number.isRequired,
       month: PropTypes.string.isRequired
     })
-  ).isRequired
+  ).isRequired,
+  excludedMonths: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
 export default ExpensesVsIncomeChart;

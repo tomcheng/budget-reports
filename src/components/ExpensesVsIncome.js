@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
+import get from "lodash/get";
 import groupBy from "lodash/groupBy";
 import map from "lodash/map";
 import maxBy from "lodash/maxBy";
@@ -31,8 +32,18 @@ class ExpensesVsIncome extends Component {
     })
   };
 
+  state = { excludeOutliers: true };
+
+  handleToggleExcludedOutliers = () => {
+    this.setState(state => ({
+      ...state,
+      excludeOutliers: !state.excludeOutliers
+    }));
+  };
+
   render() {
     const { budget, budgetId, onRequestBudget } = this.props;
+    const { excludeOutliers } = this.state;
 
     return (
       <GetBudget
@@ -65,26 +76,50 @@ class ExpensesVsIncome extends Component {
             })),
             "month"
           ).slice(1);
-          const max = maxBy(monthStats, s => s.income + s.expenses);
-          const min = minBy(monthStats, s => s.income + s.expenses);
-          const monthsToExclude = [max.month, min.month];
+          const excludedMonths = [];
+
+          if (excludeOutliers) {
+            excludedMonths.push(
+              get(maxBy(monthStats, s => s.income + s.expenses), "month")
+            );
+            excludedMonths.push(
+              get(minBy(monthStats, s => s.income + s.expenses), "month")
+            );
+          }
+
           const truncatedMonthStats = monthStats.filter(
-            s => !monthsToExclude.includes(s.month)
+            s => !excludedMonths.includes(s.month)
           );
 
           return (
             <Fragment>
-              <ExpensesVsIncomeChart data={monthStats} />
               <div>
-                Average Income: {meanBy(truncatedMonthStats, s => s.income)}
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={excludeOutliers}
+                    onChange={this.handleToggleExcludedOutliers}
+                  />
+                  Exclude Outliers
+                </label>
+              </div>
+              <ExpensesVsIncomeChart
+                data={monthStats}
+                excludedMonths={excludedMonths}
+              />
+              <div>
+                Average Income:{" "}
+                {Math.round(meanBy(truncatedMonthStats, s => s.income))}
               </div>
               <div>
                 Average Expenses:{" "}
-                {-meanBy(truncatedMonthStats, s => s.expenses)}
+                {-Math.round(meanBy(truncatedMonthStats, s => s.expenses))}
               </div>
               <div>
-                Average Net Income:{" "}
-                {meanBy(truncatedMonthStats, s => s.income + s.expenses)}
+                Average Net Worth Increase:{" "}
+                {Math.round(
+                  meanBy(truncatedMonthStats, s => s.income + s.expenses)
+                )}
               </div>
             </Fragment>
           );

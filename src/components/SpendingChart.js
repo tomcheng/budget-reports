@@ -7,7 +7,7 @@ import sumBy from "lodash/sumBy";
 import head from "lodash/head";
 import last from "lodash/last";
 import moment from "moment";
-import { primaryColor } from "../styleVariables";
+import { primaryColor, plotBandColor } from "../styleVariables";
 import { MinorText } from "./typeComponents";
 import Chart from "./Chart";
 
@@ -38,7 +38,7 @@ const SpendingChart = ({ total, transactions, currentMonth }) => {
   const lineData = dates.map((_, index) => index / (dates.length - 1) * total);
   const firstDayOfWeek = parseInt(dates[0].format("d"), 10);
   const plotBands = range(6).map(num => ({
-    color: "#fafafa",
+    color: plotBandColor,
     from: num * 7 - 1.5 - firstDayOfWeek,
     to: num * 7 + 0.5 - firstDayOfWeek
   }));
@@ -47,14 +47,10 @@ const SpendingChart = ({ total, transactions, currentMonth }) => {
     <div style={{ margin: 20 }}>
       <Chart
         options={{
-          chart: {
-            spacing: [0, 0, 0, 0],
-            height: 180
-          },
+          chart: { spacing: [0, 0, 0, 0], height: 180 },
           xAxis: {
             labels: { enabled: false },
-            plotBands,
-            tickLength: 0
+            plotBands
           },
           yAxis: { visible: false, endOnTick: false },
           series: [
