@@ -12,12 +12,10 @@ import GetBudget from "./GetBudget";
 import Layout from "./Layout";
 import BackToBudget from "./BackToBudget";
 import { PageTitle } from "./typeComponents";
-import Section from "./Section";
-import Toggle from "./Toggle";
 import TopNumbers from "./TopNumbers";
-import { StrongText } from "./typeComponents";
 import ExpensesVsIncomeChart from "./ExpensesVsIncomeChart";
 import PageActions from "./PageActions";
+import Exclusions from "./Exclusions";
 
 class ExpensesVsIncome extends Component {
   static propTypes = {
@@ -47,24 +45,10 @@ class ExpensesVsIncome extends Component {
     excludeCurrentMonth: true
   };
 
-  handleToggleExcludedOutliers = () => {
+  handleToggleExclusion = key => {
     this.setState(state => ({
       ...state,
-      excludeOutliers: !state.excludeOutliers
-    }));
-  };
-
-  handleToggleExcludeFirstMonth = () => {
-    this.setState(state => ({
-      ...state,
-      excludeFirstMonth: !state.excludeFirstMonth
-    }));
-  };
-
-  handleExcludeCurrentMonth = () => {
-    this.setState(state => ({
-      ...state,
-      excludeCurrentMonth: !state.excludeCurrentMonth
+      [key]: !state[key]
     }));
   };
 
@@ -169,24 +153,26 @@ class ExpensesVsIncome extends Component {
                   data={monthStats}
                   excludedMonths={excludedMonths}
                 />
-                <Section>
-                  <StrongText>Exclude:</StrongText>
-                  <Toggle
-                    label="first month"
-                    value={excludeFirstMonth}
-                    onToggle={this.handleToggleExcludeFirstMonth}
-                  />
-                  <Toggle
-                    label="current month"
-                    value={excludeCurrentMonth}
-                    onToggle={this.handleExcludeCurrentMonth}
-                  />
-                  <Toggle
-                    label="outliers"
-                    value={excludeOutliers}
-                    onToggle={this.handleToggleExcludedOutliers}
-                  />
-                </Section>
+                <Exclusions
+                  toggles={[
+                    {
+                      label: "first month",
+                      key: "excludeFirstMonth",
+                      value: excludeFirstMonth
+                    },
+                    {
+                      label: "current month",
+                      key: "excludeCurrentMonth",
+                      value: excludeCurrentMonth
+                    },
+                    {
+                      label: "outliers",
+                      key: "excludeOutliers",
+                      value: excludeOutliers
+                    }
+                  ]}
+                  onToggle={this.handleToggleExclusion}
+                />
               </Layout.Body>
             </Layout>
           );
