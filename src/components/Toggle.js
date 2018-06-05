@@ -2,17 +2,15 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const Toggle = ({ label, value, onToggle }) => (
-  <div>
-    <label>
-      <input
-        type="checkbox"
-        checked={value}
-        onChange={onToggle}
-        style={{ marginRight: 8 }}
-      />
-      {label}
-    </label>
-  </div>
+  <label style={{ display: "flex", height: 40, alignItems: "center" }}>
+    <input
+      type="checkbox"
+      checked={value}
+      onChange={onToggle}
+      style={{ marginRight: 8 }}
+    />
+    {label}
+  </label>
 );
 
 Toggle.propTypes = {
