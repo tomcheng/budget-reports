@@ -3,7 +3,12 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import findIndex from "lodash/findIndex";
 import property from "lodash/property";
-import { plotBandColor } from "../styleVariables";
+import {
+  plotBandColor,
+  primaryColor,
+  lightPrimaryColor,
+  negativeChartColor
+} from "../styleVariables";
 import Chart from "./Chart";
 
 const ExpensesVsIncomeChart = ({ data, excludedMonths }) => {
@@ -31,20 +36,25 @@ const ExpensesVsIncomeChart = ({ data, excludedMonths }) => {
         },
         series: [
           {
-            name: "Income",
+            borderWidth: 0,
+            color: lightPrimaryColor,
             data: data.map(property("income")),
             enableMouseTracking: false,
+            name: "Income"
           },
           {
-            name: "Expenses",
+            borderWidth: 0,
+            color: negativeChartColor,
             data: data.map(property("expenses")),
             enableMouseTracking: false,
+            name: "Expenses"
           },
           {
-            type: "line",
-            name: "Net Income",
+            color: primaryColor,
             data: data.map(d => d.income + d.expenses),
             enableMouseTracking: false,
+            name: "Net Income",
+            type: "line"
           }
         ]
       }}
