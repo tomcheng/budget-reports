@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import get from "lodash/get";
 import groupBy from "lodash/groupBy";
 import map from "lodash/map";
-import maxBy from "lodash/maxBy";
+import mean from "lodash/mean";
 import meanBy from "lodash/meanBy";
-import minBy from "lodash/minBy";
 import sortBy from "lodash/sortBy";
 import sumBy from "lodash/sumBy";
 import GetBudget from "./GetBudget";
@@ -16,6 +14,11 @@ import TopNumbers from "./TopNumbers";
 import ExpensesVsIncomeChart from "./ExpensesVsIncomeChart";
 import PageActions from "./PageActions";
 import Exclusions from "./Exclusions";
+
+const standardDeviation = arr => {
+  const avg = mean(arr);
+  return Math.sqrt(sumBy(arr, num => Math.pow(num - avg, 2)) / arr.length);
+};
 
 class ExpensesVsIncome extends Component {
   static propTypes = {
@@ -101,15 +104,15 @@ class ExpensesVsIncome extends Component {
             monthStats = monthStats.slice(0, monthStats.length - 1);
           }
 
-          const excludedMonths = [];
+          let excludedMonths = [];
 
           if (excludeOutliers) {
-            excludedMonths.push(
-              get(maxBy(monthStats, s => s.income + s.expenses), "month")
-            );
-            excludedMonths.push(
-              get(minBy(monthStats, s => s.income + s.expenses), "month")
-            );
+            const nets = monthStats.map(s => s.income + s.expenses);
+            const sd = standardDeviation(nets);
+            const avg = mean(nets);
+            excludedMonths = monthStats
+              .filter(s => Math.abs(s.income + s.expenses - avg) > sd)
+              .map(s => s.month);
           }
 
           const truncatedMonthStats = monthStats.filter(
