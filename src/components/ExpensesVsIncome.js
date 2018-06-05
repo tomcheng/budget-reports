@@ -42,7 +42,7 @@ class ExpensesVsIncome extends Component {
   state = {
     excludeOutliers: true,
     excludeFirstMonth: true,
-    excludeCurrentMonth: false
+    excludeCurrentMonth: true
   };
 
   handleToggleExcludedOutliers = () => {
