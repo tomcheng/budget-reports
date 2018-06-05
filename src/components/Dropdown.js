@@ -94,14 +94,13 @@ class Dropdown extends Component {
 
     return (
       <Fragment>
-        <span style={{ cursor: "pointer", userSelect: "none" }}>
-          {children({
-            onClick: this.handleClickTrigger,
-            ref: el => {
-              this.trigger = el;
-            }
-          })}
-        </span>
+        {children({
+          triggerStyle: { cursor: "pointer", userSelect: "none" },
+          onClick: this.handleClickTrigger,
+          ref: el => {
+            this.trigger = el;
+          }
+        })}
         {isOpen &&
           createPortal(
             <Fragment>

@@ -49,23 +49,31 @@ const CategoryGroup = ({
 
       return (
         <Layout>
-          <Layout.Header flushLeft>
+          <Layout.Header flushLeft flushRight>
             <BackToBudget budgetId={budgetId} />
-            <PageTitle style={{ flexGrow: 1 }}>
+            <PageTitle
+              style={{
+                flexGrow: 1,
+                alignSelf: "stretch",
+                display: "flex",
+                alignItems: "center"
+              }}
+            >
               <Dropdown
                 links={categories.map(category => ({
                   to: getCategoryLink({ budgetId, categoryId: category.id }),
                   label: category.name
                 }))}
               >
-                {({ ref, onClick }) => (
+                {({ ref, triggerStyle, onClick }) => (
                   <div
                     ref={ref}
                     onClick={onClick}
                     style={{
+                      ...triggerStyle,
+                      alignSelf: "stretch",
                       display: "inline-flex",
-                      alignItems: "center",
-                      padding: "4px 0"
+                      alignItems: "center"
                     }}
                   >
                     {categoryGroup.name}

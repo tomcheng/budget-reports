@@ -104,7 +104,7 @@ class Budget extends Component {
       >
         {() => (
           <Layout>
-            <Layout.Header>
+            <Layout.Header flushRight>
               <PageTitle>{budget.name}</PageTitle>
               <PageActions
                 budgetId={budget.id}

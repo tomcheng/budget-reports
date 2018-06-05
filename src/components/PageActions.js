@@ -30,10 +30,21 @@ const PageActions = ({ budgetId, onRefreshBudget }) => (
       </Dropdown.ContentWrapper>
     }
   >
-    {({ onClick, ref }) => (
-      <span onClick={onClick} ref={ref}>
+    {({ ref, triggerStyle, onClick }) => (
+      <div
+        style={{
+          ...triggerStyle,
+          width: 50,
+          display: "flex",
+          alignSelf: "stretch",
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+        onClick={onClick}
+        ref={ref}
+      >
         <Icon icon="ellipsis-v" />
-      </span>
+      </div>
     )}
   </Dropdown>
 );

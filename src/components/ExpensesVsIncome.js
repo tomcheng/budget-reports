@@ -132,7 +132,7 @@ class ExpensesVsIncome extends Component {
 
           return (
             <Layout>
-              <Layout.Header flushLeft>
+              <Layout.Header flushLeft flushRight>
                 <BackToBudget budgetId={budgetId} />
                 <PageTitle style={{ flexGrow: 1 }}>
                   Expenses vs Income

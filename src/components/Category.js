@@ -42,7 +42,7 @@ const Category = ({
 
       return (
         <Layout>
-          <Layout.Header flushLeft>
+          <Layout.Header flushLeft flushRight>
             <BackToBudget budgetId={budgetId} />
             <PageTitle
               style={{ flexGrow: 1, display: "flex", alignItems: "center" }}
