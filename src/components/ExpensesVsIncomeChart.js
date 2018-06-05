@@ -9,6 +9,7 @@ import {
   lightPrimaryColor,
   negativeChartColor
 } from "../styleVariables";
+import Section from "./Section";
 import Chart from "./Chart";
 
 const ExpensesVsIncomeChart = ({ data, excludedMonths }) => {
@@ -17,48 +18,50 @@ const ExpensesVsIncomeChart = ({ data, excludedMonths }) => {
     return { color: plotBandColor, from: index - 0.5, to: index + 0.5 };
   });
   return (
-    <Chart
-      options={{
-        chart: { type: "column" },
-        xAxis: {
-          categories: data.map(d => moment(d.month).format("MMM YY")),
-          plotBands
-        },
-        yAxis: {
-          title: {
-            text: null
-          }
-        },
-        plotOptions: {
-          series: {
-            stacking: "normal"
-          }
-        },
-        series: [
-          {
-            borderWidth: 0,
-            color: lightPrimaryColor,
-            data: data.map(property("income")),
-            enableMouseTracking: false,
-            name: "Income"
+    <Section>
+      <Chart
+        options={{
+          chart: { type: "column" },
+          xAxis: {
+            categories: data.map(d => moment(d.month).format("MMM YY")),
+            plotBands
           },
-          {
-            borderWidth: 0,
-            color: negativeChartColor,
-            data: data.map(property("expenses")),
-            enableMouseTracking: false,
-            name: "Expenses"
+          yAxis: {
+            title: {
+              text: null
+            }
           },
-          {
-            color: primaryColor,
-            data: data.map(d => d.income + d.expenses),
-            enableMouseTracking: false,
-            name: "Net Income",
-            type: "line"
-          }
-        ]
-      }}
-    />
+          plotOptions: {
+            series: {
+              stacking: "normal"
+            }
+          },
+          series: [
+            {
+              borderWidth: 0,
+              color: lightPrimaryColor,
+              data: data.map(property("income")),
+              enableMouseTracking: false,
+              name: "Income"
+            },
+            {
+              borderWidth: 0,
+              color: negativeChartColor,
+              data: data.map(property("expenses")),
+              enableMouseTracking: false,
+              name: "Expenses"
+            },
+            {
+              color: primaryColor,
+              data: data.map(d => d.income + d.expenses),
+              enableMouseTracking: false,
+              name: "Net Income",
+              type: "line"
+            }
+          ]
+        }}
+      />
+    </Section>
   );
 };
 

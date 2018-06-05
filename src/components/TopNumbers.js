@@ -2,11 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { MinorText, LargeNumber } from "./typeComponents";
-
-const Container = styled.div`
-  margin: 20px;
-  display: flex;
-`;
+import Section from "./Section";
 
 const Group = styled.div`
   flex-grow: 1;
@@ -20,14 +16,14 @@ const Label = styled(MinorText)`
 `;
 
 const TopNumbers = ({ numbers, roundToDollar }) => (
-  <Container>
+  <Section style={{ display: "flex" }}>
     {numbers.map(({ label, value }) => (
       <Group key={label}>
         <LargeNumber>${value.toFixed(roundToDollar ? 0 : 2)}</LargeNumber>
         <Label>{label}</Label>
       </Group>
     ))}
-  </Container>
+  </Section>
 );
 
 TopNumbers.propTypes = {

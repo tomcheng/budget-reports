@@ -12,8 +12,10 @@ import GetBudget from "./GetBudget";
 import Layout from "./Layout";
 import BackToBudget from "./BackToBudget";
 import { PageTitle } from "./typeComponents";
+import Section from "./Section";
 import Toggle from "./Toggle";
 import TopNumbers from "./TopNumbers";
+import { StrongText } from "./typeComponents";
 import ExpensesVsIncomeChart from "./ExpensesVsIncomeChart";
 import PageActions from "./PageActions";
 
@@ -142,22 +144,7 @@ class ExpensesVsIncome extends Component {
                   onRefreshBudget={onRefreshBudget}
                 />
               </Layout.Header>
-              <Layout.Body style={{ margin: 20 }}>
-                <Toggle
-                  label="exclude outliers"
-                  value={excludeOutliers}
-                  onToggle={this.handleToggleExcludedOutliers}
-                />
-                <Toggle
-                  label="exclude first month"
-                  value={excludeFirstMonth}
-                  onToggle={this.handleToggleExcludeFirstMonth}
-                />
-                <Toggle
-                  label="exclude current month"
-                  value={excludeCurrentMonth}
-                  onToggle={this.handleExcludeCurrentMonth}
-                />
+              <Layout.Body>
                 <TopNumbers
                   numbers={[
                     {
@@ -182,6 +169,24 @@ class ExpensesVsIncome extends Component {
                   data={monthStats}
                   excludedMonths={excludedMonths}
                 />
+                <Section>
+                  <StrongText>Exclude:</StrongText>
+                  <Toggle
+                    label="first month"
+                    value={excludeFirstMonth}
+                    onToggle={this.handleToggleExcludeFirstMonth}
+                  />
+                  <Toggle
+                    label="current month"
+                    value={excludeCurrentMonth}
+                    onToggle={this.handleExcludeCurrentMonth}
+                  />
+                  <Toggle
+                    label="outliers"
+                    value={excludeOutliers}
+                    onToggle={this.handleToggleExcludedOutliers}
+                  />
+                </Section>
               </Layout.Body>
             </Layout>
           );

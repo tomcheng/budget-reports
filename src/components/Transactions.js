@@ -2,9 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import Transaction from "./Transaction";
 import { StrongText, SecondaryText } from "./typeComponents";
+import Section from "./Section";
 
 const Transactions = ({ transactions, payees }) => (
-  <div style={{ margin: 20 }}>
+  <Section>
     <StrongText>Transactions</StrongText>
     {transactions.length ? (
       transactions.map(({ id, payeeId, date, amount }) => (
@@ -20,7 +21,7 @@ const Transactions = ({ transactions, payees }) => (
         No transactions this month
       </SecondaryText>
     )}
-  </div>
+  </Section>
 );
 
 Transactions.propTypes = {

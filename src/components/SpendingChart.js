@@ -9,6 +9,7 @@ import last from "lodash/last";
 import moment from "moment";
 import { primaryColor, plotBandColor } from "../styleVariables";
 import { MinorText } from "./typeComponents";
+import Section from "./Section";
 import Chart from "./Chart";
 
 const DateLabels = styled.div`
@@ -44,7 +45,7 @@ const SpendingChart = ({ total, transactions, currentMonth }) => {
   }));
 
   return (
-    <div style={{ margin: 20 }}>
+    <Section>
       <Chart
         options={{
           chart: { spacing: [0, 0, 0, 0], height: 180 },
@@ -77,7 +78,7 @@ const SpendingChart = ({ total, transactions, currentMonth }) => {
         <MinorText>{head(dates).format("MMM D")}</MinorText>
         <MinorText>{last(dates).format("MMM D")}</MinorText>
       </DateLabels>
-    </div>
+    </Section>
   );
 };
 
