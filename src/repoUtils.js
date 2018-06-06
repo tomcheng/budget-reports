@@ -7,6 +7,12 @@ import moment from "moment";
 import { upsertBy } from "./utils";
 import { formatCurrency, camelCaseKeys } from "./utils";
 
+const GROUPS_TO_HIDE = [
+  "Internal Master Category",
+  "Credit Card Payments",
+  "Hidden Categories"
+];
+
 export const sanitizeBudget = (
   budget,
   currentMonth = moment().format("YYYY-MM")
@@ -21,7 +27,10 @@ export const sanitizeBudget = (
 
   return {
     ...camelCaseKeys(
-      omit(budget, ["categories", "payees", "months", "transactions"])
+      omit(budget, ["categories", "category_groups", "payees", "months", "transactions"])
+    ),
+    categoryGroups: budget.category_groups.filter(
+      group => !GROUPS_TO_HIDE.includes(group.name)
     ),
     categories: budget.categories.map(c => {
       const mergedCategory = { ...c, ...categoriesFromMonth[c.id] };

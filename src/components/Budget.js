@@ -13,12 +13,6 @@ import { PageTitle } from "./typeComponents";
 import PageActions from "./PageActions";
 import CategoryGroupListItem from "./CategoryGroupListItem";
 
-const GROUPS_TO_HIDE = [
-  "Internal Master Category",
-  "Credit Card Payments",
-  "Hidden Categories"
-];
-
 class Budget extends Component {
   static propTypes = {
     budgetId: PropTypes.string.isRequired,
@@ -70,16 +64,12 @@ class Budget extends Component {
       t => categoryToGroup[t.categoryId]
     );
 
-    return sortBy(
-      budget.categoryGroups.filter(
-        group => !GROUPS_TO_HIDE.includes(group.name)
-      ),
-      group =>
-        get(
-          maxBy(transactionsByGroup[group.id], transaction => transaction.date),
-          "date",
-          "0000-00-00"
-        )
+    return sortBy(budget.categoryGroups, group =>
+      get(
+        maxBy(transactionsByGroup[group.id], transaction => transaction.date),
+        "date",
+        "0000-00-00"
+      )
     ).reverse();
   });
 

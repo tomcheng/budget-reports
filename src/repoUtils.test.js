@@ -4,6 +4,7 @@ describe("sanitizeBudget", () => {
   const budget = {
     payees: [{ id: "foo-bar" }],
     categories: [{ id: "cat", activity: 1000, balance: 2000, budgeted: 3000 }],
+    category_groups: [{ id: "blah", name: "Internal Master Category" }],
     subtransactions: [
       {
         id: "sub-1",
@@ -43,6 +44,7 @@ describe("sanitizeBudget", () => {
     expect(result.categories).toEqual([
       { id: "cat", activity: 1, balance: 5, budgeted: 3 }
     ]);
+    expect(result.categoryGroups).toEqual([]);
     expect(result.transactions).toEqual([
       { id: "trans-1", amount: 1, categoryId: "cat-1", date: "2018-05-02" },
       { id: "sub-1", amount: 1, categoryId: "cat-3", date: "2018-05-01" },
