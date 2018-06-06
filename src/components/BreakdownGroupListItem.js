@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import AnimateHeight from "react-animate-height-auto";
 import ListItem from "./ListItem";
-import { SecondaryText, MinorText } from "./typeComponents";
-import Amount from "./Amount";
+import { SecondaryText } from "./typeComponents";
+import AmountWithPercentage from "./AmountWithPercentage";
 
 class BreakdownGroupListItem extends Component {
   static propTypes = {
@@ -42,14 +42,11 @@ class BreakdownGroupListItem extends Component {
           }}
         >
           <SecondaryText style={{ whiteSpace: "pre" }}>{name}</SecondaryText>
-          <SecondaryText
-            style={{ textAlign: "right", opacity: expanded ? 0.3 : null }}
-          >
-            <Amount amount={amount} />
-            <MinorText style={{ marginTop: -4 }}>
-              {Math.round(amount / total * 100)}%
-            </MinorText>
-          </SecondaryText>
+          <AmountWithPercentage
+            amount={amount}
+            total={total}
+            faded={expanded}
+          />
         </div>
         <AnimateHeight isExpanded={expanded}>
           <div>
@@ -64,12 +61,7 @@ class BreakdownGroupListItem extends Component {
                 }}
               >
                 <SecondaryText>{category.name}</SecondaryText>
-                <SecondaryText style={{ textAlign: "right" }}>
-                  <Amount amount={category.amount} />
-                  <MinorText style={{ marginTop: -4 }}>
-                    {Math.round(category.amount / total * 100)}%
-                  </MinorText>
-                </SecondaryText>
+                <AmountWithPercentage amount={category.amount} total={total} />
               </div>
             ))}
           </div>
