@@ -8,26 +8,29 @@ import sumBy from "lodash/sumBy";
 import property from "lodash/property";
 import Section from "./Section";
 
-const Breakdown = ({ transactions, categories, categoryGroups }) => {
-  const transactionsByCategory = groupBy(
-    transactions.filter(trans => !!trans.categoryId),
+const Breakdown = ({ expenses, categories, categoryGroups }) => {
+  const total = sumBy(expenses, "amount");
+  const expensesByCategory = groupBy(
+    expenses.filter(trans => !!trans.categoryId),
     property("categoryId")
   );
   const categoriesByGroup = groupBy(categories, property("categoryGroupId"));
 
   const groups = sortBy(
-    categoryGroups.map(group => {
-      const groupTransactions = flatMap(
-        get(categoriesByGroup, group.id, []).map(category =>
-          get(transactionsByCategory, category.id, [])
-        )
-      );
+    categoryGroups
+      .map(group => {
+        const groupTransactions = flatMap(
+          get(categoriesByGroup, group.id, []).map(category =>
+            get(expensesByCategory, category.id, [])
+          )
+        );
 
-      return {
-        ...group,
-        total: sumBy(groupTransactions, "amount")
-      };
-    }),
+        return {
+          ...group,
+          total: sumBy(groupTransactions, "amount")
+        };
+      })
+      .filter(group => !!group.total),
     "total"
   );
 
@@ -35,7 +38,7 @@ const Breakdown = ({ transactions, categories, categoryGroups }) => {
     <Section>
       {groups.map(group => (
         <div key={group.id}>
-          {group.name} {group.total}
+          {group.name} {group.total} ({Math.round(group.total / total * 100)})
         </div>
       ))}
     </Section>
@@ -43,12 +46,6 @@ const Breakdown = ({ transactions, categories, categoryGroups }) => {
 };
 
 Breakdown.propTypes = {
-  transactions: PropTypes.arrayOf(
-    PropTypes.shape({
-      amount: PropTypes.number.isRequired,
-      categoryId: PropTypes.string
-    })
-  ).isRequired,
   categories: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
@@ -58,6 +55,12 @@ Breakdown.propTypes = {
   categoryGroups: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired
+    })
+  ).isRequired,
+  expenses: PropTypes.arrayOf(
+    PropTypes.shape({
+      amount: PropTypes.number.isRequired,
+      categoryId: PropTypes.string
     })
   ).isRequired,
   payees: PropTypes.objectOf(PropTypes.shape({})).isRequired

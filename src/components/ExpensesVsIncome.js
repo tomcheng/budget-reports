@@ -21,6 +21,10 @@ const standardDeviation = arr => {
   return Math.sqrt(sumBy(arr, num => Math.pow(num - avg, 2)) / arr.length);
 };
 
+const isIncome = transaction => transaction.amount > 0;
+const isExpense = transaction => transaction.amount < 0;
+const getMonth = transaction => transaction.date.slice(0, 7);
+
 class ExpensesVsIncome extends Component {
   static propTypes = {
     budgetId: PropTypes.string.isRequired,
@@ -84,20 +88,14 @@ class ExpensesVsIncome extends Component {
             budget.transactions.filter(
               transaction => !transaction.transferAccountId
             ),
-            transaction => transaction.date.slice(0, 7)
+            getMonth
           );
 
           let monthStats = sortBy(
             map(transactionsByMonth, (transactions, month) => ({
               month,
-              income: sumBy(
-                transactions.filter(transaction => transaction.amount > 0),
-                "amount"
-              ),
-              expenses: sumBy(
-                transactions.filter(transaction => transaction.amount < 0),
-                "amount"
-              )
+              income: sumBy(transactions.filter(isIncome), "amount"),
+              expenses: sumBy(transactions.filter(isExpense), "amount")
             })),
             "month"
           );
@@ -215,10 +213,8 @@ class ExpensesVsIncome extends Component {
                     categories={budget.categories}
                     categoryGroups={budget.categoryGroups}
                     payees={budget.payees}
-                    transactions={sortBy(
-                      transactionsByMonth[selectedMonth],
-                      "amount"
-                    )}
+                    expenses={transactionsByMonth[selectedMonth].filter(isExpense)}
+                    income={transactionsByMonth[selectedMonth].filter(isIncome)}
                   />
                 )}
               </Layout.Body>
