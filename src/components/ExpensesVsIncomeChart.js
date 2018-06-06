@@ -5,6 +5,7 @@ import findIndex from "lodash/findIndex";
 import property from "lodash/property";
 import {
   plotBandColor,
+  selectedPlotBandColor,
   primaryColor,
   lightPrimaryColor,
   negativeChartColor
@@ -12,11 +13,26 @@ import {
 import Section from "./Section";
 import Chart from "./Chart";
 
-const ExpensesVsIncomeChart = ({ data, excludedMonths, onSelectMonth }) => {
+const ExpensesVsIncomeChart = ({
+  data,
+  excludedMonths,
+  onSelectMonth,
+  selectedMonth
+}) => {
   const plotBands = excludedMonths.map(month => {
     const index = findIndex(data, d => d.month === month);
     return { color: plotBandColor, from: index - 0.5, to: index + 0.5 };
   });
+  const selectedPlotBand = [];
+
+  if (selectedMonth) {
+    const index = findIndex(data, d => d.month === selectedMonth);
+    selectedPlotBand.push({
+      color: selectedPlotBandColor,
+      from: index - 0.5,
+      to: index + 0.5
+    });
+  }
 
   return (
     <Section>
@@ -25,7 +41,7 @@ const ExpensesVsIncomeChart = ({ data, excludedMonths, onSelectMonth }) => {
           chart: { type: "column" },
           xAxis: {
             categories: data.map(d => moment(d.month).format("MMM YY")),
-            plotBands
+            plotBands: plotBands.concat(selectedPlotBand)
           },
           yAxis: {
             title: {
@@ -62,6 +78,7 @@ const ExpensesVsIncomeChart = ({ data, excludedMonths, onSelectMonth }) => {
             {
               color: primaryColor,
               data: data.map(d => d.income + d.expenses),
+              enableMouseTracking: false,
               name: "Net Income",
               type: "line"
             }
@@ -81,7 +98,8 @@ ExpensesVsIncomeChart.propTypes = {
     })
   ).isRequired,
   excludedMonths: PropTypes.arrayOf(PropTypes.string).isRequired,
-  onSelectMonth: PropTypes.func.isRequired
+  onSelectMonth: PropTypes.func.isRequired,
+  selectedMonth: PropTypes.string
 };
 
 export default ExpensesVsIncomeChart;

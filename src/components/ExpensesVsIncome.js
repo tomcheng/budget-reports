@@ -124,7 +124,6 @@ class ExpensesVsIncome extends Component {
           const truncatedMonthStats = monthStats.filter(
             s => !excludedMonths.includes(s.month)
           );
-          console.log("budget:", budget);
 
           return (
             <Layout>
@@ -162,6 +161,7 @@ class ExpensesVsIncome extends Component {
                 <ExpensesVsIncomeChart
                   data={monthStats}
                   excludedMonths={excludedMonths}
+                  selectedMonth={selectedMonth}
                   onSelectMonth={this.handleSelectMonth}
                 />
                 {!selectedMonth && (
