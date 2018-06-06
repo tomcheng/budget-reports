@@ -14,7 +14,7 @@ import TopNumbers from "./TopNumbers";
 import ExpensesVsIncomeChart from "./ExpensesVsIncomeChart";
 import PageActions from "./PageActions";
 import Exclusions from "./Exclusions";
-import Transactions from "./Transactions";
+import Breakdown from "./Breakdown";
 
 const standardDeviation = arr => {
   const avg = mean(arr);
@@ -211,12 +211,14 @@ class ExpensesVsIncome extends Component {
                   />
                 )}
                 {selectedMonth && (
-                  <Transactions
+                  <Breakdown
+                    categories={budget.categories}
+                    categoryGroups={budget.categoryGroups}
+                    payees={budget.payees}
                     transactions={sortBy(
                       transactionsByMonth[selectedMonth],
                       "amount"
                     )}
-                    payees={budget.payees}
                   />
                 )}
               </Layout.Body>
