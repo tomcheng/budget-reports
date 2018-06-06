@@ -214,9 +214,13 @@ class ExpensesVsIncome extends Component {
                     categories={budget.categories}
                     categoryGroups={budget.categoryGroups}
                     payees={budget.payees}
-                    transactions={transactionsByMonth[selectedMonth].filter(
-                      isIncome
-                    )}
+                    transactions={transactionsByMonth[selectedMonth]
+                      .filter(isIncome)
+                      .map(transaction => ({
+                        ...transaction,
+                        categoryId: null // don't bother grouping by category for income
+                      }))}
+                    reverse
                   />
                 )}
                 {selectedMonth && (

@@ -17,6 +17,7 @@ const Breakdown = ({
   transactions,
   categories,
   categoryGroups,
+  reverse,
   payees: payeesById
 }) => {
   const total = sumBy(transactions, "amount");
@@ -42,7 +43,7 @@ const Breakdown = ({
           get(transactionsByCategory, category.id, [])
         )
       );
-      const categories = sortBy(
+      let categories = sortBy(
         get(categoriesByGroup, group.id, [])
           .map(category => {
             return {
@@ -57,6 +58,10 @@ const Breakdown = ({
         "amount"
       );
 
+      if (reverse) {
+        categories = categories.reverse();
+      }
+
       return {
         ...group,
         categories,
@@ -66,7 +71,11 @@ const Breakdown = ({
     })
     .filter(group => !!group.amount);
 
-  const groupsAndPayees = sortBy(groups.concat(payees), "amount");
+  let groupsAndPayees = sortBy(groups.concat(payees), "amount");
+
+  if (reverse) {
+    groupsAndPayees.reverse();
+  }
 
   return (
     <Section>
@@ -108,7 +117,10 @@ Breakdown.propTypes = {
       amount: PropTypes.number.isRequired,
       categoryId: PropTypes.string
     })
-  ).isRequired
+  ).isRequired,
+  reverse: PropTypes.bool
 };
+
+Breakdown.defaultProps = { reverse: false };
 
 export default Breakdown;
