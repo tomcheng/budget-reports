@@ -4,9 +4,10 @@ import flatMap from "lodash/flatMap";
 import get from "lodash/get";
 import groupBy from "lodash/groupBy";
 import keys from "lodash/keys";
+import property from "lodash/property";
 import sortBy from "lodash/sortBy";
 import sumBy from "lodash/sumBy";
-import property from "lodash/property";
+import map from "lodash/map";
 import Section from "./Section";
 import { StrongText } from "./typeComponents";
 import PayeeListItem from "./PayeeListItem";
@@ -46,12 +47,20 @@ const Breakdown = ({
       let categories = sortBy(
         get(categoriesByGroup, group.id, [])
           .map(category => {
+            const transactions = get(transactionsByCategory, category.id, []);
+            const transactionsByPayee = groupBy(transactions, "payeeId");
+            const payees = sortBy(
+              map(transactionsByPayee, (trans, id) => ({
+                ...payeesById[id],
+                amount: sumBy(trans, "amount")
+              })),
+              "amount"
+            );
+
             return {
               ...category,
-              amount: sumBy(
-                get(transactionsByCategory, category.id, []),
-                "amount"
-              )
+              payees,
+              amount: sumBy(transactions, "amount")
             };
           })
           .filter(category => !!category.amount),
