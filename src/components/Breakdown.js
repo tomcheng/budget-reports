@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import flatMap from "lodash/flatMap";
 import get from "lodash/get";
@@ -8,13 +8,10 @@ import property from "lodash/property";
 import sortBy from "lodash/sortBy";
 import sumBy from "lodash/sumBy";
 import map from "lodash/map";
-import Section from "./Section";
-import { StrongText } from "./typeComponents";
 import PayeeListItem from "./PayeeListItem";
 import BreakdownGroupListItem from "./BreakdownGroupListItem";
 
 const Breakdown = ({
-  title,
   transactions,
   categories,
   categoryGroups,
@@ -87,8 +84,7 @@ const Breakdown = ({
   }
 
   return (
-    <Section>
-      <StrongText>{title}</StrongText>
+    <Fragment>
       {groupsAndPayees.map(
         ({ type, id, name, amount, categories }) =>
           type === "payee" ? (
@@ -103,7 +99,7 @@ const Breakdown = ({
             />
           )
       )}
-    </Section>
+    </Fragment>
   );
 };
 
@@ -120,7 +116,6 @@ Breakdown.propTypes = {
     })
   ).isRequired,
   payees: PropTypes.objectOf(PropTypes.shape({})).isRequired,
-  title: PropTypes.string.isRequired,
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       amount: PropTypes.number.isRequired,
