@@ -4,6 +4,7 @@ import AnimateHeight from "react-animate-height-auto";
 import ListItem from "./ListItem";
 import { SecondaryText } from "./typeComponents";
 import AmountWithPercentage from "./AmountWithPercentage";
+import BreakdownCategoryListItem from "./BreakdownCategoryListItem";
 
 class BreakdownGroupListItem extends Component {
   static propTypes = {
@@ -51,18 +52,11 @@ class BreakdownGroupListItem extends Component {
         <AnimateHeight isExpanded={expanded}>
           <div>
             {categories.map(category => (
-              <div
+              <BreakdownCategoryListItem
                 key={category.id}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "8px 0"
-                }}
-              >
-                <SecondaryText>{category.name}</SecondaryText>
-                <AmountWithPercentage amount={category.amount} total={total} />
-              </div>
+                category={category}
+                total={total}
+              />
             ))}
           </div>
         </AnimateHeight>
