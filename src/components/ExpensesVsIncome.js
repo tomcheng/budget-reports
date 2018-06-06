@@ -210,6 +210,17 @@ class ExpensesVsIncome extends Component {
                 )}
                 {selectedMonth && (
                   <Breakdown
+                    title="Expenses"
+                    categories={budget.categories}
+                    categoryGroups={budget.categoryGroups}
+                    payees={budget.payees}
+                    transactions={transactionsByMonth[selectedMonth].filter(
+                      isExpense
+                    )}
+                  />
+                )}
+                {selectedMonth && (
+                  <Breakdown
                     title="Income"
                     categories={budget.categories}
                     categoryGroups={budget.categoryGroups}
@@ -221,17 +232,6 @@ class ExpensesVsIncome extends Component {
                         categoryId: null // don't bother grouping by category for income
                       }))}
                     reverse
-                  />
-                )}
-                {selectedMonth && (
-                  <Breakdown
-                    title="Expenses"
-                    categories={budget.categories}
-                    categoryGroups={budget.categoryGroups}
-                    payees={budget.payees}
-                    transactions={transactionsByMonth[selectedMonth].filter(
-                      isExpense
-                    )}
                   />
                 )}
               </Layout.Body>
