@@ -40,9 +40,21 @@ const Breakdown = ({
           get(expensesByCategory, category.id, [])
         )
       );
+      const categories = sortBy(
+        get(categoriesByGroup, group.id, [])
+          .map(category => {
+            return {
+              ...category,
+              amount: sumBy(get(expensesByCategory, category.id, []), "amount")
+            };
+          })
+          .filter(category => !!category.amount),
+        "amount"
+      );
 
       return {
         ...group,
+        categories,
         amount: sumBy(groupTransactions, "amount"),
         type: "group"
       };
@@ -54,7 +66,7 @@ const Breakdown = ({
   return (
     <Section>
       {groupsAndPayees.map(
-        ({ type, id, name, amount }) =>
+        ({ type, id, name, amount, categories }) =>
           type === "payee" ? (
             <PayeeListItem key={id} name={name} amount={amount} total={total} />
           ) : (
@@ -63,6 +75,7 @@ const Breakdown = ({
               name={name}
               amount={amount}
               total={total}
+              categories={categories}
             />
           )
       )}
