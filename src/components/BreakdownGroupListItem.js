@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import AnimateHeight from "react-animate-height-auto";
 import ListItem from "./ListItem";
-import { SecondaryText } from "./typeComponents";
 import AmountWithPercentage from "./AmountWithPercentage";
 import BreakdownCategoryListItem from "./BreakdownCategoryListItem";
+import NameWithExpandedIndicator from "./NameWithExpandedIndicator";
 
 class BreakdownGroupListItem extends Component {
   static propTypes = {
@@ -42,7 +42,7 @@ class BreakdownGroupListItem extends Component {
             userSelect: "none"
           }}
         >
-          <SecondaryText style={{ whiteSpace: "pre" }}>{name}</SecondaryText>
+          <NameWithExpandedIndicator name={name} expanded={expanded} />
           <AmountWithPercentage
             amount={amount}
             total={total}
@@ -50,7 +50,7 @@ class BreakdownGroupListItem extends Component {
           />
         </div>
         <AnimateHeight isExpanded={expanded}>
-          <div>
+          <div style={{ paddingLeft: 18 }}>
             {categories.map(category => (
               <BreakdownCategoryListItem
                 key={category.id}

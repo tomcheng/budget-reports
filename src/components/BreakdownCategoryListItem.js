@@ -4,6 +4,9 @@ import styled from "styled-components";
 import AnimateHeight from "react-animate-height-auto";
 import { SecondaryText } from "./typeComponents";
 import AmountWithPercentage from "./AmountWithPercentage";
+import NameWithExpandedIndicator from "./NameWithExpandedIndicator";
+
+const EXPAND_INDICATOR_WIDTH = 24;
 
 const Container = styled.div`
   display: flex;
@@ -41,7 +44,7 @@ class BreakdownCategoryListItem extends Component {
     return (
       <Fragment>
         <Container onClick={this.handleToggleExpand}>
-          <SecondaryText>{category.name}</SecondaryText>
+          <NameWithExpandedIndicator name={category.name} expanded={expanded} />
           <AmountWithPercentage
             amount={category.amount}
             total={total}
@@ -52,7 +55,9 @@ class BreakdownCategoryListItem extends Component {
           <div>
             {category.payees.map(payee => (
               <Container key={payee.id}>
-                <SecondaryText>{payee.name}</SecondaryText>
+                <SecondaryText style={{ paddingLeft: EXPAND_INDICATOR_WIDTH }}>
+                  {payee.name}
+                </SecondaryText>
                 <AmountWithPercentage amount={payee.amount} total={total} />
               </Container>
             ))}

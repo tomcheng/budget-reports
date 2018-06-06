@@ -210,6 +210,7 @@ class ExpensesVsIncome extends Component {
                 )}
                 {selectedMonth && (
                   <Breakdown
+                    key={selectedMonth + "-expenses"}
                     title="Expenses"
                     categories={budget.categories}
                     categoryGroups={budget.categoryGroups}
@@ -221,6 +222,7 @@ class ExpensesVsIncome extends Component {
                 )}
                 {selectedMonth && (
                   <Breakdown
+                    key={selectedMonth + "-income"}
                     title="Income"
                     categories={budget.categories}
                     categoryGroups={budget.categoryGroups}
