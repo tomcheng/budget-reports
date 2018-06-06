@@ -19,19 +19,20 @@ const ExpensesVsIncomeChart = ({
   onSelectMonth,
   selectedMonth
 }) => {
-  const plotBands = excludedMonths.map(month => {
+  let plotBands = excludedMonths.map(month => {
     const index = findIndex(data, d => d.month === month);
     return { color: plotBandColor, from: index - 0.5, to: index + 0.5 };
   });
-  const selectedPlotBand = [];
 
   if (selectedMonth) {
     const index = findIndex(data, d => d.month === selectedMonth);
-    selectedPlotBand.push({
-      color: selectedPlotBandColor,
-      from: index - 0.5,
-      to: index + 0.5
-    });
+    plotBands = [
+      {
+        color: selectedPlotBandColor,
+        from: index - 0.5,
+        to: index + 0.5
+      }
+    ];
   }
 
   return (
@@ -41,7 +42,7 @@ const ExpensesVsIncomeChart = ({
           chart: { type: "column" },
           xAxis: {
             categories: data.map(d => moment(d.month).format("MMM YY")),
-            plotBands: plotBands.concat(selectedPlotBand)
+            plotBands
           },
           yAxis: {
             title: {
