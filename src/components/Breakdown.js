@@ -8,22 +8,24 @@ import sortBy from "lodash/sortBy";
 import sumBy from "lodash/sumBy";
 import property from "lodash/property";
 import Section from "./Section";
+import { StrongText } from "./typeComponents";
 import PayeeListItem from "./PayeeListItem";
 import BreakdownGroupListItem from "./BreakdownGroupListItem";
 
 const Breakdown = ({
-  expenses,
+  title,
+  transactions,
   categories,
   categoryGroups,
   payees: payeesById
 }) => {
-  const total = sumBy(expenses, "amount");
-  const expensesByCategory = groupBy(
-    expenses.filter(trans => !!trans.categoryId),
+  const total = sumBy(transactions, "amount");
+  const transactionsByCategory = groupBy(
+    transactions.filter(trans => !!trans.categoryId),
     property("categoryId")
   );
   const categoriesByGroup = groupBy(categories, property("categoryGroupId"));
-  const noCategories = expenses.filter(trans => !trans.categoryId);
+  const noCategories = transactions.filter(trans => !trans.categoryId);
   const transactionsByPayee = groupBy(noCategories, "payeeId");
   const payees = keys(payeesById)
     .filter(id => !!transactionsByPayee[id])
@@ -37,7 +39,7 @@ const Breakdown = ({
     .map(group => {
       const groupTransactions = flatMap(
         get(categoriesByGroup, group.id, []).map(category =>
-          get(expensesByCategory, category.id, [])
+          get(transactionsByCategory, category.id, [])
         )
       );
       const categories = sortBy(
@@ -45,7 +47,10 @@ const Breakdown = ({
           .map(category => {
             return {
               ...category,
-              amount: sumBy(get(expensesByCategory, category.id, []), "amount")
+              amount: sumBy(
+                get(transactionsByCategory, category.id, []),
+                "amount"
+              )
             };
           })
           .filter(category => !!category.amount),
@@ -65,6 +70,7 @@ const Breakdown = ({
 
   return (
     <Section>
+      <StrongText>{title}</StrongText>
       {groupsAndPayees.map(
         ({ type, id, name, amount, categories }) =>
           type === "payee" ? (
@@ -95,13 +101,14 @@ Breakdown.propTypes = {
       id: PropTypes.string.isRequired
     })
   ).isRequired,
-  expenses: PropTypes.arrayOf(
+  payees: PropTypes.objectOf(PropTypes.shape({})).isRequired,
+  title: PropTypes.string.isRequired,
+  transactions: PropTypes.arrayOf(
     PropTypes.shape({
       amount: PropTypes.number.isRequired,
       categoryId: PropTypes.string
     })
-  ).isRequired,
-  payees: PropTypes.objectOf(PropTypes.shape({})).isRequired
+  ).isRequired
 };
 
 export default Breakdown;

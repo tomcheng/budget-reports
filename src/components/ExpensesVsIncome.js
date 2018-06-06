@@ -210,11 +210,24 @@ class ExpensesVsIncome extends Component {
                 )}
                 {selectedMonth && (
                   <Breakdown
+                    title="Income"
                     categories={budget.categories}
                     categoryGroups={budget.categoryGroups}
                     payees={budget.payees}
-                    expenses={transactionsByMonth[selectedMonth].filter(isExpense)}
-                    income={transactionsByMonth[selectedMonth].filter(isIncome)}
+                    transactions={transactionsByMonth[selectedMonth].filter(
+                      isIncome
+                    )}
+                  />
+                )}
+                {selectedMonth && (
+                  <Breakdown
+                    title="Expenses"
+                    categories={budget.categories}
+                    categoryGroups={budget.categoryGroups}
+                    payees={budget.payees}
+                    transactions={transactionsByMonth[selectedMonth].filter(
+                      isExpense
+                    )}
                   />
                 )}
               </Layout.Body>
