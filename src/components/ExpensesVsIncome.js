@@ -101,6 +101,9 @@ class ExpensesVsIncome extends Component {
             })),
             "month"
           );
+          const selectedMonthStat = monthStats.find(
+            s => s.month === selectedMonth
+          );
 
           if (excludeFirstMonth) {
             monthStats = monthStats.slice(1);
@@ -138,26 +141,47 @@ class ExpensesVsIncome extends Component {
                 />
               </Layout.Header>
               <Layout.Body>
-                <TopNumbers
-                  numbers={[
-                    {
-                      label: "avg. income",
-                      value: meanBy(truncatedMonthStats, s => s.income)
-                    },
-                    {
-                      label: "avg. expenses",
-                      value: -meanBy(truncatedMonthStats, s => s.expenses)
-                    },
-                    {
-                      label: "avg. net income",
-                      value: meanBy(
-                        truncatedMonthStats,
-                        s => s.income + s.expenses
-                      )
-                    }
-                  ]}
-                  roundToDollar
-                />
+                {selectedMonth ? (
+                  <TopNumbers
+                    numbers={[
+                      {
+                        label: "income",
+                        value: selectedMonthStat.income
+                      },
+                      {
+                        label: "expenses",
+                        value: -selectedMonthStat.expenses
+                      },
+                      {
+                        label: "net income",
+                        value:
+                          selectedMonthStat.income + selectedMonthStat.expenses
+                      }
+                    ]}
+                    roundToDollar
+                  />
+                ) : (
+                  <TopNumbers
+                    numbers={[
+                      {
+                        label: "avg. income",
+                        value: meanBy(truncatedMonthStats, s => s.income)
+                      },
+                      {
+                        label: "avg. expenses",
+                        value: -meanBy(truncatedMonthStats, s => s.expenses)
+                      },
+                      {
+                        label: "avg. net income",
+                        value: meanBy(
+                          truncatedMonthStats,
+                          s => s.income + s.expenses
+                        )
+                      }
+                    ]}
+                    roundToDollar
+                  />
+                )}
                 <ExpensesVsIncomeChart
                   data={monthStats}
                   excludedMonths={excludedMonths}
