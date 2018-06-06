@@ -3,44 +3,69 @@ import PropTypes from "prop-types";
 import flatMap from "lodash/flatMap";
 import get from "lodash/get";
 import groupBy from "lodash/groupBy";
+import keys from "lodash/keys";
 import sortBy from "lodash/sortBy";
 import sumBy from "lodash/sumBy";
 import property from "lodash/property";
 import Section from "./Section";
+import PayeeListItem from "./PayeeListItem";
+import BreakdownGroupListItem from "./BreakdownGroupListItem";
 
-const Breakdown = ({ expenses, categories, categoryGroups }) => {
+const Breakdown = ({
+  expenses,
+  categories,
+  categoryGroups,
+  payees: payeesById
+}) => {
   const total = sumBy(expenses, "amount");
   const expensesByCategory = groupBy(
     expenses.filter(trans => !!trans.categoryId),
     property("categoryId")
   );
   const categoriesByGroup = groupBy(categories, property("categoryGroupId"));
+  const noCategories = expenses.filter(trans => !trans.categoryId);
+  const transactionsByPayee = groupBy(noCategories, "payeeId");
+  const payees = keys(payeesById)
+    .filter(id => !!transactionsByPayee[id])
+    .map(id => ({
+      ...payeesById[id],
+      amount: sumBy(transactionsByPayee[id], "amount"),
+      type: "payee"
+    }));
 
-  const groups = sortBy(
-    categoryGroups
-      .map(group => {
-        const groupTransactions = flatMap(
-          get(categoriesByGroup, group.id, []).map(category =>
-            get(expensesByCategory, category.id, [])
-          )
-        );
+  const groups = categoryGroups
+    .map(group => {
+      const groupTransactions = flatMap(
+        get(categoriesByGroup, group.id, []).map(category =>
+          get(expensesByCategory, category.id, [])
+        )
+      );
 
-        return {
-          ...group,
-          total: sumBy(groupTransactions, "amount")
-        };
-      })
-      .filter(group => !!group.total),
-    "total"
-  );
+      return {
+        ...group,
+        amount: sumBy(groupTransactions, "amount"),
+        type: "group"
+      };
+    })
+    .filter(group => !!group.amount);
+
+  const groupsAndPayees = sortBy(groups.concat(payees), "amount");
 
   return (
     <Section>
-      {groups.map(group => (
-        <div key={group.id}>
-          {group.name} {group.total} ({Math.round(group.total / total * 100)})
-        </div>
-      ))}
+      {groupsAndPayees.map(
+        ({ type, id, name, amount }) =>
+          type === "payee" ? (
+            <PayeeListItem key={id} name={name} amount={amount} total={total} />
+          ) : (
+            <BreakdownGroupListItem
+              key={id}
+              name={name}
+              amount={amount}
+              total={total}
+            />
+          )
+      )}
     </Section>
   );
 };

@@ -3,25 +3,15 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import moment from "moment";
 import { SecondaryText, MinorText } from "./typeComponents";
+import ListItem from "./ListItem";
 import Amount from "./Amount";
-
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 0;
-
-  & + & {
-    border-top: 1px dotted #ddd;
-  }
-`;
 
 const Date = styled(MinorText)`
   margin-top: -4px;
 `;
 
 const Transaction = ({ payee, date, amount }) => (
-  <Container>
+  <ListItem>
     <div>
       <SecondaryText>{payee.name}</SecondaryText>
       <Date>{moment(date).format("dddd, MMM D")}</Date>
@@ -29,7 +19,7 @@ const Transaction = ({ payee, date, amount }) => (
     <SecondaryText>
       <Amount amount={amount} />
     </SecondaryText>
-  </Container>
+  </ListItem>
 );
 
 Transaction.propTypes = {
