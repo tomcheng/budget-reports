@@ -14,6 +14,7 @@ import TopNumbers from "./TopNumbers";
 import ExpensesVsIncomeChart from "./ExpensesVsIncomeChart";
 import PageActions from "./PageActions";
 import Exclusions from "./Exclusions";
+import Transactions from "./Transactions";
 
 const standardDeviation = arr => {
   const avg = mean(arr);
@@ -45,7 +46,8 @@ class ExpensesVsIncome extends Component {
   state = {
     excludeOutliers: true,
     excludeFirstMonth: true,
-    excludeCurrentMonth: true
+    excludeCurrentMonth: true,
+    selectedMonth: null
   };
 
   handleToggleExclusion = key => {
@@ -55,12 +57,20 @@ class ExpensesVsIncome extends Component {
     }));
   };
 
+  handleSelectMonth = month => {
+    this.setState(state => ({
+      ...state,
+      selectedMonth: month === state.selectedMonth ? null : month
+    }));
+  };
+
   render() {
     const { budget, budgetId, onRefreshBudget, onRequestBudget } = this.props;
     const {
       excludeOutliers,
       excludeFirstMonth,
-      excludeCurrentMonth
+      excludeCurrentMonth,
+      selectedMonth
     } = this.state;
 
     return (
@@ -71,7 +81,9 @@ class ExpensesVsIncome extends Component {
       >
         {() => {
           const transactionsByMonth = groupBy(
-            budget.transactions,
+            budget.transactions.filter(
+              transaction => !transaction.transferAccountId
+            ),
             transaction => transaction.date.slice(0, 7)
           );
 
@@ -79,17 +91,11 @@ class ExpensesVsIncome extends Component {
             map(transactionsByMonth, (transactions, month) => ({
               month,
               income: sumBy(
-                transactions.filter(
-                  transaction =>
-                    !transaction.transferAccountId && transaction.amount > 0
-                ),
+                transactions.filter(transaction => transaction.amount > 0),
                 "amount"
               ),
               expenses: sumBy(
-                transactions.filter(
-                  transaction =>
-                    !transaction.transferAccountId && transaction.amount < 0
-                ),
+                transactions.filter(transaction => transaction.amount < 0),
                 "amount"
               )
             })),
@@ -118,6 +124,7 @@ class ExpensesVsIncome extends Component {
           const truncatedMonthStats = monthStats.filter(
             s => !excludedMonths.includes(s.month)
           );
+          console.log("budget:", budget);
 
           return (
             <Layout>
@@ -155,27 +162,39 @@ class ExpensesVsIncome extends Component {
                 <ExpensesVsIncomeChart
                   data={monthStats}
                   excludedMonths={excludedMonths}
+                  onSelectMonth={this.handleSelectMonth}
                 />
-                <Exclusions
-                  toggles={[
-                    {
-                      label: "first month",
-                      key: "excludeFirstMonth",
-                      value: excludeFirstMonth
-                    },
-                    {
-                      label: "current month",
-                      key: "excludeCurrentMonth",
-                      value: excludeCurrentMonth
-                    },
-                    {
-                      label: "outliers",
-                      key: "excludeOutliers",
-                      value: excludeOutliers
-                    }
-                  ]}
-                  onToggle={this.handleToggleExclusion}
-                />
+                {!selectedMonth && (
+                  <Exclusions
+                    toggles={[
+                      {
+                        label: "first month",
+                        key: "excludeFirstMonth",
+                        value: excludeFirstMonth
+                      },
+                      {
+                        label: "current month",
+                        key: "excludeCurrentMonth",
+                        value: excludeCurrentMonth
+                      },
+                      {
+                        label: "outliers",
+                        key: "excludeOutliers",
+                        value: excludeOutliers
+                      }
+                    ]}
+                    onToggle={this.handleToggleExclusion}
+                  />
+                )}
+                {selectedMonth && (
+                  <Transactions
+                    transactions={sortBy(
+                      transactionsByMonth[selectedMonth],
+                      "amount"
+                    )}
+                    payees={budget.payees}
+                  />
+                )}
               </Layout.Body>
             </Layout>
           );

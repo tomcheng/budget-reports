@@ -12,11 +12,12 @@ import {
 import Section from "./Section";
 import Chart from "./Chart";
 
-const ExpensesVsIncomeChart = ({ data, excludedMonths }) => {
+const ExpensesVsIncomeChart = ({ data, excludedMonths, onSelectMonth }) => {
   const plotBands = excludedMonths.map(month => {
     const index = findIndex(data, d => d.month === month);
     return { color: plotBandColor, from: index - 0.5, to: index + 0.5 };
   });
+
   return (
     <Section>
       <Chart
@@ -33,7 +34,14 @@ const ExpensesVsIncomeChart = ({ data, excludedMonths }) => {
           },
           plotOptions: {
             series: {
-              stacking: "normal"
+              stacking: "normal",
+              events: {
+                click: ({ point }) => {
+                  onSelectMonth(
+                    moment(point.category, "MMM YY").format("YYYY-MM")
+                  );
+                }
+              }
             }
           },
           series: [
@@ -41,20 +49,19 @@ const ExpensesVsIncomeChart = ({ data, excludedMonths }) => {
               borderWidth: 0,
               color: lightPrimaryColor,
               data: data.map(property("income")),
-              enableMouseTracking: false,
-              name: "Income"
+              name: "Income",
+              states: { hover: { brightness: 0 } }
             },
             {
               borderWidth: 0,
               color: negativeChartColor,
               data: data.map(property("expenses")),
-              enableMouseTracking: false,
-              name: "Expenses"
+              name: "Expenses",
+              states: { hover: { brightness: 0 } }
             },
             {
               color: primaryColor,
               data: data.map(d => d.income + d.expenses),
-              enableMouseTracking: false,
               name: "Net Income",
               type: "line"
             }
@@ -73,7 +80,8 @@ ExpensesVsIncomeChart.propTypes = {
       month: PropTypes.string.isRequired
     })
   ).isRequired,
-  excludedMonths: PropTypes.arrayOf(PropTypes.string).isRequired
+  excludedMonths: PropTypes.arrayOf(PropTypes.string).isRequired,
+  onSelectMonth: PropTypes.func.isRequired
 };
 
 export default ExpensesVsIncomeChart;

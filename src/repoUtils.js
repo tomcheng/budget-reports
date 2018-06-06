@@ -19,36 +19,40 @@ export const sanitizeBudget = (
     budget.subtransactions.map(s => s.transaction_id)
   );
 
-  return camelCaseKeys({
-    ...budget,
+  return {
+    ...camelCaseKeys(
+      omit(budget, ["categories", "payees", "months", "transactions"])
+    ),
     categories: budget.categories.map(c => {
       const mergedCategory = { ...c, ...categoriesFromMonth[c.id] };
-      return {
+      return camelCaseKeys({
         ...mergedCategory,
         activity: formatCurrency(mergedCategory.activity),
         balance: formatCurrency(mergedCategory.balance),
         budgeted: formatCurrency(mergedCategory.budgeted)
-      };
+      });
     }),
-    payees: keyBy(budget.payees, "id"),
-    months: sortBy(budget.months, "month"),
-    transactions: flatMap(
-      sortBy(budget.transactions, "date").reverse(),
-      t =>
-        transactionIdsFromSub.includes(t.id)
-          ? budget.subtransactions
-              .filter(s => s.transaction_id === t.id)
-              .map(s =>
-                omit({ ...t, ...s, amount: formatCurrency(s.amount) }, [
-                  "transaction_id"
-                ])
-              )
-          : {
-              ...t,
-              amount: formatCurrency(t.amount)
-            }
+    payees: keyBy(camelCaseKeys(budget.payees), "id"),
+    months: sortBy(camelCaseKeys(budget.months), "month"),
+    transactions: camelCaseKeys(
+      flatMap(
+        sortBy(budget.transactions, "date").reverse(),
+        t =>
+          transactionIdsFromSub.includes(t.id)
+            ? budget.subtransactions
+                .filter(s => s.transaction_id === t.id)
+                .map(s =>
+                  omit({ ...t, ...s, amount: formatCurrency(s.amount) }, [
+                    "transaction_id"
+                  ])
+                )
+            : {
+                ...t,
+                amount: formatCurrency(t.amount)
+              }
+      )
     )
-  });
+  };
 };
 
 const applyDeltas = (arr, deltas, key = "id", updater) =>

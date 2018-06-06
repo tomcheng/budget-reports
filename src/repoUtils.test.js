@@ -2,7 +2,7 @@ import { sanitizeBudget, mergeBudgets } from "./repoUtils";
 
 describe("sanitizeBudget", () => {
   const budget = {
-    payees: [{ id: "foo" }],
+    payees: [{ id: "foo-bar" }],
     categories: [{ id: "cat", activity: 1000, balance: 2000, budgeted: 3000 }],
     subtransactions: [
       {
@@ -39,7 +39,7 @@ describe("sanitizeBudget", () => {
   it("sanitizes data", () => {
     const result = sanitizeBudget(budget, "2018-05");
 
-    expect(result.payees).toEqual({ foo: { id: "foo" } });
+    expect(result.payees).toEqual({ "foo-bar": { id: "foo-bar" } });
     expect(result.categories).toEqual([
       { id: "cat", activity: 1, balance: 5, budgeted: 3 }
     ]);
