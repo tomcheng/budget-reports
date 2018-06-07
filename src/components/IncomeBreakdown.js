@@ -4,6 +4,7 @@ import moment from "moment";
 import flatMap from "lodash/flatMap";
 import get from "lodash/get";
 import groupBy from "lodash/groupBy";
+import keyBy from "lodash/keyBy";
 import keys from "lodash/keys";
 import map from "lodash/map";
 import pick from "lodash/pick";
@@ -26,8 +27,14 @@ const IncomeBreakdown = ({
     transactions.filter(trans => !!trans.categoryId),
     property("categoryId")
   );
+  const categoriesById = keyBy(categories, "id");
+  const groupsById = keyBy(categoryGroups, "id");
   const categoriesByGroup = groupBy(categories, property("categoryGroupId"));
-  const noCategories = transactions.filter(trans => !trans.categoryId);
+  const noCategories = transactions.filter(
+    trans =>
+      !trans.categoryId ||
+      !groupsById[categoriesById[trans.categoryId].categoryGroupId]
+  );
   const transactionsByPayee = groupBy(noCategories, "payeeId");
   const payees = keys(payeesById)
     .filter(id => !!transactionsByPayee[id])
