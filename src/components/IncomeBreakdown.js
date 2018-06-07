@@ -17,7 +17,6 @@ import Breakdown from "./Breakdown";
 const IncomeBreakdown = ({
   categories,
   categoryGroups,
-  reverse,
   selectedMonth,
   transactions,
   payees: payeesById
@@ -44,7 +43,7 @@ const IncomeBreakdown = ({
           get(transactionsByCategory, category.id, [])
         )
       );
-      let categories = sortBy(
+      const categories = sortBy(
         get(categoriesByGroup, group.id, [])
           .map(category => {
             const transactions = get(transactionsByCategory, category.id, []);
@@ -65,11 +64,7 @@ const IncomeBreakdown = ({
           })
           .filter(category => !!category.amount),
         "amount"
-      );
-
-      if (reverse) {
-        categories = categories.reverse();
-      }
+      ).reverse();
 
       return {
         ...pick(group, ["id", "name"]),
@@ -79,11 +74,7 @@ const IncomeBreakdown = ({
     })
     .filter(group => !!group.amount);
 
-  let groupsAndPayees = sortBy(groups.concat(payees), "amount");
-
-  if (reverse) {
-    groupsAndPayees.reverse();
-  }
+  const groupsAndPayees = sortBy(groups.concat(payees), "amount").reverse();
 
   return (
     <Section>
@@ -114,8 +105,7 @@ IncomeBreakdown.propTypes = {
       amount: PropTypes.number.isRequired,
       categoryId: PropTypes.string
     })
-  ).isRequired,
-  reverse: PropTypes.bool
+  ).isRequired
 };
 
 export default IncomeBreakdown;

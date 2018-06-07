@@ -234,7 +234,6 @@ class ExpensesVsIncome extends Component {
                         ...transaction,
                         categoryId: null // don't bother grouping by category for income
                       }))}
-                    reverse
                   />
                 )}
               </Layout.Body>
