@@ -8,7 +8,7 @@ import property from "lodash/property";
 import sortBy from "lodash/sortBy";
 import sumBy from "lodash/sumBy";
 import map from "lodash/map";
-import PayeeListItem from "./PayeeListItem";
+import BreakdownNode from "./BreakdownNode";
 import BreakdownGroupListItem from "./BreakdownGroupListItem";
 
 const Breakdown = ({
@@ -88,7 +88,7 @@ const Breakdown = ({
       {groupsAndPayees.map(
         ({ type, id, name, amount, categories }) =>
           type === "payee" ? (
-            <PayeeListItem key={id} name={name} amount={amount} total={total} />
+            <BreakdownNode key={id} name={name} amount={amount} total={total} />
           ) : (
             <BreakdownGroupListItem
               key={id}
