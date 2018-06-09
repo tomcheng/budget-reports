@@ -22,7 +22,8 @@ describe("sanitizeBudget", () => {
     transactions: [
       { id: "trans-1", amount: 1000, category_id: "cat-1", date: "2018-05-02" },
       { id: "trans-2", amount: 2000, category_id: "cat-2", date: "2018-05-01" },
-      { id: "trans-3", amount: 1000, transfer_account_id: "foo" }
+      { id: "trans-3", amount: 1000, transfer_account_id: "foo" },
+      { id: "trans-4", amount: 0 }
     ],
     months: [
       {

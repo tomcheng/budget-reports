@@ -52,7 +52,10 @@ export const sanitizeBudget = (
     months: sortBy(camelCaseKeys(budget.months), "month"),
     transactions: flow([
       transactions =>
-        transactions.filter(transaction => !transaction.transfer_account_id),
+        transactions.filter(
+          transaction =>
+            !transaction.transfer_account_id && transaction.amount !== 0
+        ),
       transactions => sortBy(transactions, "date"),
       transactions => transactions.reverse(),
       transactions =>

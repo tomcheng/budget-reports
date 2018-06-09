@@ -43,43 +43,41 @@ const IncomeBreakdown = ({
       amount: sumBy(transactionsByPayee[id], "amount")
     }));
 
-  const groups = categoryGroups
-    .map(group => {
-      const groupTransactions = flatMap(
-        get(categoriesByGroup, group.id, []).map(category =>
-          get(transactionsByCategory, category.id, [])
-        )
-      );
-      const categories = sortBy(
-        get(categoriesByGroup, group.id, [])
-          .map(category => {
-            const transactions = get(transactionsByCategory, category.id, []);
-            const transactionsByPayee = groupBy(transactions, "payeeId");
-            const payees = sortBy(
-              map(transactionsByPayee, (trans, id) => ({
-                ...pick(payeesById[id], ["id", "name"]),
-                amount: sumBy(trans, "amount")
-              })),
-              "amount"
-            );
+  const groups = categoryGroups.map(group => {
+    const groupTransactions = flatMap(
+      get(categoriesByGroup, group.id, []).map(category =>
+        get(transactionsByCategory, category.id, [])
+      )
+    );
+    const categories = sortBy(
+      get(categoriesByGroup, group.id, [])
+        .map(category => {
+          const transactions = get(transactionsByCategory, category.id, []);
+          const transactionsByPayee = groupBy(transactions, "payeeId");
+          const payees = sortBy(
+            map(transactionsByPayee, (trans, id) => ({
+              ...pick(payeesById[id], ["id", "name"]),
+              amount: sumBy(trans, "amount")
+            })),
+            "amount"
+          );
 
-            return {
-              ...pick(category, ["id", "name"]),
-              nodes: payees,
-              amount: sumBy(transactions, "amount")
-            };
-          })
-          .filter(category => !!category.amount),
-        "amount"
-      ).reverse();
+          return {
+            ...pick(category, ["id", "name"]),
+            nodes: payees,
+            amount: sumBy(transactions, "amount")
+          };
+        })
+        .filter(category => !!category.amount),
+      "amount"
+    ).reverse();
 
-      return {
-        ...pick(group, ["id", "name"]),
-        nodes: categories,
-        amount: sumBy(groupTransactions, "amount")
-      };
-    })
-    .filter(group => !!group.amount);
+    return {
+      ...pick(group, ["id", "name"]),
+      nodes: categories,
+      amount: sumBy(groupTransactions, "amount")
+    };
+  });
 
   const groupsAndPayees = sortBy(groups.concat(payees), "amount").reverse();
 
