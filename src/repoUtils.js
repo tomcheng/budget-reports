@@ -1,4 +1,5 @@
 import flatMap from "lodash/flatMap";
+import flow from "lodash/flow";
 import keyBy from "lodash/keyBy";
 import omit from "lodash/omit";
 import sortBy from "lodash/sortBy";
@@ -27,7 +28,13 @@ export const sanitizeBudget = (
 
   return {
     ...camelCaseKeys(
-      omit(budget, ["categories", "category_groups", "payees", "months", "transactions"])
+      omit(budget, [
+        "categories",
+        "category_groups",
+        "payees",
+        "months",
+        "transactions"
+      ])
     ),
     categoryGroups: budget.category_groups.filter(
       group => !GROUPS_TO_HIDE.includes(group.name)
@@ -43,24 +50,30 @@ export const sanitizeBudget = (
     }),
     payees: keyBy(camelCaseKeys(budget.payees), "id"),
     months: sortBy(camelCaseKeys(budget.months), "month"),
-    transactions: camelCaseKeys(
-      flatMap(
-        sortBy(budget.transactions, "date").reverse(),
-        t =>
-          transactionIdsFromSub.includes(t.id)
-            ? budget.subtransactions
-                .filter(s => s.transaction_id === t.id)
-                .map(s =>
-                  omit({ ...t, ...s, amount: formatCurrency(s.amount) }, [
-                    "transaction_id"
-                  ])
-                )
-            : {
-                ...t,
-                amount: formatCurrency(t.amount)
-              }
-      )
-    )
+    transactions: flow([
+      transactions =>
+        transactions.filter(transaction => !transaction.transfer_account_id),
+      transactions => sortBy(transactions, "date"),
+      transactions => transactions.reverse(),
+      transactions =>
+        flatMap(
+          transactions,
+          transaction =>
+            transactionIdsFromSub.includes(transaction.id)
+              ? budget.subtransactions
+                  .filter(sub => sub.transaction_id === transaction.id)
+                  .map(sub =>
+                    omit({ ...transaction, ...sub }, ["transaction_id"])
+                  )
+              : transaction
+        ),
+      transactions =>
+        transactions.map(transaction => ({
+          ...transaction,
+          amount: formatCurrency(transaction.amount)
+        })),
+      camelCaseKeys
+    ])(budget.transactions)
   };
 };
 

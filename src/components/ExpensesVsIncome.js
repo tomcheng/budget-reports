@@ -41,8 +41,7 @@ class ExpensesVsIncome extends Component {
       transactions: PropTypes.arrayOf(
         PropTypes.shape({
           amount: PropTypes.number.isRequired,
-          date: PropTypes.string.isRequired,
-          transferAccountId: PropTypes.string
+          date: PropTypes.string.isRequired
         })
       ).isRequired
     })
@@ -52,7 +51,7 @@ class ExpensesVsIncome extends Component {
     excludeOutliers: true,
     excludeFirstMonth: true,
     excludeCurrentMonth: true,
-    selectedMonth: null
+    selectedMonth: "2018-05"
   };
 
   handleToggleExclusion = key => {
@@ -85,12 +84,7 @@ class ExpensesVsIncome extends Component {
         onRequestBudget={onRequestBudget}
       >
         {() => {
-          const transactionsByMonth = groupBy(
-            budget.transactions.filter(
-              transaction => !transaction.transferAccountId
-            ),
-            getMonth
-          );
+          const transactionsByMonth = groupBy(budget.transactions, getMonth);
 
           let monthStats = sortBy(
             map(transactionsByMonth, (transactions, month) => ({
