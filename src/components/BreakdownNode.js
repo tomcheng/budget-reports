@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import AnimateHeight from "react-animate-height-auto";
-import ListItem from "./ListItem";
 import { SecondaryText } from "./typeComponents";
+import ListItem from "./ListItem";
+import Icon from "./Icon";
 import AmountWithPercentage from "./AmountWithPercentage";
-import NameWithExpandedIndicator from "./NameWithExpandedIndicator";
 
 class BreakdownNode extends Component {
   static propTypes = {
@@ -17,7 +17,7 @@ class BreakdownNode extends Component {
       PropTypes.shape({
         id: PropTypes.string.isRequired
       })
-    ),
+    )
   };
 
   state = { expanded: false };
@@ -74,7 +74,24 @@ const NodeWrapper = styled.div`
 
 const ToggleNode = ({ onToggle, expanded, name, amount, total }) => (
   <NodeWrapper onClick={onToggle}>
-    <NameWithExpandedIndicator name={name} expanded={expanded} />
+    <SecondaryText
+      style={{ whiteSpace: "pre", display: "flex", alignItems: "center" }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: 24,
+          fontWeight: 400,
+          color: "#888",
+          fontSize: 10
+        }}
+      >
+        <Icon icon="chevron-right" transform={{ rotate: expanded ? 90 : 0 }} />
+      </div>
+      {name}
+    </SecondaryText>
     <AmountWithPercentage amount={amount} total={total} faded={expanded} />
   </NodeWrapper>
 );
