@@ -232,6 +232,7 @@ class ExpensesVsIncome extends Component {
                     payees={budget.payees}
                     selectedMonth={selectedMonth}
                     transactions={selectedMonthStat.expenseTransactions}
+                    totalIncome={selectedMonthStat.income}
                   />
                 )}
                 {selectedMonth && (

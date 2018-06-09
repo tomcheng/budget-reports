@@ -19,9 +19,9 @@ const ExpensesBreakdown = ({
   categoryGroups,
   selectedMonth,
   transactions,
+  totalIncome,
   payees: payeesById
 }) => {
-  const total = sumBy(transactions, "amount");
   const transactionsByCategory = groupBy(
     transactions.filter(trans => !!trans.categoryId),
     property("categoryId")
@@ -81,7 +81,7 @@ const ExpensesBreakdown = ({
       <StrongText>
         Expenses for {moment(selectedMonth, "YYYY-MM").format("MMMM YYYY")}
       </StrongText>
-      <Breakdown nodes={groupsAndPayees} total={total} />
+      <Breakdown nodes={groupsAndPayees} total={-totalIncome} />
     </Section>
   );
 };
@@ -100,6 +100,7 @@ ExpensesBreakdown.propTypes = {
   ).isRequired,
   payees: PropTypes.objectOf(PropTypes.shape({})).isRequired,
   selectedMonth: PropTypes.string.isRequired,
+  totalIncome: PropTypes.number.isRequired,
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       amount: PropTypes.number.isRequired,
