@@ -25,7 +25,7 @@ Breakdown.propTypes = {
       amount: PropTypes.number.isRequired,
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-      nodes: PropTypes.array.isRequired
+      nodes: PropTypes.array
     })
   ).isRequired,
   total: PropTypes.number.isRequired

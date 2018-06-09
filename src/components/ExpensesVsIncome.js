@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import flow from "lodash/flow";
 import groupBy from "lodash/groupBy";
 import map from "lodash/map";
 import mean from "lodash/mean";
 import meanBy from "lodash/meanBy";
 import sortBy from "lodash/sortBy";
 import sumBy from "lodash/sumBy";
+import difference from "lodash/difference";
 import GetBudget from "./GetBudget";
 import Layout from "./Layout";
 import BackToBudget from "./BackToBudget";
@@ -22,8 +24,6 @@ const standardDeviation = arr => {
   return Math.sqrt(sumBy(arr, num => Math.pow(num - avg, 2)) / arr.length);
 };
 
-const isIncome = transaction => transaction.amount > 0;
-const isExpense = transaction => transaction.amount < 0;
 const getMonth = transaction => transaction.date.slice(0, 7);
 
 class ExpensesVsIncome extends Component {
@@ -84,16 +84,29 @@ class ExpensesVsIncome extends Component {
         onRequestBudget={onRequestBudget}
       >
         {() => {
-          const transactionsByMonth = groupBy(budget.transactions, getMonth);
+          let monthStats = flow([
+            transactions => groupBy(transactions, getMonth),
+            byMonth =>
+              map(byMonth, (transactions, month) => {
+                const incomeTransactions = transactions.filter(
+                  transaction => transaction.amount > 0
+                );
+                const expenseTransactions = difference(
+                  transactions,
+                  incomeTransactions
+                );
 
-          let monthStats = sortBy(
-            map(transactionsByMonth, (transactions, month) => ({
-              month,
-              income: sumBy(transactions.filter(isIncome), "amount"),
-              expenses: sumBy(transactions.filter(isExpense), "amount")
-            })),
-            "month"
-          );
+                return {
+                  month,
+                  incomeTransactions,
+                  expenseTransactions,
+                  income: sumBy(incomeTransactions, "amount"),
+                  expenses: sumBy(expenseTransactions, "amount")
+                };
+              }),
+            stats => sortBy(stats, "month")
+          ])(budget.transactions);
+
           const selectedMonthStat = monthStats.find(
             s => s.month === selectedMonth
           );
@@ -210,9 +223,7 @@ class ExpensesVsIncome extends Component {
                     categoryGroups={budget.categoryGroups}
                     payees={budget.payees}
                     selectedMonth={selectedMonth}
-                    transactions={transactionsByMonth[selectedMonth].filter(
-                      isExpense
-                    )}
+                    transactions={selectedMonthStat.expenseTransactions}
                   />
                 )}
                 {selectedMonth && (
@@ -222,9 +233,7 @@ class ExpensesVsIncome extends Component {
                     categoryGroups={budget.categoryGroups}
                     payees={budget.payees}
                     selectedMonth={selectedMonth}
-                    transactions={transactionsByMonth[selectedMonth].filter(
-                      isIncome
-                    )}
+                    transactions={selectedMonthStat.incomeTransactions}
                   />
                 )}
               </Layout.Body>
