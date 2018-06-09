@@ -7,6 +7,8 @@ import ListItem from "./ListItem";
 import Icon from "./Icon";
 import AmountWithPercentage from "./AmountWithPercentage";
 
+const INDENTATION = 18;
+
 class BreakdownNode extends Component {
   static propTypes = {
     amount: PropTypes.number.isRequired,
@@ -47,7 +49,7 @@ class BreakdownNode extends Component {
 
         {hasChildNodes && (
           <AnimateHeight isExpanded={expanded}>
-            <div style={{ paddingLeft: 18 }}>
+            <div style={{ paddingLeft: INDENTATION }}>
               {nodes.map(node => (
                 <BreakdownNode
                   {...node}
@@ -72,24 +74,23 @@ const NodeWrapper = styled.div`
   user-select: none;
 `;
 
+const IconWrapper = styled.div`
+  box-sizing: border-box;
+  padding-left: 3px;
+  width: ${INDENTATION}px;
+  font-weight: 400;
+  color: #888;
+  font-size: 10px;
+`;
+
 const ToggleNode = ({ onToggle, expanded, name, amount, total }) => (
   <NodeWrapper onClick={onToggle}>
     <SecondaryText
       style={{ whiteSpace: "pre", display: "flex", alignItems: "center" }}
     >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: 24,
-          fontWeight: 400,
-          color: "#888",
-          fontSize: 10
-        }}
-      >
+      <IconWrapper>
         <Icon icon="chevron-right" transform={{ rotate: expanded ? 90 : 0 }} />
-      </div>
+      </IconWrapper>
       {name}
     </SecondaryText>
     <AmountWithPercentage amount={amount} total={total} faded={expanded} />
