@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import flow from "lodash/flow";
 import groupBy from "lodash/groupBy";
+import keyBy from "lodash/keyBy";
 import map from "lodash/map";
 import mean from "lodash/mean";
 import meanBy from "lodash/meanBy";
@@ -84,12 +85,19 @@ class ExpensesVsIncome extends Component {
         onRequestBudget={onRequestBudget}
       >
         {() => {
+          const groupsById = keyBy(budget.categoryGroups, "id");
+          const categoriesById = keyBy(budget.categories, "id");
           let monthStats = flow([
             transactions => groupBy(transactions, getMonth),
             byMonth =>
               map(byMonth, (transactions, month) => {
                 const incomeTransactions = transactions.filter(
-                  transaction => transaction.amount > 0
+                  transaction =>
+                    transaction.amount > 0 &&
+                    (!transaction.categoryId ||
+                      !groupsById[
+                        categoriesById[transaction.categoryId].categoryGroupId
+                      ])
                 );
                 const expenseTransactions = difference(
                   transactions,
