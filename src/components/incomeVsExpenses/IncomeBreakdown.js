@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
-import { getPayeeNodes } from "../utils";
-import { StrongText } from "./typeComponents";
-import Section from "./Section";
+import { getPayeeNodes } from "../../utils";
+import { StrongText } from "../common/typeComponents";
+import Section from "../common/Section";
 import Breakdown from "./Breakdown";
 
 const IncomeBreakdown = ({

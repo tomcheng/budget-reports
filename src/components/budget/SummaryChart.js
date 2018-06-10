@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { primaryColor } from "../styleVariables";
+import { primaryColor } from "../../styleVariables";
 
 const CHART_HEIGHT = 3;
 const CHART_WIDTH = 80;

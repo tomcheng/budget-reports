@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import sumBy from "lodash/fp/sumBy";
-import { splitTransactions } from "../utils";
+import { splitTransactions } from "../../utils";
 import ExpensesBreakdown from "./ExpensesBreakdown";
 import IncomeBreakdown from "./IncomeBreakdown";
 

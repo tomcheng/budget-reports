@@ -13,9 +13,9 @@ import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import AnimateHeight from "react-animate-height-auto";
 import { Link } from "react-router-dom";
-import { getGroupLink, simpleMemoize } from "../utils";
-import { StrongText } from "./typeComponents";
-import Icon from "./Icon";
+import { getGroupLink, simpleMemoize } from "../../utils";
+import { StrongText } from "../common/typeComponents";
+import Icon from "../common/Icon";
 import CategoryListItem from "./CategoryListItem";
 import SummaryChart from "./SummaryChart";
 

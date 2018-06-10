@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { getLastUpdated } from "../uiRepo";
-import { MinorText } from "./typeComponents";
-import Icon from "./Icon";
-import Dropdown from "./Dropdown";
+import { getLastUpdated } from "../../uiRepo";
+import { MinorText } from "../common/typeComponents";
+import Icon from "../common/Icon";
+import Dropdown from "../common/Dropdown";
 
 const PageActions = ({ budgetId, onRefreshBudget }) => (
   <Dropdown

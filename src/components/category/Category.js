@@ -1,14 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { getGroupLink } from "../utils";
-import GetBudget from "./GetBudget";
-import Layout from "./Layout";
-import BackToBudget from "./BackToBudget";
-import { PageTitle } from "./typeComponents";
-import Separator from "./Separator";
-import PageActions from "./PageActions";
-import TopNumbers from "./TopNumbers";
+import { getGroupLink } from "../../utils";
+import GetBudget from "../GetBudget";
+import Layout from "../common/Layout";
+import BackToBudget from "../header/BackToBudget";
+import { PageTitle } from "../common/typeComponents";
+import Separator from "../header/Separator";
+import PageActions from "../header/PageActions";
+import TopNumbers from "../common/TopNumbers";
 import SpendingChart from "./SpendingChart";
 import Transactions from "./Transactions";
 

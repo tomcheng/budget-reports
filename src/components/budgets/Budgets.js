@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { getBudgetLink } from "../utils";
-import Loading from "./Loading";
+import { getBudgetLink } from "../../utils";
+import Loading from "../common/Loading";
 
 class Budgets extends Component {
   static propTypes = {

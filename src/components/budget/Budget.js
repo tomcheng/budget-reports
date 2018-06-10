@@ -7,12 +7,12 @@ import groupBy from "lodash/fp/groupBy";
 import maxBy from "lodash/fp/maxBy";
 import reverse from "lodash/fp/reverse";
 import sortBy from "lodash/fp/sortBy";
-import { simpleMemoize } from "../utils";
-import { getExpandedGroups, setExpandedGroups } from "../uiRepo";
-import GetBudget from "./GetBudget";
-import Layout from "./Layout";
-import { PageTitle } from "./typeComponents";
-import PageActions from "./PageActions";
+import { simpleMemoize } from "../../utils";
+import { getExpandedGroups, setExpandedGroups } from "../../uiRepo";
+import GetBudget from "../GetBudget";
+import Layout from "../common/Layout";
+import { PageTitle } from "../common/typeComponents";
+import PageActions from "../header/PageActions";
 import CategoryGroupListItem from "./CategoryGroupListItem";
 
 class Budget extends Component {

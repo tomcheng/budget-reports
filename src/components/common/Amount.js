@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { positiveColor } from "../styleVariables";
+import { positiveColor } from "../../styleVariables";
 
 const Amount = ({ amount, amountAfterDecimal }) => (
   <span style={{ color: amount > 0 && positiveColor }}>

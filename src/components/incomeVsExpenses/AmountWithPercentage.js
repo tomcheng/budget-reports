@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { SecondaryText, MinorText } from "./typeComponents";
-import Amount from "./Amount";
+import { SecondaryText, MinorText } from "../common/typeComponents";
+import Amount from "../common/Amount";
 
 const AmountWithPercentage = ({ amount, total, faded }) => (
   <SecondaryText style={{ display: "flex", opacity: faded ? 0.3 : 1 }}>

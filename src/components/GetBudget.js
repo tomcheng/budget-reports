@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Loading from "./Loading";
+import Loading from "./common/Loading";
 
 class GetBudget extends Component {
   static propTypes = {

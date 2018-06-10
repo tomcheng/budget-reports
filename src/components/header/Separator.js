@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Icon from "./Icon";
+import Icon from "../common/Icon";
 
 const Container = styled.div`
   padding: 0 8px;

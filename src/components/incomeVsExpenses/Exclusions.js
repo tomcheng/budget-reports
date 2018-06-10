@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Section from "./Section";
+import Section from "../common/Section";
 import Toggle from "./Toggle";
-import { StrongText } from "./typeComponents";
+import { StrongText } from "../common/typeComponents";
 
 const Exclusions = ({ toggles, onToggle }) => (
   <Section>
