@@ -86,9 +86,7 @@ class ExpensesVsIncome extends Component {
         {() => {
           const {
             transactions,
-            categories,
             categoriesById,
-            categoryGroups,
             categoryGroupsById,
             payeesById
           } = budget;
@@ -233,8 +231,8 @@ class ExpensesVsIncome extends Component {
                 {selectedMonth && (
                   <Fragment key={selectedMonth}>
                     <ExpensesBreakdown
-                      categories={categories}
-                      categoryGroups={categoryGroups}
+                      categoriesById={categoriesById}
+                      categoryGroupsById={categoryGroupsById}
                       payeesById={payeesById}
                       selectedMonth={selectedMonth}
                       transactions={selectedMonthStat.expenseTransactions}

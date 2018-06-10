@@ -1,79 +1,72 @@
 import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import flow from "lodash/flow";
-import get from "lodash/get";
-import groupBy from "lodash/groupBy";
-import map from "lodash/map";
-import pick from "lodash/pick";
-import sortBy from "lodash/sortBy";
-import sumBy from "lodash/sumBy";
+import compose from "lodash/fp/compose";
+import filter from "lodash/fp/filter";
+import get from "lodash/fp/get";
+import groupBy from "lodash/fp/groupBy";
+import mapRaw from "lodash/fp/map";
+import omit from "lodash/fp/omit";
+import pick from "lodash/fp/pick";
+import sortBy from "lodash/fp/sortBy";
+import sumBy from "lodash/fp/sumBy";
 import { StrongText } from "./typeComponents";
 import Section from "./Section";
 import Breakdown from "./Breakdown";
 
+const map = mapRaw.convert({ cap: false });
+
 const getPayeeNodes = ({ payeesById, transactions }) =>
-  flow([
-    transactions => groupBy(transactions, "payeeId"),
-    transactionsByPayee =>
-      map(transactionsByPayee, (transactions, payeeId) => ({
-        ...pick(payeesById[payeeId], ["id", "name"]),
-        amount: sumBy(transactions, "amount")
-      }))
+  compose([
+    map((transactions, payeeId) => ({
+      ...pick(["id", "name"], payeesById[payeeId]),
+      amount: sumBy("amount", transactions)
+    })),
+    groupBy("payeeId")
   ])(transactions);
 
 const ExpensesBreakdown = ({
-  categories,
-  categoryGroups,
+  categoriesById,
+  categoryGroupsById,
   selectedMonth,
   transactions,
   totalIncome,
   payeesById
 }) => {
-  const payeeNodes = getPayeeNodes({
+  const categoryNodes = compose([
+    map((transactions, categoryId) => {
+      const payeeNodes = getPayeeNodes({ payeesById, transactions });
+      return {
+        ...pick(["id", "name", "categoryGroupId"], categoriesById[categoryId]),
+        nodes: sortBy("amount", payeeNodes),
+        amount: sumBy("amount", payeeNodes)
+      };
+    }),
+    groupBy("categoryId"),
+    filter(get("categoryId"))
+  ])(transactions);
+
+  const groupNodes = compose([
+    map((nodes, categoryGroupId) => {
+      const categoryNodes = map(omit("categoryGroupId"), nodes);
+      return {
+        ...pick(["id", "name"], categoryGroupsById[categoryGroupId]),
+        nodes: sortBy("amount", categoryNodes),
+        amount: sumBy("amount", categoryNodes)
+      };
+    }),
+    groupBy("categoryGroupId")
+  ])(categoryNodes);
+
+  const rootPayeeNodes = getPayeeNodes({
     payeesById,
     transactions: transactions.filter(trans => !trans.categoryId)
   });
 
-  const transactionsByCategory = groupBy(
-    transactions.filter(trans => !!trans.categoryId),
-    "categoryId"
-  );
-  const categoriesByGroup = groupBy(categories, "categoryGroupId");
-
-  const groupNodes = categoryGroups
-    .map(group => {
-      const categoryNodes = sortBy(
-        get(categoriesByGroup, group.id, [])
-          .map(category => {
-            const transactions = get(transactionsByCategory, category.id, []);
-            const payeeNodes = sortBy(
-              getPayeeNodes({ payeesById, transactions }),
-              "amount"
-            );
-
-            return {
-              ...pick(category, ["id", "name"]),
-              nodes: payeeNodes,
-              amount: sumBy(transactions, "amount")
-            };
-          })
-          .filter(category => category.nodes.length > 0),
-        "amount"
-      );
-
-      return {
-        ...pick(group, ["id", "name"]),
-        nodes: categoryNodes,
-        amount: sumBy(categoryNodes, "amount")
-      };
-    })
-    .filter(group => group.nodes.length > 0);
-
-  const nodes = sortBy(groupNodes.concat(payeeNodes), "amount").concat([
+  const nodes = sortBy("amount", groupNodes.concat(rootPayeeNodes)).concat([
     {
       id: "net",
-      amount: -totalIncome - sumBy(transactions, "amount"),
+      amount: -totalIncome - sumBy("amount", transactions),
       name: "Net Income"
     }
   ]);
@@ -89,13 +82,13 @@ const ExpensesBreakdown = ({
 };
 
 ExpensesBreakdown.propTypes = {
-  categories: PropTypes.arrayOf(
+  categoriesById: PropTypes.objectOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       categoryGroupId: PropTypes.string.isRequired
     })
   ).isRequired,
-  categoryGroups: PropTypes.arrayOf(
+  categoryGroupsById: PropTypes.objectOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired
     })
