@@ -61,7 +61,7 @@ const ExpensesBreakdown = ({
       concat(nodes)([
         {
           id: "net",
-          amount: -totalIncome - sumBy("amount")(transactions),
+          amount: -totalIncome - sumBy("amount")(nodes),
           name: "Net Income"
         }
       ]),
