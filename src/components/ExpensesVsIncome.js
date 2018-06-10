@@ -38,12 +38,39 @@ const standardDeviation = arr => {
 
 const getMonth = transaction => transaction.date.slice(0, 7);
 
-const isIncome = ({ categoryGroupsById, categoriesById }) => transaction =>
-  transaction.amount > 0 &&
-  (!transaction.categoryId ||
-    !categoryGroupsById[
-      categoriesById[transaction.categoryId].categoryGroupId
-    ]);
+const isIncome = ({
+  categoryGroupsById,
+  categoriesById,
+  transactions
+}) => transaction => {
+  const { categoryId, payeeId } = transaction;
+
+  if (
+    categoryId &&
+    categoryGroupsById[categoriesById[categoryId].categoryGroupId]
+  ) {
+    return false;
+  }
+
+  return (
+    compose([sumBy("amount"), filter(matchesProperty("payeeId", payeeId))])(
+      transactions
+    ) > 0
+  );
+};
+
+const splitTransactions = ({
+  categoryGroupsById,
+  categoriesById,
+  transactions
+}) => {
+  const incomeTransactions = filter(
+    isIncome({ categoryGroupsById, categoriesById, transactions })
+  )(transactions);
+  const expenseTransactions = difference(transactions, incomeTransactions);
+
+  return { incomeTransactions, expenseTransactions };
+};
 
 class ExpensesVsIncome extends Component {
   static propTypes = {
@@ -113,16 +140,18 @@ class ExpensesVsIncome extends Component {
           let monthSummaries = compose([
             sortBy("month"),
             map((transactions, month) => {
-              const incomeTransactions = filter(
-                isIncome({ categoryGroupsById, categoriesById })
-              )(transactions);
-              const expenseTransactions = difference(
-                transactions,
-                incomeTransactions
-              );
+              const {
+                incomeTransactions,
+                expenseTransactions
+              } = splitTransactions({
+                categoryGroupsById,
+                categoriesById,
+                transactions
+              });
 
               return {
                 month,
+                transactions,
                 incomeTransactions,
                 expenseTransactions,
                 income: sumBy("amount")(incomeTransactions),
@@ -132,7 +161,7 @@ class ExpensesVsIncome extends Component {
             groupBy(getMonth)
           ])(transactions);
 
-          const selectedMonthStat = find(
+          const selectedMonthSummary = find(
             matchesProperty("month", selectedMonth)
           )(monthSummaries);
 
@@ -178,16 +207,17 @@ class ExpensesVsIncome extends Component {
                     numbers={[
                       {
                         label: "income",
-                        value: selectedMonthStat.income
+                        value: selectedMonthSummary.income
                       },
                       {
                         label: "expenses",
-                        value: -selectedMonthStat.expenses
+                        value: -selectedMonthSummary.expenses
                       },
                       {
                         label: "net income",
                         value:
-                          selectedMonthStat.income + selectedMonthStat.expenses
+                          selectedMonthSummary.income +
+                          selectedMonthSummary.expenses
                       }
                     ]}
                     roundToDollar
@@ -249,13 +279,13 @@ class ExpensesVsIncome extends Component {
                       categoryGroupsById={categoryGroupsById}
                       payeesById={payeesById}
                       selectedMonth={selectedMonth}
-                      transactions={selectedMonthStat.expenseTransactions}
-                      totalIncome={selectedMonthStat.income}
+                      transactions={selectedMonthSummary.expenseTransactions}
+                      totalIncome={selectedMonthSummary.income}
                     />
                     <IncomeBreakdown
                       payeesById={payeesById}
                       selectedMonth={selectedMonth}
-                      transactions={selectedMonthStat.incomeTransactions}
+                      transactions={selectedMonthSummary.incomeTransactions}
                     />
                   </Fragment>
                 ) : (
@@ -264,17 +294,21 @@ class ExpensesVsIncome extends Component {
                       categoriesById={categoriesById}
                       categoryGroupsById={categoryGroupsById}
                       payeesById={payeesById}
-                      transactions={flatMap(prop("expenseTransactions"))(truncatedMonthSummaries)}
+                      transactions={flatMap(prop("expenseTransactions"))(
+                        truncatedMonthSummaries
+                      )}
                       totalIncome={meanBy("income")(truncatedMonthSummaries)}
                       months={truncatedMonthSummaries.length}
                     />
                     <IncomeBreakdown
                       payeesById={payeesById}
-                      transactions={flatMap(prop("incomeTransactions"))(truncatedMonthSummaries)}
+                      transactions={flatMap(prop("incomeTransactions"))(
+                        truncatedMonthSummaries
+                      )}
                       months={truncatedMonthSummaries.length}
                     />
                   </Fragment>
-                  )}
+                )}
               </Layout.Body>
             </Layout>
           );
