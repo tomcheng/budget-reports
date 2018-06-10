@@ -65,7 +65,7 @@ const Category = ({
             <TopNumbers
               numbers={[
                 { label: "budgeted", value: category.budgeted },
-                { label: "spend", value: -category.activity },
+                { label: "spent", value: -category.activity },
                 { label: "available", value: category.balance }
               ]}
             />

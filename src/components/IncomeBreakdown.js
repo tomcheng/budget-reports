@@ -8,12 +8,19 @@ import { StrongText } from "./typeComponents";
 import Section from "./Section";
 import Breakdown from "./Breakdown";
 
-const IncomeBreakdown = ({ selectedMonth, transactions, payeesById }) => {
-  const nodes = getPayeeNodes({ payeesById, transactions });
+const IncomeBreakdown = ({
+  selectedMonth,
+  transactions,
+  payeesById,
+  months
+}) => {
+  const nodes = getPayeeNodes({ payeesById, transactions }, months);
   return (
     <Section>
       <StrongText>
-        Income for {moment(selectedMonth, "YYYY-MM").format("MMMM YYYY")}
+        {selectedMonth
+          ? `Income for ${moment(selectedMonth, "YYYY-MM").format("MMMM YYYY")}`
+          : "Average Income per Month"}
       </StrongText>
       <Breakdown
         nodes={sortBy("amount")(nodes).reverse()}
@@ -25,13 +32,16 @@ const IncomeBreakdown = ({ selectedMonth, transactions, payeesById }) => {
 
 IncomeBreakdown.propTypes = {
   payeesById: PropTypes.objectOf(PropTypes.object).isRequired,
-  selectedMonth: PropTypes.string.isRequired,
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       amount: PropTypes.number.isRequired,
       categoryId: PropTypes.string
     })
-  ).isRequired
+  ).isRequired,
+  months: PropTypes.number,
+  selectedMonth: PropTypes.string
 };
+
+IncomeBreakdown.defaultProps = { months: 1 };
 
 export default IncomeBreakdown;

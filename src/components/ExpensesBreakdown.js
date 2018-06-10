@@ -24,11 +24,12 @@ const ExpensesBreakdown = ({
   selectedMonth,
   transactions,
   totalIncome,
-  payeesById
+  payeesById,
+  months
 }) => {
   const categoryNodes = compose([
     map((transactions, categoryId) => {
-      const payeeNodes = getPayeeNodes({ payeesById, transactions });
+      const payeeNodes = getPayeeNodes({ payeesById, transactions }, months);
       return {
         ...pick(["id", "name", "categoryGroupId"])(categoriesById[categoryId]),
         nodes: sortBy("amount")(payeeNodes),
@@ -51,10 +52,13 @@ const ExpensesBreakdown = ({
     groupBy("categoryGroupId")
   ])(categoryNodes);
 
-  const rootPayeeNodes = getPayeeNodes({
-    payeesById,
-    transactions: transactions.filter(trans => !trans.categoryId)
-  });
+  const rootPayeeNodes = getPayeeNodes(
+    {
+      payeesById,
+      transactions: transactions.filter(trans => !trans.categoryId)
+    },
+    months
+  );
 
   const nodes = compose([
     nodes =>
@@ -72,7 +76,11 @@ const ExpensesBreakdown = ({
   return (
     <Section>
       <StrongText>
-        Expenses for {moment(selectedMonth, "YYYY-MM").format("MMMM YYYY")}
+        {selectedMonth
+          ? `Expenses for ${moment(selectedMonth, "YYYY-MM").format(
+              "MMMM YYYY"
+            )}`
+          : "Average Expenses per Month"}
       </StrongText>
       <Breakdown nodes={nodes} total={-totalIncome} />
     </Section>
@@ -92,14 +100,17 @@ ExpensesBreakdown.propTypes = {
     })
   ).isRequired,
   payeesById: PropTypes.objectOf(PropTypes.object).isRequired,
-  selectedMonth: PropTypes.string.isRequired,
   totalIncome: PropTypes.number.isRequired,
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       amount: PropTypes.number.isRequired,
       categoryId: PropTypes.string
     })
-  ).isRequired
+  ).isRequired,
+  months: PropTypes.number,
+  selectedMonth: PropTypes.string
 };
+
+ExpensesBreakdown.defaultProps = { months: 1 };
 
 export default ExpensesBreakdown;

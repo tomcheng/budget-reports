@@ -4,12 +4,14 @@ import compose from "lodash/fp/compose";
 import difference from "lodash/fp/difference";
 import filter from "lodash/fp/filter";
 import find from "lodash/fp/find";
+import flatMap from "lodash/fp/flatMap";
 import groupBy from "lodash/fp/groupBy";
 import includes from "lodash/fp/includes";
 import mapRaw from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
 import mean from "lodash/fp/mean";
 import meanBy from "lodash/fp/meanBy";
+import prop from "lodash/fp/prop";
 import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
@@ -240,7 +242,7 @@ class ExpensesVsIncome extends Component {
                     onToggle={this.handleToggleExclusion}
                   />
                 )}
-                {selectedMonth && (
+                {selectedMonth ? (
                   <Fragment key={selectedMonth}>
                     <ExpensesBreakdown
                       categoriesById={categoriesById}
@@ -256,7 +258,23 @@ class ExpensesVsIncome extends Component {
                       transactions={selectedMonthStat.incomeTransactions}
                     />
                   </Fragment>
-                )}
+                ) : (
+                  <Fragment>
+                    <ExpensesBreakdown
+                      categoriesById={categoriesById}
+                      categoryGroupsById={categoryGroupsById}
+                      payeesById={payeesById}
+                      transactions={flatMap(prop("expenseTransactions"))(truncatedMonthSummaries)}
+                      totalIncome={meanBy("income")(truncatedMonthSummaries)}
+                      months={truncatedMonthSummaries.length}
+                    />
+                    <IncomeBreakdown
+                      payeesById={payeesById}
+                      transactions={flatMap(prop("incomeTransactions"))(truncatedMonthSummaries)}
+                      months={truncatedMonthSummaries.length}
+                    />
+                  </Fragment>
+                  )}
               </Layout.Body>
             </Layout>
           );
