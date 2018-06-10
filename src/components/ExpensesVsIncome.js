@@ -1,8 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import flow from "lodash/flow";
 import groupBy from "lodash/groupBy";
-import keyBy from "lodash/keyBy";
 import map from "lodash/map";
 import mean from "lodash/mean";
 import meanBy from "lodash/meanBy";
@@ -85,8 +84,15 @@ class ExpensesVsIncome extends Component {
         onRequestBudget={onRequestBudget}
       >
         {() => {
-          const groupsById = keyBy(budget.categoryGroups, "id");
-          const categoriesById = keyBy(budget.categories, "id");
+          const {
+            transactions,
+            categories,
+            categoriesById,
+            categoryGroups,
+            categoryGroupsById,
+            payeesById
+          } = budget;
+
           let monthStats = flow([
             transactions => groupBy(transactions, getMonth),
             byMonth =>
@@ -95,7 +101,7 @@ class ExpensesVsIncome extends Component {
                   transaction =>
                     transaction.amount > 0 &&
                     (!transaction.categoryId ||
-                      !groupsById[
+                      !categoryGroupsById[
                         categoriesById[transaction.categoryId].categoryGroupId
                       ])
                 );
@@ -113,7 +119,7 @@ class ExpensesVsIncome extends Component {
                 };
               }),
             stats => sortBy(stats, "month")
-          ])(budget.transactions);
+          ])(transactions);
 
           const selectedMonthStat = monthStats.find(
             s => s.month === selectedMonth
@@ -225,23 +231,21 @@ class ExpensesVsIncome extends Component {
                   />
                 )}
                 {selectedMonth && (
-                  <ExpensesBreakdown
-                    key={selectedMonth + "-expenses"}
-                    categories={budget.categories}
-                    categoryGroups={budget.categoryGroups}
-                    payees={budget.payees}
-                    selectedMonth={selectedMonth}
-                    transactions={selectedMonthStat.expenseTransactions}
-                    totalIncome={selectedMonthStat.income}
-                  />
-                )}
-                {selectedMonth && (
-                  <IncomeBreakdown
-                    key={selectedMonth + "-income"}
-                    payees={budget.payees}
-                    selectedMonth={selectedMonth}
-                    transactions={selectedMonthStat.incomeTransactions}
-                  />
+                  <Fragment key={selectedMonth}>
+                    <ExpensesBreakdown
+                      categories={categories}
+                      categoryGroups={categoryGroups}
+                      payeesById={payeesById}
+                      selectedMonth={selectedMonth}
+                      transactions={selectedMonthStat.expenseTransactions}
+                      totalIncome={selectedMonthStat.income}
+                    />
+                    <IncomeBreakdown
+                      payeesById={payeesById}
+                      selectedMonth={selectedMonth}
+                      transactions={selectedMonthStat.incomeTransactions}
+                    />
+                  </Fragment>
                 )}
               </Layout.Body>
             </Layout>

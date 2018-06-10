@@ -7,7 +7,6 @@ import groupBy from "lodash/groupBy";
 import keys from "lodash/keys";
 import map from "lodash/map";
 import pick from "lodash/pick";
-import property from "lodash/property";
 import sortBy from "lodash/sortBy";
 import sumBy from "lodash/sumBy";
 import { StrongText } from "./typeComponents";
@@ -20,13 +19,13 @@ const ExpensesBreakdown = ({
   selectedMonth,
   transactions,
   totalIncome,
-  payees: payeesById
+  payeesById
 }) => {
   const transactionsByCategory = groupBy(
     transactions.filter(trans => !!trans.categoryId),
-    property("categoryId")
+    "categoryId"
   );
-  const categoriesByGroup = groupBy(categories, property("categoryGroupId"));
+  const categoriesByGroup = groupBy(categories, "categoryGroupId");
   const noCategories = transactions.filter(trans => !trans.categoryId);
   const transactionsByPayee = groupBy(noCategories, "payeeId");
   const payees = keys(payeesById)
@@ -104,7 +103,7 @@ ExpensesBreakdown.propTypes = {
       id: PropTypes.string.isRequired
     })
   ).isRequired,
-  payees: PropTypes.objectOf(PropTypes.shape({})).isRequired,
+  payeesById: PropTypes.objectOf(PropTypes.object).isRequired,
   selectedMonth: PropTypes.string.isRequired,
   totalIncome: PropTypes.number.isRequired,
   transactions: PropTypes.arrayOf(

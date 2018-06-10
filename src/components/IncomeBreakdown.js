@@ -10,11 +10,7 @@ import { StrongText } from "./typeComponents";
 import Section from "./Section";
 import Breakdown from "./Breakdown";
 
-const IncomeBreakdown = ({
-  selectedMonth,
-  transactions,
-  payees: payeesById
-}) => {
+const IncomeBreakdown = ({ selectedMonth, transactions, payeesById }) => {
   const total = sumBy(transactions, "amount");
   const transactionsByPayee = groupBy(transactions, "payeeId");
   const payees = keys(payeesById)
@@ -37,7 +33,7 @@ const IncomeBreakdown = ({
 };
 
 IncomeBreakdown.propTypes = {
-  payees: PropTypes.objectOf(PropTypes.shape({})).isRequired,
+  payeesById: PropTypes.objectOf(PropTypes.object).isRequired,
   selectedMonth: PropTypes.string.isRequired,
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
