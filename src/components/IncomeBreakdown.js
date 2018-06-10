@@ -77,7 +77,7 @@ const IncomeBreakdown = ({
       nodes: categories,
       amount: sumBy(groupTransactions, "amount")
     };
-  });
+  }).filter(category => !!category.amount);
 
   const groupsAndPayees = sortBy(groups.concat(payees), "amount").reverse();
 
