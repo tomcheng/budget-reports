@@ -1,7 +1,6 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
-import difference from "lodash/fp/difference";
 import filter from "lodash/fp/filter";
 import find from "lodash/fp/find";
 import flatMap from "lodash/fp/flatMap";
@@ -15,6 +14,7 @@ import prop from "lodash/fp/prop";
 import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
+import { splitTransactions } from "../utils";
 import GetBudget from "./GetBudget";
 import Layout from "./Layout";
 import BackToBudget from "./BackToBudget";
@@ -23,8 +23,8 @@ import TopNumbers from "./TopNumbers";
 import ExpensesVsIncomeChart from "./ExpensesVsIncomeChart";
 import PageActions from "./PageActions";
 import Exclusions from "./Exclusions";
-import ExpensesBreakdown from "./ExpensesBreakdown";
-import IncomeBreakdown from "./IncomeBreakdown";
+import BreakdownForMonth from "./BreakdownForMonth";
+import BreakdownForMonths from "./BreakdownForMonths";
 
 const map = mapRaw.convert({ cap: false });
 
@@ -37,40 +37,6 @@ const standardDeviation = arr => {
 };
 
 const getMonth = transaction => transaction.date.slice(0, 7);
-
-const isIncome = ({
-  categoryGroupsById,
-  categoriesById,
-  transactions
-}) => transaction => {
-  const { categoryId, payeeId } = transaction;
-
-  if (
-    categoryId &&
-    categoryGroupsById[categoriesById[categoryId].categoryGroupId]
-  ) {
-    return false;
-  }
-
-  return (
-    compose([sumBy("amount"), filter(matchesProperty("payeeId", payeeId))])(
-      transactions
-    ) > 0
-  );
-};
-
-const splitTransactions = ({
-  categoryGroupsById,
-  categoriesById,
-  transactions
-}) => {
-  const incomeTransactions = filter(
-    isIncome({ categoryGroupsById, categoriesById, transactions })
-  )(transactions);
-  const expenseTransactions = difference(transactions, incomeTransactions);
-
-  return { incomeTransactions, expenseTransactions };
-};
 
 class ExpensesVsIncome extends Component {
   static propTypes = {
@@ -273,41 +239,25 @@ class ExpensesVsIncome extends Component {
                   />
                 )}
                 {selectedMonth ? (
-                  <Fragment key={selectedMonth}>
-                    <ExpensesBreakdown
-                      categoriesById={categoriesById}
-                      categoryGroupsById={categoryGroupsById}
-                      payeesById={payeesById}
-                      selectedMonth={selectedMonth}
-                      transactions={selectedMonthSummary.expenseTransactions}
-                      totalIncome={selectedMonthSummary.income}
-                    />
-                    <IncomeBreakdown
-                      payeesById={payeesById}
-                      selectedMonth={selectedMonth}
-                      transactions={selectedMonthSummary.incomeTransactions}
-                    />
-                  </Fragment>
+                  <BreakdownForMonth
+                    key={selectedMonth}
+                    categoriesById={categoriesById}
+                    categoryGroupsById={categoryGroupsById}
+                    payeesById={payeesById}
+                    selectedMonth={selectedMonth}
+                    expenseTransactions={
+                      selectedMonthSummary.expenseTransactions
+                    }
+                    incomeTransactions={selectedMonthSummary.incomeTransactions}
+                  />
                 ) : (
-                  <Fragment>
-                    <ExpensesBreakdown
-                      categoriesById={categoriesById}
-                      categoryGroupsById={categoryGroupsById}
-                      payeesById={payeesById}
-                      transactions={flatMap(prop("expenseTransactions"))(
-                        truncatedMonthSummaries
-                      )}
-                      totalIncome={meanBy("income")(truncatedMonthSummaries)}
-                      months={truncatedMonthSummaries.length}
-                    />
-                    <IncomeBreakdown
-                      payeesById={payeesById}
-                      transactions={flatMap(prop("incomeTransactions"))(
-                        truncatedMonthSummaries
-                      )}
-                      months={truncatedMonthSummaries.length}
-                    />
-                  </Fragment>
+                  <BreakdownForMonths
+                    categoriesById={categoriesById}
+                    categoryGroupsById={categoryGroupsById}
+                    payeesById={payeesById}
+                    transactions={flatMap(prop("transactions"))(truncatedMonthSummaries)}
+                    months={truncatedMonthSummaries.length}
+                  />
                 )}
               </Layout.Body>
             </Layout>

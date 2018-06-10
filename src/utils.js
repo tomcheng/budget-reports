@@ -11,6 +11,9 @@ import pick from "lodash/fp/pick";
 import sumBy from "lodash/fp/sumBy";
 
 import { utils } from "ynab";
+import matchesProperty from "lodash/fp/matchesProperty";
+import filter from "lodash/fp/filter";
+import difference from "lodash/fp/difference";
 
 const map = mapRaw.convert({ cap: false });
 const mapKeys = mapKeysRaw.convert({ cap: false });
@@ -83,3 +86,37 @@ export const getPayeeNodes = ({ payeesById, transactions }, divideBy = 1) =>
     })),
     groupBy("payeeId")
   ])(transactions);
+
+const isIncome = ({
+  categoryGroupsById,
+  categoriesById,
+  transactions
+}) => transaction => {
+  const { categoryId, payeeId } = transaction;
+
+  if (
+    categoryId &&
+    categoryGroupsById[categoriesById[categoryId].categoryGroupId]
+  ) {
+    return false;
+  }
+
+  return (
+    compose([sumBy("amount"), filter(matchesProperty("payeeId", payeeId))])(
+      transactions
+    ) > 0
+  );
+};
+
+export const splitTransactions = ({
+  categoryGroupsById,
+  categoriesById,
+  transactions
+}) => {
+  const incomeTransactions = filter(
+    isIncome({ categoryGroupsById, categoriesById, transactions })
+  )(transactions);
+  const expenseTransactions = difference(transactions, incomeTransactions);
+
+  return { incomeTransactions, expenseTransactions };
+};
