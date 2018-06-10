@@ -2,7 +2,10 @@ import { sanitizeBudget, mergeBudgets } from "./repoUtils";
 
 describe("sanitizeBudget", () => {
   const budget = {
-    payees: [{ id: "foo-bar" }],
+    payees: [
+      { id: "foo-bar" },
+      { id: "starting-balance", name: "Starting Balance" }
+    ],
     categories: [{ id: "cat", activity: 1000, balance: 2000, budgeted: 3000 }],
     category_groups: [
       { id: "blah", name: "Internal Master Category" },
@@ -23,10 +26,28 @@ describe("sanitizeBudget", () => {
       }
     ],
     transactions: [
-      { id: "trans-1", amount: 1000, category_id: "cat-1", date: "2018-05-02" },
-      { id: "trans-2", amount: 2000, category_id: "cat-2", date: "2018-05-01" },
-      { id: "trans-3", amount: 1000, transfer_account_id: "foo" },
-      { id: "trans-4", amount: 0 }
+      {
+        id: "trans-1",
+        amount: 1000,
+        payee_id: "foo-bar",
+        category_id: "cat-1",
+        date: "2018-05-02"
+      },
+      {
+        id: "trans-2",
+        amount: 2000,
+        payee_id: "foo-bar",
+        category_id: "cat-2",
+        date: "2018-05-01"
+      },
+      {
+        id: "trans-3",
+        amount: 1000,
+        payee_id: "foo-bar",
+        transfer_account_id: "foo"
+      },
+      { id: "trans-4", amount: 0, payee_id: "foo-bar" },
+      { id: "trans-5", amount: 1000, payee_id: "starting-balance" }
     ],
     months: [
       {
@@ -51,9 +72,27 @@ describe("sanitizeBudget", () => {
     ]);
     expect(result.categoryGroups).toEqual([{ id: "group-1", name: "group 1" }]);
     expect(result.transactions).toEqual([
-      { id: "trans-1", amount: 1, categoryId: "cat-1", date: "2018-05-02" },
-      { id: "sub-1", amount: 1, categoryId: "cat-3", date: "2018-05-01" },
-      { id: "sub-2", amount: 1, categoryId: "cat-4", date: "2018-05-01" }
+      {
+        id: "trans-1",
+        amount: 1,
+        payeeId: "foo-bar",
+        categoryId: "cat-1",
+        date: "2018-05-02"
+      },
+      {
+        id: "sub-1",
+        amount: 1,
+        payeeId: "foo-bar",
+        categoryId: "cat-3",
+        date: "2018-05-01"
+      },
+      {
+        id: "sub-2",
+        amount: 1,
+        payeeId: "foo-bar",
+        categoryId: "cat-4",
+        date: "2018-05-01"
+      }
     ]);
     expect(result.months[0]).toHaveProperty("ageOfMoney", 30);
     expect(result.months.map(({ month }) => month)).toEqual([

@@ -1,9 +1,13 @@
+import anyPass from "lodash/fp/anyPass";
 import compose from "lodash/fp/compose";
 import flatMap from "lodash/fp/flatMap";
 import filter from "lodash/fp/filter";
 import keyBy from "lodash/fp/keyBy";
-import omit from "lodash/fp/omit";
 import map from "lodash/fp/map";
+import matchesProperty from "lodash/fp/matchesProperty";
+import omit from "lodash/fp/omit";
+import prop from "lodash/fp/prop";
+import reject from "lodash/fp/reject";
 import reverse from "lodash/fp/reverse";
 import sortBy from "lodash/fp/sortBy";
 import uniq from "lodash/fp/uniq";
@@ -15,6 +19,10 @@ const GROUPS_TO_HIDE = [
   "Internal Master Category",
   "Credit Card Payments",
   "Hidden Categories"
+];
+const PAYEES_TO_EXCLUDE = [
+  "Starting Balance",
+  "Reconciliation Balance Adjustment"
 ];
 
 export const sanitizeBudget = (
@@ -39,7 +47,11 @@ export const sanitizeBudget = (
       budgeted: formatCurrency(mergedCategory.budgeted)
     });
   });
-  const payees = camelCaseKeys(budget.payees);
+  const payees = compose([
+    camelCaseKeys,
+    reject(payee => PAYEES_TO_EXCLUDE.includes(payee.name))
+  ])(budget.payees);
+  const payeesById = keyBy("id")(payees);
 
   return {
     ...camelCaseKeys(
@@ -56,7 +68,7 @@ export const sanitizeBudget = (
     categories,
     categoriesById: keyBy("id")(categories),
     payees,
-    payeesById: keyBy("id")(payees),
+    payeesById,
     months: sortBy("month")(camelCaseKeys(budget.months)),
     transactions: compose([
       camelCaseKeys,
@@ -75,9 +87,12 @@ export const sanitizeBudget = (
       ),
       reverse,
       sortBy("date"),
-      filter(
-        transaction =>
-          !transaction.transfer_account_id && transaction.amount !== 0
+      reject(
+        anyPass([
+          prop("transfer_account_id"),
+          matchesProperty("amount", 0),
+          transaction => !payeesById[transaction.payee_id]
+        ])
       )
     ])(budget.transactions)
   };
