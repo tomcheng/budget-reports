@@ -10,20 +10,12 @@ import omit from "lodash/fp/omit";
 import pick from "lodash/fp/pick";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
+import { getPayeeNodes } from "../utils";
 import { StrongText } from "./typeComponents";
 import Section from "./Section";
 import Breakdown from "./Breakdown";
 
 const map = mapRaw.convert({ cap: false });
-
-const getPayeeNodes = ({ payeesById, transactions }) =>
-  compose([
-    map((transactions, payeeId) => ({
-      ...pick(["id", "name"], payeesById[payeeId]),
-      amount: sumBy("amount", transactions)
-    })),
-    groupBy("payeeId")
-  ])(transactions);
 
 const ExpensesBreakdown = ({
   categoriesById,
@@ -37,9 +29,9 @@ const ExpensesBreakdown = ({
     map((transactions, categoryId) => {
       const payeeNodes = getPayeeNodes({ payeesById, transactions });
       return {
-        ...pick(["id", "name", "categoryGroupId"], categoriesById[categoryId]),
-        nodes: sortBy("amount", payeeNodes),
-        amount: sumBy("amount", payeeNodes)
+        ...pick(["id", "name", "categoryGroupId"])(categoriesById[categoryId]),
+        nodes: sortBy("amount")(payeeNodes),
+        amount: sumBy("amount")(payeeNodes)
       };
     }),
     groupBy("categoryId"),
@@ -48,11 +40,11 @@ const ExpensesBreakdown = ({
 
   const groupNodes = compose([
     map((nodes, categoryGroupId) => {
-      const categoryNodes = map(omit("categoryGroupId"), nodes);
+      const categoryNodes = map(omit("categoryGroupId"))(nodes);
       return {
-        ...pick(["id", "name"], categoryGroupsById[categoryGroupId]),
-        nodes: sortBy("amount", categoryNodes),
-        amount: sumBy("amount", categoryNodes)
+        ...pick(["id", "name"])(categoryGroupsById[categoryGroupId]),
+        nodes: sortBy("amount")(categoryNodes),
+        amount: sumBy("amount")(categoryNodes)
       };
     }),
     groupBy("categoryGroupId")
@@ -63,10 +55,10 @@ const ExpensesBreakdown = ({
     transactions: transactions.filter(trans => !trans.categoryId)
   });
 
-  const nodes = sortBy("amount", groupNodes.concat(rootPayeeNodes)).concat([
+  const nodes = sortBy("amount")(groupNodes.concat(rootPayeeNodes)).concat([
     {
       id: "net",
-      amount: -totalIncome - sumBy("amount", transactions),
+      amount: -totalIncome - sumBy("amount")(transactions),
       name: "Net Income"
     }
   ]);

@@ -3,7 +3,16 @@ import mapValues from "lodash/mapValues";
 import mapKeys from "lodash/mapKeys";
 import isObject from "lodash/isObject";
 import isArray from "lodash/isArray";
+
+import compose from "lodash/fp/compose";
+import groupBy from "lodash/fp/groupBy";
+import mapRaw from "lodash/fp/map";
+import pick from "lodash/fp/pick";
+import sumBy from "lodash/fp/sumBy";
+
 import { utils } from "ynab";
+
+const map = mapRaw.convert({ cap: false });
 
 export const simpleMemoize = func => {
   let lastArgs = null;
@@ -65,3 +74,12 @@ export const getGroupLink = ({ budgetId, categoryGroupId }) =>
 
 export const getCategoryLink = ({ budgetId, categoryId }) =>
   `/budgets/${budgetId}/categories/${categoryId}`;
+
+export const getPayeeNodes = ({ payeesById, transactions }) =>
+  compose([
+    map((transactions, payeeId) => ({
+      ...pick(["id", "name"])(payeesById[payeeId]),
+      amount: sumBy("amount")(transactions)
+    })),
+    groupBy("payeeId")
+  ])(transactions);
