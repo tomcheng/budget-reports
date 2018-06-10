@@ -5,7 +5,7 @@ import Toggle from "./Toggle";
 import { StrongText } from "../common/typeComponents";
 
 const Exclusions = ({ toggles, onToggle }) => (
-  <Section>
+  <Section style={{ display: "flex", alignItems: "center" }}>
     <StrongText>Exclude:</StrongText>
     {toggles.map(({ label, key, value }) => (
       <Toggle

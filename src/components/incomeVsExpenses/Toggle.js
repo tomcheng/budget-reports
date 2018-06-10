@@ -2,7 +2,15 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const Toggle = ({ label, value, onToggle }) => (
-  <label style={{ display: "flex", height: 40, alignItems: "center" }}>
+  <label
+    style={{
+      display: "flex",
+      alignItems: "center",
+      height: 40,
+      marginLeft: 20,
+      userSelect: "none"
+    }}
+  >
     <input
       type="checkbox"
       checked={value}

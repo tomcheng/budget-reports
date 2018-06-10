@@ -193,12 +193,12 @@ class IncomeVsExpenses extends Component {
                   <Exclusions
                     toggles={[
                       {
-                        label: "first month",
+                        label: "first",
                         key: "excludeFirstMonth",
                         value: excludeFirstMonth
                       },
                       {
-                        label: "current month",
+                        label: "current",
                         key: "excludeCurrentMonth",
                         value: excludeCurrentMonth
                       },
