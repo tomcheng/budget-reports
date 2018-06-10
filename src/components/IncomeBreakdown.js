@@ -9,15 +9,16 @@ import Section from "./Section";
 import Breakdown from "./Breakdown";
 
 const IncomeBreakdown = ({ selectedMonth, transactions, payeesById }) => {
-  const total = sumBy("amount")(transactions);
-  const payeeNodes = getPayeeNodes({ payeesById, transactions });
-
+  const nodes = getPayeeNodes({ payeesById, transactions });
   return (
     <Section>
       <StrongText>
         Income for {moment(selectedMonth, "YYYY-MM").format("MMMM YYYY")}
       </StrongText>
-      <Breakdown nodes={sortBy("amount")(payeeNodes).reverse()} total={total} />
+      <Breakdown
+        nodes={sortBy("amount")(nodes).reverse()}
+        total={sumBy("amount")(nodes)}
+      />
     </Section>
   );
 };

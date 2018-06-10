@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import compose from "lodash/fp/compose";
+import concat from "lodash/fp/concat";
 import filter from "lodash/fp/filter";
 import get from "lodash/fp/get";
 import groupBy from "lodash/fp/groupBy";
@@ -55,13 +56,18 @@ const ExpensesBreakdown = ({
     transactions: transactions.filter(trans => !trans.categoryId)
   });
 
-  const nodes = sortBy("amount")(groupNodes.concat(rootPayeeNodes)).concat([
-    {
-      id: "net",
-      amount: -totalIncome - sumBy("amount")(transactions),
-      name: "Net Income"
-    }
-  ]);
+  const nodes = compose([
+    nodes =>
+      concat(nodes)([
+        {
+          id: "net",
+          amount: -totalIncome - sumBy("amount")(transactions),
+          name: "Net Income"
+        }
+      ]),
+    sortBy("amount"),
+    concat(rootPayeeNodes)
+  ])(groupNodes);
 
   return (
     <Section>
