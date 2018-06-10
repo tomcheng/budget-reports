@@ -8,7 +8,8 @@ const Toggle = ({ label, value, onToggle }) => (
       alignItems: "center",
       height: 40,
       marginLeft: 20,
-      userSelect: "none"
+      userSelect: "none",
+      opacity: value ? 1 : 0.5
     }}
   >
     <input
