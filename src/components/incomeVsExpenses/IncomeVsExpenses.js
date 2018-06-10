@@ -6,6 +6,7 @@ import find from "lodash/fp/find";
 import flatMap from "lodash/fp/flatMap";
 import groupBy from "lodash/fp/groupBy";
 import includes from "lodash/fp/includes";
+import last from "lodash/fp/last";
 import mapRaw from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
 import mean from "lodash/fp/mean";
@@ -81,6 +82,68 @@ class IncomeVsExpenses extends Component {
     }));
   };
 
+  getSummaries = ({ categoryGroupsById, categoriesById, transactions }) =>
+    compose([
+      sortBy("month"),
+      map((transactions, month) => {
+        const { incomeTransactions, expenseTransactions } = splitTransactions({
+          categoryGroupsById,
+          categoriesById,
+          transactions
+        });
+
+        return {
+          month,
+          transactions,
+          incomeTransactions,
+          expenseTransactions,
+          income: sumBy("amount")(incomeTransactions),
+          expenses: sumBy("amount")(expenseTransactions)
+        };
+      }),
+      groupBy(getMonth)
+    ])(transactions);
+
+  getExcludedMonths = summaries => {
+    const {
+      excludeOutliers,
+      excludeFirstMonth,
+      excludeCurrentMonth,
+      selectedMonth
+    } = this.state;
+
+    if (selectedMonth) {
+      return [];
+    }
+
+    const excludedMonths = [];
+
+    if (excludeFirstMonth) {
+      excludedMonths.push(summaries[0].month);
+    }
+
+    if (excludeCurrentMonth) {
+      excludedMonths.push(last(summaries).month);
+    }
+
+    if (excludeOutliers) {
+      const remainingSummaries = reject(
+        propertyIncludedIn("month", excludedMonths)
+      )(summaries);
+      const nets = map(s => s.income + s.expenses)(remainingSummaries);
+      const sd = standardDeviation(nets);
+      const avg = mean(nets);
+      excludedMonths.push(
+        ...compose([
+          map("month"),
+          filter(s => Math.abs(s.income + s.expenses - avg) > sd)
+        ])(remainingSummaries)
+      );
+    }
+
+    return excludedMonths;
+  };
+
   render() {
     const { budget, budgetId, onRefreshBudget, onRequestBudget } = this.props;
     const {
@@ -97,64 +160,16 @@ class IncomeVsExpenses extends Component {
         onRequestBudget={onRequestBudget}
       >
         {() => {
-          const {
-            transactions,
-            categoriesById,
-            categoryGroupsById,
-            payeesById
-          } = budget;
+          const { categoriesById, categoryGroupsById, payeesById } = budget;
 
-          let monthSummaries = compose([
-            sortBy("month"),
-            map((transactions, month) => {
-              const {
-                incomeTransactions,
-                expenseTransactions
-              } = splitTransactions({
-                categoryGroupsById,
-                categoriesById,
-                transactions
-              });
-
-              return {
-                month,
-                transactions,
-                incomeTransactions,
-                expenseTransactions,
-                income: sumBy("amount")(incomeTransactions),
-                expenses: sumBy("amount")(expenseTransactions)
-              };
-            }),
-            groupBy(getMonth)
-          ])(transactions);
-
-          const selectedMonthSummary = find(
-            matchesProperty("month", selectedMonth)
-          )(monthSummaries);
-
-          if (excludeFirstMonth) {
-            monthSummaries = monthSummaries.slice(1);
-          }
-
-          if (excludeCurrentMonth) {
-            monthSummaries = monthSummaries.slice(0, monthSummaries.length - 1);
-          }
-
-          let excludedMonths = [];
-
-          if (excludeOutliers) {
-            const nets = map(s => s.income + s.expenses)(monthSummaries);
-            const sd = standardDeviation(nets);
-            const avg = mean(nets);
-            excludedMonths = compose([
-              map("month"),
-              filter(s => Math.abs(s.income + s.expenses - avg) > sd)
-            ])(monthSummaries);
-          }
-
-          const truncatedMonthSummaries = reject(
-            propertyIncludedIn("month", excludedMonths)
-          )(monthSummaries);
+          const allSummaries = this.getSummaries(budget);
+          const excludedMonths = this.getExcludedMonths(allSummaries);
+          const summaries = reject(propertyIncludedIn("month", excludedMonths))(
+            allSummaries
+          );
+          const selectedSummary = find(matchesProperty("month", selectedMonth))(
+            allSummaries
+          );
 
           return (
             <Layout>
@@ -171,20 +186,17 @@ class IncomeVsExpenses extends Component {
               <Layout.Body>
                 {selectedMonth ? (
                   <IncomeVsExpensesSummaryForSingleMonth
-                    income={selectedMonthSummary.income}
-                    expenses={selectedMonthSummary.expenses}
+                    income={selectedSummary.income}
+                    expenses={selectedSummary.expenses}
                   />
                 ) : (
                   <IncomeVsExpensesSummaryForMultipleMonths
-                    averageExpenses={meanBy(
-                      "expenses",
-                      truncatedMonthSummaries
-                    )}
-                    averageIncome={meanBy("income", truncatedMonthSummaries)}
+                    averageExpenses={meanBy("expenses", summaries)}
+                    averageIncome={meanBy("income", summaries)}
                   />
                 )}
                 <ExpensesVsIncomeChart
-                  data={monthSummaries}
+                  data={allSummaries}
                   excludedMonths={excludedMonths}
                   selectedMonth={selectedMonth}
                   onSelectMonth={this.handleSelectMonth}
@@ -218,20 +230,16 @@ class IncomeVsExpenses extends Component {
                     categoryGroupsById={categoryGroupsById}
                     payeesById={payeesById}
                     selectedMonth={selectedMonth}
-                    expenseTransactions={
-                      selectedMonthSummary.expenseTransactions
-                    }
-                    incomeTransactions={selectedMonthSummary.incomeTransactions}
+                    expenseTransactions={selectedSummary.expenseTransactions}
+                    incomeTransactions={selectedSummary.incomeTransactions}
                   />
                 ) : (
                   <BreakdownForMultipleMonths
                     categoriesById={categoriesById}
                     categoryGroupsById={categoryGroupsById}
                     payeesById={payeesById}
-                    transactions={flatMap(prop("transactions"))(
-                      truncatedMonthSummaries
-                    )}
-                    months={truncatedMonthSummaries.length}
+                    transactions={flatMap(prop("transactions"))(summaries)}
+                    months={summaries.length}
                   />
                 )}
               </Layout.Body>
