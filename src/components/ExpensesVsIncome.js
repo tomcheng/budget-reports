@@ -3,10 +3,14 @@ import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import difference from "lodash/fp/difference";
 import filter from "lodash/fp/filter";
+import find from "lodash/fp/find";
 import groupBy from "lodash/fp/groupBy";
+import includes from "lodash/fp/includes";
 import mapRaw from "lodash/fp/map";
+import matchesProperty from "lodash/fp/matchesProperty";
 import mean from "lodash/fp/mean";
 import meanBy from "lodash/fp/meanBy";
+import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import GetBudget from "./GetBudget";
@@ -22,12 +26,22 @@ import IncomeBreakdown from "./IncomeBreakdown";
 
 const map = mapRaw.convert({ cap: false });
 
+const propertyIncludedIn = (property, arr) => obj =>
+  includes(obj[property], arr);
+
 const standardDeviation = arr => {
   const avg = mean(arr);
   return Math.sqrt(sumBy(num => Math.pow(num - avg, 2))(arr) / arr.length);
 };
 
 const getMonth = transaction => transaction.date.slice(0, 7);
+
+const isIncome = ({ categoryGroupsById, categoriesById }) => transaction =>
+  transaction.amount > 0 &&
+  (!transaction.categoryId ||
+    !categoryGroupsById[
+      categoriesById[transaction.categoryId].categoryGroupId
+    ]);
 
 class ExpensesVsIncome extends Component {
   static propTypes = {
@@ -94,16 +108,11 @@ class ExpensesVsIncome extends Component {
             payeesById
           } = budget;
 
-          let monthStats = compose([
+          let monthSummaries = compose([
             sortBy("month"),
             map((transactions, month) => {
               const incomeTransactions = filter(
-                transaction =>
-                  transaction.amount > 0 &&
-                  (!transaction.categoryId ||
-                    !categoryGroupsById[
-                      categoriesById[transaction.categoryId].categoryGroupId
-                    ])
+                isIncome({ categoryGroupsById, categoriesById })
               )(transactions);
               const expenseTransactions = difference(
                 transactions,
@@ -121,33 +130,33 @@ class ExpensesVsIncome extends Component {
             groupBy(getMonth)
           ])(transactions);
 
-          const selectedMonthStat = monthStats.find(
-            s => s.month === selectedMonth
-          );
+          const selectedMonthStat = find(
+            matchesProperty("month", selectedMonth)
+          )(monthSummaries);
 
           if (excludeFirstMonth) {
-            monthStats = monthStats.slice(1);
+            monthSummaries = monthSummaries.slice(1);
           }
 
           if (excludeCurrentMonth) {
-            monthStats = monthStats.slice(0, monthStats.length - 1);
+            monthSummaries = monthSummaries.slice(0, monthSummaries.length - 1);
           }
 
           let excludedMonths = [];
 
           if (excludeOutliers) {
-            const nets = map(s => s.income + s.expenses)(monthStats);
+            const nets = map(s => s.income + s.expenses)(monthSummaries);
             const sd = standardDeviation(nets);
             const avg = mean(nets);
             excludedMonths = compose([
               map("month"),
               filter(s => Math.abs(s.income + s.expenses - avg) > sd)
-            ])(monthStats);
+            ])(monthSummaries);
           }
 
-          const truncatedMonthStats = filter(
-            s => !excludedMonths.includes(s.month)
-          )(monthStats);
+          const truncatedMonthSummaries = reject(
+            propertyIncludedIn("month", excludedMonths)
+          )(monthSummaries);
 
           return (
             <Layout>
@@ -186,17 +195,17 @@ class ExpensesVsIncome extends Component {
                     numbers={[
                       {
                         label: "avg. income",
-                        value: meanBy("income", truncatedMonthStats)
+                        value: meanBy("income", truncatedMonthSummaries)
                       },
                       {
                         label: "avg. expenses",
-                        value: -meanBy("expenses", truncatedMonthStats)
+                        value: -meanBy("expenses", truncatedMonthSummaries)
                       },
                       {
                         label: "avg. net income",
                         value: meanBy(
                           s => s.income + s.expenses,
-                          truncatedMonthStats
+                          truncatedMonthSummaries
                         )
                       }
                     ]}
@@ -204,7 +213,7 @@ class ExpensesVsIncome extends Component {
                   />
                 )}
                 <ExpensesVsIncomeChart
-                  data={monthStats}
+                  data={monthSummaries}
                   excludedMonths={excludedMonths}
                   selectedMonth={selectedMonth}
                   onSelectMonth={this.handleSelectMonth}
