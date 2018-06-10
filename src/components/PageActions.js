@@ -11,8 +11,8 @@ const PageActions = ({ budgetId, onRefreshBudget }) => (
     align="right"
     links={[
       {
-        to: `/budgets/${budgetId}/expenses-vs-income`,
-        label: "Expenses vs Income"
+        to: `/budgets/${budgetId}/income-vs-expenses`,
+        label: "Income vs Expenses"
       }
     ]}
     dropdownContent={

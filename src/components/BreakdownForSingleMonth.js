@@ -4,7 +4,7 @@ import sumBy from "lodash/fp/sumBy";
 import ExpensesBreakdown from "./ExpensesBreakdown";
 import IncomeBreakdown from "./IncomeBreakdown";
 
-const BreakdownForMonth = ({
+const BreakdownForSingleMonth = ({
   categoriesById,
   categoryGroupsById,
   payeesById,
@@ -29,7 +29,7 @@ const BreakdownForMonth = ({
   </Fragment>
 );
 
-BreakdownForMonth.propTypes = {
+BreakdownForSingleMonth.propTypes = {
   categoriesById: PropTypes.object.isRequired,
   categoryGroupsById: PropTypes.object.isRequired,
   payeesById: PropTypes.object.isRequired,
@@ -38,4 +38,4 @@ BreakdownForMonth.propTypes = {
   incomeTransactions: PropTypes.array.isRequired
 };
 
-export default BreakdownForMonth;
+export default BreakdownForSingleMonth;

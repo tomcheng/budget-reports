@@ -19,12 +19,13 @@ import GetBudget from "./GetBudget";
 import Layout from "./Layout";
 import BackToBudget from "./BackToBudget";
 import { PageTitle } from "./typeComponents";
-import TopNumbers from "./TopNumbers";
+import IncomeVsExpensesSummaryForSingleMonth from "./IncomeVsExpensesSummaryForSingleMonth";
+import IncomeVsExpensesSummaryForMultipleMonths from "./IncomeVsExpensesSummaryForMultipleMonths";
 import ExpensesVsIncomeChart from "./ExpensesVsIncomeChart";
 import PageActions from "./PageActions";
 import Exclusions from "./Exclusions";
-import BreakdownForMonth from "./BreakdownForMonth";
-import BreakdownForMonths from "./BreakdownForMonths";
+import BreakdownForSingleMonth from "./BreakdownForSingleMonth";
+import BreakdownForMultipleMonths from "./BreakdownForMultipleMonths";
 
 const map = mapRaw.convert({ cap: false });
 
@@ -38,7 +39,7 @@ const standardDeviation = arr => {
 
 const getMonth = transaction => transaction.date.slice(0, 7);
 
-class ExpensesVsIncome extends Component {
+class IncomeVsExpenses extends Component {
   static propTypes = {
     budgetId: PropTypes.string.isRequired,
     onRefreshBudget: PropTypes.func.isRequired,
@@ -160,7 +161,7 @@ class ExpensesVsIncome extends Component {
               <Layout.Header flushLeft flushRight>
                 <BackToBudget budgetId={budgetId} />
                 <PageTitle style={{ flexGrow: 1 }}>
-                  Expenses vs Income
+                  Income vs Expenses
                 </PageTitle>
                 <PageActions
                   budgetId={budgetId}
@@ -169,45 +170,17 @@ class ExpensesVsIncome extends Component {
               </Layout.Header>
               <Layout.Body>
                 {selectedMonth ? (
-                  <TopNumbers
-                    numbers={[
-                      {
-                        label: "income",
-                        value: selectedMonthSummary.income
-                      },
-                      {
-                        label: "expenses",
-                        value: -selectedMonthSummary.expenses
-                      },
-                      {
-                        label: "net income",
-                        value:
-                          selectedMonthSummary.income +
-                          selectedMonthSummary.expenses
-                      }
-                    ]}
-                    roundToDollar
+                  <IncomeVsExpensesSummaryForSingleMonth
+                    income={selectedMonthSummary.income}
+                    expenses={selectedMonthSummary.expenses}
                   />
                 ) : (
-                  <TopNumbers
-                    numbers={[
-                      {
-                        label: "avg. income",
-                        value: meanBy("income", truncatedMonthSummaries)
-                      },
-                      {
-                        label: "avg. expenses",
-                        value: -meanBy("expenses", truncatedMonthSummaries)
-                      },
-                      {
-                        label: "avg. net income",
-                        value: meanBy(
-                          s => s.income + s.expenses,
-                          truncatedMonthSummaries
-                        )
-                      }
-                    ]}
-                    roundToDollar
+                  <IncomeVsExpensesSummaryForMultipleMonths
+                    averageExpenses={meanBy(
+                      "expenses",
+                      truncatedMonthSummaries
+                    )}
+                    averageIncome={meanBy("income", truncatedMonthSummaries)}
                   />
                 )}
                 <ExpensesVsIncomeChart
@@ -239,7 +212,7 @@ class ExpensesVsIncome extends Component {
                   />
                 )}
                 {selectedMonth ? (
-                  <BreakdownForMonth
+                  <BreakdownForSingleMonth
                     key={selectedMonth}
                     categoriesById={categoriesById}
                     categoryGroupsById={categoryGroupsById}
@@ -251,11 +224,13 @@ class ExpensesVsIncome extends Component {
                     incomeTransactions={selectedMonthSummary.incomeTransactions}
                   />
                 ) : (
-                  <BreakdownForMonths
+                  <BreakdownForMultipleMonths
                     categoriesById={categoriesById}
                     categoryGroupsById={categoryGroupsById}
                     payeesById={payeesById}
-                    transactions={flatMap(prop("transactions"))(truncatedMonthSummaries)}
+                    transactions={flatMap(prop("transactions"))(
+                      truncatedMonthSummaries
+                    )}
                     months={truncatedMonthSummaries.length}
                   />
                 )}
@@ -268,4 +243,4 @@ class ExpensesVsIncome extends Component {
   }
 }
 
-export default ExpensesVsIncome;
+export default IncomeVsExpenses;
