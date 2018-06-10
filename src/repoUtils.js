@@ -1,9 +1,12 @@
-import flatMap from "lodash/flatMap";
-import flow from "lodash/flow";
-import keyBy from "lodash/keyBy";
-import omit from "lodash/omit";
-import sortBy from "lodash/sortBy";
-import uniq from "lodash/uniq";
+import compose from "lodash/fp/compose";
+import flatMap from "lodash/fp/flatMap";
+import filter from "lodash/fp/filter";
+import keyBy from "lodash/fp/keyBy";
+import omit from "lodash/fp/omit";
+import map from "lodash/fp/map";
+import reverse from "lodash/fp/reverse";
+import sortBy from "lodash/fp/sortBy";
+import uniq from "lodash/fp/uniq";
 import moment from "moment";
 import { upsertBy } from "./utils";
 import { formatCurrency, camelCaseKeys } from "./utils";
@@ -18,15 +21,14 @@ export const sanitizeBudget = (
   budget,
   currentMonth = moment().format("YYYY-MM")
 ) => {
-  const categoriesFromMonth = keyBy(
-    budget.months.find(m => m.month === currentMonth + "-01").categories,
-    "id"
+  const categoriesFromMonth = keyBy("id")(
+    budget.months.find(m => m.month === currentMonth + "-01").categories
   );
   const transactionIdsFromSub = uniq(
-    budget.subtransactions.map(s => s.transaction_id)
+    map("transaction_id")(budget.subtransactions)
   );
-  const categoryGroups = budget.category_groups.filter(
-    group => !GROUPS_TO_HIDE.includes(group.name)
+  const categoryGroups = filter(group => !GROUPS_TO_HIDE.includes(group.name))(
+    budget.category_groups
   );
   const categories = budget.categories.map(c => {
     const mergedCategory = { ...c, ...categoriesFromMonth[c.id] };
@@ -41,47 +43,42 @@ export const sanitizeBudget = (
 
   return {
     ...camelCaseKeys(
-      omit(budget, [
+      omit([
         "categories",
         "category_groups",
         "payees",
         "months",
         "transactions"
-      ])
+      ])(budget)
     ),
     categoryGroups,
-    categoryGroupsById: keyBy(categoryGroups, "id"),
+    categoryGroupsById: keyBy("id")(categoryGroups),
     categories,
-    categoriesById: keyBy(categories, "id"),
+    categoriesById: keyBy("id")(categories),
     payees,
-    payeesById: keyBy(payees, "id"),
-    months: sortBy(camelCaseKeys(budget.months), "month"),
-    transactions: flow([
-      transactions =>
-        transactions.filter(
-          transaction =>
-            !transaction.transfer_account_id && transaction.amount !== 0
-        ),
-      transactions => sortBy(transactions, "date"),
-      transactions => transactions.reverse(),
-      transactions =>
-        flatMap(
-          transactions,
-          transaction =>
-            transactionIdsFromSub.includes(transaction.id)
-              ? budget.subtransactions
-                  .filter(sub => sub.transaction_id === transaction.id)
-                  .map(sub =>
-                    omit({ ...transaction, ...sub }, ["transaction_id"])
-                  )
-              : transaction
-        ),
-      transactions =>
-        transactions.map(transaction => ({
-          ...transaction,
-          amount: formatCurrency(transaction.amount)
-        })),
-      camelCaseKeys
+    payeesById: keyBy("id")(payees),
+    months: sortBy("month")(camelCaseKeys(budget.months)),
+    transactions: compose([
+      camelCaseKeys,
+      map(transaction => ({
+        ...transaction,
+        amount: formatCurrency(transaction.amount)
+      })),
+      flatMap(
+        transaction =>
+          transactionIdsFromSub.includes(transaction.id)
+            ? compose([
+                map(sub => omit("transaction_id")({ ...transaction, ...sub })),
+                filter(sub => sub.transaction_id === transaction.id)
+              ])(budget.subtransactions)
+            : transaction
+      ),
+      reverse,
+      sortBy("date"),
+      filter(
+        transaction =>
+          !transaction.transfer_account_id && transaction.amount !== 0
+      )
     ])(budget.transactions)
   };
 };

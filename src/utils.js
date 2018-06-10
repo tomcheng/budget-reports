@@ -1,18 +1,19 @@
-import camelCase from "lodash/camelCase";
-import mapValues from "lodash/mapValues";
-import mapKeys from "lodash/mapKeys";
-import isObject from "lodash/isObject";
-import isArray from "lodash/isArray";
-
+import camelCase from "lodash/fp/camelCase";
 import compose from "lodash/fp/compose";
+import curry from "lodash/fp/curry";
 import groupBy from "lodash/fp/groupBy";
+import isArray from "lodash/fp/isArray";
+import isObject from "lodash/fp/isObject";
 import mapRaw from "lodash/fp/map";
+import mapKeysRaw from "lodash/fp/mapKeys";
+import mapValues from "lodash/fp/mapValues";
 import pick from "lodash/fp/pick";
 import sumBy from "lodash/fp/sumBy";
 
 import { utils } from "ynab";
 
 const map = mapRaw.convert({ cap: false });
+const mapKeys = mapKeysRaw.convert({ cap: false });
 
 export const simpleMemoize = func => {
   let lastArgs = null;
@@ -31,18 +32,17 @@ export const simpleMemoize = func => {
   };
 };
 
-export const mapKeysDeep = (obj, cb) => {
+export const mapKeysDeep = curry((iteratee, obj) => {
   if (isArray(obj)) {
-    return obj.map(innerObj => mapKeysDeep(innerObj, cb));
+    return obj.map(mapKeysDeep(iteratee));
   } else if (isObject(obj)) {
-    return mapValues(mapKeys(obj, cb), val => mapKeysDeep(val, cb));
+    return mapValues(mapKeysDeep(iteratee))(mapKeys(iteratee)(obj));
   } else {
     return obj;
   }
-};
+});
 
-export const camelCaseKeys = obj =>
-  mapKeysDeep(obj, (val, key) => camelCase(key));
+export const camelCaseKeys = mapKeysDeep((val, key) => camelCase(key));
 
 export const formatCurrency = utils.convertMilliUnitsToCurrencyAmount;
 

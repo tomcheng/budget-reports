@@ -4,28 +4,28 @@ import camelCase from "lodash/camelCase";
 describe("mapKeysDeep", () => {
   it("maps keys of an object", () => {
     const obj = { foo_bar: 1 };
-    const result = mapKeysDeep(obj, (val, key) => camelCase(key));
+    const result = mapKeysDeep((val, key) => camelCase(key))(obj);
 
     expect(result).toEqual({ fooBar: 1 });
   });
 
   it("maps keys of a nested object", () => {
     const obj = { foo_bar: { baz_qux: 1 } };
-    const result = mapKeysDeep(obj, (val, key) => camelCase(key));
+    const result = mapKeysDeep((val, key) => camelCase(key))(obj);
 
     expect(result).toEqual({ fooBar: { bazQux: 1 } });
   });
 
   it("skips mapping keys of array on top level", () => {
     const obj = [{ foo_bar: { baz_qux: 1 } }];
-    const result = mapKeysDeep(obj, (val, key) => camelCase(key));
+    const result = mapKeysDeep((val, key) => camelCase(key))(obj);
 
     expect(result).toEqual([{ fooBar: { bazQux: 1 } }]);
   });
 
   it("skips mapping keys of array on second level", () => {
     const obj = { foo_bar: [{ baz_qux: 1 }] };
-    const result = mapKeysDeep(obj, (val, key) => camelCase(key));
+    const result = mapKeysDeep((val, key) => camelCase(key))(obj);
 
     expect(result).toEqual({ fooBar: [{ bazQux: 1 }] });
   });
