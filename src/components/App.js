@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Route, Switch } from "react-router-dom";
 import moment from "moment";
-import keyBy from "lodash/keyBy";
+import keyBy from "lodash/fp/keyBy";
 import {
   getBudgets,
   getBudget,
@@ -49,7 +49,7 @@ class App extends Component {
         {
           budgetsLoaded: true,
           budgetIds: budgets.map(b => b.id),
-          budgets: keyBy(budgets, "id")
+          budgets: keyBy("id")(budgets)
         },
         callback
       );

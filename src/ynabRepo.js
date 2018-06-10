@@ -3,7 +3,7 @@ import { camelCaseKeys, getStorage, setStorage } from "./utils";
 import { setLastUpdated } from "./uiRepo";
 import { sanitizeBudget, mergeBudgets } from "./repoUtils";
 import { clientId, redirectUri } from "./ynabConfig";
-import get from "lodash/get";
+import get from "lodash/fp/get";
 
 export const AUTHORIZE_URL =
   "https://app.youneedabudget.com/oauth/authorize?client_id=" +
@@ -76,7 +76,7 @@ export const initializeYnabApi = token => {
     const formatter = ({ budget }) => sanitizeBudget(budget);
 
     const allBudgets = getStorage(BUDGET_DETAILS_STORAGE_KEY);
-    const cachedBudget = get(allBudgets, budgetId);
+    const cachedBudget = get(budgetId)(allBudgets);
 
     if (cachedBudget) {
       return Promise.resolve(formatter(cachedBudget));

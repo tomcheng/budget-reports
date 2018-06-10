@@ -1,6 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import sumBy from "lodash/sumBy";
+import filter from "lodash/fp/filter";
+import find from "lodash/fp/find";
+import includes from "lodash/fp/includes";
+import map from "lodash/fp/map";
+import matchesProperty from "lodash/fp/matchesProperty";
+import sumBy from "lodash/fp/sumBy";
 import { getCategoryLink } from "../utils";
 import GetBudget from "./GetBudget";
 import Layout from "./Layout";
@@ -27,22 +32,29 @@ const CategoryGroup = ({
     onRequestBudget={onRequestBudget}
   >
     {() => {
-      const categoryGroup = budget.categoryGroups.find(
-        group => group.id === categoryGroupId
-      );
-      const categories = budget.categories.filter(
-        category => category.categoryGroupId === categoryGroupId
-      );
-      const categoryIds = categories.map(category => category.id);
-      const transactions = budget.transactions.filter(
-        transaction =>
-          categoryIds.includes(transaction.categoryId) &&
-          transaction.date.slice(0, 7) === currentMonth
-      );
+      const {
+        categoryGroups,
+        payeesById,
+        categories: allCategories,
+        transactions: allTransactions
+      } = budget;
 
-      const budgeted = sumBy(categories, "budgeted");
-      const spent = -sumBy(categories, "activity");
-      const available = sumBy(categories, "balance");
+      const categoryGroup = find(matchesProperty("id", categoryGroupId))(
+        categoryGroups
+      );
+      const categories = filter(
+        matchesProperty("categoryGroupId", categoryGroupId)
+      )(allCategories);
+      const categoryIds = map("id")(categories);
+      const transactions = filter(
+        transaction =>
+          includes(transaction.categoryId)(categoryIds) &&
+          transaction.date.slice(0, 7) === currentMonth
+      )(allTransactions);
+
+      const budgeted = sumBy("budgeted")(categories);
+      const spent = -sumBy("activity")(categories);
+      const available = sumBy("balance")(categories);
 
       return (
         <Layout>
@@ -99,10 +111,7 @@ const CategoryGroup = ({
               total={spent + available}
               transactions={transactions}
             />
-            <Transactions
-              transactions={transactions}
-              payeesById={budget.payeesById}
-            />
+            <Transactions transactions={transactions} payeesById={payeesById} />
           </Layout.Body>
         </Layout>
       );

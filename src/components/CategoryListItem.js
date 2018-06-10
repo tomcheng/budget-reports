@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import round from "lodash/round";
+import round from "lodash/fp/round";
 import { Link } from "react-router-dom";
 import { getCategoryLink } from "../utils";
 import { SecondaryText } from "./typeComponents";

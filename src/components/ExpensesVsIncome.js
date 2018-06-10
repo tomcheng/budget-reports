@@ -54,7 +54,7 @@ class ExpensesVsIncome extends Component {
     excludeOutliers: true,
     excludeFirstMonth: true,
     excludeCurrentMonth: true,
-    selectedMonth: "2018-05"
+    selectedMonth: null
   };
 
   handleToggleExclusion = key => {

@@ -1,14 +1,18 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import round from "lodash/round";
-import sumBy from "lodash/sumBy";
+import compose from "lodash/fp/compose";
+import filter from "lodash/fp/filter";
+import getOr from "lodash/fp/getOr";
+import groupBy from "lodash/fp/groupBy";
+import map from "lodash/fp/map";
+import maxBy from "lodash/fp/maxBy";
+import reverse from "lodash/fp/reverse";
+import round from "lodash/fp/round";
+import sortBy from "lodash/fp/sortBy";
+import sumBy from "lodash/fp/sumBy";
 import AnimateHeight from "react-animate-height-auto";
 import { Link } from "react-router-dom";
-import get from "lodash/get";
-import groupBy from "lodash/groupBy";
-import maxBy from "lodash/maxBy";
-import sortBy from "lodash/sortBy";
 import { getGroupLink, simpleMemoize } from "../utils";
 import { StrongText } from "./typeComponents";
 import Icon from "./Icon";
@@ -59,23 +63,25 @@ class CategoryGroupListItem extends Component {
   };
 
   getSortedCategories = simpleMemoize((categories, allTransactions) => {
-    const categoryIds = categories.map(category => category.id);
-    const transactions = allTransactions.filter(
-      transaction =>
-        transaction.categoryId && categoryIds.includes(transaction.categoryId)
-    );
-    const transactionsByCategory = groupBy(
-      transactions,
-      transaction => transaction.categoryId
-    );
-
-    return sortBy(categories, category =>
-      get(
-        maxBy(transactionsByCategory[category.id], "date"),
-        "date",
-        "0000-00-00"
+    const categoryIds = map("id")(categories);
+    const transactionsByCategory = compose([
+      groupBy("categoryId"),
+      filter(
+        transaction =>
+          transaction.categoryId && categoryIds.includes(transaction.categoryId)
       )
-    ).reverse();
+    ])(allTransactions);
+
+    return compose([
+      reverse,
+      sortBy(
+        compose([
+          getOr("0000-00-00")("date"),
+          maxBy("date"),
+          category => transactionsByCategory[category.id]
+        ])
+      )
+    ])(categories);
   });
 
   render() {
@@ -88,8 +94,8 @@ class CategoryGroupListItem extends Component {
       transactions,
       onToggleGroup
     } = this.props;
-    const activity = sumBy(categories, "activity");
-    const balance = sumBy(categories, "balance");
+    const activity = sumBy("activity")(categories);
+    const balance = sumBy("balance")(categories);
 
     return (
       <Container>

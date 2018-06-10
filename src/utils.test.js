@@ -1,5 +1,5 @@
 import { mapKeysDeep, upsertBy } from "./utils";
-import camelCase from "lodash/camelCase";
+import camelCase from "lodash/fp/camelCase";
 
 describe("mapKeysDeep", () => {
   it("maps keys of an object", () => {

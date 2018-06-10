@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import groupBy from "lodash/groupBy";
-import range from "lodash/range";
-import sumBy from "lodash/sumBy";
-import head from "lodash/head";
-import last from "lodash/last";
+import groupBy from "lodash/fp/groupBy";
+import head from "lodash/fp/head";
+import last from "lodash/fp/last";
+import range from "lodash/fp/range";
+import sumBy from "lodash/fp/sumBy";
 import moment from "moment";
 import { primaryColor, plotBandColor } from "../styleVariables";
 import { MinorText } from "./typeComponents";
@@ -24,7 +24,7 @@ const SpendingChart = ({ total, transactions, currentMonth }) => {
   const dates = range(-1, daysInMonth).map(day =>
     moment(currentMonth).add(day, "days")
   );
-  const transactionsByDate = groupBy(transactions, "date");
+  const transactionsByDate = groupBy("date")(transactions);
   let cumulative = 0;
   const data = dates.map(date => {
     if (date.isAfter(today)) {
@@ -33,12 +33,12 @@ const SpendingChart = ({ total, transactions, currentMonth }) => {
 
     const transactionsForDate =
       transactionsByDate[date.format("YYYY-MM-DD")] || [];
-    cumulative += -sumBy(transactionsForDate, "amount");
+    cumulative += -sumBy("amount")(transactionsForDate);
     return cumulative;
   });
   const lineData = dates.map((_, index) => index / (dates.length - 1) * total);
   const firstDayOfWeek = parseInt(dates[0].format("d"), 10);
-  const plotBands = range(6).map(num => ({
+  const plotBands = range(0, 6).map(num => ({
     color: plotBandColor,
     from: num * 7 - 1.5 - firstDayOfWeek,
     to: num * 7 + 0.5 - firstDayOfWeek

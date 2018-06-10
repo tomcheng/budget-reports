@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import findIndex from "lodash/findIndex";
-import property from "lodash/property";
+import findIndex from "lodash/fp/findIndex";
+import map from "lodash/fp/map";
+import matchesProperty from "lodash/fp/matchesProperty";
 import {
   plotBandColor,
   selectedPlotBandColor,
@@ -19,13 +20,13 @@ const ExpensesVsIncomeChart = ({
   onSelectMonth,
   selectedMonth
 }) => {
-  let plotBands = excludedMonths.map(month => {
-    const index = findIndex(data, d => d.month === month);
+  let plotBands = map(month => {
+    const index = findIndex(matchesProperty("month", month))(data);
     return { color: plotBandColor, from: index - 0.5, to: index + 0.5 };
-  });
+  })(excludedMonths);
 
   if (selectedMonth) {
-    const index = findIndex(data, d => d.month === selectedMonth);
+    const index = findIndex(matchesProperty("month", selectedMonth))(data);
     plotBands = [
       {
         color: selectedPlotBandColor,
@@ -41,7 +42,7 @@ const ExpensesVsIncomeChart = ({
         options={{
           chart: { type: "column" },
           xAxis: {
-            categories: data.map(d => moment(d.month).format("MMM YY")),
+            categories: map(d => moment(d.month).format("MMM YY"))(data),
             plotBands
           },
           yAxis: {
@@ -65,20 +66,20 @@ const ExpensesVsIncomeChart = ({
             {
               borderWidth: 0,
               color: lightPrimaryColor,
-              data: data.map(property("income")),
+              data: map("income")(data),
               name: "Income",
               states: { hover: { brightness: 0 } }
             },
             {
               borderWidth: 0,
               color: negativeChartColor,
-              data: data.map(property("expenses")),
+              data: map("expenses")(data),
               name: "Expenses",
               states: { hover: { brightness: 0 } }
             },
             {
               color: primaryColor,
-              data: data.map(d => d.income + d.expenses),
+              data: map(d => d.income + d.expenses)(data),
               enableMouseTracking: false,
               name: "Net Income",
               type: "line"

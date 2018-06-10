@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import get from "lodash/get";
-import groupBy from "lodash/groupBy";
-import maxBy from "lodash/maxBy";
-import sortBy from "lodash/sortBy";
+import compose from "lodash/fp/compose";
+import getOr from "lodash/fp/getOr";
+import groupBy from "lodash/fp/groupBy";
+import maxBy from "lodash/fp/maxBy";
+import reverse from "lodash/fp/reverse";
+import sortBy from "lodash/fp/sortBy";
 import { simpleMemoize } from "../utils";
 import { getExpandedGroups, setExpandedGroups } from "../uiRepo";
 import GetBudget from "./GetBudget";
@@ -59,18 +61,18 @@ class Budget extends Component {
       (acc, category) => ({ ...acc, [category.id]: category.categoryGroupId }),
       {}
     );
-    const transactionsByGroup = groupBy(
-      budget.transactions,
-      t => categoryToGroup[t.categoryId]
+    const transactionsByGroup = groupBy(t => categoryToGroup[t.categoryId])(
+      budget.transactions
     );
 
-    return sortBy(budget.categoryGroups, group =>
-      get(
-        maxBy(transactionsByGroup[group.id], transaction => transaction.date),
-        "date",
-        "0000-00-00"
-      )
-    ).reverse();
+    return compose([
+      reverse,
+      sortBy(compose([
+        getOr("0000-00-00")("date"),
+        maxBy("date"),
+        group => transactionsByGroup[group.id]
+      ]))
+    ])(budget.categoryGroups);
   });
 
   render() {

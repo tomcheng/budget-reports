@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import keys from "lodash/keys";
+import keys from "lodash/fp/keys";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import faArrowLeft from "@fortawesome/fontawesome-free-solid/faArrowLeft";
 import faCaretDown from "@fortawesome/fontawesome-free-solid/faCaretDown";
