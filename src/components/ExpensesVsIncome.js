@@ -52,7 +52,7 @@ class ExpensesVsIncome extends Component {
     excludeOutliers: true,
     excludeFirstMonth: true,
     excludeCurrentMonth: true,
-    selectedMonth: "2018-05"
+    selectedMonth: null
   };
 
   handleToggleExclusion = key => {
@@ -238,8 +238,6 @@ class ExpensesVsIncome extends Component {
                 {selectedMonth && (
                   <IncomeBreakdown
                     key={selectedMonth + "-income"}
-                    categories={budget.categories}
-                    categoryGroups={budget.categoryGroups}
                     payees={budget.payees}
                     selectedMonth={selectedMonth}
                     transactions={selectedMonthStat.incomeTransactions}
