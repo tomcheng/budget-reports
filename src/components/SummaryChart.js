@@ -29,7 +29,7 @@ const Marker = styled.div`
 
 const SummaryChart = ({ activity, balance, indicator }) => (
   <Container>
-    <Progress progress={-activity / (balance - activity || 1)} />
+    <Progress progress={Math.max(-activity / (balance - activity || 1), 0)} />
     <Marker indicator={indicator} />
   </Container>
 );
