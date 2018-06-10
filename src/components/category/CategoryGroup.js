@@ -7,7 +7,7 @@ import map from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
 import sumBy from "lodash/fp/sumBy";
 import { getCategoryLink } from "../../utils";
-import GetBudget from "../GetBudget";
+import EnsureBudgetLoaded from "../EnsureBudgetLoaded";
 import Layout from "../common/Layout";
 import { PageTitle } from "../common/typeComponents";
 import BackToBudget from "../header/BackToBudget";
@@ -26,7 +26,7 @@ const CategoryGroup = ({
   onRefreshBudget,
   onRequestBudget
 }) => (
-  <GetBudget
+  <EnsureBudgetLoaded
     budgetId={budgetId}
     budgetLoaded={!!budget}
     onRequestBudget={onRequestBudget}
@@ -116,7 +116,7 @@ const CategoryGroup = ({
         </Layout>
       );
     }}
-  </GetBudget>
+  </EnsureBudgetLoaded>
 );
 
 CategoryGroup.propTypes = {

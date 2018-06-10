@@ -15,7 +15,7 @@ import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import { splitTransactions } from "../../utils";
-import GetBudget from "../GetBudget";
+import EnsureBudgetLoaded from "../EnsureBudgetLoaded";
 import Layout from "../common/Layout";
 import BackToBudget from "../header/BackToBudget";
 import { PageTitle } from "../common/typeComponents";
@@ -91,7 +91,7 @@ class IncomeVsExpenses extends Component {
     } = this.state;
 
     return (
-      <GetBudget
+      <EnsureBudgetLoaded
         budgetId={budgetId}
         budgetLoaded={!!budget}
         onRequestBudget={onRequestBudget}
@@ -238,7 +238,7 @@ class IncomeVsExpenses extends Component {
             </Layout>
           );
         }}
-      </GetBudget>
+      </EnsureBudgetLoaded>
     );
   }
 }

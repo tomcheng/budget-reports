@@ -9,7 +9,7 @@ import reverse from "lodash/fp/reverse";
 import sortBy from "lodash/fp/sortBy";
 import { simpleMemoize } from "../../utils";
 import { getExpandedGroups, setExpandedGroups } from "../../uiRepo";
-import GetBudget from "../GetBudget";
+import EnsureBudgetLoaded from "../EnsureBudgetLoaded";
 import Layout from "../common/Layout";
 import { PageTitle } from "../common/typeComponents";
 import PageActions from "../header/PageActions";
@@ -89,7 +89,7 @@ class Budget extends Component {
     const dayOfMonth = parseInt(moment().format("D"), 10);
 
     return (
-      <GetBudget
+      <EnsureBudgetLoaded
         budgetId={budgetId}
         budgetLoaded={!!budget}
         onRequestBudget={onRequestBudget}
@@ -121,7 +121,7 @@ class Budget extends Component {
             </Layout.Body>
           </Layout>
         )}
-      </GetBudget>
+      </EnsureBudgetLoaded>
     );
   }
 }

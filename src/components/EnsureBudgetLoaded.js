@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Loading from "./common/Loading";
 
-class GetBudget extends Component {
+class EnsureBudgetLoaded extends Component {
   static propTypes = {
     budgetId: PropTypes.string.isRequired,
     budgetLoaded: PropTypes.bool.isRequired,
@@ -27,4 +27,4 @@ class GetBudget extends Component {
   }
 }
 
-export default GetBudget;
+export default EnsureBudgetLoaded;

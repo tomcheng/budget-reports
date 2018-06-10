@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { getGroupLink } from "../../utils";
-import GetBudget from "../GetBudget";
+import EnsureBudgetLoaded from "../EnsureBudgetLoaded";
 import Layout from "../common/Layout";
 import BackToBudget from "../header/BackToBudget";
 import { PageTitle } from "../common/typeComponents";
@@ -20,7 +20,7 @@ const Category = ({
   onRefreshBudget,
   onRequestBudget
 }) => (
-  <GetBudget
+  <EnsureBudgetLoaded
     budgetId={budgetId}
     budgetLoaded={!!budget}
     onRequestBudget={onRequestBudget}
@@ -82,7 +82,7 @@ const Category = ({
         </Layout>
       );
     }}
-  </GetBudget>
+  </EnsureBudgetLoaded>
 );
 
 Category.propTypes = {
