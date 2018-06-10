@@ -4,14 +4,14 @@ import Transaction from "./Transaction";
 import { StrongText, SecondaryText } from "./typeComponents";
 import Section from "./Section";
 
-const Transactions = ({ transactions, payees }) => (
+const Transactions = ({ transactions, payeesById }) => (
   <Section>
     <StrongText>Transactions</StrongText>
     {transactions.length ? (
       transactions.map(({ id, payeeId, date, amount }) => (
         <Transaction
           key={id}
-          payee={payees[payeeId]}
+          payee={payeesById[payeeId]}
           date={date}
           amount={amount}
         />
@@ -25,7 +25,7 @@ const Transactions = ({ transactions, payees }) => (
 );
 
 Transactions.propTypes = {
-  payees: PropTypes.object,
+  payeesById: PropTypes.object,
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       amount: PropTypes.number.isRequired,

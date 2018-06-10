@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import keyBy from "lodash/keyBy";
 import { Link } from "react-router-dom";
 import { getGroupLink } from "../utils";
 import GetBudget from "./GetBudget";
@@ -33,7 +32,6 @@ const Category = ({
       const categoryGroup = budget.categoryGroups.find(
         group => group.id === category.categoryGroupId
       );
-      const payees = keyBy(budget.payees, "id");
       const transactions = budget.transactions.filter(
         transaction =>
           transaction.categoryId === categoryId &&
@@ -76,7 +74,10 @@ const Category = ({
               currentMonth={currentMonth}
               transactions={transactions}
             />
-            <Transactions transactions={transactions} payees={payees} />
+            <Transactions
+              transactions={transactions}
+              payeesById={budget.payeesById}
+            />
           </Layout.Body>
         </Layout>
       );
@@ -99,7 +100,7 @@ Category.propTypes = {
         name: PropTypes.string.isRequired
       })
     ).isRequired,
-    payees: PropTypes.objectOf(
+    payeesById: PropTypes.objectOf(
       PropTypes.shape({
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired

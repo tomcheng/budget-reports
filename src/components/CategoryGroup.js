@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import keyBy from "lodash/keyBy";
 import sumBy from "lodash/sumBy";
 import { getCategoryLink } from "../utils";
 import GetBudget from "./GetBudget";
@@ -35,8 +34,6 @@ const CategoryGroup = ({
         category => category.categoryGroupId === categoryGroupId
       );
       const categoryIds = categories.map(category => category.id);
-
-      const payees = keyBy(budget.payees, "id");
       const transactions = budget.transactions.filter(
         transaction =>
           categoryIds.includes(transaction.categoryId) &&
@@ -102,7 +99,10 @@ const CategoryGroup = ({
               total={spent + available}
               transactions={transactions}
             />
-            <Transactions transactions={transactions} payees={payees} />
+            <Transactions
+              transactions={transactions}
+              payeesById={budget.payeesById}
+            />
           </Layout.Body>
         </Layout>
       );
@@ -125,7 +125,7 @@ CategoryGroup.propTypes = {
         name: PropTypes.string.isRequired
       })
     ).isRequired,
-    payees: PropTypes.objectOf(
+    payeesById: PropTypes.objectOf(
       PropTypes.shape({
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired

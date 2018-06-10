@@ -25,6 +25,19 @@ export const sanitizeBudget = (
   const transactionIdsFromSub = uniq(
     budget.subtransactions.map(s => s.transaction_id)
   );
+  const categoryGroups = budget.category_groups.filter(
+    group => !GROUPS_TO_HIDE.includes(group.name)
+  );
+  const categories = budget.categories.map(c => {
+    const mergedCategory = { ...c, ...categoriesFromMonth[c.id] };
+    return camelCaseKeys({
+      ...mergedCategory,
+      activity: formatCurrency(mergedCategory.activity),
+      balance: formatCurrency(mergedCategory.balance),
+      budgeted: formatCurrency(mergedCategory.budgeted)
+    });
+  });
+  const payees = camelCaseKeys(budget.payees);
 
   return {
     ...camelCaseKeys(
@@ -36,19 +49,12 @@ export const sanitizeBudget = (
         "transactions"
       ])
     ),
-    categoryGroups: budget.category_groups.filter(
-      group => !GROUPS_TO_HIDE.includes(group.name)
-    ),
-    categories: budget.categories.map(c => {
-      const mergedCategory = { ...c, ...categoriesFromMonth[c.id] };
-      return camelCaseKeys({
-        ...mergedCategory,
-        activity: formatCurrency(mergedCategory.activity),
-        balance: formatCurrency(mergedCategory.balance),
-        budgeted: formatCurrency(mergedCategory.budgeted)
-      });
-    }),
-    payees: keyBy(camelCaseKeys(budget.payees), "id"),
+    categoryGroups,
+    categoryGroupsById: keyBy(categoryGroups, "id"),
+    categories,
+    categoriesById: keyBy(categories, "id"),
+    payees,
+    payeesById: keyBy(payees, "id"),
     months: sortBy(camelCaseKeys(budget.months), "month"),
     transactions: flow([
       transactions =>
