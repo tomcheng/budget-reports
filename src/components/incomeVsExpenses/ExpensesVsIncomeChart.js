@@ -24,6 +24,7 @@ const ExpensesVsIncomeChart = ({
     const index = findIndex(matchesProperty("month", month))(data);
     return { color: plotBandColor, from: index - 0.5, to: index + 0.5 };
   })(excludedMonths);
+
   const selectedBands = [];
   selectedMonths.forEach(month => {
     const index = findIndex(matchesProperty("month", month))(data);
@@ -34,7 +35,14 @@ const ExpensesVsIncomeChart = ({
     });
   });
 
-  const categories = map(d => moment(d.month).format("MMM YY"))(data);
+  const yearLines = [];
+  data.forEach(({ month }, index) => {
+    if (moment(month).format("MMM") === "Jan") {
+      yearLines.push({ color: "#ccc", width: 1, value: index - 0.5, zIndex: 3 });
+    }
+  });
+
+  const categories = map(d => moment(d.month).format("MMM"))(data);
 
   return (
     <Section>
@@ -50,9 +58,10 @@ const ExpensesVsIncomeChart = ({
           },
           xAxis: {
             categories,
-            plotBands: selectedMonths.length ? selectedBands : excludedBands
+            plotBands: selectedMonths.length ? selectedBands : excludedBands,
+            plotLines: yearLines
           },
-          yAxis: { title: { text: null } },
+          yAxis: { labels: { enabled: false }, title: { text: null } },
           plotOptions: { series: { stacking: "normal" } },
           series: [
             {
