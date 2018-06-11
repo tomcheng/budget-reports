@@ -63,33 +63,31 @@ class CategoryGroupListItem extends Component {
     onToggleGroup: PropTypes.func.isRequired
   };
 
-  getSortedCategories = simpleMemoize(
-    (allCategories, allTransactions, categoryGroupId) => {
-      const categories = filter(
-        matchesProperty("categoryGroupId", categoryGroupId)
-      )(allCategories);
-      const categoryIds = map("id")(categories);
-      const transactionsByCategory = compose([
-        groupBy("categoryId"),
-        filter(
-          transaction =>
-            transaction.categoryId &&
-            categoryIds.includes(transaction.categoryId)
-        )
-      ])(allTransactions);
-
-      return compose([
-        reverse,
-        sortBy(
-          compose([
-            getOr("0000-00-00")("date"),
-            maxBy("date"),
-            category => transactionsByCategory[category.id]
-          ])
-        )
-      ])(categories);
-    }
+  getCategoriesForGroup = simpleMemoize((allCategories, categoryGroupId) =>
+    filter(matchesProperty("categoryGroupId", categoryGroupId))(allCategories)
   );
+
+  getSortedCategories = simpleMemoize((categories, transactions) => {
+    const categoryIds = map("id")(categories);
+    const transactionsByCategory = compose([
+      groupBy("categoryId"),
+      filter(
+        transaction =>
+          transaction.categoryId && categoryIds.includes(transaction.categoryId)
+      )
+    ])(transactions);
+
+    return compose([
+      reverse,
+      sortBy(
+        compose([
+          getOr("0000-00-00")("date"),
+          maxBy("date"),
+          category => transactionsByCategory[category.id]
+        ])
+      )
+    ])(categories);
+  });
 
   render() {
     const {
@@ -101,9 +99,10 @@ class CategoryGroupListItem extends Component {
       transactions,
       onToggleGroup
     } = this.props;
-    const categories = filter(
-      matchesProperty("categoryGroupId", categoryGroup.id)
-    )(allCategories);
+    const categories = this.getCategoriesForGroup(
+      allCategories,
+      categoryGroup.id
+    );
     const activity = sumBy("activity")(categories);
     const balance = sumBy("balance")(categories);
 
@@ -172,11 +171,7 @@ class CategoryGroupListItem extends Component {
         </Link>
         <AnimateHeight isExpanded={expanded}>
           <Categories
-            categories={this.getSortedCategories(
-              categories,
-              transactions,
-              categoryGroup.id
-            )}
+            categories={this.getSortedCategories(categories, transactions)}
             budgetId={budgetId}
             monthProgress={monthProgress}
           />
