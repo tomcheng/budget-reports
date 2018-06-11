@@ -6,7 +6,6 @@ import map from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
 import {
   plotBandColor,
-  selectedPlotBandColor,
   primaryColor,
   lightPrimaryColor,
   negativeChartColor
@@ -14,31 +13,21 @@ import {
 import Section from "../common/Section";
 import Chart from "../common/Chart";
 
-const IncomeVsExpensesChart = ({
-  data,
-  excludedMonths,
-  onSelectMonth,
-  selectedMonths
-}) => {
+const IncomeVsExpensesChart = ({ data, excludedMonths, onToggleMonth }) => {
   const excludedBands = map(month => {
     const index = findIndex(matchesProperty("month", month))(data);
     return { color: plotBandColor, from: index - 0.5, to: index + 0.5 };
   })(excludedMonths);
 
-  const selectedBands = [];
-  selectedMonths.forEach(month => {
-    const index = findIndex(matchesProperty("month", month))(data);
-    selectedBands.push({
-      color: selectedPlotBandColor,
-      from: index - 0.5,
-      to: index + 0.5
-    });
-  });
-
   const yearLines = [];
   data.forEach(({ month }, index) => {
     if (moment(month).format("MMM") === "Jan") {
-      yearLines.push({ color: "#ccc", width: 1, value: index - 0.5, zIndex: 3 });
+      yearLines.push({
+        color: "#ccc",
+        width: 1,
+        value: index - 0.5,
+        zIndex: 3
+      });
     }
   });
 
@@ -52,13 +41,13 @@ const IncomeVsExpensesChart = ({
             type: "column",
             events: {
               click: event => {
-                onSelectMonth(data[Math.round(event.xAxis[0].value)].month);
+                onToggleMonth(data[Math.round(event.xAxis[0].value)].month);
               }
             }
           },
           xAxis: {
             categories,
-            plotBands: selectedMonths.length ? selectedBands : excludedBands,
+            plotBands: excludedBands,
             plotLines: yearLines
           },
           yAxis: { labels: { enabled: false }, title: { text: null } },
@@ -103,8 +92,7 @@ IncomeVsExpensesChart.propTypes = {
     })
   ).isRequired,
   excludedMonths: PropTypes.arrayOf(PropTypes.string).isRequired,
-  selectedMonths: PropTypes.arrayOf(PropTypes.string).isRequired,
-  onSelectMonth: PropTypes.func.isRequired
+  onToggleMonth: PropTypes.func.isRequired
 };
 
 export default IncomeVsExpensesChart;
