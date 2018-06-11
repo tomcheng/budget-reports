@@ -21,6 +21,7 @@ import sumBy from "lodash/fp/sumBy";
 import { splitTransactions } from "../../utils";
 import EnsureBudgetLoaded from "../EnsureBudgetLoaded";
 import Layout from "../common/Layout";
+import Section from "../common/Section";
 import BackToBudget from "../header/BackToBudget";
 import { PageTitle } from "../common/typeComponents";
 import IncomeVsExpensesSummary from "./IncomeVsExpensesSummary";
@@ -85,6 +86,10 @@ class IncomeVsExpenses extends Component {
     }));
   };
 
+  handleClearSelectedMonths = () => {
+    this.setState({ selectedMonths: {} });
+  };
+
   getSelectedMonths = () =>
     compose([sortBy(identity), keys])(this.state.selectedMonths);
 
@@ -101,6 +106,8 @@ class IncomeVsExpenses extends Component {
         return {
           month,
           transactions,
+          incomeTransactions,
+          expenseTransactions,
           income: sumBy("amount")(incomeTransactions),
           expenses: sumBy("amount")(expenseTransactions)
         };
@@ -197,26 +204,34 @@ class IncomeVsExpenses extends Component {
                   selectedMonths={selectedMonths}
                   onSelectMonth={this.handleSelectMonth}
                 />
-                <Exclusions
-                  toggles={[
-                    {
-                      label: "first",
-                      key: "excludeFirstMonth",
-                      value: excludeFirstMonth
-                    },
-                    {
-                      label: "current",
-                      key: "excludeCurrentMonth",
-                      value: excludeCurrentMonth
-                    },
-                    {
-                      label: "outliers",
-                      key: "excludeOutliers",
-                      value: excludeOutliers
-                    }
-                  ]}
-                  onToggle={this.handleToggleExclusion}
-                />
+                {selectedMonths.length === 0 ? (
+                  <Exclusions
+                    toggles={[
+                      {
+                        label: "first",
+                        key: "excludeFirstMonth",
+                        value: excludeFirstMonth
+                      },
+                      {
+                        label: "current",
+                        key: "excludeCurrentMonth",
+                        value: excludeCurrentMonth
+                      },
+                      {
+                        label: "outliers",
+                        key: "excludeOutliers",
+                        value: excludeOutliers
+                      }
+                    ]}
+                    onToggle={this.handleToggleExclusion}
+                  />
+                ) : (
+                  <Section>
+                    <button onClick={this.handleClearSelectedMonths}>
+                      Clear selection
+                    </button>
+                  </Section>
+                )}
                 <Breakdowns
                   categoriesById={categoriesById}
                   categoryGroupsById={categoryGroupsById}
