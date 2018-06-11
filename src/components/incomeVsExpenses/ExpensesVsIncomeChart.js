@@ -18,23 +18,22 @@ const ExpensesVsIncomeChart = ({
   data,
   excludedMonths,
   onSelectMonth,
-  selectedMonth
+  selectedMonths
 }) => {
-  let plotBands = map(month => {
+  const excludedBands = map(month => {
     const index = findIndex(matchesProperty("month", month))(data);
     return { color: plotBandColor, from: index - 0.5, to: index + 0.5 };
   })(excludedMonths);
+  const selectedBands = [];
+  selectedMonths.forEach(month => {
+    const index = findIndex(matchesProperty("month", month))(data);
+    selectedBands.push({
+      color: selectedPlotBandColor,
+      from: index - 0.5,
+      to: index + 0.5
+    });
+  });
 
-  if (selectedMonth) {
-    const index = findIndex(matchesProperty("month", selectedMonth))(data);
-    plotBands = [
-      {
-        color: selectedPlotBandColor,
-        from: index - 0.5,
-        to: index + 0.5
-      }
-    ];
-  }
   const categories = map(d => moment(d.month).format("MMM YY"))(data);
 
   return (
@@ -49,7 +48,10 @@ const ExpensesVsIncomeChart = ({
               }
             }
           },
-          xAxis: { categories, plotBands },
+          xAxis: {
+            categories,
+            plotBands: selectedMonths.length ? selectedBands : excludedBands
+          },
           yAxis: { title: { text: null } },
           plotOptions: { series: { stacking: "normal" } },
           series: [
@@ -92,8 +94,8 @@ ExpensesVsIncomeChart.propTypes = {
     })
   ).isRequired,
   excludedMonths: PropTypes.arrayOf(PropTypes.string).isRequired,
-  onSelectMonth: PropTypes.func.isRequired,
-  selectedMonth: PropTypes.string
+  selectedMonths: PropTypes.arrayOf(PropTypes.string).isRequired,
+  onSelectMonth: PropTypes.func.isRequired
 };
 
 export default ExpensesVsIncomeChart;

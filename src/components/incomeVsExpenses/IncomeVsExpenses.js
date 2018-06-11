@@ -5,12 +5,15 @@ import filter from "lodash/fp/filter";
 import find from "lodash/fp/find";
 import flatMap from "lodash/fp/flatMap";
 import groupBy from "lodash/fp/groupBy";
+import identity from "lodash/fp/identity";
 import includes from "lodash/fp/includes";
+import keys from "lodash/fp/keys";
 import last from "lodash/fp/last";
 import mapRaw from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
 import mean from "lodash/fp/mean";
 import meanBy from "lodash/fp/meanBy";
+import omit from "lodash/fp/omit";
 import prop from "lodash/fp/prop";
 import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
@@ -65,7 +68,7 @@ class IncomeVsExpenses extends Component {
     excludeOutliers: true,
     excludeFirstMonth: true,
     excludeCurrentMonth: true,
-    selectedMonth: null
+    selectedMonths: {}
   };
 
   handleToggleExclusion = key => {
@@ -78,9 +81,14 @@ class IncomeVsExpenses extends Component {
   handleSelectMonth = month => {
     this.setState(state => ({
       ...state,
-      selectedMonth: month === state.selectedMonth ? null : month
+      selectedMonths: state.selectedMonths[month]
+        ? omit(month)(state.selectedMonths)
+        : { ...state.selectedMonths, [month]: true }
     }));
   };
+
+  getSelectedMonths = () =>
+    compose([sortBy(identity), keys])(this.state.selectedMonths);
 
   getSummaries = ({ categoryGroupsById, categoriesById, transactions }) =>
     compose([
@@ -108,11 +116,11 @@ class IncomeVsExpenses extends Component {
     const {
       excludeOutliers,
       excludeFirstMonth,
-      excludeCurrentMonth,
-      selectedMonth
+      excludeCurrentMonth
     } = this.state;
+    const selectedMonths = this.getSelectedMonths();
 
-    if (selectedMonth) {
+    if (selectedMonths.length) {
       return [];
     }
 
@@ -149,9 +157,9 @@ class IncomeVsExpenses extends Component {
     const {
       excludeOutliers,
       excludeFirstMonth,
-      excludeCurrentMonth,
-      selectedMonth
+      excludeCurrentMonth
     } = this.state;
+    const selectedMonths = this.getSelectedMonths();
 
     return (
       <EnsureBudgetLoaded
@@ -167,9 +175,9 @@ class IncomeVsExpenses extends Component {
           const summaries = reject(propertyIncludedIn("month", excludedMonths))(
             allSummaries
           );
-          const selectedSummary = find(matchesProperty("month", selectedMonth))(
-            allSummaries
-          );
+          const selectedSummary = find(
+            matchesProperty("month", selectedMonths[0])
+          )(allSummaries);
 
           return (
             <Layout>
@@ -184,7 +192,7 @@ class IncomeVsExpenses extends Component {
                 />
               </Layout.Header>
               <Layout.Body>
-                {selectedMonth ? (
+                {selectedSummary ? (
                   <IncomeVsExpensesSummaryForSingleMonth
                     income={selectedSummary.income}
                     expenses={selectedSummary.expenses}
@@ -198,10 +206,10 @@ class IncomeVsExpenses extends Component {
                 <ExpensesVsIncomeChart
                   data={allSummaries}
                   excludedMonths={excludedMonths}
-                  selectedMonth={selectedMonth}
+                  selectedMonths={selectedMonths}
                   onSelectMonth={this.handleSelectMonth}
                 />
-                {!selectedMonth && (
+                {!selectedSummary && (
                   <Exclusions
                     toggles={[
                       {
@@ -223,13 +231,13 @@ class IncomeVsExpenses extends Component {
                     onToggle={this.handleToggleExclusion}
                   />
                 )}
-                {selectedMonth ? (
+                {selectedSummary ? (
                   <BreakdownForSingleMonth
-                    key={selectedMonth}
+                    key={selectedMonths[0]}
                     categoriesById={categoriesById}
                     categoryGroupsById={categoryGroupsById}
                     payeesById={payeesById}
-                    selectedMonth={selectedMonth}
+                    selectedMonth={selectedMonths[0]}
                     expenseTransactions={selectedSummary.expenseTransactions}
                     incomeTransactions={selectedSummary.incomeTransactions}
                   />
