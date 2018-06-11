@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import findIndex from "lodash/fp/findIndex";
-import get from "lodash/fp/get";
 import map from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
 import {
@@ -46,9 +45,7 @@ const ExpensesVsIncomeChart = ({
             type: "column",
             events: {
               click: event => {
-                onSelectMonth(
-                  get([Math.round(event.xAxis[0].value), "month"])(data)
-                );
+                onSelectMonth(data[Math.round(event.xAxis[0].value)].month);
               }
             }
           },
