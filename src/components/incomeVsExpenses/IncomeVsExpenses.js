@@ -27,7 +27,7 @@ import { PageTitle } from "../common/typeComponents";
 import IncomeVsExpensesSummary from "./IncomeVsExpensesSummary";
 import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
 import PageActions from "../header/PageActions";
-import Exclusions from "./Exclusions";
+import IncomeVsExpensesChartControls from "./IncomeVsExpensesChartControls";
 import Breakdowns from "./Breakdowns";
 
 const map = mapRaw.convert({ cap: false });
@@ -204,34 +204,28 @@ class IncomeVsExpenses extends Component {
                   selectedMonths={selectedMonths}
                   onSelectMonth={this.handleSelectMonth}
                 />
-                {selectedMonths.length === 0 ? (
-                  <Exclusions
-                    toggles={[
-                      {
-                        label: "first",
-                        key: "excludeFirstMonth",
-                        value: excludeFirstMonth
-                      },
-                      {
-                        label: "current",
-                        key: "excludeCurrentMonth",
-                        value: excludeCurrentMonth
-                      },
-                      {
-                        label: "outliers",
-                        key: "excludeOutliers",
-                        value: excludeOutliers
-                      }
-                    ]}
-                    onToggle={this.handleToggleExclusion}
-                  />
-                ) : (
-                  <Section>
-                    <button onClick={this.handleClearSelectedMonths}>
-                      Clear selection
-                    </button>
-                  </Section>
-                )}
+                <IncomeVsExpensesChartControls
+                  toggles={[
+                    {
+                      label: "exclude first",
+                      key: "excludeFirstMonth",
+                      value: excludeFirstMonth
+                    },
+                    {
+                      label: "exclude last",
+                      key: "excludeCurrentMonth",
+                      value: excludeCurrentMonth
+                    },
+                    {
+                      label: "exclude outliers",
+                      key: "excludeOutliers",
+                      value: excludeOutliers
+                    }
+                  ]}
+                  onToggle={this.handleToggleExclusion}
+                  onClearSelected={this.handleClearSelectedMonths}
+                  hasSelection={selectedMonths.length > 0}
+                />
                 <Breakdowns
                   categoriesById={categoriesById}
                   categoryGroupsById={categoryGroupsById}

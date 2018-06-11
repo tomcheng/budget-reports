@@ -2,7 +2,7 @@ import tinyColor from "tinycolor2";
 
 export const primaryColor = "#4399ff";
 export const positiveColor = "#2cbc2f";
-export const plotBandColor = "#f8f8f8";
+export const plotBandColor = "#f2f2f2";
 export const selectedPlotBandColor = tinyColor(primaryColor)
   .lighten(32)
   .desaturate()
