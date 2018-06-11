@@ -5,18 +5,20 @@ import Toggle from "./Toggle";
 import { StrongText } from "../common/typeComponents";
 
 const Exclusions = ({ toggles, onToggle }) => (
-  <Section style={{ display: "flex", alignItems: "center" }}>
-    <StrongText>Exclude:</StrongText>
-    {toggles.map(({ label, key, value }) => (
-      <Toggle
-        key={key}
-        label={label}
-        value={value}
-        onToggle={() => {
-          onToggle(key, !value);
-        }}
-      />
-    ))}
+  <Section>
+    <StrongText>Exclude</StrongText>
+    <div style={{ display: "flex", alignItems: "center" }}>
+      {toggles.map(({ label, key, value }) => (
+        <Toggle
+          key={key}
+          label={label}
+          value={value}
+          onToggle={() => {
+            onToggle(key, !value);
+          }}
+        />
+      ))}
+    </div>
   </Section>
 );
 

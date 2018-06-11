@@ -149,6 +149,30 @@ class IncomeVsExpensesBody extends Component {
         }));
         break;
 
+      case "none":
+        this.setState(state => ({
+          ...state,
+          excludedMonths: next
+            ? {}
+            : summaries.reduce(
+                (ex, { month }) => ({ ...ex, [month]: true }),
+                {}
+              )
+        }));
+        break;
+
+      case "all":
+        this.setState(state => ({
+          ...state,
+          excludedMonths: next
+            ? summaries.reduce(
+                (ex, { month }) => ({ ...ex, [month]: true }),
+                {}
+              )
+            : {}
+        }));
+        break;
+
       default:
         break;
     }
@@ -184,6 +208,8 @@ class IncomeVsExpensesBody extends Component {
     const outliersExcluded = every(month => includes(month)(excludedMonths))(
       this.getOutliers(budget)
     );
+    const noneExcluded = excludedMonths.length === 0;
+    const allExcluded = excludedMonths.length === allSummaries.length;
 
     return (
       <Fragment>
@@ -212,6 +238,16 @@ class IncomeVsExpensesBody extends Component {
               label: "outliers",
               key: "outliers",
               value: outliersExcluded
+            },
+            {
+              label: "none",
+              key: "none",
+              value: noneExcluded
+            },
+            {
+              label: "all",
+              key: "all",
+              value: allExcluded
             }
           ]}
           onToggle={this.handleToggleExclusion}
