@@ -49,19 +49,36 @@ class BreakdownNode extends Component {
 
         {hasChildNodes && (
           <AnimateHeight isExpanded={expanded}>
-            <div style={{ paddingLeft: INDENTATION }}>
-              {nodes.map(node => (
-                <BreakdownNode
-                  {...node}
-                  key={node.id}
-                  isTopLevel={false}
-                  total={total}
-                />
-              ))}
-            </div>
+            <Nodes nodes={nodes} total={total} />
           </AnimateHeight>
         )}
       </Container>
+    );
+  }
+}
+
+class Nodes extends Component {
+  shouldComponentUpdate(nextProps) {
+    return (
+      this.props.nodes !== nextProps.nodes ||
+      this.props.total !== nextProps.total
+    );
+  }
+
+  render() {
+    const { nodes, total } = this.props;
+
+    return (
+      <div style={{ paddingLeft: INDENTATION }}>
+        {nodes.map(node => (
+          <BreakdownNode
+            {...node}
+            key={node.id}
+            isTopLevel={false}
+            total={total}
+          />
+        ))}
+      </div>
     );
   }
 }
