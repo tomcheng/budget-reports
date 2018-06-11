@@ -21,6 +21,7 @@ import sumBy from "lodash/fp/sumBy";
 import { splitTransactions } from "../../utils";
 import EnsureBudgetLoaded from "../EnsureBudgetLoaded";
 import Layout from "../common/Layout";
+import Section from "../common/Section";
 import BackToBudget from "../header/BackToBudget";
 import { PageTitle } from "../common/typeComponents";
 import IncomeVsExpensesSummaryForSingleMonth from "./IncomeVsExpensesSummaryForSingleMonth";
@@ -85,6 +86,10 @@ class IncomeVsExpenses extends Component {
         ? omit(month)(state.selectedMonths)
         : { ...state.selectedMonths, [month]: true }
     }));
+  };
+
+  handleClearSelectedMonths = () => {
+    this.setState({ selectedMonths: {} });
   };
 
   getSelectedMonths = () =>
@@ -172,12 +177,15 @@ class IncomeVsExpenses extends Component {
 
           const allSummaries = this.getSummaries(budget);
           const excludedMonths = this.getExcludedMonths(allSummaries);
-          const summaries = reject(propertyIncludedIn("month", excludedMonths))(
-            allSummaries
-          );
-          const selectedSummary = find(
-            matchesProperty("month", selectedMonths[0])
-          )(allSummaries);
+          const summaries = selectedMonths.length
+            ? selectedMonths.map(month =>
+                find(matchesProperty("month", month))(allSummaries)
+              )
+            : reject(propertyIncludedIn("month", excludedMonths))(allSummaries);
+          const selectedSummary =
+            selectedMonths.length === 1
+              ? find(matchesProperty("month", selectedMonths[0]))(allSummaries)
+              : null;
 
           return (
             <Layout>
@@ -209,7 +217,7 @@ class IncomeVsExpenses extends Component {
                   selectedMonths={selectedMonths}
                   onSelectMonth={this.handleSelectMonth}
                 />
-                {!selectedSummary && (
+                {selectedMonths.length === 0 ? (
                   <Exclusions
                     toggles={[
                       {
@@ -230,6 +238,12 @@ class IncomeVsExpenses extends Component {
                     ]}
                     onToggle={this.handleToggleExclusion}
                   />
+                ) : (
+                  <Section>
+                    <button onClick={this.handleClearSelectedMonths}>
+                      Clear selection
+                    </button>
+                  </Section>
                 )}
                 {selectedSummary ? (
                   <BreakdownForSingleMonth
