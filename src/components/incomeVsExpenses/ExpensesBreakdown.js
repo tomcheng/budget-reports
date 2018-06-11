@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import moment from "moment";
 import compose from "lodash/fp/compose";
 import concat from "lodash/fp/concat";
 import filter from "lodash/fp/filter";
@@ -21,7 +20,6 @@ const map = mapRaw.convert({ cap: false });
 const ExpensesBreakdown = ({
   categoriesById,
   categoryGroupsById,
-  selectedMonth,
   transactions,
   totalIncome,
   payeesById,
@@ -75,13 +73,7 @@ const ExpensesBreakdown = ({
 
   return (
     <Section>
-      <StrongText>
-        {selectedMonth
-          ? `Expenses for ${moment(selectedMonth, "YYYY-MM").format(
-              "MMMM YYYY"
-            )}`
-          : "Average Expenses per Month"}
-      </StrongText>
+      <StrongText>Expenses Breakdown</StrongText>
       <Breakdown nodes={nodes} total={-totalIncome} />
     </Section>
   );
@@ -99,6 +91,7 @@ ExpensesBreakdown.propTypes = {
       id: PropTypes.string.isRequired
     })
   ).isRequired,
+  months: PropTypes.number.isRequired,
   payeesById: PropTypes.objectOf(PropTypes.object).isRequired,
   totalIncome: PropTypes.number.isRequired,
   transactions: PropTypes.arrayOf(
@@ -106,9 +99,7 @@ ExpensesBreakdown.propTypes = {
       amount: PropTypes.number.isRequired,
       categoryId: PropTypes.string
     })
-  ).isRequired,
-  months: PropTypes.number,
-  selectedMonth: PropTypes.string
+  ).isRequired
 };
 
 ExpensesBreakdown.defaultProps = { months: 1 };

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import TopNumbers from "../common/TopNumbers";
 
-const IncomeVsExpensesSummaryForMultipleMonths = ({
+const IncomeVsExpensesSummary = ({
   averageExpenses,
   averageIncome
 }) => (
@@ -25,9 +25,9 @@ const IncomeVsExpensesSummaryForMultipleMonths = ({
   />
 );
 
-IncomeVsExpensesSummaryForMultipleMonths.propTypes = {
+IncomeVsExpensesSummary.propTypes = {
   averageExpenses: PropTypes.number.isRequired,
   averageIncome: PropTypes.number.isRequired
 };
 
-export default IncomeVsExpensesSummaryForMultipleMonths;
+export default IncomeVsExpensesSummary;

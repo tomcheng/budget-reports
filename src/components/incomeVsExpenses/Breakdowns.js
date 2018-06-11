@@ -5,7 +5,7 @@ import { splitTransactions } from "../../utils";
 import ExpensesBreakdown from "./ExpensesBreakdown";
 import IncomeBreakdown from "./IncomeBreakdown";
 
-const BreakdownForMultipleMonths = ({
+const Breakdowns = ({
   categoriesById,
   categoryGroupsById,
   payeesById,
@@ -37,7 +37,7 @@ const BreakdownForMultipleMonths = ({
   );
 };
 
-BreakdownForMultipleMonths.propTypes = {
+Breakdowns.propTypes = {
   categoriesById: PropTypes.object.isRequired,
   categoryGroupsById: PropTypes.object.isRequired,
   payeesById: PropTypes.object.isRequired,
@@ -45,4 +45,4 @@ BreakdownForMultipleMonths.propTypes = {
   transactions: PropTypes.array.isRequired
 };
 
-export default BreakdownForMultipleMonths;
+export default Breakdowns;

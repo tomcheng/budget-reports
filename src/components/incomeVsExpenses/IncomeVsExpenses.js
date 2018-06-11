@@ -24,13 +24,11 @@ import Layout from "../common/Layout";
 import Section from "../common/Section";
 import BackToBudget from "../header/BackToBudget";
 import { PageTitle } from "../common/typeComponents";
-import IncomeVsExpensesSummaryForSingleMonth from "./IncomeVsExpensesSummaryForSingleMonth";
-import IncomeVsExpensesSummaryForMultipleMonths from "./IncomeVsExpensesSummaryForMultipleMonths";
+import IncomeVsExpensesSummary from "./IncomeVsExpensesSummary";
 import ExpensesVsIncomeChart from "./ExpensesVsIncomeChart";
 import PageActions from "../header/PageActions";
 import Exclusions from "./Exclusions";
-import BreakdownForSingleMonth from "./BreakdownForSingleMonth";
-import BreakdownForMultipleMonths from "./BreakdownForMultipleMonths";
+import Breakdowns from "./Breakdowns";
 
 const map = mapRaw.convert({ cap: false });
 
@@ -182,10 +180,6 @@ class IncomeVsExpenses extends Component {
                 find(matchesProperty("month", month))(allSummaries)
               )
             : reject(propertyIncludedIn("month", excludedMonths))(allSummaries);
-          const selectedSummary =
-            selectedMonths.length === 1
-              ? find(matchesProperty("month", selectedMonths[0]))(allSummaries)
-              : null;
 
           return (
             <Layout>
@@ -200,17 +194,10 @@ class IncomeVsExpenses extends Component {
                 />
               </Layout.Header>
               <Layout.Body>
-                {selectedSummary ? (
-                  <IncomeVsExpensesSummaryForSingleMonth
-                    income={selectedSummary.income}
-                    expenses={selectedSummary.expenses}
-                  />
-                ) : (
-                  <IncomeVsExpensesSummaryForMultipleMonths
-                    averageExpenses={meanBy("expenses", summaries)}
-                    averageIncome={meanBy("income", summaries)}
-                  />
-                )}
+                <IncomeVsExpensesSummary
+                  averageExpenses={meanBy("expenses", summaries)}
+                  averageIncome={meanBy("income", summaries)}
+                />
                 <ExpensesVsIncomeChart
                   data={allSummaries}
                   excludedMonths={excludedMonths}
@@ -245,25 +232,13 @@ class IncomeVsExpenses extends Component {
                     </button>
                   </Section>
                 )}
-                {selectedSummary ? (
-                  <BreakdownForSingleMonth
-                    key={selectedMonths[0]}
-                    categoriesById={categoriesById}
-                    categoryGroupsById={categoryGroupsById}
-                    payeesById={payeesById}
-                    selectedMonth={selectedMonths[0]}
-                    expenseTransactions={selectedSummary.expenseTransactions}
-                    incomeTransactions={selectedSummary.incomeTransactions}
-                  />
-                ) : (
-                  <BreakdownForMultipleMonths
-                    categoriesById={categoriesById}
-                    categoryGroupsById={categoryGroupsById}
-                    payeesById={payeesById}
-                    transactions={flatMap(prop("transactions"))(summaries)}
-                    months={summaries.length}
-                  />
-                )}
+                <Breakdowns
+                  categoriesById={categoriesById}
+                  categoryGroupsById={categoryGroupsById}
+                  payeesById={payeesById}
+                  transactions={flatMap(prop("transactions"))(summaries)}
+                  months={summaries.length}
+                />
               </Layout.Body>
             </Layout>
           );
