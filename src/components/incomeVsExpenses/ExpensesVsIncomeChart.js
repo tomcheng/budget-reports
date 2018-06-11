@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import findIndex from "lodash/fp/findIndex";
+import get from "lodash/fp/get";
 import map from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
 import {
@@ -35,38 +36,31 @@ const ExpensesVsIncomeChart = ({
       }
     ];
   }
+  const categories = map(d => moment(d.month).format("MMM YY"))(data);
 
   return (
     <Section>
       <Chart
         options={{
-          chart: { type: "column" },
-          xAxis: {
-            categories: map(d => moment(d.month).format("MMM YY"))(data),
-            plotBands
-          },
-          yAxis: {
-            title: {
-              text: null
-            }
-          },
-          plotOptions: {
-            series: {
-              stacking: "normal",
-              events: {
-                click: ({ point }) => {
-                  onSelectMonth(
-                    moment(point.category, "MMM YY").format("YYYY-MM")
-                  );
-                }
+          chart: {
+            type: "column",
+            events: {
+              click: event => {
+                onSelectMonth(
+                  get([Math.round(event.xAxis[0].value), "month"])(data)
+                );
               }
             }
           },
+          xAxis: { categories, plotBands },
+          yAxis: { title: { text: null } },
+          plotOptions: { series: { stacking: "normal" } },
           series: [
             {
               borderWidth: 0,
               color: lightPrimaryColor,
               data: map("income")(data),
+              enableMouseTracking: false,
               name: "Income",
               states: { hover: { brightness: 0 } }
             },
@@ -74,6 +68,7 @@ const ExpensesVsIncomeChart = ({
               borderWidth: 0,
               color: negativeChartColor,
               data: map("expenses")(data),
+              enableMouseTracking: false,
               name: "Expenses",
               states: { hover: { brightness: 0 } }
             },
