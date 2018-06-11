@@ -109,9 +109,7 @@ class Budget extends Component {
                   key={categoryGroup.id}
                   budgetId={budgetId}
                   categoryGroup={categoryGroup}
-                  categories={budget.categories.filter(
-                    c => c.categoryGroupId === categoryGroup.id
-                  )}
+                  categories={budget.categories}
                   expanded={!!expandedGroups[categoryGroup.id]}
                   monthProgress={(dayOfMonth - 0.5) / daysInMonth}
                   transactions={budget.transactions}

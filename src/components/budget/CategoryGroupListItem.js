@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import compose from "lodash/fp/compose";
@@ -6,6 +6,7 @@ import filter from "lodash/fp/filter";
 import getOr from "lodash/fp/getOr";
 import groupBy from "lodash/fp/groupBy";
 import map from "lodash/fp/map";
+import matchesProperty from "lodash/fp/matchesProperty";
 import maxBy from "lodash/fp/maxBy";
 import reverse from "lodash/fp/reverse";
 import round from "lodash/fp/round";
@@ -62,27 +63,33 @@ class CategoryGroupListItem extends Component {
     onToggleGroup: PropTypes.func.isRequired
   };
 
-  getSortedCategories = simpleMemoize((categories, allTransactions) => {
-    const categoryIds = map("id")(categories);
-    const transactionsByCategory = compose([
-      groupBy("categoryId"),
-      filter(
-        transaction =>
-          transaction.categoryId && categoryIds.includes(transaction.categoryId)
-      )
-    ])(allTransactions);
+  getSortedCategories = simpleMemoize(
+    (allCategories, allTransactions, categoryGroupId) => {
+      const categories = filter(
+        matchesProperty("categoryGroupId", categoryGroupId)
+      )(allCategories);
+      const categoryIds = map("id")(categories);
+      const transactionsByCategory = compose([
+        groupBy("categoryId"),
+        filter(
+          transaction =>
+            transaction.categoryId &&
+            categoryIds.includes(transaction.categoryId)
+        )
+      ])(allTransactions);
 
-    return compose([
-      reverse,
-      sortBy(
-        compose([
-          getOr("0000-00-00")("date"),
-          maxBy("date"),
-          category => transactionsByCategory[category.id]
-        ])
-      )
-    ])(categories);
-  });
+      return compose([
+        reverse,
+        sortBy(
+          compose([
+            getOr("0000-00-00")("date"),
+            maxBy("date"),
+            category => transactionsByCategory[category.id]
+          ])
+        )
+      ])(categories);
+    }
+  );
 
   render() {
     const {
@@ -161,17 +168,44 @@ class CategoryGroupListItem extends Component {
           </GroupArea>
         </Link>
         <AnimateHeight isExpanded={expanded}>
-          {this.getSortedCategories(categories, transactions).map(category => (
-            <CategoryListItem
-              key={category.id}
-              budgetId={budgetId}
-              category={category}
-              leftSpacing={TOGGLE_ICON_SPACING}
-              monthProgress={monthProgress}
-            />
-          ))}
+          <Categories
+            categories={this.getSortedCategories(
+              categories,
+              transactions,
+              categoryGroup.id
+            )}
+            budgetId={budgetId}
+            monthProgress={monthProgress}
+          />
         </AnimateHeight>
       </Container>
+    );
+  }
+}
+
+class Categories extends Component {
+  shouldComponentUpdate(nextProps) {
+    return (
+      this.props.categories !== nextProps.categories ||
+      this.props.budgetId !== nextProps.budgetId ||
+      this.props.monthProgress !== nextProps.monthProgress
+    );
+  }
+
+  render() {
+    const { categories, budgetId, monthProgress } = this.props;
+    return (
+      <Fragment>
+        {categories.map(category => (
+          <CategoryListItem
+            key={category.id}
+            budgetId={budgetId}
+            category={category}
+            leftSpacing={TOGGLE_ICON_SPACING}
+            monthProgress={monthProgress}
+          />
+        ))}
+      </Fragment>
     );
   }
 }
