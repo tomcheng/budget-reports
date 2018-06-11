@@ -3,22 +3,25 @@ import PropTypes from "prop-types";
 import TopNumbers from "../common/TopNumbers";
 
 const IncomeVsExpensesSummary = ({
-  averageExpenses,
-  averageIncome
+  expenses,
+  income,
+  showTotals,
+  onToggleTotals
 }) => (
   <TopNumbers
+    onClick={onToggleTotals}
     numbers={[
       {
-        label: "avg. income",
-        value: averageIncome
+        label: showTotals ? "total income" : "avg. income",
+        value: income
       },
       {
-        label: "avg. expenses",
-        value: -averageExpenses
+        label: showTotals ? "total expenses" : "avg. expenses",
+        value: -expenses
       },
       {
-        label: "avg. net income",
-        value: averageIncome + averageExpenses
+        label: showTotals ? "total net income" : "avg. net income",
+        value: income + expenses
       }
     ]}
     roundToDollar
@@ -26,8 +29,10 @@ const IncomeVsExpensesSummary = ({
 );
 
 IncomeVsExpensesSummary.propTypes = {
-  averageExpenses: PropTypes.number.isRequired,
-  averageIncome: PropTypes.number.isRequired
+  expenses: PropTypes.number.isRequired,
+  income: PropTypes.number.isRequired,
+  showTotals: PropTypes.bool.isRequired,
+  onToggleTotals: PropTypes.func.isRequired
 };
 
 export default IncomeVsExpensesSummary;

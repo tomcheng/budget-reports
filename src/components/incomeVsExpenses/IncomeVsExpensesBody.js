@@ -55,10 +55,18 @@ class IncomeVsExpenses extends Component {
   };
 
   state = {
+    showTotals: false,
     excludeOutliers: true,
     excludeFirstMonth: true,
     excludeCurrentMonth: true,
     selectedMonths: {}
+  };
+
+  handleToggleTotals = () => {
+    this.setState(state => ({
+      ...state,
+      showTotals: !state.showTotals
+    }));
   };
 
   handleToggleExclusion = key => {
@@ -149,6 +157,7 @@ class IncomeVsExpenses extends Component {
   render() {
     const { budget } = this.props;
     const {
+      showTotals,
       excludeOutliers,
       excludeFirstMonth,
       excludeCurrentMonth
@@ -168,8 +177,18 @@ class IncomeVsExpenses extends Component {
     return (
       <Fragment>
         <IncomeVsExpensesSummary
-          averageExpenses={meanBy("expenses", summaries)}
-          averageIncome={meanBy("income", summaries)}
+          expenses={
+            showTotals
+              ? sumBy("expenses", summaries)
+              : meanBy("expenses", summaries)
+          }
+          income={
+            showTotals
+              ? sumBy("income", summaries)
+              : meanBy("income", summaries)
+          }
+          showTotals={showTotals}
+          onToggleTotals={this.handleToggleTotals}
         />
         <IncomeVsExpensesChart
           data={allSummaries}
@@ -204,7 +223,7 @@ class IncomeVsExpenses extends Component {
           categoryGroupsById={categoryGroupsById}
           payeesById={payeesById}
           transactions={flatMap(prop("transactions"))(summaries)}
-          months={summaries.length}
+          months={showTotals ? 1 : summaries.length}
         />
       </Fragment>
     );
