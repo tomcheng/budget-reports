@@ -25,7 +25,7 @@ import Section from "../common/Section";
 import BackToBudget from "../header/BackToBudget";
 import { PageTitle } from "../common/typeComponents";
 import IncomeVsExpensesSummary from "./IncomeVsExpensesSummary";
-import ExpensesVsIncomeChart from "./ExpensesVsIncomeChart";
+import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
 import PageActions from "../header/PageActions";
 import Exclusions from "./Exclusions";
 import Breakdowns from "./Breakdowns";
@@ -198,7 +198,7 @@ class IncomeVsExpenses extends Component {
                   averageExpenses={meanBy("expenses", summaries)}
                   averageIncome={meanBy("income", summaries)}
                 />
-                <ExpensesVsIncomeChart
+                <IncomeVsExpensesChart
                   data={allSummaries}
                   excludedMonths={excludedMonths}
                   selectedMonths={selectedMonths}

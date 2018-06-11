@@ -14,7 +14,7 @@ import {
 import Section from "../common/Section";
 import Chart from "../common/Chart";
 
-const ExpensesVsIncomeChart = ({
+const IncomeVsExpensesChart = ({
   data,
   excludedMonths,
   onSelectMonth,
@@ -94,7 +94,7 @@ const ExpensesVsIncomeChart = ({
   );
 };
 
-ExpensesVsIncomeChart.propTypes = {
+IncomeVsExpensesChart.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       expenses: PropTypes.number.isRequired,
@@ -107,4 +107,4 @@ ExpensesVsIncomeChart.propTypes = {
   onSelectMonth: PropTypes.func.isRequired
 };
 
-export default ExpensesVsIncomeChart;
+export default IncomeVsExpensesChart;
