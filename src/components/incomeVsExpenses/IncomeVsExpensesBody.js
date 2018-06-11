@@ -1,14 +1,18 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
+import every from "lodash/fp/every";
 import filter from "lodash/fp/filter";
 import flatMap from "lodash/fp/flatMap";
 import groupBy from "lodash/fp/groupBy";
+import identity from "lodash/fp/identity";
 import includes from "lodash/fp/includes";
+import keys from "lodash/fp/keys";
 import last from "lodash/fp/last";
 import mapRaw from "lodash/fp/map";
 import mean from "lodash/fp/mean";
 import meanBy from "lodash/fp/meanBy";
+import omit from "lodash/fp/omit";
 import prop from "lodash/fp/prop";
 import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
@@ -49,35 +53,23 @@ class IncomeVsExpensesBody extends Component {
     }).isRequired
   };
 
-  state = {
-    excludeOutliers: true,
-    excludeFirstMonth: true,
-    excludeCurrentMonth: true
-  };
+  constructor(props) {
+    super();
 
-  handleToggleExclusion = key => {
-    this.setState(state => ({
-      ...state,
-      [key]: !state[key]
-    }));
-  };
+    const { budget } = props;
 
-  handleToggleMonth = month => {
-    console.log(month);
-  };
-
-  getOutliers = simpleMemoize(budget => {
     const summaries = this.getSummaries(budget);
+    const outliers = this.getOutliers(budget);
 
-    const nets = map(s => s.income + s.expenses)(summaries);
-    const sd = standardDeviation(nets);
-    const avg = mean(nets);
+    const excludedMonths = {};
+    excludedMonths[summaries[0].month] = true;
+    excludedMonths[last(summaries).month] = true;
+    outliers.forEach(month => {
+      excludedMonths[month] = true;
+    });
 
-    return compose([
-      map("month"),
-      filter(s => Math.abs(s.income + s.expenses - avg) > sd)
-    ])(summaries);
-  });
+    this.state = { excludedMonths };
+  }
 
   getSummaries = simpleMemoize(
     ({ categoryGroupsById, categoriesById, transactions }) =>
@@ -103,54 +95,94 @@ class IncomeVsExpensesBody extends Component {
       ])(transactions)
   );
 
-  getExcludedMonths = summaries => {
-    const {
-      excludeOutliers,
-      excludeFirstMonth,
-      excludeCurrentMonth
-    } = this.state;
+  getOutliers = simpleMemoize(budget => {
+    const summaries = this.getSummaries(budget);
 
-    const excludedMonths = [];
+    const nets = map(s => s.income + s.expenses)(summaries);
+    const sd = standardDeviation(nets);
+    const avg = mean(nets);
 
-    if (excludeFirstMonth) {
-      excludedMonths.push(summaries[0].month);
+    return compose([
+      map("month"),
+      filter(s => Math.abs(s.income + s.expenses - avg) > sd)
+    ])(summaries);
+  });
+
+  getExcludedMonths = () =>
+    compose([sortBy(identity), keys])(this.state.excludedMonths);
+
+  handleToggleExclusion = (key, next) => {
+    const { budget } = this.props;
+    const summaries = this.getSummaries(budget);
+    const firstMonth = summaries[0].month;
+    const lastMonth = last(summaries).month;
+    const outliers = this.getOutliers(budget);
+
+    switch (key) {
+      case "first":
+        this.setState(state => ({
+          ...state,
+          excludedMonths: next
+            ? { ...state.excludedMonths, [firstMonth]: true }
+            : omit(firstMonth)(state.excludedMonths)
+        }));
+        break;
+
+      case "last":
+        this.setState(state => ({
+          ...state,
+          excludedMonths: next
+            ? { ...state.excludedMonths, [lastMonth]: true }
+            : omit(lastMonth)(state.excludedMonths)
+        }));
+        break;
+
+      case "outliers":
+        this.setState(state => ({
+          ...state,
+          excludedMonths: next
+            ? outliers.reduce(
+                (ex, month) => ({ ...ex, [month]: true }),
+                state.excludedMonths
+              )
+            : omit(outliers)(state.excludedMonths)
+        }));
+        break;
+
+      default:
+        break;
     }
+    this.setState(state => ({
+      ...state,
+      [key]: !state[key]
+    }));
+  };
 
-    if (excludeCurrentMonth) {
-      excludedMonths.push(last(summaries).month);
-    }
-
-    if (excludeOutliers) {
-      const remainingSummaries = reject(
-        propertyIncludedIn("month", excludedMonths)
-      )(summaries);
-      const nets = map(s => s.income + s.expenses)(remainingSummaries);
-      const sd = standardDeviation(nets);
-      const avg = mean(nets);
-      excludedMonths.push(
-        ...compose([
-          map("month"),
-          filter(s => Math.abs(s.income + s.expenses - avg) > sd)
-        ])(remainingSummaries)
-      );
-    }
-
-    return excludedMonths;
+  handleToggleMonth = month => {
+    this.setState(state => ({
+      ...state,
+      excludedMonths: state.excludedMonths[month]
+        ? omit(month)(state.excludedMonths)
+        : { ...state.excludedMonths, [month]: true }
+    }));
   };
 
   render() {
     const { budget } = this.props;
-    const {
-      excludeOutliers,
-      excludeFirstMonth,
-      excludeCurrentMonth
-    } = this.state;
     const { categoriesById, categoryGroupsById, payeesById } = budget;
 
     const allSummaries = this.getSummaries(budget);
-    const excludedMonths = this.getExcludedMonths(allSummaries);
+    const excludedMonths = this.getExcludedMonths();
     const summaries = reject(propertyIncludedIn("month", excludedMonths))(
       allSummaries
+    );
+
+    const firstMonthExcluded = includes(allSummaries[0].month)(excludedMonths);
+    const lastMonthExcluded = includes(last(allSummaries).month)(
+      excludedMonths
+    );
+    const outliersExcluded = every(month => includes(month)(excludedMonths))(
+      this.getOutliers(budget)
     );
 
     return (
@@ -168,18 +200,18 @@ class IncomeVsExpensesBody extends Component {
           toggles={[
             {
               label: "first",
-              key: "excludeFirstMonth",
-              value: excludeFirstMonth
+              key: "first",
+              value: firstMonthExcluded
             },
             {
-              label: "current",
-              key: "excludeCurrentMonth",
-              value: excludeCurrentMonth
+              label: "last",
+              key: "last",
+              value: lastMonthExcluded
             },
             {
               label: "outliers",
-              key: "excludeOutliers",
-              value: excludeOutliers
+              key: "outliers",
+              value: outliersExcluded
             }
           ]}
           onToggle={this.handleToggleExclusion}

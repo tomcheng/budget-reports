@@ -13,7 +13,7 @@ const Exclusions = ({ toggles, onToggle }) => (
         label={label}
         value={value}
         onToggle={() => {
-          onToggle(key);
+          onToggle(key, !value);
         }}
       />
     ))}
