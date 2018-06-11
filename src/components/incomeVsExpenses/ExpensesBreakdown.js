@@ -23,11 +23,11 @@ const ExpensesBreakdown = ({
   transactions,
   totalIncome,
   payeesById,
-  months
+  divideBy
 }) => {
   const categoryNodes = compose([
     map((transactions, categoryId) => {
-      const payeeNodes = getPayeeNodes({ payeesById, transactions }, months);
+      const payeeNodes = getPayeeNodes({ payeesById, transactions }, divideBy);
       return {
         ...pick(["id", "name", "categoryGroupId"])(categoriesById[categoryId]),
         nodes: sortBy("amount")(payeeNodes),
@@ -55,7 +55,7 @@ const ExpensesBreakdown = ({
       payeesById,
       transactions: transactions.filter(trans => !trans.categoryId)
     },
-    months
+    divideBy
   );
 
   const nodes = compose([
@@ -91,7 +91,7 @@ ExpensesBreakdown.propTypes = {
       id: PropTypes.string.isRequired
     })
   ).isRequired,
-  months: PropTypes.number.isRequired,
+  divideBy: PropTypes.number.isRequired,
   payeesById: PropTypes.objectOf(PropTypes.object).isRequired,
   totalIncome: PropTypes.number.isRequired,
   transactions: PropTypes.arrayOf(
@@ -102,6 +102,6 @@ ExpensesBreakdown.propTypes = {
   ).isRequired
 };
 
-ExpensesBreakdown.defaultProps = { months: 1 };
+ExpensesBreakdown.defaultProps = { divideBy: 1 };
 
 export default ExpensesBreakdown;

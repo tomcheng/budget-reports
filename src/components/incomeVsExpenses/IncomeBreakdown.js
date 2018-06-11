@@ -7,8 +7,8 @@ import { StrongText } from "../common/typeComponents";
 import Section from "../common/Section";
 import Breakdown from "./Breakdown";
 
-const IncomeBreakdown = ({ transactions, payeesById, months }) => {
-  const nodes = getPayeeNodes({ payeesById, transactions }, months);
+const IncomeBreakdown = ({ transactions, payeesById, divideBy }) => {
+  const nodes = getPayeeNodes({ payeesById, transactions }, divideBy);
   return (
     <Section>
       <StrongText>Income Breakdown</StrongText>
@@ -21,7 +21,7 @@ const IncomeBreakdown = ({ transactions, payeesById, months }) => {
 };
 
 IncomeBreakdown.propTypes = {
-  months: PropTypes.number.isRequired,
+  divideBy: PropTypes.number.isRequired,
   payeesById: PropTypes.objectOf(PropTypes.object).isRequired,
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
@@ -31,6 +31,6 @@ IncomeBreakdown.propTypes = {
   ).isRequired
 };
 
-IncomeBreakdown.defaultProps = { months: 1 };
+IncomeBreakdown.defaultProps = { divideBy: 1 };
 
 export default IncomeBreakdown;

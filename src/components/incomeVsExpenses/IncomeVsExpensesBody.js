@@ -182,8 +182,7 @@ class IncomeVsExpenses extends Component {
         <IncomeVsExpensesSummary
           incomeTransactions={incomeTransactions}
           expenseTransactions={expenseTransactions}
-          months={summaries.length}
-          showTotals={showTotals}
+          divideBy={showTotals ? 1 : summaries.length}
           onToggleTotals={this.handleToggleTotals}
         />
         <IncomeVsExpensesChart
@@ -218,8 +217,9 @@ class IncomeVsExpenses extends Component {
           categoriesById={categoriesById}
           categoryGroupsById={categoryGroupsById}
           payeesById={payeesById}
-          transactions={flatMap(prop("transactions"))(summaries)}
-          months={showTotals ? 1 : summaries.length}
+          expenseTransactions={expenseTransactions}
+          incomeTransactions={incomeTransactions}
+          divideBy={showTotals ? 1 : summaries.length}
         />
       </Fragment>
     );

@@ -1,7 +1,6 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import sumBy from "lodash/fp/sumBy";
-import { splitTransactions } from "../../utils";
 import ExpensesBreakdown from "./ExpensesBreakdown";
 import IncomeBreakdown from "./IncomeBreakdown";
 
@@ -9,15 +8,10 @@ const Breakdowns = ({
   categoriesById,
   categoryGroupsById,
   payeesById,
-  transactions,
-  months
+  expenseTransactions,
+  incomeTransactions,
+  divideBy
 }) => {
-  const { incomeTransactions, expenseTransactions } = splitTransactions({
-    categoryGroupsById,
-    categoriesById,
-    transactions
-  });
-
   return (
     <Fragment>
       <ExpensesBreakdown
@@ -25,13 +19,13 @@ const Breakdowns = ({
         categoryGroupsById={categoryGroupsById}
         payeesById={payeesById}
         transactions={expenseTransactions}
-        totalIncome={sumBy("amount")(incomeTransactions) / months}
-        months={months}
+        totalIncome={sumBy("amount")(incomeTransactions) / divideBy}
+        divideBy={divideBy}
       />
       <IncomeBreakdown
         payeesById={payeesById}
         transactions={incomeTransactions}
-        months={months}
+        divideBy={divideBy}
       />
     </Fragment>
   );
@@ -40,9 +34,10 @@ const Breakdowns = ({
 Breakdowns.propTypes = {
   categoriesById: PropTypes.object.isRequired,
   categoryGroupsById: PropTypes.object.isRequired,
+  expenseTransactions: PropTypes.array.isRequired,
+  incomeTransactions: PropTypes.array.isRequired,
   payeesById: PropTypes.object.isRequired,
-  months: PropTypes.number.isRequired,
-  transactions: PropTypes.array.isRequired
+  divideBy: PropTypes.number.isRequired
 };
 
 export default Breakdowns;

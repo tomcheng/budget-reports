@@ -6,29 +6,29 @@ import TopNumbers from "../common/TopNumbers";
 const IncomeVsExpensesSummary = ({
   expenseTransactions,
   incomeTransactions,
-  months,
+  divideBy,
   showTotals,
   onToggleTotals
 }) => {
   const totalIncome = sumBy("amount")(incomeTransactions);
   const totalExpenses = sumBy("amount")(expenseTransactions);
-  const denominator = showTotals ? 1 : months;
+  const isAverage = divideBy !== 1;
 
   return (
     <TopNumbers
       onClick={onToggleTotals}
       numbers={[
         {
-          label: showTotals ? "total income" : "avg. income",
-          value: totalIncome / denominator
+          label: isAverage ? "avg. income" : "total income",
+          value: totalIncome / divideBy
         },
         {
-          label: showTotals ? "total expenses" : "avg. expenses",
-          value: -totalExpenses / denominator
+          label: isAverage ? "avg. expenses" : "total expenses",
+          value: -totalExpenses / divideBy
         },
         {
-          label: showTotals ? "total net income" : "avg. net income",
-          value: (totalIncome + totalExpenses) / denominator
+          label: isAverage ? "avg. net income" : "total net income",
+          value: (totalIncome + totalExpenses) / divideBy
         }
       ]}
       roundToDollar
@@ -43,8 +43,7 @@ IncomeVsExpensesSummary.propTypes = {
   incomeTransactions: PropTypes.arrayOf(
     PropTypes.shape({ amount: PropTypes.number.isRequired })
   ).isRequired,
-  months: PropTypes.number.isRequired,
-  showTotals: PropTypes.bool.isRequired,
+  divideBy: PropTypes.number.isRequired,
   onToggleTotals: PropTypes.func.isRequired
 };
 
