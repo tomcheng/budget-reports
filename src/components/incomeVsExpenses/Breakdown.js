@@ -2,22 +2,20 @@ import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import BreakdownNode from "./BreakdownNode";
 
-const Breakdown = ({ nodes, total }) => {
-  return (
-    <Fragment>
-      {nodes.map(({ id, name, amount, nodes }) => (
-        <BreakdownNode
-          key={id}
-          name={name}
-          amount={amount}
-          total={total}
-          nodes={nodes}
-          isTopLevel
-        />
-      ))}
-    </Fragment>
-  );
-};
+const Breakdown = ({ nodes, total }) => (
+  <Fragment>
+    {nodes.map(({ id, name, amount, nodes }) => (
+      <BreakdownNode
+        key={id}
+        name={name}
+        amount={amount}
+        total={total}
+        nodes={nodes}
+        isTopLevel
+      />
+    ))}
+  </Fragment>
+);
 
 Breakdown.propTypes = {
   nodes: PropTypes.arrayOf(

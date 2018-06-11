@@ -12,7 +12,6 @@ import last from "lodash/fp/last";
 import mapRaw from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
 import mean from "lodash/fp/mean";
-import meanBy from "lodash/fp/meanBy";
 import omit from "lodash/fp/omit";
 import prop from "lodash/fp/prop";
 import reject from "lodash/fp/reject";
@@ -105,8 +104,6 @@ class IncomeVsExpenses extends Component {
         return {
           month,
           transactions,
-          incomeTransactions,
-          expenseTransactions,
           income: sumBy("amount")(incomeTransactions),
           expenses: sumBy("amount")(expenseTransactions)
         };
@@ -174,19 +171,18 @@ class IncomeVsExpenses extends Component {
         )
       : reject(propertyIncludedIn("month", excludedMonths))(allSummaries);
 
+    const { incomeTransactions, expenseTransactions } = splitTransactions({
+      categoryGroupsById,
+      categoriesById,
+      transactions: flatMap(prop("transactions"))(summaries)
+    });
+
     return (
       <Fragment>
         <IncomeVsExpensesSummary
-          expenses={
-            showTotals
-              ? sumBy("expenses", summaries)
-              : meanBy("expenses", summaries)
-          }
-          income={
-            showTotals
-              ? sumBy("income", summaries)
-              : meanBy("income", summaries)
-          }
+          incomeTransactions={incomeTransactions}
+          expenseTransactions={expenseTransactions}
+          months={summaries.length}
           showTotals={showTotals}
           onToggleTotals={this.handleToggleTotals}
         />
