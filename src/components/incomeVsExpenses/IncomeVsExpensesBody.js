@@ -214,8 +214,8 @@ class IncomeVsExpensesBody extends Component {
     return (
       <Fragment>
         <IncomeVsExpensesSummary
-          averageExpenses={meanBy("expenses", summaries)}
-          averageIncome={meanBy("income", summaries)}
+          averageExpenses={allExcluded ? 0 : meanBy("expenses", summaries)}
+          averageIncome={allExcluded ? 0 : meanBy("income", summaries)}
         />
         <IncomeVsExpensesChart
           data={allSummaries}
@@ -252,13 +252,15 @@ class IncomeVsExpensesBody extends Component {
           ]}
           onToggle={this.handleToggleExclusion}
         />
-        <Breakdowns
-          categoriesById={categoriesById}
-          categoryGroupsById={categoryGroupsById}
-          payeesById={payeesById}
-          transactions={flatMap(prop("transactions"))(summaries)}
-          months={summaries.length}
-        />
+        {!allExcluded && (
+          <Breakdowns
+            categoriesById={categoriesById}
+            categoryGroupsById={categoryGroupsById}
+            payeesById={payeesById}
+            transactions={flatMap(prop("transactions"))(summaries)}
+            months={summaries.length}
+          />
+        )}
       </Fragment>
     );
   }
