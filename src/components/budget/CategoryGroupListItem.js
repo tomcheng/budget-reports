@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import compose from "lodash/fp/compose";
@@ -183,15 +183,7 @@ class CategoryGroupListItem extends Component {
   }
 }
 
-class Categories extends Component {
-  shouldComponentUpdate(nextProps) {
-    return (
-      this.props.categories !== nextProps.categories ||
-      this.props.budgetId !== nextProps.budgetId ||
-      this.props.monthProgress !== nextProps.monthProgress
-    );
-  }
-
+class Categories extends PureComponent {
   render() {
     const { categories, budgetId, monthProgress } = this.props;
     return (

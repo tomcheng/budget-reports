@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, PureComponent } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import AnimateHeight from "react-animate-height-auto";
@@ -57,17 +57,9 @@ class BreakdownNode extends Component {
   }
 }
 
-class Nodes extends Component {
-  shouldComponentUpdate(nextProps) {
-    return (
-      this.props.nodes !== nextProps.nodes ||
-      this.props.total !== nextProps.total
-    );
-  }
-
+class Nodes extends PureComponent {
   render() {
     const { nodes, total } = this.props;
-
     return (
       <div style={{ paddingLeft: INDENTATION }}>
         {nodes.map(node => (
