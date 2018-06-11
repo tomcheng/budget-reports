@@ -95,12 +95,15 @@ class CategoryGroupListItem extends Component {
     const {
       budgetId,
       categoryGroup,
-      categories,
+      categories: allCategories,
       expanded,
       monthProgress,
       transactions,
       onToggleGroup
     } = this.props;
+    const categories = filter(
+      matchesProperty("categoryGroupId", categoryGroup.id)
+    )(allCategories);
     const activity = sumBy("activity")(categories);
     const balance = sumBy("balance")(categories);
 
