@@ -7,7 +7,7 @@ const Toggle = ({ label, value, onToggle }) => (
       display: "flex",
       alignItems: "center",
       height: 40,
-      marginRight: 20,
+      marginLeft: 20,
       userSelect: "none",
       opacity: value ? 1 : 0.5
     }}
