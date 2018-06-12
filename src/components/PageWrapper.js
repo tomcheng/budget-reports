@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { plotBandColor } from "../styleVariables";
 import EnsureBudgetLoaded from "./EnsureBudgetLoaded";
 import Layout from "./Layout";
 import { PageTitle } from "./typeComponents";
@@ -7,12 +8,13 @@ import SidebarMenu from "./SidebarMenu";
 
 const PageWrapper = ({
   content,
+  authorized,
   budgetId,
   budgetLoaded,
   title,
   actions,
-  onRequestBudget,
-  onRefreshBudget
+  onAuthorize,
+  onRequestBudget
 }) => (
   <EnsureBudgetLoaded
     budgetId={budgetId}
@@ -20,7 +22,7 @@ const PageWrapper = ({
     onRequestBudget={onRequestBudget}
   >
     {() => (
-      <SidebarMenu budgetId={budgetId} onRefreshBudget={onRefreshBudget}>
+      <SidebarMenu budgetId={budgetId}>
         {({ sidebarTrigger }) => (
           <Layout>
             <Layout.Header flushLeft>
@@ -29,6 +31,20 @@ const PageWrapper = ({
               {actions}
             </Layout.Header>
             <Layout.Body>{content()}</Layout.Body>
+            {!authorized && (
+              <div
+                style={{
+                  padding: 20,
+                  backgroundColor: plotBandColor,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                }}
+              >
+                Your authorization expired.
+                <button onClick={onAuthorize}>Reauthorize</button>
+              </div>
+            )}
           </Layout>
         )}
       </SidebarMenu>
@@ -37,11 +53,12 @@ const PageWrapper = ({
 );
 
 PageWrapper.propTypes = {
+  authorized: PropTypes.bool.isRequired,
   budgetId: PropTypes.string.isRequired,
   budgetLoaded: PropTypes.bool.isRequired,
   content: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  onRefreshBudget: PropTypes.func.isRequired,
+  onAuthorize: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired,
   actions: PropTypes.node
 };

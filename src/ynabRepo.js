@@ -1,9 +1,10 @@
 import * as ynab from "ynab";
+import get from "lodash/fp/get";
+import matches from "lodash/fp/matches";
 import { camelCaseKeys, getStorage, setStorage } from "./utils";
 import { setLastUpdated } from "./uiRepo";
 import { sanitizeBudget, mergeBudgets } from "./repoUtils";
 import { clientId, redirectUri } from "./ynabConfig";
-import get from "lodash/fp/get";
 
 export const AUTHORIZE_URL =
   "https://app.youneedabudget.com/oauth/authorize?client_id=" +
@@ -49,8 +50,8 @@ export const getAuthorizeToken = () => {
 
 const handleFailure = () => {
   // TODO: Don't assume expired auth
-  localStorage.removeItem(TOKEN_STORAGE_KEY);
-  window.location.reload();
+  // localStorage.removeItem(TOKEN_STORAGE_KEY);
+  // window.location.reload();
 };
 
 export const initializeYnabApi = token => {
@@ -115,8 +116,19 @@ export const initializeYnabApi = token => {
         setStorage("ynab_budget_details", newDetails);
         setLastUpdated(id);
 
-        return sanitizeBudget(newDetails[id].budget);
+        return {
+          budget: sanitizeBudget(newDetails[id].budget),
+          authorized: true
+        };
       })
-      .catch(handleFailure);
+      .catch(({ error }) => {
+        if (matches({ id: "401", name: "unauthorized" })(error)) {
+          const cached = get(id)(getStorage(BUDGET_DETAILS_STORAGE_KEY));
+          return {
+            budget: cached ? sanitizeBudget(cached.budget) : null,
+            authorized: false
+          };
+        }
+      });
   };
 };

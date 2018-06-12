@@ -32,10 +32,11 @@ const Container = styled.div`
 
 class App extends Component {
   static propTypes = {
-    isAuthorized: PropTypes.bool.isRequired
+    hasToken: PropTypes.bool.isRequired
   };
 
   state = {
+    authorized: true,
     budgetsLoaded: false,
     budgetIds: [],
     budgets: {},
@@ -69,9 +70,10 @@ class App extends Component {
   };
 
   handleRefreshBudget = id => {
-    getUpdatedBudget(id).then(budget => {
+    getUpdatedBudget(id).then(({ budget, authorized }) => {
       this.setState(state => ({
         ...state,
+        authorized,
         budgetDetails: {
           ...state.budgetDetails,
           [id]: budget
@@ -85,8 +87,9 @@ class App extends Component {
   };
 
   render() {
-    const { isAuthorized } = this.props;
+    const { hasToken } = this.props;
     const {
+      authorized,
       budgetsLoaded,
       budgetIds,
       budgets,
@@ -94,7 +97,7 @@ class App extends Component {
       currentMonth
     } = this.state;
 
-    if (!isAuthorized) {
+    if (!hasToken) {
       return <Unauthorized onAuthorize={this.handleAuthorize} />;
     }
 
@@ -118,11 +121,12 @@ class App extends Component {
               exact
               render={({ match }) => (
                 <Budget
+                  authorized={authorized}
                   budget={budgetDetails[match.params.budgetId]}
                   budgetId={match.params.budgetId}
                   currentMonth={currentMonth}
-                  onRefreshBudget={this.handleRefreshBudget}
-                  onRequestBudget={this.handleRequestBudget}
+                  onAuthorize={this.handleAuthorize}
+                  onRequestBudget={this.handleRefreshBudget}
                 />
               )}
             />
@@ -131,10 +135,11 @@ class App extends Component {
               exact
               render={({ match }) => (
                 <IncomeVsExpenses
+                  authorized={authorized}
                   budget={budgetDetails[match.params.budgetId]}
                   budgetId={match.params.budgetId}
-                  onRefreshBudget={this.handleRefreshBudget}
-                  onRequestBudget={this.handleRequestBudget}
+                  onAuthorize={this.handleAuthorize}
+                  onRequestBudget={this.handleRefreshBudget}
                 />
               )}
             />
@@ -147,7 +152,6 @@ class App extends Component {
                   budgetId={match.params.budgetId}
                   categoryGroupId={match.params.categoryGroupId}
                   currentMonth={currentMonth}
-                  onRefreshBudget={this.handleRefreshBudget}
                   onRequestBudget={this.handleRequestBudget}
                 />
               )}
@@ -161,7 +165,6 @@ class App extends Component {
                   budgetId={match.params.budgetId}
                   categoryId={match.params.categoryId}
                   currentMonth={currentMonth}
-                  onRefreshBudget={this.handleRefreshBudget}
                   onRequestBudget={this.handleRequestBudget}
                 />
               )}

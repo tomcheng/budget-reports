@@ -13,7 +13,7 @@ if (token) {
 
 ReactDOM.render(
   <HashRouter>
-    <App isAuthorized={!!token} />
+    <App hasToken={!!token} />
   </HashRouter>,
   document.getElementById("root")
 );

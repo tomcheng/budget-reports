@@ -6,8 +6,9 @@ import BudgetBody from "./BudgetBody";
 
 class Budget extends Component {
   static propTypes = {
+    authorized: PropTypes.bool.isRequired,
     budgetId: PropTypes.string.isRequired,
-    onRefreshBudget: PropTypes.func.isRequired,
+    onAuthorize: PropTypes.func.isRequired,
     onRequestBudget: PropTypes.func.isRequired,
     budget: PropTypes.object
   };
@@ -22,14 +23,15 @@ class Budget extends Component {
   };
 
   render() {
-    const { budget, budgetId, onRefreshBudget, onRequestBudget } = this.props;
+    const { authorized, budget, budgetId, onAuthorize, onRequestBudget } = this.props;
     const { showing } = this.state;
 
     return (
       <PageWrapper
+        authorized={authorized}
         budgetId={budgetId}
         budgetLoaded={!!budget}
-        onRefreshBudget={onRefreshBudget}
+        onAuthorize={onAuthorize}
         onRequestBudget={onRequestBudget}
         title="Current Month Budget"
         actions={

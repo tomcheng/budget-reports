@@ -5,20 +5,28 @@ import IncomeVsExpensesBody from "./IncomeVsExpensesBody";
 
 class IncomeVsExpenses extends Component {
   static propTypes = {
+    authorized: PropTypes.bool.isRequired,
     budgetId: PropTypes.string.isRequired,
-    onRefreshBudget: PropTypes.func.isRequired,
+    onAuthorize: PropTypes.func.isRequired,
     onRequestBudget: PropTypes.func.isRequired,
     budget: PropTypes.object
   };
 
   render() {
-    const { budget, budgetId, onRefreshBudget, onRequestBudget } = this.props;
+    const {
+      authorized,
+      budget,
+      budgetId,
+      onAuthorize,
+      onRequestBudget
+    } = this.props;
 
     return (
       <PageWrapper
+        authorized={authorized}
         budgetId={budgetId}
         budgetLoaded={!!budget}
-        onRefreshBudget={onRefreshBudget}
+        onAuthorize={onAuthorize}
         onRequestBudget={onRequestBudget}
         title="Income vs Expenses"
         content={() => <IncomeVsExpensesBody budget={budget} />}

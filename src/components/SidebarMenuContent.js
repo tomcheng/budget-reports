@@ -2,9 +2,6 @@ import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import moment from "moment";
-import { getLastUpdated } from "../uiRepo";
-import { MinorText } from "./typeComponents";
 import Icon from "./Icon";
 import { plotBandColor } from "../styleVariables";
 
@@ -19,7 +16,7 @@ const StyledLink = styled(NavLink)`
   }
 `;
 
-const SidebarMenuContent = ({ budgetId, onRefreshBudget, onCloseSidebar }) => (
+const SidebarMenuContent = ({ budgetId, onCloseSidebar }) => (
   <Fragment>
     <div
       style={{
@@ -37,25 +34,12 @@ const SidebarMenuContent = ({ budgetId, onRefreshBudget, onCloseSidebar }) => (
     <MenuItem to={`/budgets/${budgetId}/income-vs-expenses`}>
       Income vs Expenses
     </MenuItem>
-    <div style={{ padding: 20 }}>
-      <button
-        onClick={() => {
-          onRefreshBudget(budgetId);
-        }}
-      >
-        Refresh
-      </button>
-      <MinorText>
-        Updated {moment(getLastUpdated(budgetId) || undefined).fromNow()}
-      </MinorText>
-    </div>
   </Fragment>
 );
 
 SidebarMenuContent.propTypes = {
   budgetId: PropTypes.string.isRequired,
-  onCloseSidebar: PropTypes.func.isRequired,
-  onRefreshBudget: PropTypes.func.isRequired
+  onCloseSidebar: PropTypes.func.isRequired
 };
 
 const MenuItem = ({ to, children }) => (
