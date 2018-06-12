@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Transaction from "./Transaction";
-import { StrongText, SecondaryText } from "../common/typeComponents";
-import Section from "../common/Section";
+import { StrongText, SecondaryText } from "./typeComponents";
+import Section from "./Section";
 
 const Transactions = ({ transactions, payeesById }) => (
   <Section>

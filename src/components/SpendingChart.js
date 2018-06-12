@@ -7,10 +7,10 @@ import last from "lodash/fp/last";
 import range from "lodash/fp/range";
 import sumBy from "lodash/fp/sumBy";
 import moment from "moment";
-import { primaryColor, plotBandColor } from "../../styleVariables";
-import { MinorText } from "../common/typeComponents";
-import Section from "../common/Section";
-import Chart from "../common/Chart";
+import { primaryColor, plotBandColor } from "../styleVariables";
+import { MinorText } from "./typeComponents";
+import Section from "./Section";
+import Chart from "./Chart";
 
 const DateLabels = styled.div`
   border-top: 1px solid #ddd;

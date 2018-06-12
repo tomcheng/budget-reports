@@ -2,9 +2,9 @@ import React, { Component, PureComponent } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import AnimateHeight from "react-animate-height-auto";
-import { SecondaryText } from "../common/typeComponents";
-import ListItem from "../common/ListItem";
-import Icon from "../common/Icon";
+import { SecondaryText } from "./typeComponents";
+import ListItem from "./ListItem";
+import Icon from "./Icon";
 import AmountWithPercentage from "./AmountWithPercentage";
 
 const INDENTATION = 18;

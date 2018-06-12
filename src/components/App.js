@@ -13,11 +13,11 @@ import {
 import Unauthorized from "./Unauthorized";
 import NotFound from "./NotFound";
 import ErrorBoundary from "./ErrorBoundary";
-import Budgets from "./budgets/Budgets";
-import Budget from "./budget/Budget";
-import IncomeVsExpenses from "./incomeVsExpenses/IncomeVsExpenses";
-import CategoryGroup from "./category/CategoryGroup";
-import Category from "./category/Category";
+import Budgets from "./Budgets";
+import Budget from "./Budget";
+import IncomeVsExpenses from "./IncomeVsExpenses";
+import CategoryGroup from "./CategoryGroup";
+import Category from "./Category";
 
 const Container = styled.div`
   font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;

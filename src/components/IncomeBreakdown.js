@@ -2,9 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
-import { getPayeeNodes } from "../../utils";
-import { StrongText } from "../common/typeComponents";
-import Section from "../common/Section";
+import { getPayeeNodes } from "../utils";
+import { StrongText } from "./typeComponents";
+import Section from "./Section";
 import Breakdown from "./Breakdown";
 
 const IncomeBreakdown = ({ transactions, payeesById, divideBy }) => {

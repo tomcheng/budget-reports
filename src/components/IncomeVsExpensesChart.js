@@ -10,9 +10,9 @@ import {
   primaryColor,
   lightPrimaryColor,
   negativeChartColor
-} from "../../styleVariables";
-import Section from "../common/Section";
-import Chart from "../common/Chart";
+} from "../styleVariables";
+import Section from "./Section";
+import Chart from "./Chart";
 
 const IncomeVsExpensesChart = ({
   data,

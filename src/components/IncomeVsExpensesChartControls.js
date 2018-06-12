@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Section from "../common/Section";
-import Button from "../common/Button";
+import Section from "./Section";
+import Button from "./Button";
 import Toggle from "./Toggle";
 
 const IncomeVsExpensesChartControls = ({

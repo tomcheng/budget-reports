@@ -2,9 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import moment from "moment";
-import { SecondaryText, MinorText } from "../common/typeComponents";
-import ListItem from "../common/ListItem";
-import Amount from "../common/Amount";
+import { SecondaryText, MinorText } from "./typeComponents";
+import ListItem from "./ListItem";
+import Amount from "./Amount";
 
 const Date = styled(MinorText)`
   margin-top: -4px;

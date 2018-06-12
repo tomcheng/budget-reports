@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import sumBy from "lodash/fp/sumBy";
-import TopNumbers from "../common/TopNumbers";
+import TopNumbers from "./TopNumbers";
 
 const IncomeVsExpensesSummary = ({
   expenseTransactions,
