@@ -35,7 +35,7 @@ const standardDeviation = arr => {
 
 const getMonth = transaction => transaction.date.slice(0, 7);
 
-class IncomeVsExpenses extends Component {
+class IncomeVsExpensesBody extends Component {
   static propTypes = {
     budget: PropTypes.shape({
       id: PropTypes.string.isRequired,
@@ -226,4 +226,4 @@ class IncomeVsExpenses extends Component {
   }
 }
 
-export default IncomeVsExpenses;
+export default IncomeVsExpensesBody;

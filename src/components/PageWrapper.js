@@ -7,7 +7,7 @@ import PageActions from "./PageActions";
 import SidebarMenu from "./SidebarMenu";
 
 const PageWrapper = ({
-  children,
+  content,
   budgetId,
   budgetLoaded,
   title,
@@ -31,7 +31,7 @@ const PageWrapper = ({
                 onRefreshBudget={onRefreshBudget}
               />
             </Layout.Header>
-            <Layout.Body>{children}</Layout.Body>
+            <Layout.Body>{content()}</Layout.Body>
           </Layout>
         )}
       </SidebarMenu>
@@ -42,7 +42,7 @@ const PageWrapper = ({
 PageWrapper.propTypes = {
   budgetId: PropTypes.string.isRequired,
   budgetLoaded: PropTypes.bool.isRequired,
-  children: PropTypes.node.isRequired,
+  content: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   onRefreshBudget: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired

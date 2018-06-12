@@ -21,9 +21,8 @@ class IncomeVsExpenses extends Component {
         onRefreshBudget={onRefreshBudget}
         onRequestBudget={onRequestBudget}
         title="Income vs Expenses"
-      >
-        <IncomeVsExpensesBody budget={budget} />
-      </PageWrapper>
+        content={() => <IncomeVsExpensesBody budget={budget} />}
+      />
     );
   }
 }

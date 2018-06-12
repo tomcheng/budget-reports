@@ -7,12 +7,11 @@ const Budget = ({ budget, budgetId, onRefreshBudget, onRequestBudget }) => (
   <PageWrapper
     budgetId={budgetId}
     budgetLoaded={!!budget}
-    title="Budget"
     onRefreshBudget={onRefreshBudget}
     onRequestBudget={onRequestBudget}
-  >
-    <BudgetBody budget={budget} />
-  </PageWrapper>
+    title="Current Month Budget"
+    content={() => <BudgetBody budget={budget} />}
+  />
 );
 
 Budget.propTypes = {
