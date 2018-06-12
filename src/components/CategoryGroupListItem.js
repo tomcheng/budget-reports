@@ -33,7 +33,6 @@ const GroupArea = styled.div`
   justify-content: space-between;
   align-items: center;
   height: 60px;
-  padding: 0 20px 0 0;
   white-space: pre;
   user-select: none;
 `;
@@ -108,67 +107,59 @@ class CategoryGroupListItem extends Component {
 
     return (
       <Container>
-        <Link
-          to={getGroupLink({
-            budgetId,
-            categoryGroupId: categoryGroup.id
-          })}
-        >
-          <GroupArea>
+        <GroupArea>
+          <div
+            onClick={() => {
+              onToggleGroup(categoryGroup.id);
+            }}
+            style={{
+              alignSelf: "stretch",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: TOGGLE_ICON_SPACING,
+              fontWeight: 400,
+              color: "#888",
+              fontSize: 10
+            }}
+          >
+            <Icon
+              icon="chevron-right"
+              transform={{ rotate: expanded ? 90 : 0 }}
+            />
+          </div>
+          <Link
+            to={getGroupLink({
+              budgetId,
+              categoryGroupId: categoryGroup.id
+            })}
+            style={{
+              flexGrow: 1,
+              alignSelf: "stretch",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingRight: 20
+            }}
+          >
+            <StrongText>{categoryGroup.name}</StrongText>
             <div
-              onClick={evt => {
-                evt.preventDefault();
-                onToggleGroup(categoryGroup.id);
-              }}
               style={{
-                alignSelf: "stretch",
+                width: 160,
                 display: "flex",
-                alignItems: "center"
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: TOGGLE_ICON_SPACING,
-                  fontWeight: 400,
-                  color: "#888",
-                  fontSize: 10
-                }}
-              >
-                <Icon
-                  icon="chevron-right"
-                  transform={{ rotate: expanded ? 90 : 0 }}
-                />
-              </div>
-            </div>
-            <div
-              style={{
-                flexGrow: 1,
-                display: "flex",
+                alignItems: "center",
                 justifyContent: "space-between"
               }}
             >
-              <StrongText>{categoryGroup.name}</StrongText>
-              <div
-                style={{
-                  width: 160,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between"
-                }}
-              >
-                <SummaryChart
-                  activity={activity}
-                  balance={balance}
-                  indicator={monthProgress}
-                />
-                <StrongText>{round(balance)}</StrongText>
-              </div>
+              <SummaryChart
+                activity={activity}
+                balance={balance}
+                indicator={monthProgress}
+              />
+              <StrongText>{round(balance)}</StrongText>
             </div>
-          </GroupArea>
-        </Link>
+          </Link>
+        </GroupArea>
         <AnimateHeight isExpanded={expanded}>
           <Categories
             categories={this.getSortedCategories(categories, transactions)}

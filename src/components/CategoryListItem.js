@@ -24,10 +24,8 @@ const CategoryListItem = ({
   monthProgress
 }) => (
   <Link to={getCategoryLink({ budgetId, categoryId: category.id })}>
-    <ListItem>
-      <SecondaryText style={{ paddingLeft: leftSpacing }}>
-        {category.name}
-      </SecondaryText>
+    <ListItem style={{ paddingLeft: leftSpacing }}>
+      <SecondaryText>{category.name}</SecondaryText>
       <div
         style={{
           width: 160,
