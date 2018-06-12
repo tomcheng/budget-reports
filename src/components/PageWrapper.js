@@ -10,6 +10,7 @@ const PageWrapper = ({
   budgetId,
   budgetLoaded,
   title,
+  actions,
   onRequestBudget,
   onRefreshBudget
 }) => (
@@ -22,9 +23,10 @@ const PageWrapper = ({
       <SidebarMenu budgetId={budgetId} onRefreshBudget={onRefreshBudget}>
         {({ sidebarTrigger }) => (
           <Layout>
-            <Layout.Header flushLeft flushRight>
+            <Layout.Header flushLeft>
               {sidebarTrigger}
               <PageTitle style={{ flexGrow: 1 }}>{title}</PageTitle>
+              {actions}
             </Layout.Header>
             <Layout.Body>{content()}</Layout.Body>
           </Layout>
@@ -40,7 +42,8 @@ PageWrapper.propTypes = {
   content: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   onRefreshBudget: PropTypes.func.isRequired,
-  onRequestBudget: PropTypes.func.isRequired
+  onRequestBudget: PropTypes.func.isRequired,
+  actions: PropTypes.node
 };
 
 export default PageWrapper;

@@ -21,7 +21,8 @@ const CategoryListItem = ({
   budgetId,
   category,
   leftSpacing,
-  monthProgress
+  monthProgress,
+  showing
 }) => (
   <Link to={getCategoryLink({ budgetId, categoryId: category.id })}>
     <ListItem style={{ paddingLeft: leftSpacing }}>
@@ -39,7 +40,11 @@ const CategoryListItem = ({
           balance={category.balance}
           indicator={monthProgress}
         />
-        <SecondaryText>{round(category.balance)}</SecondaryText>
+        <SecondaryText>
+          {round(
+            showing === "available" ? category.balance : -category.activity
+          )}
+        </SecondaryText>
       </div>
     </ListItem>
   </Link>
@@ -54,7 +59,8 @@ CategoryListItem.propTypes = {
     name: PropTypes.string.isRequired
   }).isRequired,
   leftSpacing: PropTypes.number.isRequired,
-  monthProgress: PropTypes.number.isRequired
+  monthProgress: PropTypes.number.isRequired,
+  showing: PropTypes.oneOf(["available", "spent"]).isRequired
 };
 
 export default CategoryListItem;

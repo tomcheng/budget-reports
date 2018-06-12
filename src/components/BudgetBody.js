@@ -25,7 +25,8 @@ class BudgetBody extends PureComponent {
         })
       ).isRequired,
       name: PropTypes.string.isRequired
-    })
+    }),
+    showing: PropTypes.oneOf(["available", "spent"]).isRequired,
   };
 
   constructor(props) {
@@ -70,7 +71,7 @@ class BudgetBody extends PureComponent {
   });
 
   render() {
-    const { budget } = this.props;
+    const { budget, showing } = this.props;
     const { expandedGroups } = this.state;
 
     const daysInMonth = moment().daysInMonth();
@@ -82,6 +83,7 @@ class BudgetBody extends PureComponent {
           <CategoryGroupListItem
             key={categoryGroup.id}
             budgetId={budget.id}
+            showing={showing}
             categoryGroup={categoryGroup}
             categories={budget.categories}
             expanded={!!expandedGroups[categoryGroup.id]}

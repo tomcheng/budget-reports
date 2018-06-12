@@ -53,6 +53,7 @@ class CategoryGroupListItem extends Component {
     ).isRequired,
     expanded: PropTypes.bool.isRequired,
     monthProgress: PropTypes.number.isRequired,
+    showing: PropTypes.oneOf(["available", "spent"]).isRequired,
     transactions: PropTypes.arrayOf(
       PropTypes.shape({
         categoryId: PropTypes.string,
@@ -95,6 +96,7 @@ class CategoryGroupListItem extends Component {
       categories: allCategories,
       expanded,
       monthProgress,
+      showing,
       transactions,
       onToggleGroup
     } = this.props;
@@ -156,7 +158,9 @@ class CategoryGroupListItem extends Component {
                 balance={balance}
                 indicator={monthProgress}
               />
-              <StrongText>{round(balance)}</StrongText>
+              <StrongText>
+                {round(showing === "available" ? balance : -activity)}
+              </StrongText>
             </div>
           </Link>
         </GroupArea>
@@ -165,6 +169,7 @@ class CategoryGroupListItem extends Component {
             categories={this.getSortedCategories(categories, transactions)}
             budgetId={budgetId}
             monthProgress={monthProgress}
+            showing={showing}
           />
         </AnimateHeight>
       </Container>
@@ -174,7 +179,7 @@ class CategoryGroupListItem extends Component {
 
 class Categories extends PureComponent {
   render() {
-    const { categories, budgetId, monthProgress } = this.props;
+    const { categories, budgetId, monthProgress, showing } = this.props;
     return (
       <Fragment>
         {categories.map(category => (
@@ -184,6 +189,7 @@ class Categories extends PureComponent {
             category={category}
             leftSpacing={TOGGLE_ICON_SPACING}
             monthProgress={monthProgress}
+            showing={showing}
           />
         ))}
       </Fragment>
