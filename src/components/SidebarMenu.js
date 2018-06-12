@@ -21,6 +21,10 @@ class SidebarMenu extends Component {
     this.setState({ open: true });
   };
 
+  handleCloseSidebar = () => {
+    this.setState({ open: false });
+  };
+
   render() {
     const { budgetId, children, onRefreshBudget } = this.props;
     const { open } = this.state;
@@ -31,6 +35,7 @@ class SidebarMenu extends Component {
           <SidebarMenuContent
             budgetId={budgetId}
             onRefreshBudget={onRefreshBudget}
+            onCloseSidebar={this.handleCloseSidebar}
           />
         }
         open={open}

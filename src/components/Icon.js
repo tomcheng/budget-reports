@@ -7,13 +7,15 @@ import faBars from "@fortawesome/fontawesome-free-solid/faBars";
 import faCaretDown from "@fortawesome/fontawesome-free-solid/faCaretDown";
 import faChevronRight from "@fortawesome/fontawesome-free-solid/faChevronRight";
 import faEllipsisV from "@fortawesome/fontawesome-free-solid/faEllipsisV";
+import faTimes from "@fortawesome/fontawesome-free-solid/faTimes";
 
 const ICONS = {
   "arrow-left": faArrowLeft,
   bars: faBars,
   "caret-down": faCaretDown,
   "chevron-right": faChevronRight,
-  "ellipsis-v": faEllipsisV
+  "ellipsis-v": faEllipsisV,
+  times: faTimes
 };
 
 const Icon = ({ icon, ...other }) => (
