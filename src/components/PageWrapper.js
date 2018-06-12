@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import EnsureBudgetLoaded from "./EnsureBudgetLoaded";
 import Layout from "./Layout";
 import { PageTitle } from "./typeComponents";
-import PageActions from "./PageActions";
 import SidebarMenu from "./SidebarMenu";
 
 const PageWrapper = ({
@@ -20,16 +19,12 @@ const PageWrapper = ({
     onRequestBudget={onRequestBudget}
   >
     {() => (
-      <SidebarMenu budgetId={budgetId}>
+      <SidebarMenu budgetId={budgetId} onRefreshBudget={onRefreshBudget}>
         {({ sidebarTrigger }) => (
           <Layout>
             <Layout.Header flushLeft flushRight>
               {sidebarTrigger}
               <PageTitle style={{ flexGrow: 1 }}>{title}</PageTitle>
-              <PageActions
-                budgetId={budgetId}
-                onRefreshBudget={onRefreshBudget}
-              />
             </Layout.Header>
             <Layout.Body>{content()}</Layout.Body>
           </Layout>

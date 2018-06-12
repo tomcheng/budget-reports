@@ -13,7 +13,6 @@ import { PageTitle } from "./typeComponents";
 import BackToBudget from "./BackToBudget";
 import Dropdown from "./Dropdown";
 import Icon from "./Icon";
-import PageActions from "./PageActions";
 import TopNumbers from "./TopNumbers";
 import SpendingChart from "./SpendingChart";
 import Transactions from "./Transactions";
@@ -23,7 +22,6 @@ const CategoryGroup = ({
   budgetId,
   categoryGroupId,
   currentMonth,
-  onRefreshBudget,
   onRequestBudget
 }) => (
   <EnsureBudgetLoaded
@@ -93,10 +91,6 @@ const CategoryGroup = ({
                 )}
               </Dropdown>
             </PageTitle>
-            <PageActions
-              onRefreshBudget={onRefreshBudget}
-              budgetId={budgetId}
-            />
           </Layout.Header>
           <Layout.Body>
             <TopNumbers
@@ -123,7 +117,6 @@ CategoryGroup.propTypes = {
   budgetId: PropTypes.string.isRequired,
   categoryGroupId: PropTypes.string.isRequired,
   currentMonth: PropTypes.string.isRequired,
-  onRefreshBudget: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired,
   budget: PropTypes.shape({
     categories: PropTypes.arrayOf(

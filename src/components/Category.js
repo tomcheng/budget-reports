@@ -7,7 +7,6 @@ import Layout from "./Layout";
 import BackToBudget from "./BackToBudget";
 import { PageTitle } from "./typeComponents";
 import Separator from "./Separator";
-import PageActions from "./PageActions";
 import TopNumbers from "./TopNumbers";
 import SpendingChart from "./SpendingChart";
 import Transactions from "./Transactions";
@@ -17,7 +16,6 @@ const Category = ({
   budgetId,
   categoryId,
   currentMonth,
-  onRefreshBudget,
   onRequestBudget
 }) => (
   <EnsureBudgetLoaded
@@ -56,10 +54,6 @@ const Category = ({
               <Separator />
               {category.name}
             </PageTitle>
-            <PageActions
-              budgetId={budgetId}
-              onRefreshBudget={onRefreshBudget}
-            />
           </Layout.Header>
           <Layout.Body>
             <TopNumbers
@@ -89,7 +83,6 @@ Category.propTypes = {
   budgetId: PropTypes.string.isRequired,
   categoryId: PropTypes.string.isRequired,
   currentMonth: PropTypes.string.isRequired,
-  onRefreshBudget: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired,
   budget: PropTypes.shape({
     categories: PropTypes.arrayOf(

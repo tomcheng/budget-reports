@@ -7,7 +7,8 @@ import SidebarMenuContent from "./SidebarMenuContent";
 class SidebarMenu extends Component {
   static propTypes = {
     budgetId: PropTypes.string.isRequired,
-    children: PropTypes.func.isRequired
+    children: PropTypes.func.isRequired,
+    onRefreshBudget: PropTypes.func.isRequired
   };
 
   state = { open: false };
@@ -21,12 +22,17 @@ class SidebarMenu extends Component {
   };
 
   render() {
-    const { budgetId, children } = this.props;
+    const { budgetId, children, onRefreshBudget } = this.props;
     const { open } = this.state;
 
     return (
       <Sidebar
-        sidebar={<SidebarMenuContent budgetId={budgetId} />}
+        sidebar={
+          <SidebarMenuContent
+            budgetId={budgetId}
+            onRefreshBudget={onRefreshBudget}
+          />
+        }
         open={open}
         onSetOpen={this.handleSetOpen}
         styles={{
