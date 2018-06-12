@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import filter from "lodash/fp/filter";
@@ -35,7 +35,7 @@ const standardDeviation = arr => {
 
 const getMonth = transaction => transaction.date.slice(0, 7);
 
-class IncomeVsExpensesBody extends Component {
+class IncomeVsExpensesBody extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       id: PropTypes.string.isRequired,

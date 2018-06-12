@@ -38,7 +38,6 @@ class SidebarMenu extends Component {
         styles={{
           sidebar: {
             backgroundColor: "#fff",
-            transition: "transform 0.15s ease-out",
             width: 280
           }
         }}

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import compose from "lodash/fp/compose";
@@ -11,7 +11,7 @@ import { simpleMemoize } from "../utils";
 import { getExpandedGroups, setExpandedGroups } from "../uiRepo";
 import CategoryGroupListItem from "./CategoryGroupListItem";
 
-class BudgetBody extends Component {
+class BudgetBody extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       categoryGroups: PropTypes.arrayOf(
