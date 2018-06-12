@@ -9,14 +9,14 @@ import SidebarMenu from "./SidebarMenu";
 const PageWrapper = ({
   children,
   budgetId,
-  budget,
+  budgetLoaded,
   title,
   onRequestBudget,
   onRefreshBudget
 }) => (
   <EnsureBudgetLoaded
     budgetId={budgetId}
-    budgetLoaded={!!budget}
+    budgetLoaded={budgetLoaded}
     onRequestBudget={onRequestBudget}
   >
     {() => (
@@ -41,11 +41,11 @@ const PageWrapper = ({
 
 PageWrapper.propTypes = {
   budgetId: PropTypes.string.isRequired,
+  budgetLoaded: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired,
   title: PropTypes.string.isRequired,
   onRefreshBudget: PropTypes.func.isRequired,
-  onRequestBudget: PropTypes.func.isRequired,
-  budget: PropTypes.object
+  onRequestBudget: PropTypes.func.isRequired
 };
 
 export default PageWrapper;

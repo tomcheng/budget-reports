@@ -17,7 +17,7 @@ class IncomeVsExpenses extends Component {
     return (
       <PageWrapper
         budgetId={budgetId}
-        budget={budget}
+        budgetLoaded={!!budget}
         onRefreshBudget={onRefreshBudget}
         onRequestBudget={onRequestBudget}
         title="Income vs Expenses"
