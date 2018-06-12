@@ -1,10 +1,6 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
-import EnsureBudgetLoaded from "./EnsureBudgetLoaded";
-import Layout from "./Layout";
-import BackToBudget from "./BackToBudget";
-import { PageTitle } from "./typeComponents";
-import PageActions from "./PageActions";
+import PageWrapper from "./PageWrapper";
 import IncomeVsExpensesBody from "./IncomeVsExpensesBody";
 
 class IncomeVsExpenses extends Component {
@@ -19,29 +15,15 @@ class IncomeVsExpenses extends Component {
     const { budget, budgetId, onRefreshBudget, onRequestBudget } = this.props;
 
     return (
-      <EnsureBudgetLoaded
+      <PageWrapper
         budgetId={budgetId}
-        budgetLoaded={!!budget}
+        budget={budget}
+        onRefreshBudget={onRefreshBudget}
         onRequestBudget={onRequestBudget}
+        title="Income vs Expenses"
       >
-        {() => (
-          <Fragment>
-            <Layout>
-              <Layout.Header flushLeft flushRight>
-                <BackToBudget budgetId={budgetId} />
-                <PageTitle style={{ flexGrow: 1 }}>Income vs Expenses</PageTitle>
-                <PageActions
-                  budgetId={budgetId}
-                  onRefreshBudget={onRefreshBudget}
-                />
-              </Layout.Header>
-              <Layout.Body>
-                <IncomeVsExpensesBody budget={budget} />
-              </Layout.Body>
-            </Layout>
-          </Fragment>
-        )}
-      </EnsureBudgetLoaded>
+        <IncomeVsExpensesBody budget={budget} />
+      </PageWrapper>
     );
   }
 }
