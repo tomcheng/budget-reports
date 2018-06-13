@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import Icon from "./Icon";
-import { plotBandColor } from "../styleVariables";
+import { plotBandColor, iconWidth } from "../styleVariables";
 
 const StyledLink = styled(NavLink)`
   display: flex;
@@ -21,7 +21,7 @@ const SidebarMenuContent = ({ budgetId, onCloseSidebar }) => (
     <div
       style={{
         height: 60,
-        width: 50,
+        width: iconWidth,
         display: "flex",
         alignItems: "center",
         justifyContent: "center"

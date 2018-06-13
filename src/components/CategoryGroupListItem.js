@@ -15,12 +15,11 @@ import sumBy from "lodash/fp/sumBy";
 import AnimateHeight from "react-animate-height-auto";
 import { Link } from "react-router-dom";
 import { getGroupLink, simpleMemoize } from "../utils";
+import { iconWidth } from "../styleVariables";
 import { StrongText } from "./typeComponents";
 import Icon from "./Icon";
 import CategoryListItem from "./CategoryListItem";
 import SummaryChart from "./SummaryChart";
-
-const TOGGLE_ICON_SPACING = 50;
 
 const Container = styled.div`
   & + & {
@@ -119,7 +118,7 @@ class CategoryGroupListItem extends Component {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              width: TOGGLE_ICON_SPACING,
+              width: iconWidth,
               fontWeight: 400,
               color: "#888",
               fontSize: 10
@@ -187,7 +186,7 @@ class Categories extends PureComponent {
             key={category.id}
             budgetId={budgetId}
             category={category}
-            leftSpacing={TOGGLE_ICON_SPACING}
+            leftSpacing={iconWidth}
             monthProgress={monthProgress}
             showing={showing}
           />

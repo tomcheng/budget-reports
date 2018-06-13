@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { getBudgetLink } from "../utils";
+import { iconWidth } from "../styleVariables";
 import Icon from "./Icon";
 
 const StyledLink = styled(Link)`
@@ -10,7 +11,7 @@ const StyledLink = styled(Link)`
   align-self: stretch;
   align-items: center;
   justify-content: center;
-  width: 50px;
+  width: ${iconWidth}px;
 `;
 
 const BackToBudget = ({ budgetId }) => (

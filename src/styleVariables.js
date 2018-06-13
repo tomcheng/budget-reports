@@ -15,3 +15,5 @@ export const negativeChartColor = tinyColor("red")
   .lighten(30)
   .desaturate(60)
   .toHexString();
+
+export const iconWidth = 60;

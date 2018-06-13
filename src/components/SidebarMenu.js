@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Sidebar from "react-sidebar";
+import { iconWidth } from "../styleVariables";
 import Icon from "./Icon";
 import SidebarMenuContent from "./SidebarMenuContent";
 
@@ -61,7 +62,7 @@ const Trigger = ({ onClick }) => (
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      width: 50
+      width: iconWidth
     }}
   >
     <Icon icon="bars" />
