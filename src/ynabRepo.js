@@ -6,6 +6,10 @@ import { setLastUpdated } from "./uiRepo";
 import { sanitizeBudget, mergeBudgets } from "./repoUtils";
 import { clientId, redirectUri } from "./ynabConfig";
 
+const TOKEN_STORAGE_KEY = "ynab_access_token";
+const BUDGETS_STORAGE_KEY = "ynab_budgets";
+const BUDGET_DETAILS_STORAGE_KEY = "ynab_budget_details";
+
 export const AUTHORIZE_URL =
   "https://app.youneedabudget.com/oauth/authorize?client_id=" +
   clientId +
@@ -13,17 +17,9 @@ export const AUTHORIZE_URL =
   redirectUri +
   "&response_type=token";
 
-const TOKEN_STORAGE_KEY = "ynab_access_token";
-const BUDGETS_STORAGE_KEY = "ynab_budgets";
-const BUDGET_DETAILS_STORAGE_KEY = "ynab_budget_details";
-
-export let getBudgets = null;
-export let getBudget = null;
-export let getUpdatedBudget = null;
-
 export const getAuthorizeToken = () => {
+  // check for hash route
   if (window.location.hash[1] === "/") {
-    // It's probably a route
     return localStorage.getItem(TOKEN_STORAGE_KEY);
   }
 
@@ -36,85 +32,84 @@ export const getAuthorizeToken = () => {
     return localStorage.getItem(TOKEN_STORAGE_KEY);
   }
 
-  const params = JSON.parse(
-    '{"' + search + '"}',
-    (key, value) => (key === "" ? value : decodeURIComponent(value))
+  const token = get("access_token")(
+    JSON.parse(
+      '{"' + search + '"}',
+      (key, value) => (key === "" ? value : decodeURIComponent(value))
+    )
   );
-  const token = params["access_token"];
-
   localStorage.setItem(TOKEN_STORAGE_KEY, token);
   window.location.hash = "";
 
   return token;
 };
 
+let api = null;
+
 export const initializeYnabApi = token => {
-  const api = new ynab.api(token);
+  api = new ynab.api(token);
+};
 
-  getBudgets = () => {
-    const cachedBudgets = getStorage(BUDGETS_STORAGE_KEY);
+export const getBudgets = () => {
+  const cachedBudgets = getStorage(BUDGETS_STORAGE_KEY);
 
-    if (cachedBudgets) {
-      return Promise.resolve(camelCaseKeys(cachedBudgets));
-    } else {
-      return api.budgets.getBudgets().then(({ data }) => {
-        setStorage(BUDGETS_STORAGE_KEY, data);
-        return camelCaseKeys(data);
-      });
-    }
-  };
-
-  getBudget = budgetId =>
-    api.budgets.getBudgetById(budgetId).then(({ data }) => {
-      const allBudgets = getStorage(BUDGET_DETAILS_STORAGE_KEY);
-
-      setStorage(
-        BUDGET_DETAILS_STORAGE_KEY,
-        budgetId ? { ...allBudgets, [budgetId]: data } : data
-      );
-
-      setLastUpdated(budgetId);
-
-      return { budget: sanitizeBudget(data.budget), authorized: true };
+  if (cachedBudgets) {
+    return Promise.resolve(camelCaseKeys(cachedBudgets));
+  } else {
+    return api.budgets.getBudgets().then(({ data }) => {
+      setStorage(BUDGETS_STORAGE_KEY, data);
+      return camelCaseKeys(data);
     });
+  }
+};
 
-  getUpdatedBudget = id => {
-    const details = getStorage(BUDGET_DETAILS_STORAGE_KEY);
-    const budgetDetails = get(id)(details);
+const getBudget = budgetId =>
+  api.budgets.getBudgetById(budgetId).then(({ data }) => {
+    const allBudgets = getStorage(BUDGET_DETAILS_STORAGE_KEY);
+    setStorage(
+      BUDGET_DETAILS_STORAGE_KEY,
+      budgetId ? { ...allBudgets, [budgetId]: data } : data
+    );
+    setLastUpdated(budgetId);
 
-    if (!budgetDetails) {
-      return getBudget(id);
-    }
+    return { budget: sanitizeBudget(data.budget), authorized: true };
+  });
 
-    const serverKnowledge = budgetDetails.server_knowledge;
+export const getUpdatedBudget = id => {
+  const details = getStorage(BUDGET_DETAILS_STORAGE_KEY);
+  const budgetDetails = get(id)(details);
 
-    return api.budgets
-      .getBudgetById(id, serverKnowledge)
-      .then(({ data }) => {
-        const newDetails = {
-          ...details,
-          [id]: {
-            budget: mergeBudgets(details[id].budget, data.budget),
-            server_knowledge: data.server_knowledge
-          }
-        };
+  if (!budgetDetails) {
+    return getBudget(id);
+  }
 
-        setStorage("ynab_budget_details", newDetails);
-        setLastUpdated(id);
+  const serverKnowledge = budgetDetails.server_knowledge;
 
-        return {
-          budget: sanitizeBudget(newDetails[id].budget),
-          authorized: true
-        };
-      })
-      .catch(({ error }) => {
-        if (matches({ id: "401", name: "unauthorized" })(error)) {
-          const cached = get(id)(getStorage(BUDGET_DETAILS_STORAGE_KEY));
-          return {
-            budget: cached ? sanitizeBudget(cached.budget) : null,
-            authorized: false
-          };
+  return api.budgets
+    .getBudgetById(id, serverKnowledge)
+    .then(({ data }) => {
+      const newDetails = {
+        ...details,
+        [id]: {
+          budget: mergeBudgets(details[id].budget, data.budget),
+          server_knowledge: data.server_knowledge
         }
-      });
-  };
+      };
+      setStorage(BUDGET_DETAILS_STORAGE_KEY, newDetails);
+      setLastUpdated(id);
+
+      return {
+        budget: sanitizeBudget(newDetails[id].budget),
+        authorized: true
+      };
+    })
+    .catch(({ error }) => {
+      if (matches({ id: "401", name: "unauthorized" })(error)) {
+        const cached = get(id)(getStorage(BUDGET_DETAILS_STORAGE_KEY));
+        return {
+          budget: cached ? sanitizeBudget(cached.budget) : null,
+          authorized: false
+        };
+      }
+    });
 };
