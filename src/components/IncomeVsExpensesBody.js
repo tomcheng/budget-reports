@@ -17,11 +17,16 @@ import prop from "lodash/fp/prop";
 import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
-import { splitTransactions } from "../utils";
+import { splitTransactions, simpleMemoize } from "../utils";
 import IncomeVsExpensesSummary from "./IncomeVsExpensesSummary";
 import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
 import IncomeVsExpensesChartControls from "./IncomeVsExpensesChartControls";
 import Breakdowns from "./Breakdowns";
+
+const PAYEES_TO_EXCLUDE = [
+  "Starting Balance",
+  "Reconciliation Balance Adjustment"
+];
 
 const map = mapRaw.convert({ cap: false });
 
@@ -91,25 +96,32 @@ class IncomeVsExpensesBody extends PureComponent {
   getSelectedMonths = () =>
     compose([sortBy(identity), keys])(this.state.selectedMonths);
 
-  getSummaries = ({ categoryGroupsById, categoriesById, transactions }) =>
-    compose([
-      sortBy("month"),
-      map((transactions, month) => {
-        const { incomeTransactions, expenseTransactions } = splitTransactions({
-          categoryGroupsById,
-          categoriesById,
-          transactions
-        });
+  getSummaries = simpleMemoize(
+    ({ categoryGroupsById, categoriesById, transactions, payeesById }) =>
+      compose([
+        sortBy("month"),
+        map((transactions, month) => {
+          const { incomeTransactions, expenseTransactions } = splitTransactions(
+            {
+              categoryGroupsById,
+              categoriesById,
+              transactions
+            }
+          );
 
-        return {
-          month,
-          transactions,
-          income: sumBy("amount")(incomeTransactions),
-          expenses: sumBy("amount")(expenseTransactions)
-        };
-      }),
-      groupBy(getMonth)
-    ])(transactions);
+          return {
+            month,
+            transactions,
+            income: sumBy("amount")(incomeTransactions),
+            expenses: sumBy("amount")(expenseTransactions)
+          };
+        }),
+        groupBy(getMonth),
+        reject(transaction =>
+          PAYEES_TO_EXCLUDE.includes(payeesById[transaction.payeeId].name)
+        )
+      ])(transactions)
+  );
 
   getExcludedMonths = summaries => {
     const {

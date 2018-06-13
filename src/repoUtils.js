@@ -22,10 +22,6 @@ const GROUPS_TO_HIDE = [
   "Credit Card Payments",
   "Hidden Categories"
 ];
-const PAYEES_TO_EXCLUDE = [
-  "Starting Balance",
-  "Reconciliation Balance Adjustment"
-];
 
 export const sanitizeBudget = (
   budget,
@@ -51,10 +47,7 @@ export const sanitizeBudget = (
       budgeted: formatCurrency(mergedCategory.budgeted)
     });
   })(budget.categories);
-  const payees = compose([
-    camelCaseKeys,
-    reject(payee => PAYEES_TO_EXCLUDE.includes(payee.name))
-  ])(budget.payees);
+  const payees = camelCaseKeys(budget.payees);
   const payeesById = keyBy("id")(payees);
 
   return {

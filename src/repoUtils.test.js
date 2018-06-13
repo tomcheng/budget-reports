@@ -66,12 +66,16 @@ describe("sanitizeBudget", () => {
   it("sanitizes data", () => {
     const result = sanitizeBudget(budget, "2018-05");
 
-    expect(result.payees).toEqual([{ id: "foo-bar" }]);
+    expect(result.payees).toEqual([
+      { id: "foo-bar" },
+      { id: "starting-balance", name: "Starting Balance" }
+    ]);
     expect(result.categories).toEqual([
       { id: "cat", activity: 1, balance: 5, budgeted: 3 }
     ]);
     expect(result.categoryGroups).toEqual([{ id: "group-1", name: "group 1" }]);
     expect(result.transactions).toEqual([
+      { id: "trans-5", amount: 1, payeeId: "starting-balance" },
       {
         id: "trans-1",
         amount: 1,
