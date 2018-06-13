@@ -4,17 +4,12 @@ import styled from "styled-components";
 import { Route, Switch } from "react-router-dom";
 import moment from "moment";
 import keyBy from "lodash/fp/keyBy";
-import {
-  getBudgets,
-  getUpdatedBudget,
-  AUTHORIZE_URL
-} from "../ynabRepo";
+import { getBudgets, getUpdatedBudget, AUTHORIZE_URL } from "../ynabRepo";
+import topLevelPages from "../topLevelPages";
 import Unauthorized from "./Unauthorized";
 import NotFound from "./NotFound";
 import ErrorBoundary from "./ErrorBoundary";
 import Budgets from "./Budgets";
-import Budget from "./Budget";
-import IncomeVsExpenses from "./IncomeVsExpenses";
 import CategoryGroup from "./CategoryGroup";
 import Category from "./Category";
 
@@ -103,33 +98,23 @@ class App extends Component {
                 />
               )}
             />
-            <Route
-              path="/budgets/:budgetId"
-              exact
-              render={({ match }) => (
-                <Budget
-                  authorized={authorized}
-                  budget={budgetDetails[match.params.budgetId]}
-                  budgetId={match.params.budgetId}
-                  currentMonth={currentMonth}
-                  onAuthorize={this.handleAuthorize}
-                  onRequestBudget={this.handleRequestBudget}
-                />
-              )}
-            />
-            <Route
-              path="/budgets/:budgetId/income-vs-expenses"
-              exact
-              render={({ match }) => (
-                <IncomeVsExpenses
-                  authorized={authorized}
-                  budget={budgetDetails[match.params.budgetId]}
-                  budgetId={match.params.budgetId}
-                  onAuthorize={this.handleAuthorize}
-                  onRequestBudget={this.handleRequestBudget}
-                />
-              )}
-            />
+            {topLevelPages.map(({ path, title, Component }) => (
+              <Route
+                key={path}
+                path={`/budgets/:budgetId${path}`}
+                exact
+                render={({ match }) => (
+                  <Component
+                    authorized={authorized}
+                    budget={budgetDetails[match.params.budgetId]}
+                    budgetId={match.params.budgetId}
+                    title={title}
+                    onAuthorize={this.handleAuthorize}
+                    onRequestBudget={this.handleRequestBudget}
+                  />
+                )}
+              />
+            ))}
             <Route
               path="/budgets/:budgetId/category-groups/:categoryGroupId"
               exact

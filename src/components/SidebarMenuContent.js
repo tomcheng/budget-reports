@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import topLevelPages from "../topLevelPages";
 import Icon from "./Icon";
 import { plotBandColor, iconWidth } from "../styleVariables";
 
@@ -30,10 +31,18 @@ const SidebarMenuContent = ({ budgetId, onCloseSidebar }) => (
     >
       <Icon icon="times" />
     </div>
-    <MenuItem to={`/budgets/${budgetId}`}>Current Month Budget</MenuItem>
-    <MenuItem to={`/budgets/${budgetId}/income-vs-expenses`}>
-      Income vs Expenses
-    </MenuItem>
+    {topLevelPages.map(({ path, title }) => (
+      <StyledLink
+        key={path}
+        to={`/budgets/${budgetId}${path}`}
+        activeStyle={{
+          backgroundColor: plotBandColor
+        }}
+        exact
+      >
+        {title}
+      </StyledLink>
+    ))}
   </Fragment>
 );
 
@@ -41,17 +50,5 @@ SidebarMenuContent.propTypes = {
   budgetId: PropTypes.string.isRequired,
   onCloseSidebar: PropTypes.func.isRequired
 };
-
-const MenuItem = ({ to, children }) => (
-  <StyledLink
-    to={to}
-    activeStyle={{
-      backgroundColor: plotBandColor
-    }}
-    exact
-  >
-    {children}
-  </StyledLink>
-);
 
 export default SidebarMenuContent;

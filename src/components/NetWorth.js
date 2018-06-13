@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import PageWrapper from "./PageWrapper";
-import IncomeVsExpensesBody from "./IncomeVsExpensesBody";
+import NetWorthBody from "./NetWorthBody";
 
-class IncomeVsExpenses extends Component {
+class NetWorth extends Component {
   static propTypes = {
     authorized: PropTypes.bool.isRequired,
     budgetId: PropTypes.string.isRequired,
@@ -31,10 +31,10 @@ class IncomeVsExpenses extends Component {
         onAuthorize={onAuthorize}
         onRequestBudget={onRequestBudget}
         title={title}
-        content={() => <IncomeVsExpensesBody budget={budget} />}
+        content={() => <NetWorthBody budget={budget} />}
       />
     );
   }
 }
 
-export default IncomeVsExpenses;
+export default NetWorth;

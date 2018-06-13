@@ -8,6 +8,7 @@ class Budget extends Component {
   static propTypes = {
     authorized: PropTypes.bool.isRequired,
     budgetId: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
     onAuthorize: PropTypes.func.isRequired,
     onRequestBudget: PropTypes.func.isRequired,
     budget: PropTypes.object
@@ -23,7 +24,7 @@ class Budget extends Component {
   };
 
   render() {
-    const { authorized, budget, budgetId, onAuthorize, onRequestBudget } = this.props;
+    const { authorized, budget, budgetId, title, onAuthorize, onRequestBudget } = this.props;
     const { showing } = this.state;
 
     return (
@@ -33,7 +34,7 @@ class Budget extends Component {
         budgetLoaded={!!budget}
         onAuthorize={onAuthorize}
         onRequestBudget={onRequestBudget}
-        title="Current Month Budget"
+        title={title}
         actions={
           <SecondaryText onClick={this.handleToggleShowing}>
             {showing}
