@@ -77,6 +77,12 @@ describe("sanitizeBudget", () => {
     expect(result.transactions).toEqual([
       { id: "trans-5", amount: 1, payeeId: "starting-balance" },
       {
+        id: "trans-3",
+        amount: 1,
+        payeeId: "foo-bar",
+        transferAccountId: "foo"
+      },
+      {
         id: "trans-1",
         amount: 1,
         payeeId: "foo-bar",

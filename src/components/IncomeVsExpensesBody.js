@@ -1,5 +1,6 @@
 import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
+import anyPass from "lodash/fp/anyPass";
 import compose from "lodash/fp/compose";
 import filter from "lodash/fp/filter";
 import find from "lodash/fp/find";
@@ -117,8 +118,12 @@ class IncomeVsExpensesBody extends PureComponent {
           };
         }),
         groupBy(getMonth),
-        reject(transaction =>
-          PAYEES_TO_EXCLUDE.includes(payeesById[transaction.payeeId].name)
+        reject(
+          anyPass([
+            transaction =>
+              PAYEES_TO_EXCLUDE.includes(payeesById[transaction.payeeId].name),
+            prop("transferAccountId")
+          ])
         )
       ])(transactions)
   );

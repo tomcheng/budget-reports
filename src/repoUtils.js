@@ -1,5 +1,4 @@
 import moment from "moment";
-import anyPass from "lodash/fp/anyPass";
 import compose from "lodash/fp/compose";
 import flatMap from "lodash/fp/flatMap";
 import filter from "lodash/fp/filter";
@@ -9,7 +8,6 @@ import keyBy from "lodash/fp/keyBy";
 import map from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
 import omit from "lodash/fp/omit";
-import prop from "lodash/fp/prop";
 import reject from "lodash/fp/reject";
 import reverse from "lodash/fp/reverse";
 import sortBy from "lodash/fp/sortBy";
@@ -84,13 +82,7 @@ export const sanitizeBudget = (
       ),
       reverse,
       sortBy("date"),
-      reject(
-        anyPass([
-          prop("transfer_account_id"),
-          matchesProperty("amount", 0),
-          transaction => !payeesById[transaction.payee_id]
-        ])
-      )
+      reject(matchesProperty("amount", 0))
     ])(budget.transactions)
   };
 };
