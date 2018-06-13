@@ -48,12 +48,6 @@ export const getAuthorizeToken = () => {
   return token;
 };
 
-const handleFailure = () => {
-  // TODO: Don't assume expired auth
-  // localStorage.removeItem(TOKEN_STORAGE_KEY);
-  // window.location.reload();
-};
-
 export const initializeYnabApi = token => {
   const api = new ynab.api(token);
 
@@ -63,43 +57,35 @@ export const initializeYnabApi = token => {
     if (cachedBudgets) {
       return Promise.resolve(camelCaseKeys(cachedBudgets));
     } else {
-      return api.budgets
-        .getBudgets()
-        .then(({ data }) => {
-          setStorage(BUDGETS_STORAGE_KEY, data);
-          return camelCaseKeys(data);
-        })
-        .catch(handleFailure);
+      return api.budgets.getBudgets().then(({ data }) => {
+        setStorage(BUDGETS_STORAGE_KEY, data);
+        return camelCaseKeys(data);
+      });
     }
   };
 
-  getBudget = budgetId => {
-    const formatter = ({ budget }) => sanitizeBudget(budget);
+  getBudget = budgetId =>
+    api.budgets.getBudgetById(budgetId).then(({ data }) => {
+      const allBudgets = getStorage(BUDGET_DETAILS_STORAGE_KEY);
 
-    const allBudgets = getStorage(BUDGET_DETAILS_STORAGE_KEY);
-    const cachedBudget = get(budgetId)(allBudgets);
+      setStorage(
+        BUDGET_DETAILS_STORAGE_KEY,
+        budgetId ? { ...allBudgets, [budgetId]: data } : data
+      );
 
-    if (cachedBudget) {
-      return Promise.resolve(formatter(cachedBudget));
-    } else {
-      return api.budgets
-        .getBudgetById(budgetId)
-        .then(({ data }) => {
-          setStorage(
-            BUDGET_DETAILS_STORAGE_KEY,
-            budgetId ? { ...allBudgets, [budgetId]: data } : data
-          );
-          setLastUpdated(budgetId);
+      setLastUpdated(budgetId);
 
-          return formatter(data);
-        })
-        .catch(handleFailure);
-    }
-  };
+      return { budget: sanitizeBudget(data.budget), authorized: true };
+    });
 
   getUpdatedBudget = id => {
     const details = getStorage(BUDGET_DETAILS_STORAGE_KEY);
-    const budgetDetails = details[id];
+    const budgetDetails = get(id)(details);
+
+    if (!budgetDetails) {
+      return getBudget(id);
+    }
+
     const serverKnowledge = budgetDetails.server_knowledge;
 
     return api.budgets

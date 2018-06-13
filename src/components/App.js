@@ -6,7 +6,6 @@ import moment from "moment";
 import keyBy from "lodash/fp/keyBy";
 import {
   getBudgets,
-  getBudget,
   getUpdatedBudget,
   AUTHORIZE_URL
 } from "../ynabRepo";
@@ -58,18 +57,6 @@ class App extends Component {
   };
 
   handleRequestBudget = id => {
-    getBudget(id).then(budget => {
-      this.setState(state => ({
-        ...state,
-        budgetDetails: {
-          ...state.budgetDetails,
-          [id]: budget
-        }
-      }));
-    });
-  };
-
-  handleRefreshBudget = id => {
     getUpdatedBudget(id).then(({ budget, authorized }) => {
       this.setState(state => ({
         ...state,
@@ -126,7 +113,7 @@ class App extends Component {
                   budgetId={match.params.budgetId}
                   currentMonth={currentMonth}
                   onAuthorize={this.handleAuthorize}
-                  onRequestBudget={this.handleRefreshBudget}
+                  onRequestBudget={this.handleRequestBudget}
                 />
               )}
             />
@@ -139,7 +126,7 @@ class App extends Component {
                   budget={budgetDetails[match.params.budgetId]}
                   budgetId={match.params.budgetId}
                   onAuthorize={this.handleAuthorize}
-                  onRequestBudget={this.handleRefreshBudget}
+                  onRequestBudget={this.handleRequestBudget}
                 />
               )}
             />
