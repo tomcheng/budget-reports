@@ -1,7 +1,10 @@
+import moment from "moment";
 import anyPass from "lodash/fp/anyPass";
 import compose from "lodash/fp/compose";
 import flatMap from "lodash/fp/flatMap";
 import filter from "lodash/fp/filter";
+import find from "lodash/fp/find";
+import get from "lodash/fp/get";
 import keyBy from "lodash/fp/keyBy";
 import map from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
@@ -11,7 +14,6 @@ import reject from "lodash/fp/reject";
 import reverse from "lodash/fp/reverse";
 import sortBy from "lodash/fp/sortBy";
 import uniq from "lodash/fp/uniq";
-import moment from "moment";
 import { upsertBy } from "./utils";
 import { formatCurrency, camelCaseKeys } from "./utils";
 
@@ -29,16 +31,18 @@ export const sanitizeBudget = (
   budget,
   currentMonth = moment().format("YYYY-MM")
 ) => {
-  const categoriesFromMonth = keyBy("id")(
-    budget.months.find(m => m.month === currentMonth + "-01").categories
-  );
+  const categoriesFromMonth = compose([
+    keyBy("id"),
+    get("categories"),
+    find(matchesProperty("month", currentMonth + "-01"))
+  ])(budget.months);
   const transactionIdsFromSub = uniq(
     map("transaction_id")(budget.subtransactions)
   );
-  const categoryGroups = filter(group => !GROUPS_TO_HIDE.includes(group.name))(
+  const categoryGroups = reject(group => GROUPS_TO_HIDE.includes(group.name))(
     budget.category_groups
   );
-  const categories = budget.categories.map(c => {
+  const categories = map(c => {
     const mergedCategory = { ...c, ...categoriesFromMonth[c.id] };
     return camelCaseKeys({
       ...mergedCategory,
@@ -46,7 +50,7 @@ export const sanitizeBudget = (
       balance: formatCurrency(mergedCategory.balance),
       budgeted: formatCurrency(mergedCategory.budgeted)
     });
-  });
+  })(budget.categories);
   const payees = compose([
     camelCaseKeys,
     reject(payee => PAYEES_TO_EXCLUDE.includes(payee.name))
@@ -81,7 +85,7 @@ export const sanitizeBudget = (
           transactionIdsFromSub.includes(transaction.id)
             ? compose([
                 map(sub => omit("transaction_id")({ ...transaction, ...sub })),
-                filter(sub => sub.transaction_id === transaction.id)
+                filter(matchesProperty("transaction_id", transaction.id))
               ])(budget.subtransactions)
             : transaction
       ),
