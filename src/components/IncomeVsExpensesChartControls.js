@@ -14,8 +14,7 @@ const IncomeVsExpensesChartControls = ({
     style={{
       display: "flex",
       alignItems: "center",
-      justifyContent: "center",
-      marginTop: -20
+      justifyContent: "center"
     }}
   >
     {hasSelection ? (
