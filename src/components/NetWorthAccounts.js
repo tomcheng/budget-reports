@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import filter from "lodash/fp/filter";
