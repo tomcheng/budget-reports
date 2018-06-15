@@ -2,12 +2,14 @@ import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import compose from "lodash/fp/compose";
+import constant from "lodash/fp/constant";
 import groupBy from "lodash/fp/groupBy";
 import identity from "lodash/fp/identity";
 import keys from "lodash/fp/keys";
 import last from "lodash/fp/last";
 import map from "lodash/fp/map";
 import mapValues from "lodash/fp/mapValues";
+import omit from "lodash/fp/omit";
 import pick from "lodash/fp/pick";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
@@ -36,8 +38,23 @@ class NetWorthBody extends PureComponent {
     }).isRequired
   };
 
+  state = {
+    hiddenAccounts: {}
+  };
+
+  handleToggleAccount = id => {
+    this.setState(state => ({
+      ...state,
+      hiddenAccounts: state.hiddenAccounts[id]
+        ? omit(id)(state.hiddenAccounts)
+        : { ...state.hiddenAccounts, [id]: true }
+    }));
+  };
+
   render() {
     const { budget } = this.props;
+    const { hiddenAccounts } = this.state;
+
     const summary = compose([
       mapValues(groupBy("accountId")),
       groupBy(({ date }) => date.slice(0, 7))
@@ -48,12 +65,14 @@ class NetWorthBody extends PureComponent {
         cumulative,
         map(month => sumBy("amount")(summary[month][id]))
       ])(months);
+      const hidden = !!hiddenAccounts[id];
 
       return {
         id,
         name,
         type,
-        data: byMonth,
+        hidden,
+        data: hidden ? map(constant(0))(months) : byMonth,
         balance: last(byMonth),
         stack: CREDIT_ACCOUNTS.includes(type) ? "liability" : "asset"
       };
@@ -69,6 +88,7 @@ class NetWorthBody extends PureComponent {
           accounts={map(pick(["name", "id", "type", "balance"]))(
             accountSummaries
           )}
+          onToggleAccount={this.handleToggleAccount}
         />
       </Fragment>
     );

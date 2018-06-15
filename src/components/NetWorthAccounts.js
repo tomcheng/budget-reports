@@ -1,18 +1,40 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
+import filter from "lodash/fp/filter";
+import includes from "lodash/fp/includes";
 import Section from "./Section";
-import { StrongText } from "./typeComponents";
+import { StrongText, SecondaryText } from "./typeComponents";
+import ListItem from "./ListItem";
+import Amount from "./Amount";
 
-const NetWorthAccounts = ({ accounts }) => (
-  <Section>
-    <StrongText>Accounts</StrongText>
-    {accounts.map(({ balance, id, name }) => (
-      <div key={id}>
-        {name}: {balance.toFixed(2)}
-      </div>
-    ))}
-  </Section>
-);
+const GROUPS = [
+  { name: "Mortgage and Assets", types: ["mortgage", "otherAsset"] },
+  { name: "Investment Accounts", types: ["investmentAccount"] },
+  { name: "Savings Accounts", types: ["savings"] },
+  { name: "Checking Accounts and Cash", types: ["checking", "cash"] },
+  { name: "Credit Cards", types: ["creditCard"] },
+  { name: "Other", types: ["payPal"] }
+];
+
+const NetWorthAccounts = ({ accounts, onToggleAccount }) => {
+  return GROUPS.map(({ name, types }) => {
+    const groupAccounts = filter(account => includes(account.type)(types))(
+      accounts
+    );
+
+    return (
+      <Section key={name}>
+        <StrongText>{name}</StrongText>
+        {groupAccounts.map(({ balance, id, name }) => (
+          <ListItem key={id} onClick={() => onToggleAccount(id)}>
+            <SecondaryText>{name}</SecondaryText>
+            <Amount amount={balance} />
+          </ListItem>
+        ))}
+      </Section>
+    );
+  });
+};
 
 NetWorthAccounts.propTypes = {
   accounts: PropTypes.arrayOf(
@@ -21,7 +43,8 @@ NetWorthAccounts.propTypes = {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired
     })
-  ).isRequired
+  ).isRequired,
+  onToggleAccount: PropTypes.func.isRequired
 };
 
 export default NetWorthAccounts;

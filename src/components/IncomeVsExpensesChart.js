@@ -38,7 +38,12 @@ const IncomeVsExpensesChart = ({
   const yearLines = [];
   data.forEach(({ month }, index) => {
     if (moment(month).format("MMM") === "Jan") {
-      yearLines.push({ color: "#ccc", width: 1, value: index - 0.5, zIndex: 3 });
+      yearLines.push({
+        color: "#ccc",
+        width: 1,
+        value: index - 0.5,
+        zIndex: 3
+      });
     }
   });
 
