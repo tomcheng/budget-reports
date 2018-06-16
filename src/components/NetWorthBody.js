@@ -89,6 +89,7 @@ class NetWorthBody extends PureComponent {
           accounts={map(pick(["name", "id", "type", "balance"]))(
             accountSummaries
           )}
+          hiddenAccounts={hiddenAccounts}
           onToggleAccounts={this.handleToggleAccounts}
         />
       </Fragment>

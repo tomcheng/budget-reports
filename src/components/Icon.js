@@ -7,6 +7,8 @@ import faBars from "@fortawesome/fontawesome-free-solid/faBars";
 import faCaretDown from "@fortawesome/fontawesome-free-solid/faCaretDown";
 import faChevronRight from "@fortawesome/fontawesome-free-solid/faChevronRight";
 import faEllipsisV from "@fortawesome/fontawesome-free-solid/faEllipsisV";
+import faEye from "@fortawesome/fontawesome-free-solid/faEye";
+import faEyeSlash from "@fortawesome/fontawesome-free-solid/faEyeSlash";
 import faTimes from "@fortawesome/fontawesome-free-solid/faTimes";
 
 const ICONS = {
@@ -15,6 +17,8 @@ const ICONS = {
   "caret-down": faCaretDown,
   "chevron-right": faChevronRight,
   "ellipsis-v": faEllipsisV,
+  eye: faEye,
+  "eye-slash": faEyeSlash,
   times: faTimes
 };
 
