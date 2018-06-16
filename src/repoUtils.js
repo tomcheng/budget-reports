@@ -45,12 +45,15 @@ export const sanitizeBudget = (
       budgeted: formatCurrency(mergedCategory.budgeted)
     });
   })(budget.categories);
+  const accounts = camelCaseKeys(budget.accounts);
+  const accountsById = keyBy("id")(accounts);
   const payees = camelCaseKeys(budget.payees);
   const payeesById = keyBy("id")(payees);
 
   return {
     ...camelCaseKeys(
       omit([
+        "accounts",
         "categories",
         "category_groups",
         "payees",
@@ -58,6 +61,8 @@ export const sanitizeBudget = (
         "transactions"
       ])(budget)
     ),
+    accounts,
+    accountsById,
     categoryGroups,
     categoryGroupsById: keyBy("id")(categoryGroups),
     categories,

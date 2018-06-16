@@ -1,14 +1,14 @@
 import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
-import constant from "lodash/fp/constant";
+import findIndex from "lodash/fp/findIndex";
+import eq from "lodash/fp/eq";
 import groupBy from "lodash/fp/groupBy";
 import identity from "lodash/fp/identity";
 import keys from "lodash/fp/keys";
 import last from "lodash/fp/last";
 import map from "lodash/fp/map";
 import mapValues from "lodash/fp/mapValues";
-import pick from "lodash/fp/pick";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import { simpleMemoize } from "../utils";
@@ -25,6 +25,20 @@ const cumulative = arr =>
 class NetWorthBody extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
+      accounts: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.string.isRequired,
+          name: PropTypes.string.isRequired,
+          type: PropTypes.string.isRequired
+        })
+      ).isRequired,
+      accountsById: PropTypes.objectOf(
+        PropTypes.shape({
+          id: PropTypes.string.isRequired,
+          name: PropTypes.string.isRequired,
+          type: PropTypes.string.isRequired
+        })
+      ).isRequired,
       transactions: PropTypes.arrayOf(
         PropTypes.shape({
           id: PropTypes.string.isRequired,
@@ -47,6 +61,20 @@ class NetWorthBody extends PureComponent {
       groupBy(({ date }) => date.slice(0, 7))
     ])
   );
+
+  getSummaryByAccount = budget => {
+    const groupedTransactions = this.groupByMonthAndAccount(
+      budget.transactions
+    );
+    const months = compose([sortBy(identity), keys])(groupedTransactions);
+    return map(({ id }) => ({
+      id,
+      data: compose([
+        cumulative,
+        map(month => sumBy("amount")(groupedTransactions[month][id]))
+      ])(months)
+    }))(budget.accounts);
+  };
 
   handleSelectMonth = month => {
     this.setState({ selectedMonth: month });
@@ -71,36 +99,29 @@ class NetWorthBody extends PureComponent {
       budget.transactions
     );
     const months = compose([sortBy(identity), keys])(groupedTransactions);
-    const accountSummaries = map(({ name, id, type }) => {
-      const byMonth = compose([
-        cumulative,
-        map(month => sumBy("amount")(groupedTransactions[month][id]))
-      ])(months);
-      const hidden = !!hiddenAccounts[id];
-
-      return {
-        id,
-        name,
-        type,
-        hidden,
-        data: hidden ? map(constant(0))(months) : byMonth,
-        balance: last(byMonth)
-      };
-    })(budget.accounts);
+    const selectedMonthIndex = findIndex(eq(selectedMonth))(months);
+    const accountSummaries = this.getSummaryByAccount(budget);
 
     return (
       <Fragment>
         <NetWorthSummary />
         <NetWorthChart
-          data={map(pick(["name", "type", "data"]))(accountSummaries)}
+          data={map(({ id, data }) => ({
+            id,
+            data,
+            type: budget.accountsById[id].type
+          }))(accountSummaries)}
           months={months}
+          hiddenAccounts={hiddenAccounts}
           selectedMonth={selectedMonth}
           onSelectMonth={this.handleSelectMonth}
         />
         <NetWorthAccounts
-          accounts={map(pick(["name", "id", "type", "balance"]))(
-            accountSummaries
-          )}
+          accounts={map(({ id, data }) => ({
+            ...budget.accountsById[id],
+            balance:
+              selectedMonthIndex > -1 ? data[selectedMonthIndex] : last(data)
+          }))(accountSummaries)}
           hiddenAccounts={hiddenAccounts}
           onToggleAccounts={this.handleToggleAccounts}
         />
