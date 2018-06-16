@@ -12,6 +12,7 @@ const INDENTATION = 18;
 class BreakdownNode extends Component {
   static propTypes = {
     amount: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     isTopLevel: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
     infoRenderer: PropTypes.func,
@@ -29,7 +30,7 @@ class BreakdownNode extends Component {
   };
 
   render() {
-    const { name, amount, nodes, isTopLevel, infoRenderer } = this.props;
+    const { name, id, amount, nodes, isTopLevel, infoRenderer } = this.props;
     const { expanded } = this.state;
     const hasChildNodes = !!nodes && nodes.length > 0;
 
@@ -37,6 +38,7 @@ class BreakdownNode extends Component {
       <Container hasChildNodes={hasChildNodes} isTopLevel={isTopLevel}>
         {hasChildNodes ? (
           <ToggleNode
+            id={id}
             name={name}
             amount={amount}
             expanded={expanded}
@@ -44,7 +46,12 @@ class BreakdownNode extends Component {
             infoRenderer={infoRenderer}
           />
         ) : (
-          <LeafNode name={name} amount={amount} infoRenderer={infoRenderer} />
+          <LeafNode
+            id={id}
+            name={name}
+            amount={amount}
+            infoRenderer={infoRenderer}
+          />
         )}
 
         {hasChildNodes && (
@@ -92,7 +99,7 @@ const IconWrapper = styled.div`
   font-size: 10px;
 `;
 
-const ToggleNode = ({ onToggle, expanded, name, amount, infoRenderer }) => (
+const ToggleNode = ({ expanded, name, id, amount, infoRenderer, onToggle }) => (
   <NodeWrapper onClick={onToggle}>
     <SecondaryText
       style={{ whiteSpace: "pre", display: "flex", alignItems: "center" }}
@@ -104,17 +111,17 @@ const ToggleNode = ({ onToggle, expanded, name, amount, infoRenderer }) => (
     </SecondaryText>
     <SecondaryText style={{ display: "flex", opacity: expanded ? 0.3 : 1 }}>
       <Amount amount={amount} />
-      {infoRenderer && infoRenderer({ amount })}
+      {infoRenderer && infoRenderer({ amount, id })}
     </SecondaryText>
   </NodeWrapper>
 );
 
-const LeafNode = ({ name, amount, infoRenderer }) => (
+const LeafNode = ({ name, id, amount, infoRenderer }) => (
   <NodeWrapper>
     <SecondaryText>{name}</SecondaryText>
     <SecondaryText style={{ display: "flex" }}>
       <Amount amount={amount} />
-      {infoRenderer && infoRenderer({ amount })}
+      {infoRenderer && infoRenderer({ amount, id })}
     </SecondaryText>
   </NodeWrapper>
 );

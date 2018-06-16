@@ -6,6 +6,7 @@ const Breakdown = ({ nodes, infoRenderer }) =>
   nodes.map(({ id, name, amount, nodes }) => (
     <BreakdownNode
       key={id}
+      id={id}
       name={name}
       amount={amount}
       nodes={nodes}

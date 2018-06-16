@@ -9,7 +9,6 @@ import keys from "lodash/fp/keys";
 import last from "lodash/fp/last";
 import map from "lodash/fp/map";
 import mapValues from "lodash/fp/mapValues";
-import omit from "lodash/fp/omit";
 import pick from "lodash/fp/pick";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
@@ -42,13 +41,15 @@ class NetWorthBody extends PureComponent {
     hiddenAccounts: {}
   };
 
-  handleToggleAccount = id => {
-    this.setState(state => ({
-      ...state,
-      hiddenAccounts: state.hiddenAccounts[id]
-        ? omit(id)(state.hiddenAccounts)
-        : { ...state.hiddenAccounts, [id]: true }
-    }));
+  handleToggleAccounts = ({ ids }) => {
+    const { hiddenAccounts } = this.state;
+    const shouldHide = ids.some(id => !hiddenAccounts[id]);
+    const newHiddenAccounts = ids.reduce(
+      (acc, id) => ({ ...acc, [id]: shouldHide }),
+      hiddenAccounts
+    );
+
+    this.setState({ hiddenAccounts: newHiddenAccounts });
   };
 
   render() {
@@ -88,7 +89,7 @@ class NetWorthBody extends PureComponent {
           accounts={map(pick(["name", "id", "type", "balance"]))(
             accountSummaries
           )}
-          onToggleAccount={this.handleToggleAccount}
+          onToggleAccounts={this.handleToggleAccounts}
         />
       </Fragment>
     );

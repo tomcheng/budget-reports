@@ -1,9 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
-import filter from "lodash/fp/filter";
+import find from "lodash/fp/find";
+import groupBy from "lodash/fp/groupBy";
 import includes from "lodash/fp/includes";
+import keyBy from "lodash/fp/keyBy";
 import map from "lodash/fp/map";
+import prop from "lodash/fp/prop";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import Section from "./Section";
@@ -18,11 +21,16 @@ const GROUPS = [
   { name: "Credit Cards and Other", types: ["creditCard", "payPal"] }
 ];
 
-const NetWorthAccounts = ({ accounts }) => {
-  const nodes = GROUPS.map(({ name, types }) => {
-    const groupAccounts = filter(account => includes(account.type)(types))(
-      accounts
-    );
+const NetWorthAccounts = ({ accounts, onToggleAccounts }) => {
+  const accountsByGroup = groupBy(account =>
+    compose([prop("name"), find(group => includes(account.type)(group.types))])(
+      GROUPS
+    )
+  )(accounts);
+  const accountsById = keyBy("id")(accounts);
+
+  const nodes = GROUPS.map(({ name }) => {
+    const groupAccounts = accountsByGroup[name];
     return {
       amount: sumBy("balance")(groupAccounts),
       name,
@@ -41,7 +49,22 @@ const NetWorthAccounts = ({ accounts }) => {
   return (
     <Section>
       <StrongText>Accounts</StrongText>
-      <Breakdown nodes={nodes} total={0} />
+      <Breakdown
+        nodes={nodes}
+        infoRenderer={({ id }) => {
+          const accounts = accountsByGroup[id] || [accountsById[id]];
+          return (
+            <div
+              onClick={evt => {
+                evt.stopPropagation();
+                onToggleAccounts({ ids: map("id", accounts) });
+              }}
+            >
+              click
+            </div>
+          );
+        }}
+      />
     </Section>
   );
 };
@@ -54,7 +77,7 @@ NetWorthAccounts.propTypes = {
       name: PropTypes.string.isRequired
     })
   ).isRequired,
-  onToggleAccount: PropTypes.func.isRequired
+  onToggleAccounts: PropTypes.func.isRequired
 };
 
 export default NetWorthAccounts;
