@@ -11,6 +11,7 @@ const NetWorthSummary = ({ assets, liabilities, netWorth }) => (
         { label: "Assets", value: assets },
         { label: "Net Worth", value: netWorth }
       ]}
+      roundToDollar
     />
   </Section>
 );
