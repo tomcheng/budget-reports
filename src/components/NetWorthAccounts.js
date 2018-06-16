@@ -63,9 +63,11 @@ const NetWorthAccounts = ({ accounts, hiddenAccounts, onToggleAccounts }) => {
                 onToggleAccounts({ ids: map("id", accounts) });
               }}
             >
-              {every(account => hiddenAccounts[account.id])(accounts)
-                ? <Icon icon="eye-slash" />
-                : <Icon icon="eye" />}
+              {every(account => hiddenAccounts[account.id])(accounts) ? (
+                <Icon icon="eye-slash" />
+              ) : (
+                <Icon icon="eye" />
+              )}
             </div>
           );
         }}

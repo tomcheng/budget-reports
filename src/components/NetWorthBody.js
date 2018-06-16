@@ -12,10 +12,9 @@ import mapValues from "lodash/fp/mapValues";
 import pick from "lodash/fp/pick";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
+import NetWorthSummary from "./NetWorthSummary";
 import NetWorthChart from "./NetWorthChart";
 import NetWorthAccounts from "./NetWorthAccounts";
-
-const CREDIT_ACCOUNTS = ["mortgage", "creditCard"];
 
 const cumulative = arr =>
   arr.reduce(
@@ -74,16 +73,16 @@ class NetWorthBody extends PureComponent {
         type,
         hidden,
         data: hidden ? map(constant(0))(months) : byMonth,
-        balance: last(byMonth),
-        stack: CREDIT_ACCOUNTS.includes(type) ? "liability" : "asset"
+        balance: last(byMonth)
       };
     })(budget.accounts);
 
     return (
       <Fragment>
+        <NetWorthSummary />
         <NetWorthChart
-          series={map(pick(["name", "data", "stack"]))(accountSummaries)}
-          categories={months.map(month => moment(month).format("MMM"))}
+          data={map(pick(["name", "type", "data"]))(accountSummaries)}
+          categories={map(month => moment(month).format("MMM"))(months)}
         />
         <NetWorthAccounts
           accounts={map(pick(["name", "id", "type", "balance"]))(

@@ -1,9 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
+import compose from "lodash/fp/compose";
+import identity from "lodash/fp/identity";
+import includes from "lodash/fp/includes";
+import map from "lodash/fp/map";
+import sortBy from "lodash/fp/sortBy";
 import Section from "./Section";
 import Chart from "./Chart";
 
-const NetWorthChart = ({ series, categories }) => (
+const FIRST_STACK = "liability";
+const CREDIT_ACCOUNTS = ["mortgage", "creditCard"];
+const getStack = type =>
+  includes(type)(CREDIT_ACCOUNTS) ? "liability" : "asset";
+
+const NetWorthChart = ({ data, categories }) => (
   <Section>
     <Chart
       options={{
@@ -18,12 +28,19 @@ const NetWorthChart = ({ series, categories }) => (
         plotOptions: {
           column: { stacking: "normal" }
         },
-        series: series.map(s => ({
-          ...s,
-          data: (s.stack === "liability" ? s.data.map(n => -n) : s.data).map(
-            n => Math.max(n, 0)
-          )
-        }))
+        series: compose([
+          sortBy(({ stack }) => (stack === FIRST_STACK ? 0 : 1)),
+          map(({ data, name, type }) => ({
+            name,
+            stack: getStack(type),
+            data: map(
+              compose([
+                n => Math.max(n, 0),
+                getStack(type) === "liability" ? n => -n : identity
+              ])
+            )(data)
+          }))
+        ])(data)
       }}
     />
   </Section>
@@ -31,11 +48,11 @@ const NetWorthChart = ({ series, categories }) => (
 
 NetWorthChart.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.string).isRequired,
-  series: PropTypes.arrayOf(
+  data: PropTypes.arrayOf(
     PropTypes.shape({
       data: PropTypes.arrayOf(PropTypes.number).isRequired,
       name: PropTypes.string.isRequired,
-      stack: PropTypes.oneOf(["asset", "liability"]).isRequired
+      type: PropTypes.string.isRequired
     })
   ).isRequired
 };
