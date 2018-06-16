@@ -1,6 +1,5 @@
 import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
-import moment from "moment";
 import compose from "lodash/fp/compose";
 import constant from "lodash/fp/constant";
 import groupBy from "lodash/fp/groupBy";
@@ -12,6 +11,7 @@ import mapValues from "lodash/fp/mapValues";
 import pick from "lodash/fp/pick";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
+import { simpleMemoize } from "../utils";
 import NetWorthSummary from "./NetWorthSummary";
 import NetWorthChart from "./NetWorthChart";
 import NetWorthAccounts from "./NetWorthAccounts";
@@ -36,9 +36,26 @@ class NetWorthBody extends PureComponent {
     }).isRequired
   };
 
-  state = {
-    hiddenAccounts: {}
-  };
+  constructor(props) {
+    super();
+
+    this.state = {
+      hiddenAccounts: {},
+      selectedMonth: compose([
+        last,
+        sortBy(identity),
+        keys,
+        this.groupByMonthAndAccount
+      ])(props.budget.transactions)
+    };
+  }
+
+  groupByMonthAndAccount = simpleMemoize(
+    compose([
+      mapValues(groupBy("accountId")),
+      groupBy(({ date }) => date.slice(0, 7))
+    ])
+  );
 
   handleToggleAccounts = ({ ids }) => {
     const { hiddenAccounts } = this.state;
@@ -53,17 +70,16 @@ class NetWorthBody extends PureComponent {
 
   render() {
     const { budget } = this.props;
-    const { hiddenAccounts } = this.state;
+    const { hiddenAccounts, selectedMonth } = this.state;
 
-    const summary = compose([
-      mapValues(groupBy("accountId")),
-      groupBy(({ date }) => date.slice(0, 7))
-    ])(budget.transactions);
-    const months = compose([sortBy(identity), keys])(summary);
+    const groupedTransactions = this.groupByMonthAndAccount(
+      budget.transactions
+    );
+    const months = compose([sortBy(identity), keys])(groupedTransactions);
     const accountSummaries = map(({ name, id, type }) => {
       const byMonth = compose([
         cumulative,
-        map(month => sumBy("amount")(summary[month][id]))
+        map(month => sumBy("amount")(groupedTransactions[month][id]))
       ])(months);
       const hidden = !!hiddenAccounts[id];
 
@@ -82,7 +98,8 @@ class NetWorthBody extends PureComponent {
         <NetWorthSummary />
         <NetWorthChart
           data={map(pick(["name", "type", "data"]))(accountSummaries)}
-          categories={map(month => moment(month).format("MMM"))(months)}
+          months={months}
+          selectedMonth={selectedMonth}
         />
         <NetWorthAccounts
           accounts={map(pick(["name", "id", "type", "balance"]))(
