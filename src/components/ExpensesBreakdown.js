@@ -77,7 +77,6 @@ const ExpensesBreakdown = ({
       <StrongText>Expenses Breakdown</StrongText>
       <Breakdown
         nodes={nodes}
-        total={-totalIncome}
         infoRenderer={({ amount }) => (
           <BreakdownPercentage amount={amount} total={-totalIncome} />
         )}

@@ -14,7 +14,6 @@ class BreakdownNode extends Component {
     amount: PropTypes.number.isRequired,
     isTopLevel: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
-    total: PropTypes.number.isRequired,
     infoRenderer: PropTypes.func,
     nodes: PropTypes.arrayOf(
       PropTypes.shape({
@@ -30,7 +29,7 @@ class BreakdownNode extends Component {
   };
 
   render() {
-    const { name, amount, total, nodes, isTopLevel, infoRenderer } = this.props;
+    const { name, amount, nodes, isTopLevel, infoRenderer } = this.props;
     const { expanded } = this.state;
     const hasChildNodes = !!nodes && nodes.length > 0;
 
@@ -40,23 +39,17 @@ class BreakdownNode extends Component {
           <ToggleNode
             name={name}
             amount={amount}
-            total={total}
             expanded={expanded}
             onToggle={this.handleToggleExpand}
             infoRenderer={infoRenderer}
           />
         ) : (
-          <LeafNode
-            name={name}
-            amount={amount}
-            total={total}
-            infoRenderer={infoRenderer}
-          />
+          <LeafNode name={name} amount={amount} infoRenderer={infoRenderer} />
         )}
 
         {hasChildNodes && (
           <AnimateHeight isExpanded={expanded}>
-            <Nodes nodes={nodes} total={total} infoRenderer={infoRenderer} />
+            <Nodes nodes={nodes} infoRenderer={infoRenderer} />
           </AnimateHeight>
         )}
       </Container>
@@ -66,7 +59,7 @@ class BreakdownNode extends Component {
 
 class Nodes extends PureComponent {
   render() {
-    const { nodes, total, infoRenderer } = this.props;
+    const { nodes, infoRenderer } = this.props;
     return (
       <div style={{ paddingLeft: INDENTATION }}>
         {nodes.map(node => (
@@ -74,7 +67,6 @@ class Nodes extends PureComponent {
             {...node}
             key={node.id}
             isTopLevel={false}
-            total={total}
             infoRenderer={infoRenderer}
           />
         ))}
@@ -100,14 +92,7 @@ const IconWrapper = styled.div`
   font-size: 10px;
 `;
 
-const ToggleNode = ({
-  onToggle,
-  expanded,
-  name,
-  amount,
-  total,
-  infoRenderer
-}) => (
+const ToggleNode = ({ onToggle, expanded, name, amount, infoRenderer }) => (
   <NodeWrapper onClick={onToggle}>
     <SecondaryText
       style={{ whiteSpace: "pre", display: "flex", alignItems: "center" }}
@@ -124,7 +109,7 @@ const ToggleNode = ({
   </NodeWrapper>
 );
 
-const LeafNode = ({ name, amount, total, infoRenderer }) => (
+const LeafNode = ({ name, amount, infoRenderer }) => (
   <NodeWrapper>
     <SecondaryText>{name}</SecondaryText>
     <SecondaryText style={{ display: "flex" }}>
