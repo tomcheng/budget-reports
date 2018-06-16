@@ -1,8 +1,9 @@
 import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
-import findIndex from "lodash/fp/findIndex";
 import eq from "lodash/fp/eq";
+import filter from "lodash/fp/filter";
+import findIndex from "lodash/fp/findIndex";
 import groupBy from "lodash/fp/groupBy";
 import identity from "lodash/fp/identity";
 import keyBy from "lodash/fp/keyBy";
@@ -10,8 +11,11 @@ import keys from "lodash/fp/keys";
 import last from "lodash/fp/last";
 import map from "lodash/fp/map";
 import mapValues from "lodash/fp/mapValues";
+import omitBy from "lodash/fp/omitBy";
 import sortBy from "lodash/fp/sortBy";
+import sum from "lodash/fp/sum";
 import sumBy from "lodash/fp/sumBy";
+import values from "lodash/fp/values";
 import { simpleMemoize } from "../utils";
 import NetWorthSummary from "./NetWorthSummary";
 import NetWorthChart from "./NetWorthChart";
@@ -119,10 +123,27 @@ class NetWorthBody extends PureComponent {
     const months = this.getMonths(budget);
     const accountSummaries = this.getSummaryByAccount(budget);
     const selectedBalances = this.getSelectedBalances(selectedMonth, budget);
+    const filterHidden = omitBy((_, id) => hiddenAccounts[id]);
+    const selectedLiabilities = compose([
+      sum,
+      filter(b => b < 0),
+      values,
+      filterHidden
+    ])(selectedBalances);
+    const selectedAssets = compose([
+      sum,
+      filter(b => b > 0),
+      values,
+      filterHidden
+    ])(selectedBalances);
 
     return (
       <Fragment>
-        <NetWorthSummary />
+        <NetWorthSummary
+          liabilities={selectedLiabilities}
+          assets={selectedAssets}
+          netWorth={selectedAssets + selectedLiabilities}
+        />
         <NetWorthChart
           data={map(({ id, data }) => ({
             id,

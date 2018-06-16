@@ -1,20 +1,24 @@
 import React from "react";
-// import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 import Section from "./Section";
 import TopNumbers from "./TopNumbers";
 
-const NetWorthSummary = () => (
+const NetWorthSummary = ({ assets, liabilities, netWorth }) => (
   <Section>
     <TopNumbers
       numbers={[
-        { label: "Liabilities", value: 50 },
-        { label: "Assets", value: 100 },
-        { label: "Net Worth", value: 50 }
+        { label: "Liabilities", value: -liabilities },
+        { label: "Assets", value: assets },
+        { label: "Net Worth", value: netWorth }
       ]}
     />
   </Section>
 );
 
-NetWorthSummary.propTypes = {};
+NetWorthSummary.propTypes = {
+  assets: PropTypes.number.isRequired,
+  liabilities: PropTypes.number.isRequired,
+  netWorth: PropTypes.number.isRequired
+};
 
 export default NetWorthSummary;
