@@ -17,14 +17,18 @@ const CREDIT_ACCOUNTS = ["mortgage", "creditCard"];
 const getStack = type =>
   includes(type)(CREDIT_ACCOUNTS) ? "liability" : "asset";
 
-const NetWorthChart = ({ data, months, selectedMonth }) => {
+const NetWorthChart = ({ data, months, selectedMonth, onSelectMonth }) => {
   const categories = map(month => moment(month).format("MMM"))(months);
   const selectedIndex = findIndex(eq(selectedMonth))(months);
-  const plotBands = [{
-    color: selectedPlotBandColor,
-    from: selectedIndex - 0.5,
-    to: selectedIndex + 0.5
-  }];
+  const plotBands = selectedMonth
+    ? [
+        {
+          color: selectedPlotBandColor,
+          from: selectedIndex - 0.5,
+          to: selectedIndex + 0.5
+        }
+      ]
+    : [];
 
   return (
     <Section>
@@ -32,7 +36,12 @@ const NetWorthChart = ({ data, months, selectedMonth }) => {
         options={{
           chart: {
             type: "column",
-            height: 220
+            height: 220,
+            events: {
+              click: event => {
+                onSelectMonth(months[Math.round(event.xAxis[0].value)]);
+              }
+            }
           },
           yAxis: { title: { text: null } },
           xAxis: { categories, plotBands },
@@ -43,13 +52,14 @@ const NetWorthChart = ({ data, months, selectedMonth }) => {
             sortBy(({ stack }) => (stack === FIRST_STACK ? 0 : 1)),
             map(({ data, name, type }) => ({
               name,
-              stack: getStack(type),
               data: map(
                 compose([
                   n => Math.max(n, 0),
                   getStack(type) === "liability" ? n => -n : identity
                 ])
-              )(data)
+              )(data),
+              enableMouseTracking: false,
+              stack: getStack(type)
             }))
           ])(data)
         }}
@@ -67,7 +77,8 @@ NetWorthChart.propTypes = {
     })
   ).isRequired,
   months: PropTypes.arrayOf(PropTypes.string).isRequired,
-  selectedMonth: PropTypes.string.isRequired,
+  onSelectMonth: PropTypes.func.isRequired,
+  selectedMonth: PropTypes.string
 };
 
 export default NetWorthChart;

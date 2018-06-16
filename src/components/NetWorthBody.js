@@ -36,19 +36,10 @@ class NetWorthBody extends PureComponent {
     }).isRequired
   };
 
-  constructor(props) {
-    super();
-
-    this.state = {
-      hiddenAccounts: {},
-      selectedMonth: compose([
-        last,
-        sortBy(identity),
-        keys,
-        this.groupByMonthAndAccount
-      ])(props.budget.transactions)
-    };
-  }
+  state = {
+    hiddenAccounts: {},
+    selectedMonth: null
+  };
 
   groupByMonthAndAccount = simpleMemoize(
     compose([
@@ -56,6 +47,10 @@ class NetWorthBody extends PureComponent {
       groupBy(({ date }) => date.slice(0, 7))
     ])
   );
+
+  handleSelectMonth = month => {
+    this.setState({ selectedMonth: month });
+  };
 
   handleToggleAccounts = ({ ids }) => {
     const { hiddenAccounts } = this.state;
@@ -100,6 +95,7 @@ class NetWorthBody extends PureComponent {
           data={map(pick(["name", "type", "data"]))(accountSummaries)}
           months={months}
           selectedMonth={selectedMonth}
+          onSelectMonth={this.handleSelectMonth}
         />
         <NetWorthAccounts
           accounts={map(pick(["name", "id", "type", "balance"]))(
