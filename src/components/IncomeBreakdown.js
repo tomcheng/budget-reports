@@ -6,15 +6,20 @@ import { getPayeeNodes } from "../utils";
 import { StrongText } from "./typeComponents";
 import Section from "./Section";
 import Breakdown from "./Breakdown";
+import BreakdownPercentage from "./BreakdownPercentage";
 
 const IncomeBreakdown = ({ transactions, payeesById, divideBy }) => {
   const nodes = getPayeeNodes({ payeesById, transactions }, divideBy);
+  const total = sumBy("amount")(nodes);
   return (
     <Section>
       <StrongText>Income Breakdown</StrongText>
       <Breakdown
         nodes={sortBy("amount")(nodes).reverse()}
-        total={sumBy("amount")(nodes)}
+        total={total}
+        infoRenderer={({ amount }) => (
+          <BreakdownPercentage amount={amount} total={total} />
+        )}
       />
     </Section>
   );

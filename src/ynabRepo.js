@@ -103,8 +103,11 @@ export const getUpdatedBudget = id => {
         authorized: true
       };
     })
-    .catch(({ error }) => {
-      if (matches({ id: "401", name: "unauthorized" })(error)) {
+    .catch(e => {
+      if (
+        matches({ id: "401", name: "unauthorized" })(e.error) ||
+        e.message === "Failed to fetch"
+      ) {
         const cached = get(id)(getStorage(BUDGET_DETAILS_STORAGE_KEY));
         return {
           budget: cached ? sanitizeBudget(cached.budget) : null,

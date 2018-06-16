@@ -14,6 +14,7 @@ import { getPayeeNodes } from "../utils";
 import { StrongText } from "./typeComponents";
 import Section from "./Section";
 import Breakdown from "./Breakdown";
+import BreakdownPercentage from "./BreakdownPercentage";
 
 const map = mapRaw.convert({ cap: false });
 
@@ -74,7 +75,13 @@ const ExpensesBreakdown = ({
   return (
     <Section>
       <StrongText>Expenses Breakdown</StrongText>
-      <Breakdown nodes={nodes} total={-totalIncome} />
+      <Breakdown
+        nodes={nodes}
+        total={-totalIncome}
+        infoRenderer={({ amount }) => (
+          <BreakdownPercentage amount={amount} total={-totalIncome} />
+        )}
+      />
     </Section>
   );
 };

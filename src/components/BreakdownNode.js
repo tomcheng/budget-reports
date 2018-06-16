@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import AnimateHeight from "react-animate-height-auto";
 import { SecondaryText } from "./typeComponents";
+import Amount from "./Amount";
 import ListItem from "./ListItem";
 import Icon from "./Icon";
-import AmountWithPercentage from "./AmountWithPercentage";
 
 const INDENTATION = 18;
 
@@ -15,6 +15,7 @@ class BreakdownNode extends Component {
     isTopLevel: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
     total: PropTypes.number.isRequired,
+    infoRenderer: PropTypes.func,
     nodes: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.string.isRequired
@@ -29,7 +30,7 @@ class BreakdownNode extends Component {
   };
 
   render() {
-    const { name, amount, total, nodes, isTopLevel } = this.props;
+    const { name, amount, total, nodes, isTopLevel, infoRenderer } = this.props;
     const { expanded } = this.state;
     const hasChildNodes = !!nodes && nodes.length > 0;
 
@@ -42,14 +43,20 @@ class BreakdownNode extends Component {
             total={total}
             expanded={expanded}
             onToggle={this.handleToggleExpand}
+            infoRenderer={infoRenderer}
           />
         ) : (
-          <LeafNode name={name} amount={amount} total={total} />
+          <LeafNode
+            name={name}
+            amount={amount}
+            total={total}
+            infoRenderer={infoRenderer}
+          />
         )}
 
         {hasChildNodes && (
           <AnimateHeight isExpanded={expanded}>
-            <Nodes nodes={nodes} total={total} />
+            <Nodes nodes={nodes} total={total} infoRenderer={infoRenderer} />
           </AnimateHeight>
         )}
       </Container>
@@ -59,7 +66,7 @@ class BreakdownNode extends Component {
 
 class Nodes extends PureComponent {
   render() {
-    const { nodes, total } = this.props;
+    const { nodes, total, infoRenderer } = this.props;
     return (
       <div style={{ paddingLeft: INDENTATION }}>
         {nodes.map(node => (
@@ -68,6 +75,7 @@ class Nodes extends PureComponent {
             key={node.id}
             isTopLevel={false}
             total={total}
+            infoRenderer={infoRenderer}
           />
         ))}
       </div>
@@ -92,7 +100,14 @@ const IconWrapper = styled.div`
   font-size: 10px;
 `;
 
-const ToggleNode = ({ onToggle, expanded, name, amount, total }) => (
+const ToggleNode = ({
+  onToggle,
+  expanded,
+  name,
+  amount,
+  total,
+  infoRenderer
+}) => (
   <NodeWrapper onClick={onToggle}>
     <SecondaryText
       style={{ whiteSpace: "pre", display: "flex", alignItems: "center" }}
@@ -102,14 +117,20 @@ const ToggleNode = ({ onToggle, expanded, name, amount, total }) => (
       </IconWrapper>
       {name}
     </SecondaryText>
-    <AmountWithPercentage amount={amount} total={total} faded={expanded} />
+    <SecondaryText style={{ display: "flex", opacity: expanded ? 0.3 : 1 }}>
+      <Amount amount={amount} />
+      {infoRenderer && infoRenderer({ amount })}
+    </SecondaryText>
   </NodeWrapper>
 );
 
-const LeafNode = ({ name, amount, total }) => (
+const LeafNode = ({ name, amount, total, infoRenderer }) => (
   <NodeWrapper>
     <SecondaryText>{name}</SecondaryText>
-    <AmountWithPercentage amount={amount} total={total} />
+    <SecondaryText style={{ display: "flex" }}>
+      <Amount amount={amount} />
+      {infoRenderer && infoRenderer({ amount })}
+    </SecondaryText>
   </NodeWrapper>
 );
 

@@ -1,21 +1,19 @@
-import React, { Fragment } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import BreakdownNode from "./BreakdownNode";
 
-const Breakdown = ({ nodes, total }) => (
-  <Fragment>
-    {nodes.map(({ id, name, amount, nodes }) => (
-      <BreakdownNode
-        key={id}
-        name={name}
-        amount={amount}
-        total={total}
-        nodes={nodes}
-        isTopLevel
-      />
-    ))}
-  </Fragment>
-);
+const Breakdown = ({ nodes, total, infoRenderer }) =>
+  nodes.map(({ id, name, amount, nodes }) => (
+    <BreakdownNode
+      key={id}
+      name={name}
+      amount={amount}
+      total={total}
+      nodes={nodes}
+      infoRenderer={infoRenderer}
+      isTopLevel
+    />
+  ));
 
 Breakdown.propTypes = {
   nodes: PropTypes.arrayOf(
@@ -26,7 +24,8 @@ Breakdown.propTypes = {
       nodes: PropTypes.array
     })
   ).isRequired,
-  total: PropTypes.number.isRequired
+  total: PropTypes.number.isRequired,
+  infoRenderer: PropTypes.func
 };
 
 Breakdown.defaultProps = { reverse: false };
