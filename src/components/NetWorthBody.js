@@ -5,6 +5,7 @@ import findIndex from "lodash/fp/findIndex";
 import eq from "lodash/fp/eq";
 import groupBy from "lodash/fp/groupBy";
 import identity from "lodash/fp/identity";
+import keyBy from "lodash/fp/keyBy";
 import keys from "lodash/fp/keys";
 import last from "lodash/fp/last";
 import map from "lodash/fp/map";
@@ -62,11 +63,17 @@ class NetWorthBody extends PureComponent {
     ])
   );
 
-  getSummaryByAccount = budget => {
+  getMonths = simpleMemoize(budget =>
+    compose([sortBy(identity), keys, this.groupByMonthAndAccount])(
+      budget.transactions
+    )
+  );
+
+  getSummaryByAccount = simpleMemoize(budget => {
     const groupedTransactions = this.groupByMonthAndAccount(
       budget.transactions
     );
-    const months = compose([sortBy(identity), keys])(groupedTransactions);
+    const months = this.getMonths(budget);
     return map(({ id }) => ({
       id,
       data: compose([
@@ -74,7 +81,21 @@ class NetWorthBody extends PureComponent {
         map(month => sumBy("amount")(groupedTransactions[month][id]))
       ])(months)
     }))(budget.accounts);
-  };
+  });
+
+  getSelectedBalances = simpleMemoize((selectedMonth, budget) => {
+    const months = this.getMonths(budget);
+    const selectedMonthIndex = findIndex(eq(selectedMonth))(months);
+    const accountSummaries = this.getSummaryByAccount(budget);
+
+    return compose([
+      mapValues(
+        ({ data }) =>
+          selectedMonthIndex > -1 ? data[selectedMonthIndex] : last(data)
+      ),
+      keyBy("id")
+    ])(accountSummaries);
+  });
 
   handleSelectMonth = month => {
     this.setState({ selectedMonth: month });
@@ -95,12 +116,9 @@ class NetWorthBody extends PureComponent {
     const { budget } = this.props;
     const { hiddenAccounts, selectedMonth } = this.state;
 
-    const groupedTransactions = this.groupByMonthAndAccount(
-      budget.transactions
-    );
-    const months = compose([sortBy(identity), keys])(groupedTransactions);
-    const selectedMonthIndex = findIndex(eq(selectedMonth))(months);
+    const months = this.getMonths(budget);
     const accountSummaries = this.getSummaryByAccount(budget);
+    const selectedBalances = this.getSelectedBalances(selectedMonth, budget);
 
     return (
       <Fragment>
@@ -117,11 +135,10 @@ class NetWorthBody extends PureComponent {
           onSelectMonth={this.handleSelectMonth}
         />
         <NetWorthAccounts
-          accounts={map(({ id, data }) => ({
-            ...budget.accountsById[id],
-            balance:
-              selectedMonthIndex > -1 ? data[selectedMonthIndex] : last(data)
-          }))(accountSummaries)}
+          accounts={map(account => ({
+            ...account,
+            balance: selectedBalances[account.id]
+          }))(budget.accounts)}
           hiddenAccounts={hiddenAccounts}
           onToggleAccounts={this.handleToggleAccounts}
         />
