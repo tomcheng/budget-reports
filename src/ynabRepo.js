@@ -1,14 +1,17 @@
 import * as ynab from "ynab";
+import moment from "moment";
 import get from "lodash/fp/get";
 import matches from "lodash/fp/matches";
 import { camelCaseKeys, getStorage, setStorage } from "./utils";
-import { setLastUpdated } from "./uiRepo";
+import { setLastUpdated, getLastUpdated } from "./uiRepo";
 import { sanitizeBudget, mergeBudgets } from "./repoUtils";
 import { getBudgetDetails, setBudgetDetails } from "./localBudgetCache";
 import { clientId, redirectUri } from "./ynabConfig";
 
 const TOKEN_STORAGE_KEY = "ynab_access_token";
 const BUDGETS_STORAGE_KEY = "ynab_budgets";
+
+const TIME_LIMIT_FOR_FULL_REFRESH = 8 * 1000;
 
 export const AUTHORIZE_URL =
   "https://app.youneedabudget.com/oauth/authorize?client_id=" +
@@ -80,6 +83,10 @@ export const getUpdatedBudget = id => {
     return getBudget(id);
   }
 
+  if (moment().valueOf() - getLastUpdated(id) < TIME_LIMIT_FOR_FULL_REFRESH) {
+    return getBudget(id);
+  }
+
   return api.budgets
     .getBudgetById(id, budgetDetails.server_knowledge)
     .then(({ data }) => {
@@ -95,7 +102,10 @@ export const getUpdatedBudget = id => {
         matches({ id: "401", name: "unauthorized" })(e.error) ||
         e.message === "Failed to fetch"
       ) {
-        return { budget: sanitizeBudget(budgetDetails), authorized: false };
+        return {
+          budget: sanitizeBudget(budgetDetails.budget),
+          authorized: false
+        };
       }
     });
 };
