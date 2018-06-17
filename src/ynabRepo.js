@@ -4,11 +4,11 @@ import matches from "lodash/fp/matches";
 import { camelCaseKeys, getStorage, setStorage } from "./utils";
 import { setLastUpdated } from "./uiRepo";
 import { sanitizeBudget, mergeBudgets } from "./repoUtils";
+import { getBudgetDetails, setBudgetDetails } from "./localBudgetCache";
 import { clientId, redirectUri } from "./ynabConfig";
 
 const TOKEN_STORAGE_KEY = "ynab_access_token";
 const BUDGETS_STORAGE_KEY = "ynab_budgets";
-const BUDGET_DETAILS_STORAGE_KEY = "ynab_budget_details";
 
 export const AUTHORIZE_URL =
   "https://app.youneedabudget.com/oauth/authorize?client_id=" +
@@ -65,19 +65,16 @@ export const getBudgets = () => {
 
 const getBudget = id =>
   api.budgets.getBudgetById(id).then(({ data }) => {
-    const allBudgets = getStorage(BUDGET_DETAILS_STORAGE_KEY);
-    setStorage(
-      BUDGET_DETAILS_STORAGE_KEY,
-      id ? { ...allBudgets, [id]: data } : data
-    );
+    const { budget, server_knowledge } = data;
+
+    setBudgetDetails({ id, budget, server_knowledge });
     setLastUpdated(id);
 
-    return { budget: sanitizeBudget(data.budget), authorized: true };
+    return { budget: sanitizeBudget(budget), authorized: true };
   });
 
 export const getUpdatedBudget = id => {
-  const details = getStorage(BUDGET_DETAILS_STORAGE_KEY);
-  const budgetDetails = get(id)(details);
+  const budgetDetails = getBudgetDetails(id);
 
   if (!budgetDetails) {
     return getBudget(id);
@@ -87,28 +84,18 @@ export const getUpdatedBudget = id => {
     .getBudgetById(id, budgetDetails.server_knowledge)
     .then(({ data }) => {
       const budget = mergeBudgets(budgetDetails.budget, data.budget);
-      const newDetails = {
-        ...details,
-        [id]: { budget, server_knowledge: data.server_knowledge }
-      };
-      setStorage(BUDGET_DETAILS_STORAGE_KEY, newDetails);
+
+      setBudgetDetails({ id, budget, server_knowledge: data.server_knowledge });
       setLastUpdated(id);
 
-      return {
-        budget: sanitizeBudget(budget),
-        authorized: true
-      };
+      return { budget: sanitizeBudget(budget), authorized: true };
     })
     .catch(e => {
       if (
         matches({ id: "401", name: "unauthorized" })(e.error) ||
         e.message === "Failed to fetch"
       ) {
-        const cached = get(id)(getStorage(BUDGET_DETAILS_STORAGE_KEY));
-        return {
-          budget: cached ? sanitizeBudget(cached.budget) : null,
-          authorized: false
-        };
+        return { budget: sanitizeBudget(budgetDetails), authorized: false };
       }
     });
 };
