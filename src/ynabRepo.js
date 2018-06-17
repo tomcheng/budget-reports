@@ -63,14 +63,14 @@ export const getBudgets = () => {
   }
 };
 
-const getBudget = budgetId =>
-  api.budgets.getBudgetById(budgetId).then(({ data }) => {
+const getBudget = id =>
+  api.budgets.getBudgetById(id).then(({ data }) => {
     const allBudgets = getStorage(BUDGET_DETAILS_STORAGE_KEY);
     setStorage(
       BUDGET_DETAILS_STORAGE_KEY,
-      budgetId ? { ...allBudgets, [budgetId]: data } : data
+      id ? { ...allBudgets, [id]: data } : data
     );
-    setLastUpdated(budgetId);
+    setLastUpdated(id);
 
     return { budget: sanitizeBudget(data.budget), authorized: true };
   });
