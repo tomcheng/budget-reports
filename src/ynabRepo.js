@@ -83,23 +83,19 @@ export const getUpdatedBudget = id => {
     return getBudget(id);
   }
 
-  const serverKnowledge = budgetDetails.server_knowledge;
-
   return api.budgets
-    .getBudgetById(id, serverKnowledge)
+    .getBudgetById(id, budgetDetails.server_knowledge)
     .then(({ data }) => {
+      const budget = mergeBudgets(budgetDetails.budget, data.budget);
       const newDetails = {
         ...details,
-        [id]: {
-          budget: mergeBudgets(details[id].budget, data.budget),
-          server_knowledge: data.server_knowledge
-        }
+        [id]: { budget, server_knowledge: data.server_knowledge }
       };
       setStorage(BUDGET_DETAILS_STORAGE_KEY, newDetails);
       setLastUpdated(id);
 
       return {
-        budget: sanitizeBudget(newDetails[id].budget),
+        budget: sanitizeBudget(budget),
         authorized: true
       };
     })
