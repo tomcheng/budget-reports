@@ -1,6 +1,7 @@
 import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
+import constant from "lodash/fp/constant";
 import eq from "lodash/fp/eq";
 import filter from "lodash/fp/filter";
 import findIndex from "lodash/fp/findIndex";
@@ -146,12 +147,10 @@ class NetWorthBody extends PureComponent {
         />
         <NetWorthChart
           data={map(({ id, data }) => ({
-            id,
-            data,
+            data: hiddenAccounts[id] ? data.map(constant(0)) : data,
             type: budget.accountsById[id].type
           }))(accountSummaries)}
           months={months}
-          hiddenAccounts={hiddenAccounts}
           selectedMonth={selectedMonth}
           onSelectMonth={this.handleSelectMonth}
         />
