@@ -103,7 +103,10 @@ class NetWorthBody extends PureComponent {
   });
 
   handleSelectMonth = month => {
-    this.setState({ selectedMonth: month });
+    this.setState(state => ({
+      ...state,
+      selectedMonth: state.selectedMonth === month ? null : month
+    }));
   };
 
   handleToggleAccounts = ({ ids }) => {
