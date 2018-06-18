@@ -10,7 +10,12 @@ import includes from "lodash/fp/includes";
 import mapRaw from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
-import { selectedPlotBandColor, primaryColor } from "../styleVariables";
+import {
+  selectedPlotBandColor,
+  primaryColor,
+  lightPrimaryColor,
+  negativeChartColor
+} from "../styleVariables";
 import Section from "./Section";
 import Chart from "./Chart";
 
@@ -43,30 +48,37 @@ const NetWorthChart = ({ data, months, selectedMonth, onSelectMonth }) => {
         options={{
           chart: {
             type: "column",
-            height: 220,
             events: {
               click: event => {
                 onSelectMonth(months[Math.round(event.xAxis[0].value)]);
               }
             }
           },
-          yAxis: { title: { text: null } },
+          yAxis: { visible: false, endOnTick: false },
           xAxis: { categories, plotBands },
           plotOptions: {
             column: { stacking: "normal" }
           },
           series: compose([
             sortBy(({ stack }) => (stack === FIRST_STACK ? 0 : 1)),
-            map(({ data, type }) => ({
-              data: map(
-                compose([
-                  n => Math.max(n, 0),
-                  getStack(type) === "liability" ? n => -n : identity
-                ])
-              )(data),
-              enableMouseTracking: false,
-              stack: getStack(type)
-            }))
+            map(({ data, type }) => {
+              const stack = getStack(type);
+              return {
+                data: map(
+                  compose([
+                    Math.abs,
+                    stack === "liability" ? n => -n : identity
+                  ])
+                )(data),
+                borderWidth: 0,
+                enableMouseTracking: false,
+                color:
+                  stack === "liability"
+                    ? negativeChartColor
+                    : lightPrimaryColor,
+                stack: getStack(type)
+              };
+            })
           ])(data).concat({
             color: primaryColor,
             data: netWorthData,
