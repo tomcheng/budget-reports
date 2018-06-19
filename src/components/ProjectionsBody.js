@@ -1,14 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { getMortgageRate } from "../projectionUtils";
+import { getMortgageRate, getReturnOnInvestments } from "../projectionUtils";
+import Section from "./Section";
 
 const ProjectionsBody = ({ budget }) => {
   const { rate, paymentsLeft } = getMortgageRate(budget);
+  const returnOnInvestments = getReturnOnInvestments(budget);
+
   return (
-    <div>
-      rate: {(rate * 100).toFixed(2)}, years left:{" "}
-      {(paymentsLeft / 12).toFixed(1)}
-    </div>
+    <Section>
+      <div>Mortgage Rate: {(rate * 100).toFixed(2)}</div>
+      <div>Years remaining on mortgage: {(paymentsLeft / 12).toFixed(1)}</div>
+      <div>
+        Average return on investments: {(returnOnInvestments * 100).toFixed(2)}
+      </div>
+    </Section>
   );
 };
 

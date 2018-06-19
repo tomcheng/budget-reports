@@ -1,9 +1,18 @@
+import add from "lodash/fp/add";
 import compose from "lodash/fp/compose";
 import filter from "lodash/fp/filter";
 import find from "lodash/fp/find";
+import groupBy from "lodash/fp/groupBy";
+import identity from "lodash/fp/identity";
+import includes from "lodash/fp/includes";
+import keys from "lodash/fp/keys";
 import last from "lodash/fp/last";
+import map from "lodash/fp/map";
 import matches from "lodash/fp/matches";
+import multiply from "lodash/fp/multiply";
 import prop from "lodash/fp/prop";
+import reduce from "lodash/fp/reduce";
+import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import takeWhile from "lodash/fp/takeWhile";
@@ -43,4 +52,46 @@ export const getMortgageRate = ({
   const paymentsLeft = N - 1;
 
   return { rate, paymentsLeft };
+};
+
+export const getReturnOnInvestments = ({
+  accounts,
+  payees,
+  transactions: allTransactions
+}) => {
+  const investmentAccountIds = compose([
+    map("id"),
+    filter(matches({ type: "investmentAccount" }))
+  ])(accounts);
+
+  const transactionsByMonth = compose([
+    groupBy(tr => tr.date.slice(0, 7)),
+    reject(t => includes(t.transferAccountId)(investmentAccountIds)), // remove transfers between investment accounts
+    filter(t => includes(t.accountId)(investmentAccountIds))
+  ])(allTransactions);
+
+  let startForMonth = 0;
+  const returnRates = [];
+
+  compose([map(month => transactionsByMonth[month]), sortBy(identity), keys])(
+    transactionsByMonth
+  ).forEach(trs => {
+    const contributions = compose([
+      sumBy("amount"),
+      filter(prop("transferAccountId"))
+    ])(trs);
+    const returnTransactions = reject(prop("transferAccountId"))(trs);
+    const returns = sumBy("amount")(returnTransactions);
+
+    if (startForMonth && returnTransactions.length) {
+      returnRates.push(returns / (startForMonth + 0.5 * contributions));
+    }
+
+    startForMonth += returns + contributions;
+  });
+
+  const totalReturn = compose([reduce(multiply, 1), map(add(1))])(returnRates);
+  const numMonths = returnRates.length;
+
+  return totalReturn ** (12 / numMonths) - 1;
 };
