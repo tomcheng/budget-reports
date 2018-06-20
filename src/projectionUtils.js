@@ -18,6 +18,8 @@ import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import takeWhile from "lodash/fp/takeWhile";
 import takeRightWhile from "lodash/fp/takeRightWhile";
+import uniq from "lodash/fp/uniq";
+import { getOutliersBy } from "./utils";
 
 export const getMortgageRate = ({
   accounts,
@@ -114,13 +116,28 @@ export const getAverageContribution = ({
     filter(({ accountId }) => includes(accountId)(investmentAccountIds))
   ])(allTransactions);
 
-  const totalContributions = sumBy("amount")(contributions);
   const months = compose([
     sortBy(identity),
+    uniq,
     map(d => d.slice(0, 7)),
     map("date")
   ])(contributions);
-  const numMonths = moment(last(months)).diff(moment(months[0]), "months") + 1;
+
+  const outliers = getOutliersBy(month =>
+    compose([
+      sumBy("amount"),
+      filter(({ date }) => date.slice(0, 7) === month)
+    ])(contributions)
+  )(months);
+
+  const totalContributions = compose([
+    sumBy("amount"),
+    reject(({ date }) => includes(date.slice(0, 7))(outliers))
+  ])(contributions);
+  const numMonths =
+    moment(last(months)).diff(moment(months[0]), "months") +
+    1 -
+    outliers.length;
 
   return totalContributions / numMonths;
 };
