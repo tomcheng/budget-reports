@@ -1,3 +1,4 @@
+import moment from "moment";
 import add from "lodash/fp/add";
 import compose from "lodash/fp/compose";
 import filter from "lodash/fp/filter";
@@ -73,17 +74,16 @@ export const getReturnOnInvestments = ({
   let startForMonth = 0;
   const returnRates = [];
 
-  compose([map(month => transactionsByMonth[month]), sortBy(identity), keys])(
-    transactionsByMonth
-  ).forEach(trs => {
+  const months = compose([sortBy(identity), keys])(transactionsByMonth);
+  map(month => transactionsByMonth[month])(months).forEach(trs => {
     const contributions = compose([
       sumBy("amount"),
       filter(prop("transferAccountId"))
     ])(trs);
-    const returnTransactions = reject(prop("transferAccountId"))(trs);
-    const returns = sumBy("amount")(returnTransactions);
+    const gains = reject(prop("transferAccountId"))(trs);
+    const returns = sumBy("amount")(gains);
 
-    if (startForMonth && returnTransactions.length) {
+    if (startForMonth && gains.length) {
       returnRates.push(returns / (startForMonth + 0.5 * contributions));
     }
 
@@ -94,4 +94,33 @@ export const getReturnOnInvestments = ({
   const numMonths = returnRates.length;
 
   return totalReturn ** (12 / numMonths) - 1;
+};
+
+export const getAverageContribution = ({
+  accounts,
+  payees,
+  transactions: allTransactions
+}) => {
+  const investmentAccountIds = compose([
+    map("id"),
+    filter(matches({ type: "investmentAccount" }))
+  ])(accounts);
+
+  const contributions = compose([
+    filter(
+      ({ transferAccountId }) =>
+        transferAccountId && !includes(transferAccountId)(investmentAccountIds)
+    ),
+    filter(({ accountId }) => includes(accountId)(investmentAccountIds))
+  ])(allTransactions);
+
+  const totalContributions = sumBy("amount")(contributions);
+  const months = compose([
+    sortBy(identity),
+    map(d => d.slice(0, 7)),
+    map("date")
+  ])(contributions);
+  const numMonths = moment(last(months)).diff(moment(months[0]), "months") + 1;
+
+  return totalContributions / numMonths;
 };

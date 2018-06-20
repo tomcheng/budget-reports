@@ -1,11 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { getMortgageRate, getReturnOnInvestments } from "../projectionUtils";
+import {
+  getMortgageRate,
+  getReturnOnInvestments,
+  getAverageContribution
+} from "../projectionUtils";
 import Section from "./Section";
 
 const ProjectionsBody = ({ budget }) => {
   const { rate, paymentsLeft } = getMortgageRate(budget);
   const returnOnInvestments = getReturnOnInvestments(budget);
+  const averageContribution = getAverageContribution(budget);
 
   return (
     <Section>
@@ -14,6 +19,7 @@ const ProjectionsBody = ({ budget }) => {
       <div>
         Average return on investments: {(returnOnInvestments * 100).toFixed(2)}
       </div>
+      <div>Average monthly contribution: {averageContribution.toFixed(2)}</div>
     </Section>
   );
 };
