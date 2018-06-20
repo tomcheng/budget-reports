@@ -57,6 +57,18 @@ export const getMortgageRate = ({
   return { rate, paymentsLeft };
 };
 
+export const getCurrentInvestments = ({ accounts, transactions }) => {
+  const investmentAccountIds = compose([
+    map("id"),
+    filter(matches({ type: "investmentAccount" }))
+  ])(accounts);
+
+  return compose([
+    sumBy("amount"),
+    filter(({ accountId }) => includes(accountId)(investmentAccountIds))
+  ])(transactions);
+};
+
 export const getReturnOnInvestments = ({
   accounts,
   payees,
@@ -140,4 +152,22 @@ export const getAverageContribution = ({
     outliers.length;
 
   return totalContributions / numMonths;
+};
+
+export const getProjection = ({
+  numMonths,
+  returnOnInvestments,
+  averageContribution,
+  currentInvestments
+}) => {
+  const monthlyRate = (1 + returnOnInvestments) ** (1/12) - 1;
+  let amount = currentInvestments;
+  let projection = [];
+
+  do {
+    projection.push(amount);
+    amount += averageContribution + (amount + 0.5 * averageContribution) * monthlyRate;
+  } while (projection.length < numMonths);
+
+  return projection;
 };
