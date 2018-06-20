@@ -1,9 +1,11 @@
 import moment from "moment";
 import add from "lodash/fp/add";
 import compose from "lodash/fp/compose";
+import concat from "lodash/fp/concat";
 import filter from "lodash/fp/filter";
 import find from "lodash/fp/find";
 import groupBy from "lodash/fp/groupBy";
+import head from "lodash/fp/head";
 import identity from "lodash/fp/identity";
 import includes from "lodash/fp/includes";
 import keys from "lodash/fp/keys";
@@ -19,7 +21,7 @@ import sumBy from "lodash/fp/sumBy";
 import takeWhile from "lodash/fp/takeWhile";
 import takeRightWhile from "lodash/fp/takeRightWhile";
 import uniq from "lodash/fp/uniq";
-import { getOutliersBy } from "./utils";
+import { getOutliersBy, getMonth } from "./utils";
 
 export const getMortgageRate = ({
   accounts,
@@ -54,7 +56,7 @@ export const getMortgageRate = ({
   const rate = r * 12;
   const paymentsLeft = N - 1;
 
-  return { rate, paymentsLeft };
+  return { rate, mortgagePayment: c, paymentsLeft };
 };
 
 export const getCurrentInvestments = ({ accounts, transactions }) => {
@@ -112,7 +114,6 @@ export const getReturnOnInvestments = ({
 
 export const getAverageContribution = ({
   accounts,
-  payees,
   transactions: allTransactions
 }) => {
   const investmentAccountIds = compose([
@@ -147,11 +148,58 @@ export const getAverageContribution = ({
     reject(({ date }) => includes(date.slice(0, 7))(outliers))
   ])(contributions);
   const numMonths =
-    moment(last(months)).diff(moment(months[0]), "months") +
+    moment(last(months)).diff(moment(head(months)), "months") +
     1 -
     outliers.length;
 
   return totalContributions / numMonths;
+};
+
+export const getAverageExpensesWithoutMortgage = ({
+  transactions,
+  accounts,
+  payees,
+  categoriesById,
+  categoryGroupsById
+}) => {
+  const startingBalanceId = compose([
+    prop("id"),
+    find(matches({ name: "Starting Balance" }))
+  ])(payees);
+  const months = compose([sortBy(identity), uniq, map(getMonth)])(transactions);
+
+  const mortgageAccountIds = compose([
+    map(prop("id")),
+    filter(matches({ type: "mortgage" }))
+  ])(accounts);
+
+  const investmentAccountIds = compose([
+    map(prop("id")),
+    filter(matches({ type: "investmentAccount" }))
+  ])(accounts);
+
+  const totalExpenses = compose([
+    sumBy("amount"),
+    reject(
+      tr =>
+        tr.amount > 0 &&
+        !tr.transferAccountId &&
+        (!tr.categoryId ||
+          !categoryGroupsById[categoriesById[tr.categoryId].categoryGroupId])
+    ),
+    reject(tr =>
+      includes(tr.transferAccountId)(
+        concat(mortgageAccountIds, investmentAccountIds)
+      )
+    ),
+    reject(tr =>
+      includes(tr.accountId)(concat(mortgageAccountIds, investmentAccountIds))
+    ),
+    reject(tr => includes(getMonth(tr))([head(months), last(months)])),
+    reject(matches({ payeeId: startingBalanceId }))
+  ])(transactions);
+
+  return -totalExpenses / (months.length - 2);
 };
 
 export const getProjection = ({
@@ -160,13 +208,14 @@ export const getProjection = ({
   averageContribution,
   currentInvestments
 }) => {
-  const monthlyRate = (1 + returnOnInvestments) ** (1/12) - 1;
+  const monthlyRate = (1 + returnOnInvestments) ** (1 / 12) - 1;
   let amount = currentInvestments;
   let projection = [];
 
   do {
     projection.push(amount);
-    amount += averageContribution + (amount + 0.5 * averageContribution) * monthlyRate;
+    amount +=
+      averageContribution + (amount + 0.5 * averageContribution) * monthlyRate;
   } while (projection.length < numMonths);
 
   return projection;

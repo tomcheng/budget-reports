@@ -16,7 +16,7 @@ import prop from "lodash/fp/prop";
 import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
-import { splitTransactions, simpleMemoize, getOutliersBy } from "../utils";
+import { splitTransactions, simpleMemoize, getOutliersBy, getMonth } from "../utils";
 import IncomeVsExpensesSummary from "./IncomeVsExpensesSummary";
 import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
 import IncomeVsExpensesChartControls from "./IncomeVsExpensesChartControls";
@@ -31,8 +31,6 @@ const map = mapRaw.convert({ cap: false });
 
 const propertyIncludedIn = (property, arr) => obj =>
   includes(obj[property], arr);
-
-const getMonth = transaction => transaction.date.slice(0, 7);
 
 class IncomeVsExpensesBody extends PureComponent {
   static propTypes = {

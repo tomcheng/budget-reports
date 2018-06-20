@@ -121,6 +121,8 @@ export const splitTransactions = ({
   return { incomeTransactions, expenseTransactions };
 };
 
+export const getMonth = transaction => transaction.date.slice(0, 7);
+
 const standardDeviation = arr => {
   const avg = mean(arr);
   return Math.sqrt(sumBy(num => Math.pow(num - avg, 2))(arr) / arr.length);
