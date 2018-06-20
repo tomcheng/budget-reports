@@ -2,7 +2,6 @@ import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import anyPass from "lodash/fp/anyPass";
 import compose from "lodash/fp/compose";
-import filter from "lodash/fp/filter";
 import find from "lodash/fp/find";
 import flatMap from "lodash/fp/flatMap";
 import groupBy from "lodash/fp/groupBy";
@@ -12,13 +11,12 @@ import keys from "lodash/fp/keys";
 import last from "lodash/fp/last";
 import mapRaw from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
-import mean from "lodash/fp/mean";
 import omit from "lodash/fp/omit";
 import prop from "lodash/fp/prop";
 import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
-import { splitTransactions, simpleMemoize } from "../utils";
+import { splitTransactions, simpleMemoize, getOutliersBy } from "../utils";
 import IncomeVsExpensesSummary from "./IncomeVsExpensesSummary";
 import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
 import IncomeVsExpensesChartControls from "./IncomeVsExpensesChartControls";
@@ -33,11 +31,6 @@ const map = mapRaw.convert({ cap: false });
 
 const propertyIncludedIn = (property, arr) => obj =>
   includes(obj[property], arr);
-
-const standardDeviation = arr => {
-  const avg = mean(arr);
-  return Math.sqrt(sumBy(num => Math.pow(num - avg, 2))(arr) / arr.length);
-};
 
 const getMonth = transaction => transaction.date.slice(0, 7);
 
@@ -154,15 +147,10 @@ class IncomeVsExpensesBody extends PureComponent {
       const remainingSummaries = reject(
         propertyIncludedIn("month", excludedMonths)
       )(summaries);
-      const nets = map(s => s.income + s.expenses)(remainingSummaries);
-      const sd = standardDeviation(nets);
-      const avg = mean(nets);
-      excludedMonths.push(
-        ...compose([
-          map("month"),
-          filter(s => Math.abs(s.income + s.expenses - avg) > sd)
-        ])(remainingSummaries)
+      const outliers = getOutliersBy(s => s.income + s.expenses)(
+        remainingSummaries
       );
+      excludedMonths.push(...map("month")(outliers));
     }
 
     return excludedMonths;

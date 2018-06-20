@@ -1,19 +1,19 @@
+import { utils } from "ynab";
 import camelCase from "lodash/fp/camelCase";
 import compose from "lodash/fp/compose";
 import curry from "lodash/fp/curry";
+import difference from "lodash/fp/difference";
+import filter from "lodash/fp/filter";
 import groupBy from "lodash/fp/groupBy";
 import isArray from "lodash/fp/isArray";
 import isObject from "lodash/fp/isObject";
 import mapRaw from "lodash/fp/map";
 import mapKeysRaw from "lodash/fp/mapKeys";
 import mapValues from "lodash/fp/mapValues";
+import matchesProperty from "lodash/fp/matchesProperty";
+import mean from "lodash/fp/mean";
 import pick from "lodash/fp/pick";
 import sumBy from "lodash/fp/sumBy";
-
-import { utils } from "ynab";
-import matchesProperty from "lodash/fp/matchesProperty";
-import filter from "lodash/fp/filter";
-import difference from "lodash/fp/difference";
 
 const map = mapRaw.convert({ cap: false });
 const mapKeys = mapKeysRaw.convert({ cap: false });
@@ -120,3 +120,17 @@ export const splitTransactions = ({
 
   return { incomeTransactions, expenseTransactions };
 };
+
+const standardDeviation = arr => {
+  const avg = mean(arr);
+  return Math.sqrt(sumBy(num => Math.pow(num - avg, 2))(arr) / arr.length);
+};
+
+export const getOutliersBy = f => arr => {
+  const values = map(f)(arr);
+  const stdDev = standardDeviation(values);
+  const avg = mean(values);
+
+  return filter(item => Math.abs(f(item) - avg) > stdDev)(arr);
+};
+
