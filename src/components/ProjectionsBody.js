@@ -1,5 +1,9 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
+import chunk from "lodash/fp/chunk";
+import compose from "lodash/fp/compose";
+import head from "lodash/fp/head";
+import map from "lodash/fp/map";
 import {
   getMortgageRate,
   getReturnOnInvestments,
@@ -9,6 +13,7 @@ import {
   getProjection
 } from "../projectionUtils";
 import Section from "./Section";
+import ProjectionsChart from "./ProjectionsChart";
 
 const getInitialState = budget => {
   const {
@@ -91,9 +96,11 @@ class ProjectionsBody extends PureComponent {
     }
 
     const yearsUntilRetirement = m / 12;
+    const projectionByYear = compose([map(head), chunk(12)])(projection);
 
     return (
       <Section>
+        <ProjectionsChart projection={projectionByYear} />
         <div>Current Investments: {currentInvestments.toFixed(2)}</div>
         <div>
           Average return on investments:{" "}
