@@ -107,8 +107,7 @@ class ProjectionsBody extends PureComponent {
           {(returnOnInvestments * 100).toFixed(2)}
         </div>
         <div>
-          <input
-            type="range"
+          <Range
             value={returnOnInvestments}
             name="returnOnInvestments"
             onChange={this.handleChange}
@@ -121,8 +120,7 @@ class ProjectionsBody extends PureComponent {
           Average monthly contribution: {averageContribution.toFixed(2)}
         </div>
         <div>
-          <input
-            type="range"
+          <Range
             value={averageContribution}
             name="averageContribution"
             onChange={this.handleChange}
@@ -139,8 +137,7 @@ class ProjectionsBody extends PureComponent {
           Average expenses without mortgage: {averageExpenses.toFixed(2)}
         </div>
         <div>
-          <input
-            type="range"
+          <Range
             value={averageExpenses}
             name="averageExpenses"
             onChange={this.handleChange}
@@ -153,5 +150,9 @@ class ProjectionsBody extends PureComponent {
     );
   }
 }
+
+const Range = props => (
+  <input {...props} type="range" style={{ width: "100%" }} />
+);
 
 export default ProjectionsBody;
