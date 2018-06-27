@@ -14,7 +14,7 @@ const BUDGETS_STORAGE_KEY = "ynab_budgets";
 const TIME_LIMIT_FOR_FULL_REFRESH = 8 * 1000;
 
 export const AUTHORIZE_URL =
-  "https://app.youneedabudget.com/oauth/authorize?client_id=" +
+  "https://api.youneedabudget.com/oauth/authorize?client_id=" +
   clientId +
   "&redirect_uri=" +
   redirectUri +
