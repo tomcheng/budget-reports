@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import chunk from "lodash/fp/chunk";
 import compose from "lodash/fp/compose";
@@ -99,54 +99,56 @@ class ProjectionsBody extends PureComponent {
     const projectionByYear = compose([map(head), chunk(12)])(projection);
 
     return (
-      <Section>
+      <Fragment>
         <ProjectionsChart projection={projectionByYear} />
-        <div>Current Investments: {currentInvestments.toFixed(2)}</div>
-        <div>
-          Average return on investments:{" "}
-          {(returnOnInvestments * 100).toFixed(2)}
-        </div>
-        <div>
-          <Range
-            value={returnOnInvestments}
-            name="returnOnInvestments"
-            onChange={this.handleChange}
-            min={0.001}
-            max={0.2}
-            step={0.001}
-          />
-        </div>
-        <div>
-          Average monthly contribution: {averageContribution.toFixed(2)}
-        </div>
-        <div>
-          <Range
-            value={averageContribution}
-            name="averageContribution"
-            onChange={this.handleChange}
-            min={1}
-            max={maxAverageContribution}
-          />
-        </div>
-        <div>Mortgage payment: {mortgagePayment.toFixed(2)}</div>
-        <div>
-          Years remaining on mortgage:{" "}
-          {(remainingMortgagePayments / 12).toFixed(1)}
-        </div>
-        <div>
-          Average expenses without mortgage: {averageExpenses.toFixed(2)}
-        </div>
-        <div>
-          <Range
-            value={averageExpenses}
-            name="averageExpenses"
-            onChange={this.handleChange}
-            min={1}
-            max={maxAverageExpenses}
-          />
-        </div>
-        <div>Years until retirement: {yearsUntilRetirement.toFixed(1)}</div>
-      </Section>
+        <Section>
+          <div>Years until retirement: {yearsUntilRetirement.toFixed(1)}</div>
+          <div>Current Investments: {currentInvestments.toFixed(2)}</div>
+          <div>
+            Average return on investments:{" "}
+            {(returnOnInvestments * 100).toFixed(2)}
+          </div>
+          <div>
+            <Range
+              value={returnOnInvestments}
+              name="returnOnInvestments"
+              onChange={this.handleChange}
+              min={0.001}
+              max={0.2}
+              step={0.001}
+            />
+          </div>
+          <div>
+            Average monthly contribution: {averageContribution.toFixed(2)}
+          </div>
+          <div>
+            <Range
+              value={averageContribution}
+              name="averageContribution"
+              onChange={this.handleChange}
+              min={1}
+              max={maxAverageContribution}
+            />
+          </div>
+          <div>Mortgage payment: {mortgagePayment.toFixed(2)}</div>
+          <div>
+            Years remaining on mortgage:{" "}
+            {(remainingMortgagePayments / 12).toFixed(1)}
+          </div>
+          <div>
+            Average expenses without mortgage: {averageExpenses.toFixed(2)}
+          </div>
+          <div>
+            <Range
+              value={averageExpenses}
+              name="averageExpenses"
+              onChange={this.handleChange}
+              min={1}
+              max={maxAverageExpenses}
+            />
+          </div>
+        </Section>
+      </Fragment>
     );
   }
 }
