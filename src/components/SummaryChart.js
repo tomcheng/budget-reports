@@ -13,12 +13,6 @@ const Container = styled.div`
   position: relative;
 `;
 
-const Progress = styled.div`
-  height: ${CHART_HEIGHT}px;
-  width: ${props => props.progress * 100}%;
-  background-color: ${primaryColor};
-`;
-
 const Marker = styled.div`
   position: absolute;
   top: -3px;
@@ -32,6 +26,16 @@ const SummaryChart = ({ activity, balance, indicator }) => (
     <Progress progress={Math.max(-activity / (balance - activity || 1), 0)} />
     <Marker indicator={indicator} />
   </Container>
+);
+
+const Progress = ({ progress }) => (
+  <div
+    style={{
+      height: CHART_HEIGHT,
+      width: `${Math.min(progress * 100, 100)}%`,
+      backgroundColor: progress <= 1 ? primaryColor : "red"
+    }}
+  />
 );
 
 SummaryChart.propTypes = {
