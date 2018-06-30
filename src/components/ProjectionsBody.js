@@ -4,6 +4,8 @@ import chunk from "lodash/fp/chunk";
 import compose from "lodash/fp/compose";
 import head from "lodash/fp/head";
 import map from "lodash/fp/map";
+import pick from "lodash/fp/pick";
+import { simpleMemoize } from "../utils";
 import {
   getMortgageRate,
   getReturnOnInvestments,
@@ -15,7 +17,7 @@ import {
 import Section from "./Section";
 import ProjectionsChart from "./ProjectionsChart";
 
-const getInitialState = budget => {
+const getInitialState = simpleMemoize(budget => {
   const {
     paymentsLeft: remainingMortgagePayments,
     mortgagePayment
@@ -36,7 +38,7 @@ const getInitialState = budget => {
     maxAverageExpenses: Math.ceil(averageExpenses * 2 / 1000) * 1000,
     maxAverageContribution: Math.ceil(averageContribution * 2 / 1000) * 1000
   };
-};
+});
 
 class ProjectionsBody extends PureComponent {
   static propTypes = {
@@ -47,12 +49,16 @@ class ProjectionsBody extends PureComponent {
 
   constructor(props) {
     super();
-
     this.state = getInitialState(props.budget);
   }
 
   handleChange = e => {
     this.setState({ [e.target.name]: parseFloat(e.target.value) });
+  };
+
+  handleResetCalculation = calculation => {
+    const { budget } = this.props;
+    this.setState(pick(calculation)(getInitialState(budget)));
   };
 
   render() {
@@ -119,6 +125,15 @@ class ProjectionsBody extends PureComponent {
             />
           </div>
           <div>
+            <button
+              onClick={() => {
+                this.handleResetCalculation("returnOnInvestments");
+              }}
+            >
+              reset
+            </button>
+          </div>
+          <div>
             Average monthly contribution: {averageContribution.toFixed(2)}
           </div>
           <div>
@@ -129,6 +144,15 @@ class ProjectionsBody extends PureComponent {
               min={1}
               max={maxAverageContribution}
             />
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                this.handleResetCalculation("averageContribution");
+              }}
+            >
+              reset
+            </button>
           </div>
           <div>Mortgage payment: {mortgagePayment.toFixed(2)}</div>
           <div>
@@ -146,6 +170,15 @@ class ProjectionsBody extends PureComponent {
               min={1}
               max={maxAverageExpenses}
             />
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                this.handleResetCalculation("averageExpenses");
+              }}
+            >
+              reset
+            </button>
           </div>
         </Section>
       </Fragment>
