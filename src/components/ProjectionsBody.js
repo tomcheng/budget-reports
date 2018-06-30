@@ -20,7 +20,8 @@ import ProjectionsChart from "./ProjectionsChart";
 const getInitialState = simpleMemoize(budget => {
   const {
     paymentsLeft: remainingMortgagePayments,
-    mortgagePayment
+    mortgagePayment,
+    principalProjection: mortgageProjection
   } = getMortgageRate(budget);
   const returnOnInvestments = getReturnOnInvestments(budget);
   const averageContribution = getAverageContribution(budget);
@@ -30,6 +31,7 @@ const getInitialState = simpleMemoize(budget => {
   return {
     mortgagePayment,
     remainingMortgagePayments,
+    mortgageProjection,
     returnOnInvestments,
     averageContribution,
     currentInvestments,
@@ -65,6 +67,7 @@ class ProjectionsBody extends PureComponent {
     const {
       mortgagePayment,
       remainingMortgagePayments,
+      mortgageProjection,
       returnOnInvestments,
       averageContribution,
       currentInvestments,
@@ -75,12 +78,13 @@ class ProjectionsBody extends PureComponent {
     } = this.state;
 
     const projection = getProjection({
-      numMonths: 30 * 12,
+      numMonths: 25 * 12,
       returnOnInvestments,
       averageContribution,
       currentInvestments
     });
     const monthlyRetirementReturn = (1 + retirementReturns) ** (1 / 12) - 1;
+    // const amountNeededToRetire = averageExpenses / monthlyRetirementReturn;
     let m = 0;
 
     while (m < projection.length) {
@@ -103,10 +107,16 @@ class ProjectionsBody extends PureComponent {
 
     const yearsUntilRetirement = m / 12;
     const projectionByYear = compose([map(head), chunk(12)])(projection);
+    const mortgageProjectionByYear = compose([map(head), chunk(12)])(
+      mortgageProjection
+    );
 
     return (
       <Fragment>
-        <ProjectionsChart projection={projectionByYear} />
+        <ProjectionsChart
+          investmentsProjection={projectionByYear}
+          mortgageProjection={mortgageProjectionByYear}
+        />
         <Section>
           <div>Years until retirement: {yearsUntilRetirement.toFixed(1)}</div>
           <div>Current Investments: {currentInvestments.toFixed(2)}</div>

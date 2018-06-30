@@ -1,9 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { primaryColor, negativeColor } from "../styleVariables";
 import Chart from "./Chart";
 import Section from "./Section";
 
-const ProjectionsChart = ({ projection }) => (
+const ProjectionsChart = ({ investmentsProjection, mortgageProjection }) => (
   <Section>
     <Chart
       options={{
@@ -13,14 +14,13 @@ const ProjectionsChart = ({ projection }) => (
         xAxis: {
           type: "category"
         },
-        yAxis: { title: { text: null } },
+        yAxis: { title: { text: null }, endOnTick: false },
         legend: {
           enabled: false
         },
         series: [
-          {
-            data: projection
-          }
+          { data: investmentsProjection, color: primaryColor },
+          { data: mortgageProjection, color: negativeColor }
         ]
       }}
     />
@@ -28,7 +28,8 @@ const ProjectionsChart = ({ projection }) => (
 );
 
 ProjectionsChart.propTypes = {
-  projection: PropTypes.arrayOf(PropTypes.number).isRequired
+  investmentsProjection: PropTypes.arrayOf(PropTypes.number).isRequired,
+  mortgageProjection: PropTypes.arrayOf(PropTypes.number).isRequired
 };
 
 export default ProjectionsChart;

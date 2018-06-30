@@ -14,6 +14,7 @@ import map from "lodash/fp/map";
 import matches from "lodash/fp/matches";
 import multiply from "lodash/fp/multiply";
 import prop from "lodash/fp/prop";
+import range from "lodash/fp/range";
 import reduce from "lodash/fp/reduce";
 import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
@@ -56,7 +57,16 @@ export const getMortgageRate = ({
   const rate = r * 12;
   const paymentsLeft = N - 1;
 
-  return { rate, mortgagePayment: c, paymentsLeft };
+  const projection = map(n => (1 + r) ** n * P - ((1 + r) ** n - 1) / r * c)(
+    range(1, N)
+  );
+
+  return {
+    rate,
+    mortgagePayment: c,
+    paymentsLeft,
+    principalProjection: projection
+  };
 };
 
 export const getCurrentInvestments = ({ accounts, transactions }) => {
