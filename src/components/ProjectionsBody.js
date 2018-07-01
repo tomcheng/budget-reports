@@ -78,13 +78,13 @@ class ProjectionsBody extends PureComponent {
     } = this.state;
 
     const projection = getProjection({
-      numMonths: 25 * 12,
+      numMonths: 30 * 12,
       returnOnInvestments,
       averageContribution,
       currentInvestments
     });
     const monthlyRetirementReturn = (1 + retirementReturns) ** (1 / 12) - 1;
-    // const amountNeededToRetire = averageExpenses / monthlyRetirementReturn;
+    const amountNeededToRetire = averageExpenses / monthlyRetirementReturn;
     let m = 0;
 
     while (m < projection.length) {
@@ -116,6 +116,7 @@ class ProjectionsBody extends PureComponent {
         <ProjectionsChart
           investmentsProjection={projectionByYear}
           mortgageProjection={mortgageProjectionByYear}
+          amountNeededToRetire={amountNeededToRetire}
         />
         <Section>
           <div>Years until retirement: {yearsUntilRetirement.toFixed(1)}</div>

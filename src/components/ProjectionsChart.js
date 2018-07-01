@@ -4,7 +4,11 @@ import { primaryColor, negativeColor } from "../styleVariables";
 import Chart from "./Chart";
 import Section from "./Section";
 
-const ProjectionsChart = ({ investmentsProjection, mortgageProjection }) => (
+const ProjectionsChart = ({
+  investmentsProjection,
+  mortgageProjection,
+  amountNeededToRetire
+}) => (
   <Section>
     <Chart
       options={{
@@ -14,13 +18,23 @@ const ProjectionsChart = ({ investmentsProjection, mortgageProjection }) => (
         xAxis: {
           type: "category"
         },
-        yAxis: { title: { text: null }, endOnTick: false },
+        yAxis: {
+          title: { text: null },
+          endOnTick: false,
+          plotLines: [
+            {
+              value: amountNeededToRetire,
+              color: "#ccc",
+              width: 1
+            }
+          ]
+        },
         legend: {
           enabled: false
         },
         series: [
-          { data: investmentsProjection, color: primaryColor },
-          { data: mortgageProjection, color: negativeColor }
+          { data: investmentsProjection, color: primaryColor, borderWidth: 0 },
+          { data: mortgageProjection, color: negativeColor, borderWidth: 0 }
         ]
       }}
     />
@@ -28,6 +42,7 @@ const ProjectionsChart = ({ investmentsProjection, mortgageProjection }) => (
 );
 
 ProjectionsChart.propTypes = {
+  amountNeededToRetire: PropTypes.number.isRequired,
   investmentsProjection: PropTypes.arrayOf(PropTypes.number).isRequired,
   mortgageProjection: PropTypes.arrayOf(PropTypes.number).isRequired
 };
