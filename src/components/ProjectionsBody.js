@@ -159,7 +159,7 @@ class ProjectionsBody extends PureComponent {
               value={returnOnInvestments}
               name="returnOnInvestments"
               onChange={this.handleChange}
-              min={0.001}
+              min={0}
               max={0.2}
               step={0.001}
             />
@@ -181,7 +181,7 @@ class ProjectionsBody extends PureComponent {
               value={averageContribution}
               name="averageContribution"
               onChange={this.handleChange}
-              min={1}
+              min={0}
               max={maxAverageContribution}
             />
           </div>
@@ -207,7 +207,7 @@ class ProjectionsBody extends PureComponent {
               value={averageExpenses}
               name="averageExpenses"
               onChange={this.handleChange}
-              min={1}
+              min={0}
               max={maxAverageExpenses}
             />
           </div>
@@ -215,6 +215,50 @@ class ProjectionsBody extends PureComponent {
             <button
               onClick={() => {
                 this.handleResetCalculation("averageExpenses");
+              }}
+            >
+              reset
+            </button>
+          </div>
+          <div>
+            Return on investment after retirement: {(retirementReturns * 100).toFixed(2)}
+          </div>
+          <div>
+            <Range
+              value={retirementReturns}
+              name="retirementReturns"
+              onChange={this.handleChange}
+              min={0}
+              max={0.2}
+              step={0.001}
+            />
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                this.handleResetCalculation("retirementReturns");
+              }}
+            >
+              reset
+            </button>
+          </div>
+          <div>
+            Average tax rate after retiremnt: {(retirementTaxRate * 100).toFixed(1)}
+          </div>
+          <div>
+            <Range
+              value={retirementTaxRate}
+              name="retirementTaxRate"
+              onChange={this.handleChange}
+              min={0}
+              max={0.3}
+              step={0.001}
+            />
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                this.handleResetCalculation("retirementTaxRate");
               }}
             >
               reset
