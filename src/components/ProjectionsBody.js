@@ -12,10 +12,13 @@ import {
   getAverageContribution,
   getCurrentInvestments,
   getAverageExpensesWithoutMortgage,
-  getProjection
+  getProjection,
+  getProjectionWithRetirement
 } from "../projectionUtils";
 import Section from "./Section";
 import ProjectionsChart from "./ProjectionsChart";
+
+const YEARS_TO_PROJECT = 50;
 
 const getInitialState = simpleMemoize(budget => {
   const {
@@ -37,6 +40,7 @@ const getInitialState = simpleMemoize(budget => {
     currentInvestments,
     averageExpenses,
     retirementReturns: 0.04,
+    retirementTaxRate: 0.15,
     maxAverageExpenses: Math.ceil(averageExpenses * 2 / 1000) * 1000,
     maxAverageContribution: Math.ceil(averageContribution * 2 / 1000) * 1000
   };
@@ -73,18 +77,20 @@ class ProjectionsBody extends PureComponent {
       currentInvestments,
       averageExpenses,
       retirementReturns,
+      retirementTaxRate,
       maxAverageExpenses,
       maxAverageContribution
     } = this.state;
 
     const projection = getProjection({
-      numMonths: 30 * 12,
+      numMonths: YEARS_TO_PROJECT * 12,
       returnOnInvestments,
       averageContribution,
       currentInvestments
     });
     const monthlyRetirementReturn = (1 + retirementReturns) ** (1 / 12) - 1;
-    const amountNeededToRetire = averageExpenses / monthlyRetirementReturn;
+    const amountNeededToRetire =
+      averageExpenses / (monthlyRetirementReturn * (1 - retirementTaxRate));
     let m = 0;
 
     while (m < projection.length) {
@@ -92,21 +98,41 @@ class ProjectionsBody extends PureComponent {
         const remainingMortgage =
           mortgagePayment * (remainingMortgagePayments - m);
         if (
-          (projection[m] - remainingMortgage) * monthlyRetirementReturn >
+          (projection[m] - remainingMortgage) *
+            monthlyRetirementReturn *
+            (1 - retirementTaxRate) >
           averageExpenses
         ) {
           break;
         }
       } else {
-        if (projection[m] * monthlyRetirementReturn > averageExpenses) {
+        if (
+          projection[m] * monthlyRetirementReturn * (1 - retirementTaxRate) >
+          averageExpenses
+        ) {
           break;
         }
       }
       m += 1;
     }
 
+    const projectionWithRetirement = getProjectionWithRetirement({
+      numMonths: YEARS_TO_PROJECT * 12,
+      returnOnInvestments,
+      averageContribution,
+      currentInvestments,
+      monthsBeforeRetirement: m,
+      monthlyExpenses: averageExpenses,
+      retirementReturns,
+      retirementTaxRate,
+      remainingMortgagePayments,
+      mortgagePayment
+    });
+
     const yearsUntilRetirement = m / 12;
-    const projectionByYear = compose([map(head), chunk(12)])(projection);
+    const projectionByYear = compose([map(head), chunk(12)])(
+      projectionWithRetirement
+    );
     const mortgageProjectionByYear = compose([map(head), chunk(12)])(
       mortgageProjection
     );
@@ -119,8 +145,10 @@ class ProjectionsBody extends PureComponent {
           amountNeededToRetire={amountNeededToRetire}
         />
         <Section>
-          <div>Years until retirement: {yearsUntilRetirement.toFixed(1)}</div>
-          <div>Current Investments: {currentInvestments.toFixed(2)}</div>
+          <div>Earliest you can retire: {yearsUntilRetirement.toFixed(1)}</div>
+          <div>
+            Amount needed for retirement: {amountNeededToRetire.toFixed(2)}
+          </div>
           <div>
             Average return on investments:{" "}
             {(returnOnInvestments * 100).toFixed(2)}

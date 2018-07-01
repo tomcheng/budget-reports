@@ -230,3 +230,37 @@ export const getProjection = ({
 
   return projection;
 };
+
+export const getProjectionWithRetirement = ({
+  numMonths,
+  returnOnInvestments,
+  averageContribution,
+  currentInvestments,
+  monthsBeforeRetirement,
+  monthlyExpenses,
+  retirementReturns,
+  retirementTaxRate,
+  remainingMortgagePayments,
+  mortgagePayment
+}) => {
+  const monthlyRate = (1 + returnOnInvestments) ** (1 / 12) - 1;
+  const monthlyRetirementReturn = (1 + retirementReturns) ** (1 / 12) - 1;
+  let amount = currentInvestments;
+  let projection = [];
+
+  do {
+    projection.push(amount);
+    if (projection.length < monthsBeforeRetirement) {
+      amount +=
+        averageContribution +
+        (amount + 0.5 * averageContribution) * monthlyRate;
+    } else {
+      amount += amount * monthlyRetirementReturn * (1 - retirementTaxRate) - monthlyExpenses;
+      if (projection.length < remainingMortgagePayments) {
+        amount -= mortgagePayment;
+      }
+    }
+  } while (projection.length < numMonths);
+
+  return projection;
+};
