@@ -1,13 +1,18 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { primaryColor, negativeColor } from "../styleVariables";
+import {
+  primaryColor,
+  negativeColor,
+  selectedPlotBandColor
+} from "../styleVariables";
 import Chart from "./Chart";
 import Section from "./Section";
 
 const ProjectionsChart = ({
   investmentsProjection,
   mortgageProjection,
-  amountNeededToRetire
+  amountNeededToRetire,
+  yearsUntilRetirement
 }) => (
   <Section>
     <Chart
@@ -16,7 +21,14 @@ const ProjectionsChart = ({
           type: "column"
         },
         xAxis: {
-          type: "category"
+          type: "category",
+          plotBands: [
+            {
+              color: selectedPlotBandColor,
+              from: Math.floor(yearsUntilRetirement) - 0.5,
+              to: Math.floor(yearsUntilRetirement) + 0.5
+            }
+          ]
         },
         yAxis: {
           title: { text: null },
@@ -44,7 +56,8 @@ const ProjectionsChart = ({
 ProjectionsChart.propTypes = {
   amountNeededToRetire: PropTypes.number.isRequired,
   investmentsProjection: PropTypes.arrayOf(PropTypes.number).isRequired,
-  mortgageProjection: PropTypes.arrayOf(PropTypes.number).isRequired
+  mortgageProjection: PropTypes.arrayOf(PropTypes.number).isRequired,
+  yearsUntilRetirement: PropTypes.number.isRequired
 };
 
 export default ProjectionsChart;

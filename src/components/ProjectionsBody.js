@@ -143,6 +143,7 @@ class ProjectionsBody extends PureComponent {
           investmentsProjection={projectionByYear}
           mortgageProjection={mortgageProjectionByYear}
           amountNeededToRetire={amountNeededToRetire}
+          yearsUntilRetirement={yearsUntilRetirement}
         />
         <Section>
           <div>Earliest you can retire: {yearsUntilRetirement.toFixed(1)}</div>
