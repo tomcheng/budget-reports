@@ -148,32 +148,30 @@ class ProjectionsBody extends PureComponent {
         <Section>
           <Entry
             label="Earliest you can retire"
-            value={`${yearsUntilRetirement.toFixed(1)} years`}
+            value={yearsUntilRetirement}
+            formatter={val => `${val.toFixed(1)} years`}
           />
           <Entry
             label="Amount needed for retirement"
-            value={`$${Math.round(amountNeededToRetire)}`}
+            value={amountNeededToRetire}
+            formatter={val => `$${Math.round(val)}`}
           />
-          <Entry
+          <AdjustableEntry
             label="Average monthly contribution"
-            value={`$${Math.round(averageContribution)}`}
-          />
-          <Range
-            onReset={this.handleResetCalculation}
             value={averageContribution}
+            formatter={val => `$${Math.round(val)}`}
+            onReset={this.handleResetCalculation}
             name="averageContribution"
             onChange={this.handleChange}
             min={0}
             max={maxAverageContribution}
             step={10}
           />
-          <Entry
+          <AdjustableEntry
             label="Average return on investments"
-            value={`${(returnOnInvestments * 100).toFixed(1)}%`}
-          />
-          <Range
-            onReset={this.handleResetCalculation}
             value={returnOnInvestments}
+            formatter={val => `${(val * 100).toFixed(1)}%`}
+            onReset={this.handleResetCalculation}
             name="returnOnInvestments"
             onChange={this.handleChange}
             min={0}
@@ -182,45 +180,41 @@ class ProjectionsBody extends PureComponent {
           />
           <Entry
             label="Mortgage payment"
-            value={`$${mortgagePayment.toFixed(2)}`}
+            value={mortgagePayment}
+            formatter={val => `$${val.toFixed(2)}`}
           />
           <Entry
             label="Time remaining on mortgage"
-            value={`${(remainingMortgagePayments / 12).toFixed(1)} years`}
+            value={remainingMortgagePayments}
+            formatter={val => `${(val / 12).toFixed(1)} years`}
           />
-          <Entry
+          <AdjustableEntry
             label="Average expenses without mortgage"
-            value={`$${Math.round(averageExpenses)}`}
-          />
-          <Range
-            onReset={this.handleResetCalculation}
             value={averageExpenses}
+            formatter={val => `$${Math.round(val)}`}
+            onReset={this.handleResetCalculation}
             name="averageExpenses"
             onChange={this.handleChange}
             min={0}
             max={maxAverageExpenses}
             step={10}
           />
-          <Entry
+          <AdjustableEntry
             label="Return on investment after retirement"
-            value={`${(retirementReturns * 100).toFixed(1)}%`}
-          />
-          <Range
-            onReset={this.handleResetCalculation}
             value={retirementReturns}
+            formatter={val => `${(val * 100).toFixed(1)}%`}
+            onReset={this.handleResetCalculation}
             name="retirementReturns"
             onChange={this.handleChange}
             min={0}
             max={0.2}
             step={0.001}
           />
-          <Entry
+          <AdjustableEntry
             label="Average tax rate after retirement"
-            value={`${(retirementTaxRate * 100).toFixed(1)}%`}
-          />
-          <Range
-            onReset={this.handleResetCalculation}
             value={retirementTaxRate}
+            formatter={val => `${(val * 100).toFixed(1)}%`}
+            onReset={this.handleResetCalculation}
             name="retirementTaxRate"
             onChange={this.handleChange}
             min={0}
@@ -233,10 +227,17 @@ class ProjectionsBody extends PureComponent {
   }
 }
 
-const Entry = ({ label, value }) => (
+const AdjustableEntry = ({ label, value, formatter, ...other }) => (
+  <Fragment>
+    <Entry label={label} value={value} formatter={formatter} />
+    <Range {...other} value={value} />
+  </Fragment>
+);
+
+const Entry = ({ label, value, formatter = a => a }) => (
   <div style={{ display: "flex", justifyContent: "space-between" }}>
     {label}:
-    <strong>{value}</strong>
+    <strong>{formatter(value)}</strong>
   </div>
 );
 
