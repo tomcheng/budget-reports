@@ -2,7 +2,9 @@ import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import chunk from "lodash/fp/chunk";
 import compose from "lodash/fp/compose";
+import get from "lodash/fp/get";
 import head from "lodash/fp/head";
+import keyBy from "lodash/fp/keyBy";
 import map from "lodash/fp/map";
 import pick from "lodash/fp/pick";
 import { simpleMemoize } from "../utils";
@@ -17,8 +19,39 @@ import {
 } from "../projectionUtils";
 import Section from "./Section";
 import ProjectionsChart from "./ProjectionsChart";
+import ProjectionsSlider from "./ProjectionsSlider";
 
 const YEARS_TO_PROJECT = 50;
+
+const adjustableEntries = [
+  {
+    label: "Average monthly contribution",
+    name: "averageContribution",
+    formatter: val => `$${Math.round(val)}`
+  },
+  {
+    label: "Average return on investments",
+    name: "returnOnInvestments",
+    formatter: val => `${(val * 100).toFixed(1)}%`
+  },
+  {
+    label: "Average expenses without mortgage",
+    name: "averageExpenses",
+    formatter: val => `$${Math.round(val)}`
+  },
+  {
+    label: "Return on investment after retirement",
+    name: "retirementReturns",
+    formatter: val => `${(val * 100).toFixed(1)}%`
+  },
+  {
+    label: "Average tax rate after retirement",
+    name: "retirementTaxRate",
+    formatter: val => `${(val * 100).toFixed(1)}%`
+  }
+];
+
+const adjustableEntriesByName = keyBy("name")(adjustableEntries);
 
 const getInitialState = simpleMemoize(budget => {
   const {
@@ -55,11 +88,17 @@ class ProjectionsBody extends PureComponent {
 
   constructor(props) {
     super();
-    this.state = getInitialState(props.budget);
+    this.state = { ...getInitialState(props.budget), adjustingName: null };
   }
 
   handleChange = e => {
     this.setState({ [e.target.name]: parseFloat(e.target.value) });
+  };
+
+  handleSelectAdjusting = name => {
+    this.setState(state => ({
+      adjustingName: state.adjustingName === name ? null : name
+    }));
   };
 
   handleResetCalculation = calculation => {
@@ -79,7 +118,8 @@ class ProjectionsBody extends PureComponent {
       retirementReturns,
       retirementTaxRate,
       maxAverageExpenses,
-      maxAverageContribution
+      maxAverageContribution,
+      adjustingName
     } = this.state;
 
     const projection = getProjection({
@@ -137,6 +177,14 @@ class ProjectionsBody extends PureComponent {
       mortgageProjection
     );
 
+    const nameToRangeOptions = {
+      averageContribution: { min: 0, max: maxAverageContribution, step: 50 },
+      returnOnInvestments: { min: 0, max: 0.2, step: 0.001 },
+      averageExpenses: { min: 0, max: maxAverageExpenses, step: 50 },
+      retirementReturns: { min: 0, max: 0.2, step: 0.001 },
+      retirementTaxRate: { min: 0, max: 0.5, step: 0.001 }
+    };
+
     return (
       <Fragment>
         <ProjectionsChart
@@ -156,28 +204,19 @@ class ProjectionsBody extends PureComponent {
             value={amountNeededToRetire}
             formatter={val => `$${Math.round(val)}`}
           />
-          <AdjustableEntry
-            label="Average monthly contribution"
-            value={averageContribution}
-            formatter={val => `$${Math.round(val)}`}
-            onReset={this.handleResetCalculation}
-            name="averageContribution"
-            onChange={this.handleChange}
-            min={0}
-            max={maxAverageContribution}
-            step={10}
-          />
-          <AdjustableEntry
-            label="Average return on investments"
-            value={returnOnInvestments}
-            formatter={val => `${(val * 100).toFixed(1)}%`}
-            onReset={this.handleResetCalculation}
-            name="returnOnInvestments"
-            onChange={this.handleChange}
-            min={0}
-            max={0.2}
-            step={0.001}
-          />
+          {adjustableEntries.map(({ label, name, formatter }) => (
+            <AdjustableEntry
+              key={name}
+              label={label}
+              name={name}
+              value={this.state[name]}
+              formatter={formatter}
+              isAdjusting={adjustingName === name}
+              onSelect={this.handleSelectAdjusting}
+              onReset={this.handleResetCalculation}
+              onChange={this.handleChange}
+            />
+          ))}
           <Entry
             label="Mortgage payment"
             value={mortgagePayment}
@@ -188,77 +227,57 @@ class ProjectionsBody extends PureComponent {
             value={remainingMortgagePayments}
             formatter={val => `${(val / 12).toFixed(1)} years`}
           />
-          <AdjustableEntry
-            label="Average expenses without mortgage"
-            value={averageExpenses}
-            formatter={val => `$${Math.round(val)}`}
-            onReset={this.handleResetCalculation}
-            name="averageExpenses"
-            onChange={this.handleChange}
-            min={0}
-            max={maxAverageExpenses}
-            step={10}
-          />
-          <AdjustableEntry
-            label="Return on investment after retirement"
-            value={retirementReturns}
-            formatter={val => `${(val * 100).toFixed(1)}%`}
-            onReset={this.handleResetCalculation}
-            name="retirementReturns"
-            onChange={this.handleChange}
-            min={0}
-            max={0.2}
-            step={0.001}
-          />
-          <AdjustableEntry
-            label="Average tax rate after retirement"
-            value={retirementTaxRate}
-            formatter={val => `${(val * 100).toFixed(1)}%`}
-            onReset={this.handleResetCalculation}
-            name="retirementTaxRate"
-            onChange={this.handleChange}
-            min={0}
-            max={0.5}
-            step={0.001}
-          />
         </Section>
+        <ProjectionsSlider
+          name={adjustingName}
+          label={get([adjustingName, "label"])(adjustableEntriesByName)}
+          onReset={this.handleResetCalculation}
+          onChange={this.handleChange}
+          value={this.state[adjustingName]}
+          rangeOptions={nameToRangeOptions[adjustingName]}
+        />
       </Fragment>
     );
   }
 }
 
-const AdjustableEntry = ({ label, value, formatter, ...other }) => (
+const AdjustableEntry = ({
+  label,
+  value,
+  formatter,
+  name,
+  onSelect,
+  isAdjusting
+}) => (
   <Fragment>
-    <Entry label={label} value={value} formatter={formatter} />
-    <Range {...other} value={value} />
-  </Fragment>
-);
-
-const Entry = ({ label, value, formatter = a => a }) => (
-  <div style={{ display: "flex", justifyContent: "space-between" }}>
-    {label}:
-    <strong>{formatter(value)}</strong>
-  </div>
-);
-
-const Range = ({ name, onReset, ...other }) => (
-  <Fragment>
-    <input
-      {...other}
-      name={name}
-      type="range"
-      style={{ display: "block", width: "100%" }}
+    <Entry
+      label={label}
+      value={value}
+      formatter={formatter}
+      onClick={() => {
+        onSelect(name);
+      }}
+      highlightValue={isAdjusting}
     />
-    <div>
-      <button
-        onClick={() => {
-          onReset(name);
-        }}
-      >
-        reset
-      </button>
-    </div>
   </Fragment>
+);
+
+const Entry = ({
+  label,
+  value,
+  onClick,
+  highlightValue,
+  formatter = a => a
+}) => (
+  <div
+    style={{ display: "flex", justifyContent: "space-between" }}
+    onClick={onClick}
+  >
+    {label}:
+    <strong style={{ backgroundColor: highlightValue ? "#eee" : null }}>
+      {formatter(value)}
+    </strong>
+  </div>
 );
 
 export default ProjectionsBody;
