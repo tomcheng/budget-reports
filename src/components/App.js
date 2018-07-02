@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
 import { Route, Switch } from "react-router-dom";
 import moment from "moment";
 import keyBy from "lodash/fp/keyBy";
@@ -12,17 +11,6 @@ import ErrorBoundary from "./ErrorBoundary";
 import Budgets from "./Budgets";
 import CategoryGroup from "./CategoryGroup";
 import Category from "./Category";
-
-const Container = styled.div`
-  font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
-  color: #444;
-  font-size: 14px;
-  line-height: 22px;
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-`;
 
 class App extends Component {
   static propTypes = {
@@ -84,67 +72,65 @@ class App extends Component {
     }
 
     return (
-      <Container>
-        <ErrorBoundary>
-          <Switch>
-            <Route
-              path="/"
-              exact
-              render={() => (
-                <Budgets
-                  budgetsLoaded={budgetsLoaded}
-                  budgets={budgetIds.map(id => budgets[id])}
-                  onRequestBudgets={this.handleRequestBudgets}
-                />
-              )}
-            />
-            {topLevelPages.map(({ path, title, Component }) => (
-              <Route
-                key={path}
-                path={`/budgets/:budgetId${path}`}
-                exact
-                render={({ match }) => (
-                  <Component
-                    authorized={authorized}
-                    budget={budgetDetails[match.params.budgetId]}
-                    budgetId={match.params.budgetId}
-                    title={title}
-                    onAuthorize={this.handleAuthorize}
-                    onRequestBudget={this.handleRequestBudget}
-                  />
-                )}
+      <ErrorBoundary>
+        <Switch>
+          <Route
+            path="/"
+            exact
+            render={() => (
+              <Budgets
+                budgetsLoaded={budgetsLoaded}
+                budgets={budgetIds.map(id => budgets[id])}
+                onRequestBudgets={this.handleRequestBudgets}
               />
-            ))}
+            )}
+          />
+          {topLevelPages.map(({ path, title, Component }) => (
             <Route
-              path="/budgets/:budgetId/category-groups/:categoryGroupId"
+              key={path}
+              path={`/budgets/:budgetId${path}`}
               exact
               render={({ match }) => (
-                <CategoryGroup
+                <Component
+                  authorized={authorized}
                   budget={budgetDetails[match.params.budgetId]}
                   budgetId={match.params.budgetId}
-                  categoryGroupId={match.params.categoryGroupId}
-                  currentMonth={currentMonth}
+                  title={title}
+                  onAuthorize={this.handleAuthorize}
                   onRequestBudget={this.handleRequestBudget}
                 />
               )}
             />
-            <Route
-              path="/budgets/:budgetId/categories/:categoryId"
-              exact
-              render={({ match }) => (
-                <Category
-                  budget={budgetDetails[match.params.budgetId]}
-                  budgetId={match.params.budgetId}
-                  categoryId={match.params.categoryId}
-                  currentMonth={currentMonth}
-                  onRequestBudget={this.handleRequestBudget}
-                />
-              )}
-            />
-            <Route component={NotFound} />
-          </Switch>
-        </ErrorBoundary>
-      </Container>
+          ))}
+          <Route
+            path="/budgets/:budgetId/category-groups/:categoryGroupId"
+            exact
+            render={({ match }) => (
+              <CategoryGroup
+                budget={budgetDetails[match.params.budgetId]}
+                budgetId={match.params.budgetId}
+                categoryGroupId={match.params.categoryGroupId}
+                currentMonth={currentMonth}
+                onRequestBudget={this.handleRequestBudget}
+              />
+            )}
+          />
+          <Route
+            path="/budgets/:budgetId/categories/:categoryId"
+            exact
+            render={({ match }) => (
+              <Category
+                budget={budgetDetails[match.params.budgetId]}
+                budgetId={match.params.budgetId}
+                categoryId={match.params.categoryId}
+                currentMonth={currentMonth}
+                onRequestBudget={this.handleRequestBudget}
+              />
+            )}
+          />
+          <Route component={NotFound} />
+        </Switch>
+      </ErrorBoundary>
     );
   }
 }
