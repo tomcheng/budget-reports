@@ -146,132 +146,118 @@ class ProjectionsBody extends PureComponent {
           yearsUntilRetirement={yearsUntilRetirement}
         />
         <Section>
-          <div>Earliest you can retire: {yearsUntilRetirement.toFixed(1)}</div>
-          <div>
-            Amount needed for retirement: {amountNeededToRetire.toFixed(2)}
-          </div>
-          <div>
-            Average return on investments:{" "}
-            {(returnOnInvestments * 100).toFixed(2)}
-          </div>
-          <div>
-            <Range
-              value={returnOnInvestments}
-              name="returnOnInvestments"
-              onChange={this.handleChange}
-              min={0}
-              max={0.2}
-              step={0.001}
-            />
-          </div>
-          <div>
-            <button
-              onClick={() => {
-                this.handleResetCalculation("returnOnInvestments");
-              }}
-            >
-              reset
-            </button>
-          </div>
-          <div>
-            Average monthly contribution: {averageContribution.toFixed(2)}
-          </div>
-          <div>
-            <Range
-              value={averageContribution}
-              name="averageContribution"
-              onChange={this.handleChange}
-              min={0}
-              max={maxAverageContribution}
-            />
-          </div>
-          <div>
-            <button
-              onClick={() => {
-                this.handleResetCalculation("averageContribution");
-              }}
-            >
-              reset
-            </button>
-          </div>
-          <div>Mortgage payment: {mortgagePayment.toFixed(2)}</div>
-          <div>
-            Years remaining on mortgage:{" "}
-            {(remainingMortgagePayments / 12).toFixed(1)}
-          </div>
-          <div>
-            Average expenses without mortgage: {averageExpenses.toFixed(2)}
-          </div>
-          <div>
-            <Range
-              value={averageExpenses}
-              name="averageExpenses"
-              onChange={this.handleChange}
-              min={0}
-              max={maxAverageExpenses}
-            />
-          </div>
-          <div>
-            <button
-              onClick={() => {
-                this.handleResetCalculation("averageExpenses");
-              }}
-            >
-              reset
-            </button>
-          </div>
-          <div>
-            Return on investment after retirement: {(retirementReturns * 100).toFixed(2)}
-          </div>
-          <div>
-            <Range
-              value={retirementReturns}
-              name="retirementReturns"
-              onChange={this.handleChange}
-              min={0}
-              max={0.2}
-              step={0.001}
-            />
-          </div>
-          <div>
-            <button
-              onClick={() => {
-                this.handleResetCalculation("retirementReturns");
-              }}
-            >
-              reset
-            </button>
-          </div>
-          <div>
-            Average tax rate after retiremnt: {(retirementTaxRate * 100).toFixed(1)}
-          </div>
-          <div>
-            <Range
-              value={retirementTaxRate}
-              name="retirementTaxRate"
-              onChange={this.handleChange}
-              min={0}
-              max={0.3}
-              step={0.001}
-            />
-          </div>
-          <div>
-            <button
-              onClick={() => {
-                this.handleResetCalculation("retirementTaxRate");
-              }}
-            >
-              reset
-            </button>
-          </div>
+          <Entry
+            label="Earliest you can retire"
+            value={`${yearsUntilRetirement.toFixed(1)} years`}
+          />
+          <Entry
+            label="Amount needed for retirement"
+            value={`$${Math.round(amountNeededToRetire)}`}
+          />
+          <Entry
+            label="Average monthly contribution"
+            value={`$${Math.round(averageContribution)}`}
+          />
+          <Range
+            onReset={this.handleResetCalculation}
+            value={averageContribution}
+            name="averageContribution"
+            onChange={this.handleChange}
+            min={0}
+            max={maxAverageContribution}
+            step={10}
+          />
+          <Entry
+            label="Average return on investments"
+            value={`${(returnOnInvestments * 100).toFixed(1)}%`}
+          />
+          <Range
+            onReset={this.handleResetCalculation}
+            value={returnOnInvestments}
+            name="returnOnInvestments"
+            onChange={this.handleChange}
+            min={0}
+            max={0.2}
+            step={0.001}
+          />
+          <Entry
+            label="Mortgage payment"
+            value={`$${mortgagePayment.toFixed(2)}`}
+          />
+          <Entry
+            label="Time remaining on mortgage"
+            value={`${(remainingMortgagePayments / 12).toFixed(1)} years`}
+          />
+          <Entry
+            label="Average expenses without mortgage"
+            value={`$${Math.round(averageExpenses)}`}
+          />
+          <Range
+            onReset={this.handleResetCalculation}
+            value={averageExpenses}
+            name="averageExpenses"
+            onChange={this.handleChange}
+            min={0}
+            max={maxAverageExpenses}
+            step={10}
+          />
+          <Entry
+            label="Return on investment after retirement"
+            value={`${(retirementReturns * 100).toFixed(1)}%`}
+          />
+          <Range
+            onReset={this.handleResetCalculation}
+            value={retirementReturns}
+            name="retirementReturns"
+            onChange={this.handleChange}
+            min={0}
+            max={0.2}
+            step={0.001}
+          />
+          <Entry
+            label="Average tax rate after retirement"
+            value={`${(retirementTaxRate * 100).toFixed(1)}%`}
+          />
+          <Range
+            onReset={this.handleResetCalculation}
+            value={retirementTaxRate}
+            name="retirementTaxRate"
+            onChange={this.handleChange}
+            min={0}
+            max={0.5}
+            step={0.001}
+          />
         </Section>
       </Fragment>
     );
   }
 }
 
-const Range = props => (
-  <input {...props} type="range" style={{ width: "100%" }} />
+const Entry = ({ label, value }) => (
+  <div style={{ display: "flex", justifyContent: "space-between" }}>
+    {label}:
+    <strong>{value}</strong>
+  </div>
+);
+
+const Range = ({ name, onReset, ...other }) => (
+  <Fragment>
+    <input
+      {...other}
+      name={name}
+      type="range"
+      style={{ display: "block", width: "100%" }}
+    />
+    <div>
+      <button
+        onClick={() => {
+          onReset(name);
+        }}
+      >
+        reset
+      </button>
+    </div>
+  </Fragment>
 );
 
 export default ProjectionsBody;
