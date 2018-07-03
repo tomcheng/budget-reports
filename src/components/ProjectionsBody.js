@@ -7,6 +7,7 @@ import head from "lodash/fp/head";
 import keyBy from "lodash/fp/keyBy";
 import map from "lodash/fp/map";
 import pick from "lodash/fp/pick";
+import range from "lodash/fp/range";
 import { simpleMemoize } from "../utils";
 import {
   getMortgageRate,
@@ -134,9 +135,17 @@ class ProjectionsBody extends PureComponent {
     let m = 0;
 
     while (m < projection.length) {
-      if (m <= remainingMortgagePayments) {
-        const remainingMortgage =
-          mortgagePayment * (remainingMortgagePayments - m);
+      if (m < remainingMortgagePayments) {
+        const remainingMortgage = range(
+          0,
+          remainingMortgagePayments - m
+        ).reduce(
+          (acc, curr) =>
+            acc +
+            mortgagePayment /
+              (1 + monthlyRetirementReturn * (1 - retirementTaxRate)) ** curr,
+          0
+        );
         if (
           (projection[m] - remainingMortgage) *
             monthlyRetirementReturn *
