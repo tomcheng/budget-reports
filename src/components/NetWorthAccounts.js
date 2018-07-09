@@ -16,7 +16,10 @@ import Breakdown from "./Breakdown";
 import Icon from "./Icon";
 
 const GROUPS = [
-  { name: "Mortgage and Assets", types: ["mortgage", "otherAsset"] },
+  {
+    name: "Mortgage and Assets",
+    types: ["mortgage", "otherAsset", "otherLiability"]
+  },
   { name: "Investment Accounts", types: ["investmentAccount"] },
   { name: "Savings Accounts", types: ["savings"] },
   { name: "Checking Accounts and Cash", types: ["checking", "cash"] },
@@ -46,22 +49,24 @@ const NetWorthAccounts = ({
   })(accounts);
   const accountsById = keyBy("id")(accounts);
 
-  const nodes = GROUPS.map(({ name }) => {
-    const groupAccounts = accountsByGroup[name];
-    return {
-      amount: sumBy("balance")(groupAccounts),
-      name,
-      id: name,
-      nodes: compose([
-        sortBy("balance"),
-        map(({ id, name, balance }) => ({
-          amount: balance,
-          id,
-          name
-        }))
-      ])(groupAccounts)
-    };
-  });
+  const nodes = GROUPS.filter(group => !!accountsByGroup[group.name]).map(
+    ({ name }) => {
+      const groupAccounts = accountsByGroup[name];
+      return {
+        amount: sumBy("balance")(groupAccounts),
+        name,
+        id: name,
+        nodes: compose([
+          sortBy("balance"),
+          map(({ id, name, balance }) => ({
+            amount: balance,
+            id,
+            name
+          }))
+        ])(groupAccounts)
+      };
+    }
+  );
 
   return (
     <Section>
