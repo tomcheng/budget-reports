@@ -53,7 +53,9 @@ class NetWorthBody extends PureComponent {
           date: PropTypes.string.isRequired
         })
       ).isRequired
-    }).isRequired
+    }).isRequired,
+    investmentAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
+    mortgageAccounts: PropTypes.objectOf(PropTypes.bool).isRequired
   };
 
   state = {
@@ -121,7 +123,7 @@ class NetWorthBody extends PureComponent {
   };
 
   render() {
-    const { budget } = this.props;
+    const { budget, investmentAccounts, mortgageAccounts } = this.props;
     const { hiddenAccounts, selectedMonth } = this.state;
 
     const months = this.getMonths(budget);
@@ -151,9 +153,11 @@ class NetWorthBody extends PureComponent {
         <NetWorthChart
           data={map(({ id, data }) => ({
             data: hiddenAccounts[id] ? data.map(constant(0)) : data,
-            type: budget.accountsById[id].type
+            type: budget.accountsById[id].type,
+            id
           }))(accountSummaries)}
           months={months}
+          mortgageAccounts={mortgageAccounts}
           selectedMonth={selectedMonth}
           onSelectMonth={this.handleSelectMonth}
         />
@@ -163,6 +167,8 @@ class NetWorthBody extends PureComponent {
             balance: selectedBalances[account.id]
           }))(budget.accounts)}
           hiddenAccounts={hiddenAccounts}
+          investmentAccounts={investmentAccounts}
+          mortgageAccounts={mortgageAccounts}
           onToggleAccounts={this.handleToggleAccounts}
         />
       </Fragment>

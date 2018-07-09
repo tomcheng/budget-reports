@@ -23,12 +23,27 @@ const GROUPS = [
   { name: "Credit Cards and Other", types: ["creditCard", "payPal"] }
 ];
 
-const NetWorthAccounts = ({ accounts, hiddenAccounts, onToggleAccounts }) => {
-  const accountsByGroup = groupBy(account =>
-    compose([prop("name"), find(group => includes(account.type)(group.types))])(
-      GROUPS
-    )
-  )(accounts);
+const NetWorthAccounts = ({
+  accounts,
+  hiddenAccounts,
+  onToggleAccounts,
+  investmentAccounts,
+  mortgageAccounts
+}) => {
+  const accountsByGroup = groupBy(account => {
+    if (investmentAccounts[account.id]) {
+      return "Investment Accounts";
+    }
+
+    if (mortgageAccounts[account.id]) {
+      return "Mortgage and Assets";
+    }
+
+    return compose([
+      prop("name"),
+      find(group => includes(account.type)(group.types))
+    ])(GROUPS);
+  })(accounts);
   const accountsById = keyBy("id")(accounts);
 
   const nodes = GROUPS.map(({ name }) => {
@@ -85,6 +100,8 @@ NetWorthAccounts.propTypes = {
     })
   ).isRequired,
   hiddenAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
+  investmentAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
+  mortgageAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
   onToggleAccounts: PropTypes.func.isRequired
 };
 

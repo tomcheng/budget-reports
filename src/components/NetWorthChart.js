@@ -23,10 +23,21 @@ const map = mapRaw.convert({ cap: false });
 
 const FIRST_STACK = "liability";
 const CREDIT_ACCOUNTS = ["mortgage", "creditCard"];
-const getStack = type =>
-  includes(type)(CREDIT_ACCOUNTS) ? "liability" : "asset";
+const getStack = ({ type, id, mortgageAccounts }) => {
+  if (mortgageAccounts[id]) {
+    return "liability";
+  }
 
-const NetWorthChart = ({ data, months, selectedMonth, onSelectMonth }) => {
+  return includes(type)(CREDIT_ACCOUNTS) ? "liability" : "asset";
+};
+
+const NetWorthChart = ({
+  data,
+  months,
+  mortgageAccounts,
+  selectedMonth,
+  onSelectMonth
+}) => {
   const categories = map(month => moment(month).format("MMM"))(months);
   const selectedIndex = findIndex(eq(selectedMonth))(months);
   const plotBands = selectedMonth
@@ -61,8 +72,8 @@ const NetWorthChart = ({ data, months, selectedMonth, onSelectMonth }) => {
           },
           series: compose([
             sortBy(({ stack }) => (stack === FIRST_STACK ? 0 : 1)),
-            map(({ data, type }) => {
-              const stack = getStack(type);
+            map(({ data, id, type }) => {
+              const stack = getStack({ type, id, mortgageAccounts });
               return {
                 data: map(
                   compose([
@@ -76,7 +87,7 @@ const NetWorthChart = ({ data, months, selectedMonth, onSelectMonth }) => {
                   stack === "liability"
                     ? negativeChartColor
                     : lightPrimaryColor,
-                stack: getStack(type)
+                stack
               };
             })
           ])(data).concat({
@@ -96,10 +107,12 @@ NetWorthChart.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       data: PropTypes.arrayOf(PropTypes.number).isRequired,
+      id: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired
     })
   ).isRequired,
   months: PropTypes.arrayOf(PropTypes.string).isRequired,
+  mortgageAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
   onSelectMonth: PropTypes.func.isRequired,
   selectedMonth: PropTypes.string
 };

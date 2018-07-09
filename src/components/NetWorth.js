@@ -7,6 +7,8 @@ class NetWorth extends Component {
   static propTypes = {
     authorized: PropTypes.bool.isRequired,
     budgetId: PropTypes.string.isRequired,
+    investmentAccounts: PropTypes.object.isRequired,
+    mortgageAccounts: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
     onAuthorize: PropTypes.func.isRequired,
     onRequestBudget: PropTypes.func.isRequired,
@@ -19,6 +21,8 @@ class NetWorth extends Component {
       budget,
       budgetId,
       title,
+      investmentAccounts,
+      mortgageAccounts,
       onAuthorize,
       onRequestBudget
     } = this.props;
@@ -31,7 +35,13 @@ class NetWorth extends Component {
         onAuthorize={onAuthorize}
         onRequestBudget={onRequestBudget}
         title={title}
-        content={() => <NetWorthBody budget={budget} />}
+        content={() => (
+          <NetWorthBody
+            budget={budget}
+            investmentAccounts={investmentAccounts}
+            mortgageAccounts={mortgageAccounts}
+          />
+        )}
       />
     );
   }

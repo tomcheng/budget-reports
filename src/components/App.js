@@ -129,6 +129,10 @@ class App extends Component {
                   authorized={authorized}
                   budget={budgetDetails[match.params.budgetId]}
                   budgetId={match.params.budgetId}
+                  investmentAccounts={getInvestmentAccounts(
+                    match.params.budgetId
+                  )}
+                  mortgageAccounts={getMortgageAccounts(match.params.budgetId)}
                   title={title}
                   onAuthorize={this.handleAuthorize}
                   onRequestBudget={this.handleRequestBudget}
