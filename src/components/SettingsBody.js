@@ -22,7 +22,7 @@ class SettingsBody extends Component {
     }).isRequired,
     investmentAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
     mortgageAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
-    onUpdateAccounts: PropTypes.func.isRequired,
+    onUpdateAccounts: PropTypes.func.isRequired
   };
 
   state = {
@@ -78,10 +78,28 @@ class SettingsBody extends Component {
           )}
         </Section>
         <Section>
-          <StrongText>Mortgage Accounts</StrongText>
-          {budget.accounts
-            .filter(({ id }) => mortgageAccounts[id])
-            .map(({ id, name }) => <div key={id}>{name}</div>)}
+          <SectionHeader>
+            <StrongText>Mortgage Accounts</StrongText>
+            <span
+              onClick={() => {
+                this.handleClickEdit("mortgage");
+              }}
+            >
+              edit
+            </span>
+          </SectionHeader>
+          {editing === "mortgage" ? (
+            <AccountsSelectionForm
+              accounts={budget.accounts}
+              initialValue={mortgageAccounts}
+              onSubmit={this.handleSubmit}
+              onCancel={this.handleCancelEdit}
+            />
+          ) : (
+            budget.accounts
+              .filter(({ id }) => mortgageAccounts[id])
+              .map(({ id, name }) => <div key={id}>{name}</div>)
+          )}
         </Section>
       </Fragment>
     );

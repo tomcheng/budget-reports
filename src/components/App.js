@@ -4,7 +4,12 @@ import { Route, Switch } from "react-router-dom";
 import moment from "moment";
 import keyBy from "lodash/fp/keyBy";
 import { getBudgets, getUpdatedBudget, AUTHORIZE_URL } from "../ynabRepo";
-import { getInvestmentAccounts, setInvestmentAccounts } from "../uiRepo";
+import {
+  getInvestmentAccounts,
+  setInvestmentAccounts,
+  getMortgageAccounts,
+  setMortgageAccounts
+} from "../uiRepo";
 import topLevelPages from "../topLevelPages";
 import Unauthorized from "./Unauthorized";
 import NotFound from "./NotFound";
@@ -98,12 +103,16 @@ class App extends Component {
                 investmentAccounts={getInvestmentAccounts(
                   match.params.budgetId
                 )}
-                mortgageAccounts={{}}
+                mortgageAccounts={getMortgageAccounts(match.params.budgetId)}
                 onAuthorize={this.handleAuthorize}
                 onRequestBudget={this.handleRequestBudget}
                 onUpdateAccounts={({ type, value }) => {
                   if (type === "investment") {
                     setInvestmentAccounts(match.params.budgetId, value);
+                    this.forceUpdate();
+                  }
+                  if (type === "mortgage") {
+                    setMortgageAccounts(match.params.budgetId, value);
                     this.forceUpdate();
                   }
                 }}
