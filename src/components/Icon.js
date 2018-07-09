@@ -6,6 +6,7 @@ import faArrowLeft from "@fortawesome/fontawesome-free-solid/faArrowLeft";
 import faBars from "@fortawesome/fontawesome-free-solid/faBars";
 import faCaretDown from "@fortawesome/fontawesome-free-solid/faCaretDown";
 import faChevronRight from "@fortawesome/fontawesome-free-solid/faChevronRight";
+import faCog from "@fortawesome/fontawesome-free-solid/faCog";
 import faEllipsisV from "@fortawesome/fontawesome-free-solid/faEllipsisV";
 import faEye from "@fortawesome/fontawesome-free-solid/faEye";
 import faEyeSlash from "@fortawesome/fontawesome-free-solid/faEyeSlash";
@@ -16,6 +17,7 @@ const ICONS = {
   bars: faBars,
   "caret-down": faCaretDown,
   "chevron-right": faChevronRight,
+  cog: faCog,
   "ellipsis-v": faEllipsisV,
   eye: faEye,
   "eye-slash": faEyeSlash,

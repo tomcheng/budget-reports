@@ -1,10 +1,24 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import topLevelPages from "../topLevelPages";
 import Icon from "./Icon";
 import { plotBandColor, iconWidth } from "../styleVariables";
+
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  height: 60px;
+`;
+
+const IconWrapper = styled.div`
+  width: ${iconWidth}px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 const StyledLink = styled(NavLink)`
   display: flex;
@@ -19,18 +33,16 @@ const StyledLink = styled(NavLink)`
 
 const SidebarMenuContent = ({ budgetId, onCloseSidebar }) => (
   <Fragment>
-    <div
-      style={{
-        height: 60,
-        width: iconWidth,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-      }}
-      onClick={onCloseSidebar}
-    >
-      <Icon icon="times" />
-    </div>
+    <Header>
+      <IconWrapper onClick={onCloseSidebar}>
+        <Icon icon="times" />
+      </IconWrapper>
+      <Link to={`/budgets/${budgetId}/settings`} style={{ display: "flex" }}>
+        <IconWrapper>
+          <Icon icon="cog" />
+        </IconWrapper>
+      </Link>
+    </Header>
     {topLevelPages.map(({ path, title }) => (
       <StyledLink
         key={path}

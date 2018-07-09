@@ -9,6 +9,7 @@ import Unauthorized from "./Unauthorized";
 import NotFound from "./NotFound";
 import ErrorBoundary from "./ErrorBoundary";
 import Budgets from "./Budgets";
+import Settings from "./Settings";
 import CategoryGroup from "./CategoryGroup";
 import Category from "./Category";
 
@@ -23,7 +24,11 @@ class App extends Component {
     budgetIds: [],
     budgets: {},
     budgetDetails: {},
-    currentMonth: moment().format("YYYY-MM")
+    currentMonth: moment().format("YYYY-MM"),
+    settings: {
+      investmentAccounts: {},
+      mortgageAccounts: {}
+    }
   };
 
   handleRequestBudgets = callback => {
@@ -64,7 +69,8 @@ class App extends Component {
       budgetIds,
       budgets,
       budgetDetails,
-      currentMonth
+      currentMonth,
+      settings
     } = this.state;
 
     if (!hasToken) {
@@ -84,6 +90,21 @@ class App extends Component {
                 onRequestBudgets={this.handleRequestBudgets}
               />
             )}
+          />
+          <Route
+              path={`/budgets/:budgetId/settings`}
+              exact
+              render={({ match }) => (
+                <Settings
+                  authorized={authorized}
+                  budget={budgetDetails[match.params.budgetId]}
+                  budgetId={match.params.budgetId}
+                  investmentAccounts={settings.investmentAccounts}
+                  mortgageAccounts={settings.mortgageAccounts}
+                  onAuthorize={this.handleAuthorize}
+                  onRequestBudget={this.handleRequestBudget}
+                />
+              )}
           />
           {topLevelPages.map(({ path, title, Component }) => (
             <Route
