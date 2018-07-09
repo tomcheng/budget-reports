@@ -4,6 +4,7 @@ import { Route, Switch } from "react-router-dom";
 import moment from "moment";
 import keyBy from "lodash/fp/keyBy";
 import { getBudgets, getUpdatedBudget, AUTHORIZE_URL } from "../ynabRepo";
+import { getInvestmentAccounts, setInvestmentAccounts } from "../uiRepo";
 import topLevelPages from "../topLevelPages";
 import Unauthorized from "./Unauthorized";
 import NotFound from "./NotFound";
@@ -24,11 +25,7 @@ class App extends Component {
     budgetIds: [],
     budgets: {},
     budgetDetails: {},
-    currentMonth: moment().format("YYYY-MM"),
-    settings: {
-      investmentAccounts: {},
-      mortgageAccounts: {}
-    }
+    currentMonth: moment().format("YYYY-MM")
   };
 
   handleRequestBudgets = callback => {
@@ -61,16 +58,6 @@ class App extends Component {
     window.location.replace(AUTHORIZE_URL);
   };
 
-  handleUpdateAccounts = ({ type, value }) => {
-    this.setState(state => ({
-      ...state,
-      settings: {
-        ...state.settings,
-        [`${type}Accounts`]: value
-      }
-    }));
-  };
-
   render() {
     const { hasToken } = this.props;
     const {
@@ -79,8 +66,7 @@ class App extends Component {
       budgetIds,
       budgets,
       budgetDetails,
-      currentMonth,
-      settings
+      currentMonth
     } = this.state;
 
     if (!hasToken) {
@@ -109,11 +95,18 @@ class App extends Component {
                 authorized={authorized}
                 budget={budgetDetails[match.params.budgetId]}
                 budgetId={match.params.budgetId}
-                investmentAccounts={settings.investmentAccounts}
-                mortgageAccounts={settings.mortgageAccounts}
+                investmentAccounts={getInvestmentAccounts(
+                  match.params.budgetId
+                )}
+                mortgageAccounts={{}}
                 onAuthorize={this.handleAuthorize}
                 onRequestBudget={this.handleRequestBudget}
-                onUpdateAccounts={this.handleUpdateAccounts}
+                onUpdateAccounts={({ type, value }) => {
+                  if (type === "investment") {
+                    setInvestmentAccounts(match.params.budgetId, value);
+                    this.forceUpdate();
+                  }
+                }}
               />
             )}
           />

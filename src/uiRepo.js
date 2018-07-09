@@ -4,6 +4,7 @@ import moment from "moment";
 
 const EXPANDED_GROUPS_KEY = "budget-reports-expanded-groups";
 const LAST_UPDATED_KEY = "budget-reports-last-updated";
+const INVESTMENT_ACCOUNTS_KEY = "budget-reports-investment-accounts";
 
 export const getExpandedGroups = budgetId =>
   get(getStorage(EXPANDED_GROUPS_KEY), budgetId, {});
@@ -23,3 +24,14 @@ export const setLastUpdated = budgetId => {
 
 export const getLastUpdated = budgetId =>
   get(getStorage(LAST_UPDATED_KEY), budgetId, null);
+
+export const getInvestmentAccounts = budgetId =>
+  get(getStorage(INVESTMENT_ACCOUNTS_KEY), budgetId, {});
+
+export const setInvestmentAccounts = (budgetId, accounts) => {
+  const investmentAccounts = getStorage(INVESTMENT_ACCOUNTS_KEY) || {};
+  setStorage(INVESTMENT_ACCOUNTS_KEY, {
+    ...investmentAccounts,
+    [budgetId]: accounts
+  });
+};
