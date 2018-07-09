@@ -61,6 +61,16 @@ class App extends Component {
     window.location.replace(AUTHORIZE_URL);
   };
 
+  handleUpdateAccounts = ({ type, value }) => {
+    this.setState(state => ({
+      ...state,
+      settings: {
+        ...state.settings,
+        [`${type}Accounts`]: value
+      }
+    }));
+  };
+
   render() {
     const { hasToken } = this.props;
     const {
@@ -92,19 +102,20 @@ class App extends Component {
             )}
           />
           <Route
-              path={`/budgets/:budgetId/settings`}
-              exact
-              render={({ match }) => (
-                <Settings
-                  authorized={authorized}
-                  budget={budgetDetails[match.params.budgetId]}
-                  budgetId={match.params.budgetId}
-                  investmentAccounts={settings.investmentAccounts}
-                  mortgageAccounts={settings.mortgageAccounts}
-                  onAuthorize={this.handleAuthorize}
-                  onRequestBudget={this.handleRequestBudget}
-                />
-              )}
+            path={`/budgets/:budgetId/settings`}
+            exact
+            render={({ match }) => (
+              <Settings
+                authorized={authorized}
+                budget={budgetDetails[match.params.budgetId]}
+                budgetId={match.params.budgetId}
+                investmentAccounts={settings.investmentAccounts}
+                mortgageAccounts={settings.mortgageAccounts}
+                onAuthorize={this.handleAuthorize}
+                onRequestBudget={this.handleRequestBudget}
+                onUpdateAccounts={this.handleUpdateAccounts}
+              />
+            )}
           />
           {topLevelPages.map(({ path, title, Component }) => (
             <Route

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import Section from "./Section";
 import { StrongText } from "./typeComponents";
+import AccountsSelectionForm from "./AccountsSelectionForm";
 
 const SectionHeader = styled.div`
   display: flex;
@@ -20,7 +21,8 @@ class SettingsBody extends Component {
       ).isRequired
     }).isRequired,
     investmentAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
-    mortgageAccounts: PropTypes.objectOf(PropTypes.bool).isRequired
+    mortgageAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
+    onUpdateAccounts: PropTypes.func.isRequired,
   };
 
   state = {
@@ -31,6 +33,18 @@ class SettingsBody extends Component {
     this.setState(state => ({
       editing: state.editing === section ? null : section
     }));
+  };
+
+  handleSubmit = accountsObject => {
+    const { onUpdateAccounts } = this.props;
+    const { editing } = this.state;
+
+    this.setState({ editing: null });
+    onUpdateAccounts({ type: editing, value: accountsObject });
+  };
+
+  handleCancelEdit = () => {
+    this.setState({ editing: null });
   };
 
   render() {
@@ -51,7 +65,12 @@ class SettingsBody extends Component {
             </span>
           </SectionHeader>
           {editing === "investment" ? (
-            <div>Editing</div>
+            <AccountsSelectionForm
+              accounts={budget.accounts}
+              initialValue={investmentAccounts}
+              onSubmit={this.handleSubmit}
+              onCancel={this.handleCancelEdit}
+            />
           ) : (
             budget.accounts
               .filter(({ id }) => investmentAccounts[id])

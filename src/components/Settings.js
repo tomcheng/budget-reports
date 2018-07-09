@@ -10,7 +10,8 @@ const Settings = ({
   investmentAccounts,
   mortgageAccounts,
   onAuthorize,
-  onRequestBudget
+  onRequestBudget,
+  onUpdateAccounts
 }) => (
   <PageWrapper
     authorized={authorized}
@@ -24,6 +25,7 @@ const Settings = ({
         budget={budget}
         investmentAccounts={investmentAccounts}
         mortgageAccounts={mortgageAccounts}
+        onUpdateAccounts={onUpdateAccounts}
       />
     )}
   />
@@ -36,6 +38,7 @@ Settings.propTypes = {
   mortgageAccounts: PropTypes.object.isRequired,
   onAuthorize: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired,
+  onUpdateAccounts: PropTypes.func.isRequired,
   budget: PropTypes.object
 };
 
