@@ -59,7 +59,7 @@ const getInitialState = simpleMemoize(budget => {
     paymentsLeft: remainingMortgagePayments,
     mortgagePayment,
     principalProjection: mortgageProjection
-  } = getMortgageRate(budget);
+  } = getMortgageRate(budget) || {};
   const returnOnInvestments = getReturnOnInvestments(budget);
   const averageContribution = getAverageContribution(budget);
   const currentInvestments = getCurrentInvestments(budget);
@@ -177,6 +177,7 @@ class ProjectionsBody extends PureComponent {
       remainingMortgagePayments,
       mortgagePayment
     });
+    const hasMortgage = !!mortgagePayment;
 
     const yearsUntilRetirement = m / 12;
     const projectionByYear = compose([map(head), chunk(12)])(
@@ -226,16 +227,20 @@ class ProjectionsBody extends PureComponent {
               onChange={this.handleChange}
             />
           ))}
-          <Entry
-            label="Mortgage payment"
-            value={mortgagePayment}
-            formatter={val => `$${val.toFixed(2)}`}
-          />
-          <Entry
-            label="Time remaining on mortgage"
-            value={remainingMortgagePayments}
-            formatter={val => `${(val / 12).toFixed(1)} years`}
-          />
+          {hasMortgage && (
+            <Fragment>
+              <Entry
+                label="Mortgage payment"
+                value={mortgagePayment}
+                formatter={val => `$${val.toFixed(2)}`}
+              />
+              <Entry
+                label="Time remaining on mortgage"
+                value={remainingMortgagePayments}
+                formatter={val => `${(val / 12).toFixed(1)} years`}
+              />
+            </Fragment>
+          )}
         </Section>
         <ProjectionsSlider
           name={adjustingName}
