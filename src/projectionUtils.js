@@ -24,11 +24,13 @@ import takeRightWhile from "lodash/fp/takeRightWhile";
 import uniq from "lodash/fp/uniq";
 import { getOutliersBy, getMonth } from "./utils";
 
-export const getMortgageRate = ({
-  accounts,
-  transactions: allTransactions
-}) => {
-  const mortgageAccount = find(matches({ type: "mortgage" }))(accounts);
+export const getMortgageRate = (
+  { accounts, transactions: allTransactions },
+  mortgageAccounts
+) => {
+  const mortgageAccount = find(account => mortgageAccounts[account.id])(
+    accounts
+  );
 
   if (!mortgageAccount) {
     return null;
@@ -69,10 +71,13 @@ export const getMortgageRate = ({
   };
 };
 
-export const getCurrentInvestments = ({ accounts, transactions }) => {
+export const getCurrentInvestments = (
+  { accounts, transactions },
+  investmentAccounts
+) => {
   const investmentAccountIds = compose([
-    map("id"),
-    filter(matches({ type: "investmentAccount" }))
+    filter(id => investmentAccounts[id]),
+    map("id")
   ])(accounts);
 
   return compose([
@@ -81,14 +86,13 @@ export const getCurrentInvestments = ({ accounts, transactions }) => {
   ])(transactions);
 };
 
-export const getReturnOnInvestments = ({
-  accounts,
-  payees,
-  transactions: allTransactions
-}) => {
+export const getReturnOnInvestments = (
+  { accounts, payees, transactions: allTransactions },
+  investmentAccounts
+) => {
   const investmentAccountIds = compose([
-    map("id"),
-    filter(matches({ type: "investmentAccount" }))
+    filter(id => investmentAccounts[id]),
+    map("id")
   ])(accounts);
 
   const transactionsByMonth = compose([
@@ -122,13 +126,13 @@ export const getReturnOnInvestments = ({
   return totalReturn ** (12 / numMonths) - 1;
 };
 
-export const getAverageContribution = ({
-  accounts,
-  transactions: allTransactions
-}) => {
+export const getAverageContribution = (
+  { accounts, transactions: allTransactions },
+  investmentAccounts
+) => {
   const investmentAccountIds = compose([
-    map("id"),
-    filter(matches({ type: "investmentAccount" }))
+    filter(id => investmentAccounts[id]),
+    map("id")
   ])(accounts);
 
   const contributions = compose([
@@ -165,13 +169,11 @@ export const getAverageContribution = ({
   return totalContributions / numMonths;
 };
 
-export const getAverageExpensesWithoutMortgage = ({
-  transactions,
-  accounts,
-  payees,
-  categoriesById,
-  categoryGroupsById
-}) => {
+export const getAverageExpensesWithoutMortgage = (
+  { transactions, accounts, payees, categoriesById, categoryGroupsById },
+  investmentAccounts,
+  mortgageAccounts
+) => {
   const startingBalanceId = compose([
     prop("id"),
     find(matches({ name: "Starting Balance" }))
@@ -179,13 +181,13 @@ export const getAverageExpensesWithoutMortgage = ({
   const months = compose([sortBy(identity), uniq, map(getMonth)])(transactions);
 
   const mortgageAccountIds = compose([
-    map(prop("id")),
-    filter(matches({ type: "mortgage" }))
+    filter(id => mortgageAccounts[id]),
+    map("id")
   ])(accounts);
 
   const investmentAccountIds = compose([
-    map(prop("id")),
-    filter(matches({ type: "investmentAccount" }))
+    filter(id => investmentAccounts[id]),
+    map("id")
   ])(accounts);
 
   const totalExpenses = compose([
@@ -255,7 +257,9 @@ export const getProjectionWithRetirement = ({
         averageContribution +
         (amount + 0.5 * averageContribution) * monthlyRate;
     } else {
-      amount += amount * monthlyRetirementReturn * (1 - retirementTaxRate) - monthlyExpenses;
+      amount +=
+        amount * monthlyRetirementReturn * (1 - retirementTaxRate) -
+        monthlyExpenses;
       if (projection.length < remainingMortgagePayments) {
         amount -= mortgagePayment;
       }

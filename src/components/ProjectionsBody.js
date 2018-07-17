@@ -54,42 +54,67 @@ const adjustableEntries = [
 
 const adjustableEntriesByName = keyBy("name")(adjustableEntries);
 
-const getInitialState = simpleMemoize(budget => {
-  const {
-    paymentsLeft: remainingMortgagePayments,
-    mortgagePayment,
-    principalProjection: mortgageProjection
-  } = getMortgageRate(budget) || {};
-  const returnOnInvestments = getReturnOnInvestments(budget);
-  const averageContribution = getAverageContribution(budget);
-  const currentInvestments = getCurrentInvestments(budget);
-  const averageExpenses = getAverageExpensesWithoutMortgage(budget);
+const getInitialState = simpleMemoize(
+  (budget, investmentAccounts, mortgageAccounts) => {
+    const {
+      paymentsLeft: remainingMortgagePayments,
+      mortgagePayment,
+      principalProjection: mortgageProjection
+    } =
+      getMortgageRate(budget, mortgageAccounts) || {};
+    const returnOnInvestments = getReturnOnInvestments(
+      budget,
+      investmentAccounts
+    );
+    const averageContribution = getAverageContribution(
+      budget,
+      investmentAccounts
+    );
+    const currentInvestments = getCurrentInvestments(
+      budget,
+      investmentAccounts
+    );
+    const averageExpenses = getAverageExpensesWithoutMortgage(
+      budget,
+      investmentAccounts,
+      mortgageAccounts
+    );
 
-  return {
-    mortgagePayment,
-    remainingMortgagePayments,
-    mortgageProjection,
-    returnOnInvestments,
-    averageContribution,
-    currentInvestments,
-    averageExpenses,
-    retirementReturns: 0.04,
-    retirementTaxRate: 0.15,
-    maxAverageExpenses: Math.ceil(averageExpenses * 2 / 1000) * 1000,
-    maxAverageContribution: Math.ceil(averageContribution * 2 / 1000) * 1000
-  };
-});
+    return {
+      mortgagePayment,
+      remainingMortgagePayments,
+      mortgageProjection,
+      returnOnInvestments,
+      averageContribution,
+      currentInvestments,
+      averageExpenses,
+      retirementReturns: 0.04,
+      retirementTaxRate: 0.15,
+      maxAverageExpenses: Math.ceil(averageExpenses * 2 / 1000) * 1000,
+      maxAverageContribution: Math.ceil(averageContribution * 2 / 1000) * 1000
+    };
+  }
+);
 
 class ProjectionsBody extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       transactions: PropTypes.array.isRequired
-    }).isRequired
+    }).isRequired,
+    investmentAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
+    mortgageAccounts: PropTypes.objectOf(PropTypes.bool).isRequired
   };
 
   constructor(props) {
     super();
-    this.state = { ...getInitialState(props.budget), adjustingName: null };
+    this.state = {
+      ...getInitialState(
+        props.budget,
+        props.investmentAccounts,
+        props.mortgageAccounts
+      ),
+      adjustingName: null
+    };
   }
 
   handleChange = e => {
@@ -103,8 +128,12 @@ class ProjectionsBody extends PureComponent {
   };
 
   handleResetCalculation = calculation => {
-    const { budget } = this.props;
-    this.setState(pick(calculation)(getInitialState(budget)));
+    const { budget, investmentAccounts, mortgageAccounts } = this.props;
+    this.setState(
+      pick(calculation)(
+        getInitialState(budget, investmentAccounts, mortgageAccounts)
+      )
+    );
   };
 
   render() {

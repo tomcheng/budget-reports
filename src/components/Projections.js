@@ -7,6 +7,8 @@ class Projections extends Component {
   static propTypes = {
     authorized: PropTypes.bool.isRequired,
     budgetId: PropTypes.string.isRequired,
+    investmentAccounts: PropTypes.object.isRequired,
+    mortgageAccounts: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
     onAuthorize: PropTypes.func.isRequired,
     onRequestBudget: PropTypes.func.isRequired,
@@ -18,6 +20,8 @@ class Projections extends Component {
       authorized,
       budget,
       budgetId,
+      investmentAccounts,
+      mortgageAccounts,
       title,
       onAuthorize,
       onRequestBudget
@@ -31,7 +35,13 @@ class Projections extends Component {
         onAuthorize={onAuthorize}
         onRequestBudget={onRequestBudget}
         title={title}
-        content={() => <ProjectionsBody budget={budget} />}
+        content={() => (
+          <ProjectionsBody
+            budget={budget}
+            investmentAccounts={investmentAccounts}
+            mortgageAccounts={mortgageAccounts}
+          />
+        )}
       />
     );
   }
