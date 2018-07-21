@@ -18,6 +18,7 @@ import sum from "lodash/fp/sum";
 import sumBy from "lodash/fp/sumBy";
 import values from "lodash/fp/values";
 import { simpleMemoize } from "../utils";
+import { getNetworthHiddenAccounts, setNetworthHiddenAccounts } from "../uiRepo";
 import NetWorthSummary from "./NetWorthSummary";
 import NetWorthChart from "./NetWorthChart";
 import NetWorthAccounts from "./NetWorthAccounts";
@@ -58,10 +59,14 @@ class NetWorthBody extends PureComponent {
     mortgageAccounts: PropTypes.objectOf(PropTypes.bool).isRequired
   };
 
-  state = {
-    hiddenAccounts: {},
-    selectedMonth: null
-  };
+  constructor(props) {
+    super();
+
+    this.state = {
+      hiddenAccounts: getNetworthHiddenAccounts(props.budget.id),
+      selectedMonth: null
+    };
+  }
 
   groupByMonthAndAccount = simpleMemoize(
     compose([
@@ -112,6 +117,7 @@ class NetWorthBody extends PureComponent {
   };
 
   handleToggleAccounts = ({ ids }) => {
+    const { budget } = this.props;
     const { hiddenAccounts } = this.state;
     const shouldHide = ids.some(id => !hiddenAccounts[id]);
     const newHiddenAccounts = ids.reduce(
@@ -120,6 +126,7 @@ class NetWorthBody extends PureComponent {
     );
 
     this.setState({ hiddenAccounts: newHiddenAccounts });
+    setNetworthHiddenAccounts(budget.id, newHiddenAccounts);
   };
 
   render() {
