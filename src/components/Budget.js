@@ -24,7 +24,14 @@ class Budget extends Component {
   };
 
   render() {
-    const { authorized, budget, budgetId, title, onAuthorize, onRequestBudget } = this.props;
+    const {
+      authorized,
+      budget,
+      budgetId,
+      title,
+      onAuthorize,
+      onRequestBudget
+    } = this.props;
     const { showing } = this.state;
 
     return (
@@ -36,7 +43,10 @@ class Budget extends Component {
         onRequestBudget={onRequestBudget}
         title={title}
         actions={
-          <SecondaryText onClick={this.handleToggleShowing}>
+          <SecondaryText
+            onClick={this.handleToggleShowing}
+            style={{ userSelect: "none" }}
+          >
             {showing}
           </SecondaryText>
         }

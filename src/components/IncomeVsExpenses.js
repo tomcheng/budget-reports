@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import PageWrapper from "./PageWrapper";
+import { SecondaryText } from "./typeComponents";
 import IncomeVsExpensesBody from "./IncomeVsExpensesBody";
 
 class IncomeVsExpenses extends Component {
@@ -15,6 +16,15 @@ class IncomeVsExpenses extends Component {
     budget: PropTypes.object
   };
 
+  state = { showing: "average" };
+
+  handleToggleShowing = () => {
+    this.setState(state => ({
+      ...state,
+      showing: state.showing === "average" ? "total" : "average"
+    }));
+  };
+
   render() {
     const {
       authorized,
@@ -26,6 +36,7 @@ class IncomeVsExpenses extends Component {
       onAuthorize,
       onRequestBudget
     } = this.props;
+    const { showing } = this.state;
 
     return (
       <PageWrapper
@@ -35,9 +46,18 @@ class IncomeVsExpenses extends Component {
         onAuthorize={onAuthorize}
         onRequestBudget={onRequestBudget}
         title={title}
+        actions={
+          <SecondaryText
+            onClick={this.handleToggleShowing}
+            style={{ userSelect: "none" }}
+          >
+            {showing}
+          </SecondaryText>
+        }
         content={() => (
           <IncomeVsExpensesBody
             budget={budget}
+            showing={showing}
             investmentAccounts={investmentAccounts}
             mortgageAccounts={mortgageAccounts}
           />

@@ -6,9 +6,7 @@ import TopNumbers from "./TopNumbers";
 const IncomeVsExpensesSummary = ({
   expenseTransactions,
   incomeTransactions,
-  divideBy,
-  showTotals,
-  onToggleTotals
+  divideBy
 }) => {
   const totalIncome = sumBy("amount")(incomeTransactions);
   const totalExpenses = sumBy("amount")(expenseTransactions);
@@ -16,7 +14,6 @@ const IncomeVsExpensesSummary = ({
 
   return (
     <TopNumbers
-      onClick={onToggleTotals}
       numbers={[
         {
           label: isAverage ? "avg. income" : "total income",
@@ -43,8 +40,7 @@ IncomeVsExpensesSummary.propTypes = {
   incomeTransactions: PropTypes.arrayOf(
     PropTypes.shape({ amount: PropTypes.number.isRequired })
   ).isRequired,
-  divideBy: PropTypes.number.isRequired,
-  onToggleTotals: PropTypes.func.isRequired
+  divideBy: PropTypes.number.isRequired
 };
 
 export default IncomeVsExpensesSummary;

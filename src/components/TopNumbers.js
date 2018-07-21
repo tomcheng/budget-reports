@@ -15,8 +15,8 @@ const Label = styled(MinorText)`
   margin-top: -4px;
 `;
 
-const TopNumbers = ({ numbers, roundToDollar, onClick }) => (
-  <Section style={{ display: "flex" }} onClick={onClick}>
+const TopNumbers = ({ numbers, roundToDollar }) => (
+  <Section style={{ display: "flex" }}>
     {numbers.map(({ label, value }) => (
       <Group key={label}>
         <LargeNumber>${value.toFixed(roundToDollar ? 0 : 2)}</LargeNumber>
@@ -33,8 +33,7 @@ TopNumbers.propTypes = {
       value: PropTypes.number.isRequired
     })
   ).isRequired,
-  roundToDollar: PropTypes.bool,
-  onClick: PropTypes.func
+  roundToDollar: PropTypes.bool
 };
 
 TopNumbers.defaultProps = { roundToDollar: false };

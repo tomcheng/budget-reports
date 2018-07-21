@@ -54,22 +54,15 @@ class IncomeVsExpensesBody extends PureComponent {
       ).isRequired
     }).isRequired,
     investmentAccounts: PropTypes.object.isRequired,
-    mortgageAccounts: PropTypes.object.isRequired
+    mortgageAccounts: PropTypes.object.isRequired,
+    showing: PropTypes.oneOf(["average", "total"]).isRequired
   };
 
   state = {
-    showTotals: false,
     excludeOutliers: true,
     excludeFirstMonth: true,
     excludeCurrentMonth: true,
     selectedMonths: {}
-  };
-
-  handleToggleTotals = () => {
-    this.setState(state => ({
-      ...state,
-      showTotals: !state.showTotals
-    }));
   };
 
   handleToggleExclusion = key => {
@@ -179,17 +172,16 @@ class IncomeVsExpensesBody extends PureComponent {
   };
 
   render() {
-    const { budget, investmentAccounts, mortgageAccounts } = this.props;
+    const { budget, investmentAccounts, mortgageAccounts, showing } = this.props;
     const {
-      showTotals,
       excludeOutliers,
       excludeFirstMonth,
       excludeCurrentMonth
     } = this.state;
     const { categoriesById, categoryGroupsById, payeesById } = budget;
 
+    const showTotals = showing === "total";
     const selectedMonths = this.getSelectedMonths();
-
     const allSummaries = this.getSummaries(
       budget,
       investmentAccounts,
@@ -214,7 +206,6 @@ class IncomeVsExpensesBody extends PureComponent {
           incomeTransactions={incomeTransactions}
           expenseTransactions={expenseTransactions}
           divideBy={showTotals ? 1 : summaries.length}
-          onToggleTotals={this.handleToggleTotals}
         />
         <IncomeVsExpensesChart
           data={allSummaries}
