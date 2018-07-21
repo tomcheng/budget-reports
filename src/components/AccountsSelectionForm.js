@@ -2,11 +2,12 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import omit from "lodash/fp/omit";
+import { PrimaryButton, GhostButton } from "./Button";
 
 const StyledLabel = styled.label`
   display: flex;
   align-items: center;
-  padding: 4px 0;
+  padding: 5px 0;
 `;
 
 class AccountsSelectionForm extends Component {
@@ -65,9 +66,9 @@ class AccountsSelectionForm extends Component {
             {name}
           </StyledLabel>
         ))}
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <div onClick={onCancel}>Cancel</div>
-          <div onClick={this.handleClickSubmit}>Submit</div>
+        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 5 }}>
+          <GhostButton onClick={onCancel}>cancel</GhostButton>
+          <PrimaryButton onClick={this.handleClickSubmit}>Submit</PrimaryButton>
         </div>
       </Fragment>
     );
