@@ -6,8 +6,7 @@ import find from "lodash/fp/find";
 import groupBy from "lodash/fp/groupBy";
 import includes from "lodash/fp/includes";
 import keyBy from "lodash/fp/keyBy";
-import map from "lodash/fp/map";
-import prop from "lodash/fp/prop";
+import mapRaw from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import Section from "./Section";
@@ -15,15 +14,21 @@ import { StrongText } from "./typeComponents";
 import Breakdown from "./Breakdown";
 import Icon from "./Icon";
 
+const map = mapRaw.convert({ cap: false });
+
+const GROUP_ORDER = [
+  "Checking Accounts and Cash",
+  "Savings Accounts",
+  "Credit Cards",
+  "Investment Accounts",
+  "Mortgage Accounts",
+  "Other"
+];
+
 const GROUPS = [
-  {
-    name: "Mortgage and Assets",
-    types: ["mortgage", "otherAsset", "otherLiability"]
-  },
-  { name: "Investment Accounts", types: ["investmentAccount"] },
   { name: "Savings Accounts", types: ["savings"] },
   { name: "Checking Accounts and Cash", types: ["checking", "cash"] },
-  { name: "Credit Cards and Other", types: ["creditCard", "payPal"] }
+  { name: "Credit Cards", types: ["creditCard"] }
 ];
 
 const NetWorthAccounts = ({
@@ -39,34 +44,31 @@ const NetWorthAccounts = ({
     }
 
     if (mortgageAccounts[account.id]) {
-      return "Mortgage and Assets";
+      return "Mortgage Accounts";
     }
 
-    return compose([
-      prop("name"),
-      find(group => includes(account.type)(group.types))
-    ])(GROUPS);
+    const group = find(group => includes(account.type)(group.types))(GROUPS);
+
+    return group ? group.name : "Other";
   })(accounts);
   const accountsById = keyBy("id")(accounts);
 
-  const nodes = GROUPS.filter(group => !!accountsByGroup[group.name]).map(
-    ({ name }) => {
-      const groupAccounts = accountsByGroup[name];
-      return {
-        amount: sumBy("balance")(groupAccounts),
-        name,
-        id: name,
-        nodes: compose([
-          sortBy("balance"),
-          map(({ id, name, balance }) => ({
-            amount: balance,
-            id,
-            name
-          }))
-        ])(groupAccounts)
-      };
-    }
-  );
+  const nodes = compose([
+    sortBy(group => GROUP_ORDER.indexOf(group.name)),
+    map((accounts, name) => ({
+      amount: sumBy("balance")(accounts),
+      name,
+      id: name,
+      nodes: compose([
+        sortBy("balance"),
+        map(({ id, name, balance }) => ({
+          amount: balance,
+          id,
+          name
+        }))
+      ])(accounts)
+    }))
+  ])(accountsByGroup);
 
   return (
     <Section>
