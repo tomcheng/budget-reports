@@ -7,6 +7,7 @@ class IncomeVsExpenses extends Component {
   static propTypes = {
     authorized: PropTypes.bool.isRequired,
     budgetId: PropTypes.string.isRequired,
+    investmentAccounts: PropTypes.object.isRequired,
     mortgageAccounts: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
     onAuthorize: PropTypes.func.isRequired,
@@ -19,6 +20,7 @@ class IncomeVsExpenses extends Component {
       authorized,
       budget,
       budgetId,
+      investmentAccounts,
       mortgageAccounts,
       title,
       onAuthorize,
@@ -36,6 +38,7 @@ class IncomeVsExpenses extends Component {
         content={() => (
           <IncomeVsExpensesBody
             budget={budget}
+            investmentAccounts={investmentAccounts}
             mortgageAccounts={mortgageAccounts}
           />
         )}

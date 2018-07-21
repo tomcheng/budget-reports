@@ -53,6 +53,7 @@ class IncomeVsExpensesBody extends PureComponent {
         })
       ).isRequired
     }).isRequired,
+    investmentAccounts: PropTypes.object.isRequired,
     mortgageAccounts: PropTypes.object.isRequired
   };
 
@@ -97,6 +98,7 @@ class IncomeVsExpensesBody extends PureComponent {
   getSummaries = simpleMemoize(
     (
       { categoryGroupsById, categoriesById, transactions, payeesById },
+      investmentAccounts,
       mortgageAccounts
     ) =>
       compose([
@@ -127,7 +129,10 @@ class IncomeVsExpensesBody extends PureComponent {
                 return false;
               }
 
-              if (mortgageAccounts[transaction.accountId]) {
+              if (
+                mortgageAccounts[transaction.accountId] ||
+                investmentAccounts[transaction.accountId]
+              ) {
                 return true;
               }
 
@@ -174,7 +179,7 @@ class IncomeVsExpensesBody extends PureComponent {
   };
 
   render() {
-    const { budget, mortgageAccounts } = this.props;
+    const { budget, investmentAccounts, mortgageAccounts } = this.props;
     const {
       showTotals,
       excludeOutliers,
@@ -182,11 +187,14 @@ class IncomeVsExpensesBody extends PureComponent {
       excludeCurrentMonth
     } = this.state;
     const { categoriesById, categoryGroupsById, payeesById } = budget;
-    console.log("budget.transactions:", budget.transactions);
 
     const selectedMonths = this.getSelectedMonths();
 
-    const allSummaries = this.getSummaries(budget, mortgageAccounts);
+    const allSummaries = this.getSummaries(
+      budget,
+      investmentAccounts,
+      mortgageAccounts
+    );
     const excludedMonths = this.getExcludedMonths(allSummaries);
     const summaries = selectedMonths.length
       ? selectedMonths.map(month =>
