@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Section from "./Section";
 import { StrongText } from "./typeComponents";
 import AccountsSelectionForm from "./AccountsSelectionForm";
+import Icon from "./Icon";
 
 const SectionHeader = styled.div`
   display: flex;
@@ -61,7 +62,7 @@ class SettingsBody extends Component {
                 this.handleClickEdit("investment");
               }}
             >
-              edit
+              <Icon icon="pencil" />
             </span>
           </SectionHeader>
           {editing === "investment" ? (
@@ -85,7 +86,7 @@ class SettingsBody extends Component {
                 this.handleClickEdit("mortgage");
               }}
             >
-              edit
+              <Icon icon="pencil" />
             </span>
           </SectionHeader>
           {editing === "mortgage" ? (
