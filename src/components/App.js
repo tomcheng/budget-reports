@@ -18,6 +18,7 @@ import Budgets from "./Budgets";
 import Settings from "./Settings";
 import CategoryGroup from "./CategoryGroup";
 import Category from "./Category";
+import Payee from "./Payee";
 
 class App extends Component {
   static propTypes = {
@@ -162,6 +163,20 @@ class App extends Component {
                 budgetId={match.params.budgetId}
                 categoryId={match.params.categoryId}
                 currentMonth={currentMonth}
+                onRequestBudget={this.handleRequestBudget}
+              />
+            )}
+          />
+          <Route
+            path="/budgets/:budgetId/payees/:payeeId"
+            exact
+            render={({ match }) => (
+              <Payee
+                authorized={authorized}
+                budget={budgetDetails[match.params.budgetId]}
+                budgetId={match.params.budgetId}
+                payeeId={match.params.payeeId}
+                onAuthorize={this.handleAuthorize}
                 onRequestBudget={this.handleRequestBudget}
               />
             )}
