@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import groupBy from "lodash/fp/groupBy";
@@ -8,13 +8,16 @@ import range from "lodash/fp/range";
 import sumBy from "lodash/fp/sumBy";
 import moment from "moment";
 import tinyColor from "tinycolor2";
+import AnimateHeight from "react-animate-height-auto";
 import {
   getSpendingMonthsToCompare,
   setSpendingMonthsToCompare
 } from "../uiRepo";
 import { primaryColor, plotBandColor } from "../styleVariables";
 import { MinorText, SecondaryText } from "./typeComponents";
+import { GhostButton, PrimaryButton } from "./Button";
 import Section from "./Section";
+import Icon from "./Icon";
 import Chart from "./Chart";
 
 const DateLabels = styled.div`
@@ -59,9 +62,19 @@ class SpendingChart extends Component {
   constructor(props) {
     super();
     this.state = {
-      monthsToCompare: getSpendingMonthsToCompare(props.budgetId)
+      isEditingMonthsToCompare: false,
+      monthsToCompare: getSpendingMonthsToCompare(props.budgetId),
+      previousMonths: null
     };
   }
+
+  handleClickEdit = () => {
+    this.setState(state => ({
+      ...state,
+      isEditingMonthsToCompare: !state.isEditingMonthsToCompare,
+      previousMonths: state.monthsToCompare
+    }));
+  };
 
   handleChangeMonths = evt => {
     const monthsToCompare = parseInt(evt.target.value, 10);
@@ -69,9 +82,26 @@ class SpendingChart extends Component {
     setSpendingMonthsToCompare(this.props.budgetId, monthsToCompare);
   };
 
+  handleClickSave = () => {
+    this.setState({
+      isEditingMonthsToCompare: false,
+      previousMonths: null
+    });
+  };
+
+  handleClickCancel = () => {
+    setSpendingMonthsToCompare(this.props.budgetId, this.state.previousMonths);
+    this.setState(state => ({
+      ...state,
+      monthsToCompare: state.previousMonths,
+      isEditingMonthsToCompare: false,
+      previousMonths: null
+    }));
+  };
+
   render() {
     const { total, transactions, currentMonth } = this.props;
-    const { monthsToCompare } = this.state;
+    const { monthsToCompare, isEditingMonthsToCompare } = this.state;
 
     const dates = range(-1, moment(currentMonth).daysInMonth()).map(day =>
       moment(currentMonth).add(day, "days")
@@ -110,6 +140,57 @@ class SpendingChart extends Component {
 
     return (
       <Section>
+        <div style={{ marginBottom: 5 }}>
+          <MinorText
+            style={{
+              userSelect: "none",
+              textAlign: "right",
+              opacity: isEditingMonthsToCompare ? 0.4 : null
+            }}
+            onClick={this.handleClickEdit}
+          >
+            Showing last {monthsToCompare} month{monthsToCompare === 1
+              ? ""
+              : "s"}&nbsp;&nbsp;
+            <Icon icon="pencil" />
+          </MinorText>
+          <AnimateHeight isExpanded={isEditingMonthsToCompare}>
+            <Fragment>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  paddingTop: 5
+                }}
+              >
+                <SecondaryText>Number of months to show:</SecondaryText>
+                <input
+                  type="range"
+                  value={monthsToCompare}
+                  onChange={this.handleChangeMonths}
+                  min={0}
+                  max={12}
+                  step={1}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  padding: "5px 0"
+                }}
+              >
+                <GhostButton onClick={this.handleClickCancel}>
+                  cancel
+                </GhostButton>
+                <PrimaryButton onClick={this.handleClickSave}>
+                  Save
+                </PrimaryButton>
+              </div>
+            </Fragment>
+          </AnimateHeight>
+        </div>
         <Chart
           key={monthsToCompare}
           options={{
@@ -145,28 +226,6 @@ class SpendingChart extends Component {
           <MinorText>{head(dates).format("MMM D")}</MinorText>
           <MinorText>{last(dates).format("MMM D")}</MinorText>
         </DateLabels>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginTop: 5
-          }}
-        >
-          <SecondaryText>
-            Show previous {monthsToCompare} month{monthsToCompare === 1
-              ? ""
-              : "s"}
-          </SecondaryText>
-          <input
-            type="range"
-            value={monthsToCompare}
-            onChange={this.handleChangeMonths}
-            min={0}
-            max={12}
-            step={1}
-          />
-        </div>
       </Section>
     );
   }
