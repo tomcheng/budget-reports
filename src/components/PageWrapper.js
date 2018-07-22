@@ -38,7 +38,8 @@ const PageWrapper = ({
                   backgroundColor: plotBandColor,
                   display: "flex",
                   justifyContent: "space-between",
-                  alignItems: "center"
+                  alignItems: "center",
+                  flexShrink: 0
                 }}
               >
                 Your authorization expired.
