@@ -7,6 +7,7 @@ const LAST_UPDATED_KEY = "budget-reports-last-updated";
 const INVESTMENT_ACCOUNTS_KEY = "budget-reports-investment-accounts";
 const MORTGAGE_ACCOUNTS_KEY = "budget-reports-mortgage-accounts";
 const NET_WORTH_HIDDEN_ACCOUNTS = "budget-reports-networth-hidden-accounts";
+const SPENDING_MONTHS_TO_COMPARE = "budget-reports-spending-months-to-compare";
 
 export const getExpandedGroups = budgetId =>
   get(getStorage(EXPANDED_GROUPS_KEY), budgetId, {});
@@ -57,5 +58,16 @@ export const setNetworthHiddenAccounts = (budgetId, accounts) => {
   setStorage(NET_WORTH_HIDDEN_ACCOUNTS, {
     ...hiddenAccounts,
     [budgetId]: accounts
+  });
+};
+
+export const getSpendingMonthsToCompare = budgetId =>
+  get(getStorage(SPENDING_MONTHS_TO_COMPARE), budgetId, 3);
+
+export const setSpendingMonthsToCompare = (budgetId, months) => {
+  const savedMonths = getStorage(SPENDING_MONTHS_TO_COMPARE);
+  setStorage(SPENDING_MONTHS_TO_COMPARE, {
+    ...savedMonths,
+    [budgetId]: months
   });
 };

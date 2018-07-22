@@ -102,6 +102,7 @@ const CategoryGroup = ({
               ]}
             />
             <SpendingChart
+              budgetId={budgetId}
               currentMonth={currentMonth}
               total={spent + available}
               transactions={transactionsInGroup}

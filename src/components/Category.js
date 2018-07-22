@@ -66,6 +66,7 @@ const Category = ({
               ]}
             />
             <SpendingChart
+              budgetId={budgetId}
               total={category.balance - category.activity}
               currentMonth={currentMonth}
               transactions={transactionsForCategory}

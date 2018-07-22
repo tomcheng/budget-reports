@@ -8,6 +8,10 @@ import range from "lodash/fp/range";
 import sumBy from "lodash/fp/sumBy";
 import moment from "moment";
 import tinyColor from "tinycolor2";
+import {
+  getSpendingMonthsToCompare,
+  setSpendingMonthsToCompare
+} from "../uiRepo";
 import { primaryColor, plotBandColor } from "../styleVariables";
 import { MinorText, SecondaryText } from "./typeComponents";
 import Section from "./Section";
@@ -41,6 +45,7 @@ const getData = ({ month, transactions }) => {
 
 class SpendingChart extends Component {
   static propTypes = {
+    budgetId: PropTypes.string.isRequired,
     currentMonth: PropTypes.string.isRequired,
     total: PropTypes.number.isRequired,
     transactions: PropTypes.arrayOf(
@@ -51,10 +56,17 @@ class SpendingChart extends Component {
     ).isRequired
   };
 
-  state = { monthsToCompare: 0 };
+  constructor(props) {
+    super();
+    this.state = {
+      monthsToCompare: getSpendingMonthsToCompare(props.budgetId)
+    };
+  }
 
   handleChangeMonths = evt => {
-    this.setState({ monthsToCompare: parseInt(evt.target.value, 10) });
+    const monthsToCompare = parseInt(evt.target.value, 10);
+    this.setState({ monthsToCompare });
+    setSpendingMonthsToCompare(this.props.budgetId, monthsToCompare);
   };
 
   render() {
