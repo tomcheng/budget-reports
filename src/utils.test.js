@@ -50,7 +50,7 @@ describe("upsertBy", () => {
 });
 
 describe("getProcessedPayees", () => {
-  it("adds transactions to payees and gets proper sort order", () => {
+  it("processes payees and sorts by transactions", () => {
     const budget = {
       accountsById: {
         acc: { onBudget: true }
@@ -65,16 +65,12 @@ describe("getProcessedPayees", () => {
         { payeeId: "bar", amount: -10, accountId: "acc" }
       ]
     };
-    const {
-      payeesById,
-      sortedByTransactions,
-      sortedByAmount
-    } = getProcessedPayees(budget);
+    const payees = getProcessedPayees({ budget, sort: "transactions" });
 
-    expect(payeesById.foo.transactions).toHaveLength(2);
-    expect(payeesById.bar.transactions).toHaveLength(1);
-    expect(sortedByTransactions).toEqual(["foo", "bar"]);
-    expect(sortedByAmount).toEqual(["bar", "foo"]);
+    expect(payees).toHaveLength(2);
+    expect(payees.map(p => p.id)).toEqual(["foo", "bar"]);
+    expect(payees[0].transactions).toEqual(2);
+    expect(payees[1].transactions).toEqual(1);
   });
 
   it("ignores off budget transactions", () => {
@@ -87,9 +83,9 @@ describe("getProcessedPayees", () => {
       },
       transactions: [{ payeeId: "foo", amount: -1, accountId: "off" }]
     };
-    const { payeesById } = getProcessedPayees(budget);
+    const payees = getProcessedPayees({ budget, sort: "name" });
 
-    expect(payeesById.foo).toBeUndefined();
+    expect(payees).toHaveLength(0);
   });
 
   it("ignores transfers to on budget accounts", () => {
@@ -103,9 +99,9 @@ describe("getProcessedPayees", () => {
       },
       transactions: [{ payeeId: "foo", amount: -1, accountId: "acc1", transferAccountId: "acc2" }]
     };
-    const { payeesById } = getProcessedPayees(budget);
+    const payees = getProcessedPayees({ budget, sort: "name" });
 
-    expect(payeesById.foo).toBeUndefined();
+    expect(payees).toHaveLength(0);
   });
 
   it("ignores starting balances", () => {
@@ -118,8 +114,8 @@ describe("getProcessedPayees", () => {
       },
       transactions: [{ payeeId: "foo", amount: 100, accountId: "acc" }]
     };
-    const { payeesById } = getProcessedPayees(budget);
+    const payees = getProcessedPayees({ budget, sort: "name" });
 
-    expect(payeesById.foo).toBeUndefined();
+    expect(payees).toHaveLength(0);
   });
 });

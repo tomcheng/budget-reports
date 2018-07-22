@@ -7,7 +7,6 @@ import filter from "lodash/fp/filter";
 import groupBy from "lodash/fp/groupBy";
 import isArray from "lodash/fp/isArray";
 import isObject from "lodash/fp/isObject";
-import keys from "lodash/fp/keys";
 import mapRaw from "lodash/fp/map";
 import mapKeysRaw from "lodash/fp/mapKeys";
 import mapValues from "lodash/fp/mapValues";
@@ -17,6 +16,7 @@ import pick from "lodash/fp/pick";
 import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
+import values from "lodash/fp/values";
 
 const map = mapRaw.convert({ cap: false });
 const mapKeys = mapKeysRaw.convert({ cap: false });
@@ -140,7 +140,7 @@ export const getOutliersBy = f => arr => {
   return filter(item => Math.abs(f(item) - avg) > stdDev)(arr);
 };
 
-export const getProcessedPayees = simpleMemoize(budget => {
+const payeesWithMetadata = simpleMemoize(budget => {
   const { accountsById, payeesById, transactions } = budget;
   const transactionsByPayee = compose([
     groupBy("payeeId"),
@@ -161,21 +161,15 @@ export const getProcessedPayees = simpleMemoize(budget => {
     })
   ])(transactions);
 
-  const processedPayeesById = mapValuesWithKey((transactions, payeeId) => ({
+  return mapValuesWithKey((transactions, payeeId) => ({
     ...payeesById[payeeId],
-    transactions
+    transactions: transactions.length,
+    amount: sumBy("amount")(transactions)
   }))(transactionsByPayee);
-  const payeeIds = keys(processedPayeesById);
-  const sortedByTransactions = sortBy(
-    id => -processedPayeesById[id].transactions.length
-  )(payeeIds);
-  const sortedByAmount = sortBy(id =>
-    sumBy("amount")(processedPayeesById[id].transactions)
-  )(payeeIds);
-
-  return {
-    payeesById: processedPayeesById,
-    sortedByTransactions: sortedByTransactions,
-    sortedByAmount: sortedByAmount
-  };
 });
+
+export const getProcessedPayees = ({ budget, sort }) => {
+  const sorted = sortBy(sort)(values(payeesWithMetadata(budget)));
+
+  return sort === "transactions" ? sorted.reverse() : sorted;
+};

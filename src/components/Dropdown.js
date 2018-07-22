@@ -29,6 +29,8 @@ const DropdownContent = styled.div`
 const DropdownOption = styled.div`
   padding: 16px 20px;
   cursor: pointer;
+  font-size: 14px;
+  line-height: 22px;
   &:hover {
     background-color: #f5f5f5;
   }
@@ -37,19 +39,17 @@ const DropdownOption = styled.div`
 const StyledLink = styled(Link)`
   font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
   color: #444;
-  font-size: 14px;
-  line-height: 22px;
   color: inherit;
   text-decoration: none;
 `;
 
 class Dropdown extends Component {
-  static ContentWrapper = DropdownOption;
+  static Option = DropdownOption;
 
   static propTypes = {
     children: PropTypes.func.isRequired,
     align: PropTypes.oneOf(["left", "right"]),
-    dropdownContent: PropTypes.node,
+    dropdownContent: PropTypes.func,
     links: PropTypes.arrayOf(
       PropTypes.shape({
         to: PropTypes.string.isRequired,
@@ -84,7 +84,7 @@ class Dropdown extends Component {
     });
   };
 
-  handleClickOverlay = () => {
+  closeDropdown = () => {
     this.setState({ isOpen: false });
   };
 
@@ -104,7 +104,7 @@ class Dropdown extends Component {
         {isOpen &&
           createPortal(
             <Fragment>
-              <Overlay onClick={this.handleClickOverlay} />
+              <Overlay onClick={this.closeDropdown} />
               <DropdownContent
                 style={{
                   top,
@@ -118,7 +118,8 @@ class Dropdown extends Component {
                       <DropdownOption>{label}</DropdownOption>
                     </StyledLink>
                   ))}
-                {dropdownContent}
+                {dropdownContent &&
+                  dropdownContent({ onClose: this.closeDropdown })}
               </DropdownContent>
             </Fragment>,
             this.dropdownEl
