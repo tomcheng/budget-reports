@@ -1,4 +1,4 @@
-import { mapKeysDeep, upsertBy } from "./utils";
+import { mapKeysDeep, upsertBy, getProcessedPayees } from "./utils";
 import camelCase from "lodash/fp/camelCase";
 
 describe("mapKeysDeep", () => {
@@ -47,4 +47,28 @@ describe("upsertBy", () => {
 
     expect(result).toEqual([{ id: 1, val: "foo" }, { id: 2, val: "bar" }]);
   });
+});
+
+describe("getProcessedPayees", () => {
+  const budget = {
+    payeesById: {
+      foo: { id: "foo" },
+      bar: { id: "bar" }
+    },
+    transactions: [
+      { payeeId: "foo", amount: -1 },
+      { payeeId: "foo", amount: -1 },
+      { payeeId: "bar", amount: -10 }
+    ]
+  };
+  const {
+    payeesById,
+    sortedByTransactions,
+    sortedByAmount
+  } = getProcessedPayees(budget);
+
+  expect(payeesById.foo.transactions).toHaveLength(2);
+  expect(payeesById.bar.transactions).toHaveLength(1);
+  expect(sortedByTransactions).toEqual(["foo", "bar"]);
+  expect(sortedByAmount).toEqual(["bar", "foo"]);
 });
