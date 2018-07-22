@@ -5,6 +5,7 @@ import EnsureBudgetLoaded from "./EnsureBudgetLoaded";
 import Layout from "./Layout";
 import { PageTitle } from "./typeComponents";
 import SidebarMenu from "./SidebarMenu";
+import BackLink from "./BackLink";
 
 const PageWrapper = ({
   content,
@@ -13,6 +14,7 @@ const PageWrapper = ({
   budgetLoaded,
   title,
   actions,
+  backLink,
   onAuthorize,
   onRequestBudget
 }) => (
@@ -26,7 +28,7 @@ const PageWrapper = ({
         {({ sidebarTrigger }) => (
           <Layout>
             <Layout.Header flushLeft>
-              {sidebarTrigger}
+              {backLink ? <BackLink link={backLink} /> : sidebarTrigger}
               <PageTitle style={{ flexGrow: 1 }}>{title}</PageTitle>
               {actions}
             </Layout.Header>
@@ -61,7 +63,8 @@ PageWrapper.propTypes = {
   title: PropTypes.string.isRequired,
   onAuthorize: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired,
-  actions: PropTypes.node
+  actions: PropTypes.node,
+  backLink: PropTypes.string
 };
 
 export default PageWrapper;

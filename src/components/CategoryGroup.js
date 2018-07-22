@@ -6,11 +6,11 @@ import includes from "lodash/fp/includes";
 import map from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
 import sumBy from "lodash/fp/sumBy";
-import { getCategoryLink } from "../utils";
+import { getCategoryLink, getBudgetLink } from "../utils";
 import EnsureBudgetLoaded from "./EnsureBudgetLoaded";
 import Layout from "./Layout";
 import { PageTitle } from "./typeComponents";
-import BackToBudget from "./BackToBudget";
+import BackLink from "./BackLink";
 import Dropdown from "./Dropdown";
 import Icon from "./Icon";
 import TopNumbers from "./TopNumbers";
@@ -58,7 +58,7 @@ const CategoryGroup = ({
       return (
         <Layout>
           <Layout.Header flushLeft flushRight>
-            <BackToBudget budgetId={budgetId} />
+            <BackLink link={getBudgetLink({ budgetId })} />
             <PageTitle
               style={{
                 flexGrow: 1,
@@ -107,7 +107,10 @@ const CategoryGroup = ({
               total={spent + available}
               transactions={transactionsInGroup}
             />
-            <Transactions transactions={transactionsForMonth} payeesById={payeesById} />
+            <Transactions
+              transactions={transactionsForMonth}
+              payeesById={payeesById}
+            />
           </Layout.Body>
         </Layout>
       );

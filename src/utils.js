@@ -82,6 +82,8 @@ export const getGroupLink = ({ budgetId, categoryGroupId }) =>
 export const getCategoryLink = ({ budgetId, categoryId }) =>
   `/budgets/${budgetId}/categories/${categoryId}`;
 
+export const getPayeesLink = ({ budgetId }) => `/budgets/${budgetId}/payees`;
+
 export const getPayeeLink = ({ budgetId, payeeId }) =>
   `/budgets/${budgetId}/payees/${payeeId}`;
 

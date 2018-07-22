@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import get from "lodash/fp/get";
+import { getPayeesLink } from "../utils";
 import PageWrapper from "./PageWrapper";
 
 const Payee = ({
@@ -21,6 +22,7 @@ const Payee = ({
       onRequestBudget={onRequestBudget}
       title={payee ? payee.name : ""}
       content={() => <div>{payee.name}</div>}
+      backLink={getPayeesLink({ budgetId })}
     />
   );
 };
