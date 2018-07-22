@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import propEq from "lodash/fp/propEq";
 import { getGroupLink } from "../utils";
 import EnsureBudgetLoaded from "./EnsureBudgetLoaded";
 import Layout from "./Layout";
@@ -30,10 +31,11 @@ const Category = ({
       const categoryGroup = budget.categoryGroups.find(
         group => group.id === category.categoryGroupId
       );
-      const transactions = budget.transactions.filter(
-        transaction =>
-          transaction.categoryId === categoryId &&
-          transaction.date.slice(0, 7) === currentMonth
+      const transactionsForCategory = budget.transactions.filter(
+        propEq("categoryId", categoryId)
+      );
+      const transactionsForMonth = transactionsForCategory.filter(
+        transaction => transaction.date.slice(0, 7) === currentMonth
       );
 
       return (
@@ -66,10 +68,10 @@ const Category = ({
             <SpendingChart
               total={category.balance - category.activity}
               currentMonth={currentMonth}
-              transactions={transactions}
+              transactions={transactionsForCategory}
             />
             <Transactions
-              transactions={transactions}
+              transactions={transactionsForMonth}
               payeesById={budget.payeesById}
             />
           </Layout.Body>
