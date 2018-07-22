@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import get from "lodash/fp/get";
 import { getPayeesLink } from "../utils";
 import PageWrapper from "./PageWrapper";
+import PayeeBody from "./PayeeBody";
 
 const Payee = ({
   authorized,
@@ -13,6 +14,7 @@ const Payee = ({
   onRequestBudget
 }) => {
   const payee = get(["payeesById", payeeId])(budget);
+
   return (
     <PageWrapper
       authorized={authorized}
@@ -21,8 +23,8 @@ const Payee = ({
       onAuthorize={onAuthorize}
       onRequestBudget={onRequestBudget}
       title={payee ? payee.name : ""}
-      content={() => <div>{payee.name}</div>}
       backLink={getPayeesLink({ budgetId })}
+      content={() => <PayeeBody budget={budget} payee={payee} />}
     />
   );
 };
