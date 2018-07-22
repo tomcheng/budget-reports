@@ -14,6 +14,7 @@ import mapValues from "lodash/fp/mapValues";
 import matchesProperty from "lodash/fp/matchesProperty";
 import mean from "lodash/fp/mean";
 import pick from "lodash/fp/pick";
+import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 
@@ -140,8 +141,25 @@ export const getOutliersBy = f => arr => {
 };
 
 export const getProcessedPayees = simpleMemoize(budget => {
-  const { payeesById, transactions } = budget;
-  const transactionsByPayee = groupBy("payeeId")(transactions);
+  const { accountsById, payeesById, transactions } = budget;
+  const transactionsByPayee = compose([
+    groupBy("payeeId"),
+    reject(transaction => {
+      if (!accountsById[transaction.accountId].onBudget) {
+        return true;
+      }
+      if (
+        transaction.transferAccountId &&
+        accountsById[transaction.transferAccountId].onBudget
+      ) {
+        return true;
+      }
+      if (payeesById[transaction.payeeId].name === "Starting Balance") {
+        return true;
+      }
+      return false;
+    })
+  ])(transactions);
 
   const processedPayeesById = mapValuesWithKey((transactions, payeeId) => ({
     ...payeesById[payeeId],

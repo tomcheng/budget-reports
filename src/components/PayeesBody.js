@@ -6,18 +6,25 @@ import { getProcessedPayees } from "../utils";
 const PayeesBody = ({ budget }) => {
   const {
     payeesById,
-    sortedByAmount
+    // sortedByAmount,
+    sortedByTransactions
   } = getProcessedPayees(budget);
 
-  return <div>{sortedByAmount.map(id => {
-    const payee = payeesById[id];
-    const amount = sumBy("amount")(payee.transactions);
-    const transactions = payee.transactions.length;
+  return (
+    <div>
+      {sortedByTransactions.map(id => {
+        const payee = payeesById[id];
+        const amount = sumBy("amount")(payee.transactions);
+        const transactions = payee.transactions.length;
 
-    return (
-      <div key={id}>{payee.name} {amount} {transactions}</div>
-    );
-  })}</div>;
+        return (
+          <div key={id}>
+            {payee.name} {amount} {transactions}
+          </div>
+        );
+      })}
+    </div>
+  );
 };
 
 PayeesBody.propTypes = {

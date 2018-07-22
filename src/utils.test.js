@@ -50,25 +50,76 @@ describe("upsertBy", () => {
 });
 
 describe("getProcessedPayees", () => {
-  const budget = {
-    payeesById: {
-      foo: { id: "foo" },
-      bar: { id: "bar" }
-    },
-    transactions: [
-      { payeeId: "foo", amount: -1 },
-      { payeeId: "foo", amount: -1 },
-      { payeeId: "bar", amount: -10 }
-    ]
-  };
-  const {
-    payeesById,
-    sortedByTransactions,
-    sortedByAmount
-  } = getProcessedPayees(budget);
+  it("adds transactions to payees and gets proper sort order", () => {
+    const budget = {
+      accountsById: {
+        acc: { onBudget: true }
+      },
+      payeesById: {
+        foo: { id: "foo" },
+        bar: { id: "bar" }
+      },
+      transactions: [
+        { payeeId: "foo", amount: -1, accountId: "acc" },
+        { payeeId: "foo", amount: -1, accountId: "acc" },
+        { payeeId: "bar", amount: -10, accountId: "acc" }
+      ]
+    };
+    const {
+      payeesById,
+      sortedByTransactions,
+      sortedByAmount
+    } = getProcessedPayees(budget);
 
-  expect(payeesById.foo.transactions).toHaveLength(2);
-  expect(payeesById.bar.transactions).toHaveLength(1);
-  expect(sortedByTransactions).toEqual(["foo", "bar"]);
-  expect(sortedByAmount).toEqual(["bar", "foo"]);
+    expect(payeesById.foo.transactions).toHaveLength(2);
+    expect(payeesById.bar.transactions).toHaveLength(1);
+    expect(sortedByTransactions).toEqual(["foo", "bar"]);
+    expect(sortedByAmount).toEqual(["bar", "foo"]);
+  });
+
+  it("ignores off budget transactions", () => {
+    const budget = {
+      accountsById: {
+        off: { onBudget: false }
+      },
+      payeesById: {
+        foo: { id: "foo" }
+      },
+      transactions: [{ payeeId: "foo", amount: -1, accountId: "off" }]
+    };
+    const { payeesById } = getProcessedPayees(budget);
+
+    expect(payeesById.foo).toBeUndefined();
+  });
+
+  it("ignores transfers to on budget accounts", () => {
+    const budget = {
+      accountsById: {
+        acc1: { onBudget: true },
+        acc2: { onBudget: true }
+      },
+      payeesById: {
+        foo: { id: "foo" }
+      },
+      transactions: [{ payeeId: "foo", amount: -1, accountId: "acc1", transferAccountId: "acc2" }]
+    };
+    const { payeesById } = getProcessedPayees(budget);
+
+    expect(payeesById.foo).toBeUndefined();
+  });
+
+  it("ignores starting balances", () => {
+    const budget = {
+      accountsById: {
+        acc: { onBudget: true },
+      },
+      payeesById: {
+        foo: { id: "foo", name: "Starting Balance" }
+      },
+      transactions: [{ payeeId: "foo", amount: 100, accountId: "acc" }]
+    };
+    const { payeesById } = getProcessedPayees(budget);
+
+    expect(payeesById.foo).toBeUndefined();
+  });
 });
