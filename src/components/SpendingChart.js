@@ -7,6 +7,7 @@ import last from "lodash/fp/last";
 import range from "lodash/fp/range";
 import sumBy from "lodash/fp/sumBy";
 import moment from "moment";
+import tinyColor from "tinycolor2";
 import { primaryColor, plotBandColor } from "../styleVariables";
 import { MinorText } from "./typeComponents";
 import Section from "./Section";
@@ -18,24 +19,32 @@ const DateLabels = styled.div`
   justify-content: space-between;
 `;
 
-const SpendingChart = ({ total, transactions, currentMonth }) => {
-  const daysInMonth = moment(currentMonth).daysInMonth();
+const getData = ({ month, transactions }) => {
   const today = moment();
-  const dates = range(-1, daysInMonth).map(day =>
-    moment(currentMonth).add(day, "days")
+  const transactionsByDate = groupBy("date")(
+    transactions.filter(transaction => transaction.date.slice(0, 7) === month)
   );
-  const transactionsByDate = groupBy("date")(transactions);
   let cumulative = 0;
-  const data = dates.map(date => {
+  return range(-1, moment(month).daysInMonth()).map(numDays => {
+    const date = moment(month).add(numDays, "days");
     if (date.isAfter(today)) {
       return null;
     }
 
-    const transactionsForDate =
-      transactionsByDate[date.format("YYYY-MM-DD")] || [];
-    cumulative += -sumBy("amount")(transactionsForDate);
+    cumulative += -sumBy("amount")(
+      transactionsByDate[date.format("YYYY-MM-DD")] || []
+    );
+
     return cumulative;
   });
+};
+
+const SpendingChart = ({ total, transactions, currentMonth }) => {
+  const monthsToCompare = 6;
+  const dates = range(-1, moment(currentMonth).daysInMonth()).map(day =>
+    moment(currentMonth).add(day, "days")
+  );
+  const data = getData({ month: currentMonth, transactions });
   const lineData = dates.map((_, index) => index / (dates.length - 1) * total);
   const firstDayOfWeek = parseInt(dates[0].format("d"), 10);
   const plotBands = range(0, 6).map(num => ({
@@ -43,6 +52,34 @@ const SpendingChart = ({ total, transactions, currentMonth }) => {
     from: num * 7 - 1.5 - firstDayOfWeek,
     to: num * 7 + 0.5 - firstDayOfWeek
   }));
+  const comparisonSeries = range(1, monthsToCompare + 1).map(
+    numMonths =>
+      console.log(
+        tinyColor
+          .mix("#ccc", "#f5f5f5", numMonths / (monthsToCompare + 1) * 100)
+          .toHex()
+      ) || {
+        type: "spline",
+        data: getData({
+          month: moment(currentMonth)
+            .subtract(numMonths, "months")
+            .format("YYYY-MM"),
+          transactions
+        }),
+        enableMouseTracking: false,
+        color:
+          "#" +
+          tinyColor
+            .mix(
+              primaryColor,
+              "#f2f2f2",
+              30 + numMonths * 70 / (monthsToCompare + 1)
+            )
+            .toHex(),
+        lineWidth: 1,
+        marker: { enabled: false }
+      }
+  );
 
   return (
     <Section>
@@ -64,6 +101,7 @@ const SpendingChart = ({ total, transactions, currentMonth }) => {
               enableMouseTracking: false,
               marker: { enabled: false }
             },
+            ...comparisonSeries,
             {
               type: "spline",
               data,

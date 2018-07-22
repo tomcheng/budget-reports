@@ -44,11 +44,12 @@ const CategoryGroup = ({
         matchesProperty("categoryGroupId", categoryGroupId)
       )(allCategories);
       const categoryIds = map("id")(categories);
-      const transactions = filter(
-        transaction =>
-          includes(transaction.categoryId)(categoryIds) &&
-          transaction.date.slice(0, 7) === currentMonth
+      const transactionsInGroup = filter(transaction =>
+        includes(transaction.categoryId)(categoryIds)
       )(allTransactions);
+      const transactionsForMonth = filter(
+        transaction => transaction.date.slice(0, 7) === currentMonth
+      )(transactionsInGroup);
 
       const budgeted = sumBy("budgeted")(categories);
       const spent = -sumBy("activity")(categories);
@@ -103,9 +104,9 @@ const CategoryGroup = ({
             <SpendingChart
               currentMonth={currentMonth}
               total={spent + available}
-              transactions={transactions}
+              transactions={transactionsInGroup}
             />
-            <Transactions transactions={transactions} payeesById={payeesById} />
+            <Transactions transactions={transactionsForMonth} payeesById={payeesById} />
           </Layout.Body>
         </Layout>
       );
