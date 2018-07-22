@@ -17,9 +17,11 @@ const Label = styled(MinorText)`
 
 const TopNumbers = ({ numbers, roundToDollar }) => (
   <Section style={{ display: "flex" }}>
-    {numbers.map(({ label, value }) => (
+    {numbers.map(({ label, value, currency = true }) => (
       <Group key={label}>
-        <LargeNumber>${value.toFixed(roundToDollar ? 0 : 2)}</LargeNumber>
+        <LargeNumber>
+          {currency ? `$${value.toFixed(roundToDollar ? 0 : 2)}` : value}
+        </LargeNumber>
         <Label>{label}</Label>
       </Group>
     ))}

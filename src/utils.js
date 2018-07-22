@@ -178,3 +178,5 @@ export const getProcessedPayees = ({ budget, sort }) => {
 
   return sort === "transactions" ? sorted.reverse() : sorted;
 };
+
+export const getMetadataForPayee = ({ budget, payeeId }) => payeesWithMetadata(budget)[payeeId];
