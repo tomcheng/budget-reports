@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import groupBy from "lodash/fp/groupBy";
@@ -9,7 +9,7 @@ import sumBy from "lodash/fp/sumBy";
 import moment from "moment";
 import tinyColor from "tinycolor2";
 import { primaryColor, plotBandColor } from "../styleVariables";
-import { MinorText } from "./typeComponents";
+import { MinorText, SecondaryText } from "./typeComponents";
 import Section from "./Section";
 import Chart from "./Chart";
 
@@ -39,96 +39,125 @@ const getData = ({ month, transactions }) => {
   });
 };
 
-const SpendingChart = ({ total, transactions, currentMonth }) => {
-  const monthsToCompare = 6;
-  const dates = range(-1, moment(currentMonth).daysInMonth()).map(day =>
-    moment(currentMonth).add(day, "days")
-  );
-  const data = getData({ month: currentMonth, transactions });
-  const lineData = dates.map((_, index) => index / (dates.length - 1) * total);
-  const firstDayOfWeek = parseInt(dates[0].format("d"), 10);
-  const plotBands = range(0, 6).map(num => ({
-    color: plotBandColor,
-    from: num * 7 - 1.5 - firstDayOfWeek,
-    to: num * 7 + 0.5 - firstDayOfWeek
-  }));
-  const comparisonSeries = range(1, monthsToCompare + 1).map(
-    numMonths =>
-      console.log(
+class SpendingChart extends Component {
+  static propTypes = {
+    currentMonth: PropTypes.string.isRequired,
+    total: PropTypes.number.isRequired,
+    transactions: PropTypes.arrayOf(
+      PropTypes.shape({
+        amount: PropTypes.number.isRequired,
+        date: PropTypes.string.isRequired
+      })
+    ).isRequired
+  };
+
+  state = { monthsToCompare: 0 };
+
+  handleChangeMonths = evt => {
+    this.setState({ monthsToCompare: parseInt(evt.target.value, 10) });
+  };
+
+  render() {
+    const { total, transactions, currentMonth } = this.props;
+    const { monthsToCompare } = this.state;
+
+    const dates = range(-1, moment(currentMonth).daysInMonth()).map(day =>
+      moment(currentMonth).add(day, "days")
+    );
+    const data = getData({ month: currentMonth, transactions });
+    const lineData = dates.map(
+      (_, index) => index / (dates.length - 1) * total
+    );
+    const firstDayOfWeek = parseInt(dates[0].format("d"), 10);
+    const plotBands = range(0, 6).map(num => ({
+      color: plotBandColor,
+      from: num * 7 - 1.5 - firstDayOfWeek,
+      to: num * 7 + 0.5 - firstDayOfWeek
+    }));
+    const comparisonSeries = range(1, monthsToCompare + 1).map(numMonths => ({
+      type: "spline",
+      data: getData({
+        month: moment(currentMonth)
+          .subtract(numMonths, "months")
+          .format("YYYY-MM"),
+        transactions
+      }),
+      enableMouseTracking: false,
+      color:
+        "#" +
         tinyColor
-          .mix("#ccc", "#f5f5f5", numMonths / (monthsToCompare + 1) * 100)
-          .toHex()
-      ) || {
-        type: "spline",
-        data: getData({
-          month: moment(currentMonth)
-            .subtract(numMonths, "months")
-            .format("YYYY-MM"),
-          transactions
-        }),
-        enableMouseTracking: false,
-        color:
-          "#" +
-          tinyColor
-            .mix(
-              primaryColor,
-              "#f2f2f2",
-              30 + numMonths * 70 / (monthsToCompare + 1)
-            )
-            .toHex(),
-        lineWidth: 1,
-        marker: { enabled: false }
-      }
-  );
+          .mix(
+            primaryColor,
+            "#f2f2f2",
+            30 + numMonths * 70 / (monthsToCompare + 1)
+          )
+          .toHex(),
+      lineWidth: 1,
+      marker: { enabled: false }
+    }));
 
-  return (
-    <Section>
-      <Chart
-        options={{
-          chart: { spacing: [0, 0, 0, 0], height: 180 },
-          xAxis: {
-            labels: { enabled: false },
-            plotBands
-          },
-          yAxis: { visible: false, endOnTick: false },
-          series: [
-            {
-              type: "line",
-              color: "#aaa",
-              dashStyle: "Dot",
-              lineWidth: 1,
-              data: lineData,
-              enableMouseTracking: false,
-              marker: { enabled: false }
+    return (
+      <Section>
+        <Chart
+          key={monthsToCompare}
+          options={{
+            chart: { spacing: [0, 0, 0, 0], height: 180 },
+            plotOptions: { series: { animation: false } },
+            xAxis: {
+              labels: { enabled: false },
+              plotBands
             },
-            ...comparisonSeries,
-            {
-              type: "spline",
-              data,
-              enableMouseTracking: false,
-              color: primaryColor,
-              marker: { enabled: false }
-            }
-          ]
-        }}
-      />
-      <DateLabels>
-        <MinorText>{head(dates).format("MMM D")}</MinorText>
-        <MinorText>{last(dates).format("MMM D")}</MinorText>
-      </DateLabels>
-    </Section>
-  );
-};
-
-SpendingChart.propTypes = {
-  currentMonth: PropTypes.string.isRequired,
-  total: PropTypes.number.isRequired,
-  transactions: PropTypes.arrayOf(
-    PropTypes.shape({
-      amount: PropTypes.number.isRequired,
-      date: PropTypes.string.isRequired
-    })
-  ).isRequired
-};
+            yAxis: { visible: false, endOnTick: false },
+            series: [
+              {
+                type: "line",
+                color: "#aaa",
+                dashStyle: "Dot",
+                lineWidth: 1,
+                data: lineData,
+                enableMouseTracking: false,
+                marker: { enabled: false }
+              },
+              ...comparisonSeries,
+              {
+                type: "spline",
+                data,
+                enableMouseTracking: false,
+                color: primaryColor,
+                marker: { enabled: false }
+              }
+            ]
+          }}
+        />
+        <DateLabels>
+          <MinorText>{head(dates).format("MMM D")}</MinorText>
+          <MinorText>{last(dates).format("MMM D")}</MinorText>
+        </DateLabels>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginTop: 5
+          }}
+        >
+          <SecondaryText>
+            Show previous {monthsToCompare} month{monthsToCompare === 1
+              ? ""
+              : "s"}
+          </SecondaryText>
+          <input
+            type="range"
+            value={monthsToCompare}
+            onChange={this.handleChangeMonths}
+            min={0}
+            max={12}
+            step={1}
+          />
+        </div>
+      </Section>
+    );
+  }
+}
 
 export default SpendingChart;
