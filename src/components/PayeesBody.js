@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import sumBy from "lodash/fp/sumBy";
 import { getProcessedPayees } from "../utils";
+import PayeeListItem from "./PayeeListItem";
 
 const PayeesBody = ({ budget }) => {
   const {
@@ -10,21 +11,20 @@ const PayeesBody = ({ budget }) => {
     sortedByTransactions
   } = getProcessedPayees(budget);
 
-  return (
-    <div>
-      {sortedByTransactions.map(id => {
-        const payee = payeesById[id];
-        const amount = sumBy("amount")(payee.transactions);
-        const transactions = payee.transactions.length;
+  return sortedByTransactions.map(id => {
+    const payee = payeesById[id];
+    const amount = sumBy("amount")(payee.transactions);
+    const transactions = payee.transactions.length;
 
-        return (
-          <div key={id}>
-            {payee.name} {amount} {transactions}
-          </div>
-        );
-      })}
-    </div>
-  );
+    return (
+      <PayeeListItem
+        key={id}
+        name={payee.name}
+        amount={amount}
+        transactions={transactions}
+      />
+    );
+  });
 };
 
 PayeesBody.propTypes = {
