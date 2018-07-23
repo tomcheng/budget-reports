@@ -67,14 +67,27 @@ export const getBudgets = () => {
 };
 
 const getBudget = id =>
-  api.budgets.getBudgetById(id).then(({ data }) => {
-    const { budget, server_knowledge } = data;
+  api.budgets
+    .getBudgetById(id)
+    .then(({ data }) => {
+      const { budget, server_knowledge } = data;
 
-    setBudgetDetails({ id, budget, server_knowledge });
-    setSetting(LAST_UPDATED, id, moment().valueOf());
+      setBudgetDetails({ id, budget, server_knowledge });
+      setSetting(LAST_UPDATED, id, moment().valueOf());
 
-    return { budget: sanitizeBudget(budget), authorized: true };
-  });
+      return { budget: sanitizeBudget(budget), authorized: true };
+    })
+    .catch(e => {
+      if (
+        matches({ id: "401", name: "unauthorized" })(e.error) ||
+        e.message === "Failed to fetch"
+      ) {
+        return {
+          budget: { categories: [] },
+          authorized: false
+        };
+      }
+    });
 
 export const getUpdatedBudget = id => {
   const budgetDetails = getBudgetDetails(id);
