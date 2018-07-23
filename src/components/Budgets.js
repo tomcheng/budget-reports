@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { getBudgetLink } from "../utils";
+import { StrongText } from "./typeComponents";
+import Section from "./Section";
 import Loading from "./Loading";
 
 class Budgets extends Component {
@@ -29,11 +31,16 @@ class Budgets extends Component {
       return <Loading />;
     }
 
-    return budgets.map(({ id, name }) => (
-      <div key={id}>
-        <Link to={getBudgetLink({ budgetId: id })}>{name}</Link>
-      </div>
-    ));
+    return (
+      <Section>
+        <StrongText>Select a budget:</StrongText>
+        {budgets.map(({ id, name }) => (
+          <div key={id}>
+            <Link to={getBudgetLink({ budgetId: id })}>{name}</Link>
+          </div>
+        ))}
+      </Section>
+    );
   }
 }
 
