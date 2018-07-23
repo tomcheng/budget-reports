@@ -28,7 +28,7 @@ const PageWrapper = ({
         {({ sidebarTrigger }) => (
           <Layout>
             <Layout.Header flushLeft>
-              {backLink ? <BackLink link={backLink} /> : sidebarTrigger}
+              {backLink ? <BackLink /> : sidebarTrigger}
               <PageTitle style={{ flexGrow: 1 }}>{title}</PageTitle>
               {actions}
             </Layout.Header>
@@ -64,7 +64,7 @@ PageWrapper.propTypes = {
   onAuthorize: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired,
   actions: PropTypes.node,
-  backLink: PropTypes.string
+  backLink: PropTypes.bool
 };
 
 export default PageWrapper;

@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import get from "lodash/fp/get";
-import { getPayeesLink } from "../utils";
 import PageWrapper from "./PageWrapper";
 import PayeeBody from "./PayeeBody";
 
@@ -22,9 +21,9 @@ const Payee = ({
       budgetLoaded={!!budget}
       onAuthorize={onAuthorize}
       onRequestBudget={onRequestBudget}
-      title={payee ? payee.name : ""}
-      backLink={getPayeesLink({ budgetId })}
+      title={payee ? `Payee: ${payee.name}` : ""}
       content={() => <PayeeBody budget={budget} payee={payee} />}
+      backLink
     />
   );
 };

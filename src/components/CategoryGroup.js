@@ -6,7 +6,7 @@ import includes from "lodash/fp/includes";
 import map from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
 import sumBy from "lodash/fp/sumBy";
-import { getCategoryLink, getBudgetLink } from "../utils";
+import { getCategoryLink } from "../utils";
 import EnsureBudgetLoaded from "./EnsureBudgetLoaded";
 import Layout from "./Layout";
 import { PageTitle } from "./typeComponents";
@@ -58,7 +58,7 @@ const CategoryGroup = ({
       return (
         <Layout>
           <Layout.Header flushLeft flushRight>
-            <BackLink link={getBudgetLink({ budgetId })} />
+            <BackLink />
             <PageTitle
               style={{
                 flexGrow: 1,

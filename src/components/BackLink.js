@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { withRouter } from "react-router";
 import { iconWidth } from "../styleVariables";
 import Icon from "./Icon";
 
-const StyledLink = styled(Link)`
+const StyledLink = styled.div`
   display: flex;
   align-self: stretch;
   align-items: center;
@@ -13,14 +13,16 @@ const StyledLink = styled(Link)`
   width: ${iconWidth}px;
 `;
 
-const BackLink = ({ link }) => (
-  <StyledLink to={link}>
+const BackLink = ({ history }) => (
+  <StyledLink onClick={history.goBack}>
     <Icon icon="arrow-left" />
   </StyledLink>
 );
 
 BackLink.propTypes = {
-  link: PropTypes.string.isRequired
+  history: PropTypes.shape({
+    goBack: PropTypes.func.isRequired
+  }).isRequired
 };
 
-export default BackLink;
+export default withRouter(BackLink);

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import propEq from "lodash/fp/propEq";
-import { getGroupLink, getBudgetLink } from "../utils";
+import { getGroupLink } from "../utils";
 import EnsureBudgetLoaded from "./EnsureBudgetLoaded";
 import Layout from "./Layout";
 import BackLink from "./BackLink";
@@ -41,7 +41,7 @@ const Category = ({
       return (
         <Layout>
           <Layout.Header flushLeft flushRight>
-            <BackLink link={getBudgetLink({ budgetId })} />
+            <BackLink />
             <PageTitle
               style={{ flexGrow: 1, display: "flex", alignItems: "center" }}
             >
