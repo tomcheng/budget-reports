@@ -4,6 +4,7 @@ import { plotBandColor } from "../styleVariables";
 import EnsureBudgetLoaded from "./EnsureBudgetLoaded";
 import Layout from "./Layout";
 import { PageTitle } from "./typeComponents";
+import { PrimaryButton } from "./Button";
 import SidebarMenu from "./SidebarMenu";
 import BackLink from "./BackLink";
 
@@ -36,7 +37,7 @@ const PageWrapper = ({
             {!authorized && (
               <div
                 style={{
-                  padding: 20,
+                  padding: "15px 20px",
                   backgroundColor: plotBandColor,
                   display: "flex",
                   justifyContent: "space-between",
@@ -45,7 +46,7 @@ const PageWrapper = ({
                 }}
               >
                 Your authorization expired.
-                <button onClick={onAuthorize}>Reauthorize</button>
+                <PrimaryButton onClick={onAuthorize}>Reauthorize</PrimaryButton>
               </div>
             )}
           </Layout>
