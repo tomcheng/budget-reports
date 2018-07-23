@@ -108,8 +108,10 @@ const CategoryGroup = ({
               transactions={transactionsInGroup}
             />
             <Transactions
-              transactions={transactionsForMonth}
+              budgetId={budgetId}
               payeesById={payeesById}
+              transactions={transactionsForMonth}
+              linkToPayee
             />
           </Layout.Body>
         </Layout>

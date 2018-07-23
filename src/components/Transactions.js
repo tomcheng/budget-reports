@@ -4,7 +4,7 @@ import Transaction from "./Transaction";
 import { StrongText, SecondaryText } from "./typeComponents";
 import Section from "./Section";
 
-const Transactions = ({ transactions, payeesById }) => (
+const Transactions = ({ transactions, payeesById, budgetId, linkToPayee }) => (
   <Section>
     <StrongText>Transactions</StrongText>
     {transactions.length ? (
@@ -14,6 +14,8 @@ const Transactions = ({ transactions, payeesById }) => (
           payee={payeesById[payeeId]}
           date={date}
           amount={amount}
+          linkToPayee={linkToPayee}
+          budgetId={budgetId}
         />
       ))
     ) : (
@@ -33,7 +35,9 @@ Transactions.propTypes = {
       id: PropTypes.string.isRequired,
       payeeId: PropTypes.string.isRequired
     })
-  ).isRequired
+  ).isRequired,
+  budgetId: PropTypes.string,
+  linkToPayee: PropTypes.bool
 };
 
 export default Transactions;

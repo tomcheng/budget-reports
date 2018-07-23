@@ -74,6 +74,8 @@ const Category = ({
             <Transactions
               transactions={transactionsForMonth}
               payeesById={budget.payeesById}
+              budgetId={budgetId}
+              linkToPayee
             />
           </Layout.Body>
         </Layout>
