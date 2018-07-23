@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { setSetting, getSetting, PAYEES_SORT_ORDER } from "../uiRepo";
 import PageWrapper from "./PageWrapper";
 import PayeesBody from "./PayeesBody";
 import { MinorText, SecondaryText } from "./typeComponents";
@@ -23,10 +24,15 @@ class Payees extends Component {
     budget: PropTypes.object
   };
 
-  state = { sort: "amount" };
+  constructor(props) {
+    super();
+
+    this.state = { sort: getSetting(PAYEES_SORT_ORDER, props.budgetId) };
+  }
 
   handleChangeSort = sort => {
     this.setState({ sort });
+    setSetting(PAYEES_SORT_ORDER, this.props.budgetId, sort);
   };
 
   render() {

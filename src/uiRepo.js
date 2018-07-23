@@ -6,6 +6,7 @@ export const INVESTMENT_ACCOUNTS = "investmentAccounts";
 export const LAST_UPDATED = "lastUpdated";
 export const MORTGAGE_ACCOUNTS = "mortgageAccounts";
 export const NET_WORTH_HIDDEN_ACCOUNTS = "netWorthHiddenAccounts";
+export const PAYEES_SORT_ORDER = "payeesSortOrder";
 export const SPENDING_MONTHS_TO_COMPARE = "spendingMonthsToCompare";
 
 const SETTINGS = {
@@ -28,6 +29,10 @@ const SETTINGS = {
   [NET_WORTH_HIDDEN_ACCOUNTS]: {
     key: "budget-reports-networth-hidden-accounts",
     default: {}
+  },
+  [PAYEES_SORT_ORDER]: {
+    key: "budget-reports-payees-sort-order",
+    default: "amount"
   },
   [SPENDING_MONTHS_TO_COMPARE]: {
     key: "budget-reports-spending-months-to-compare",
