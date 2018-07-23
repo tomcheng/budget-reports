@@ -3,6 +3,7 @@ import { SecondaryText } from "./typeComponents";
 import { primaryColor } from "../styleVariables";
 
 const Button = styled(SecondaryText)`
+  display: inline-block;
   user-select: none;
   border: 1px solid #ccc;
   padding: 4px 12px;
