@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Route, Switch } from "react-router-dom";
 import moment from "moment";
 import keyBy from "lodash/fp/keyBy";
-import { getBudgets, getUpdatedBudget, AUTHORIZE_URL } from "../ynabRepo";
+import { getBudgets, getUpdatedBudget, AUTHORIZE_URL, setLastLocation } from "../ynabRepo";
 import {
   setSetting,
   getSetting,
@@ -61,6 +61,7 @@ class App extends Component {
   };
 
   handleAuthorize = () => {
+    setLastLocation();
     window.location.replace(AUTHORIZE_URL);
   };
 

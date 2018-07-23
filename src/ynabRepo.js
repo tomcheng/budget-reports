@@ -10,6 +10,7 @@ import { clientId, redirectUri } from "./ynabConfig";
 
 const TOKEN_STORAGE_KEY = "ynab_access_token";
 const BUDGETS_STORAGE_KEY = "ynab_budgets";
+const LAST_LOCATION_KEY = "budget-reports-last-location";
 
 const TIME_LIMIT_FOR_FULL_REFRESH = 8 * 1000;
 
@@ -42,7 +43,8 @@ export const getAuthorizeToken = () => {
     )
   );
   localStorage.setItem(TOKEN_STORAGE_KEY, token);
-  window.location.hash = "";
+  window.location.hash = localStorage.getItem(LAST_LOCATION_KEY) || "";
+  localStorage.removeItem(LAST_LOCATION_KEY);
 
   return token;
 };
@@ -124,4 +126,8 @@ export const getUpdatedBudget = id => {
         };
       }
     });
+};
+
+export const setLastLocation = () => {
+  localStorage.setItem(LAST_LOCATION_KEY, window.location.hash);
 };
