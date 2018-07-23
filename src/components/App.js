@@ -5,10 +5,10 @@ import moment from "moment";
 import keyBy from "lodash/fp/keyBy";
 import { getBudgets, getUpdatedBudget, AUTHORIZE_URL } from "../ynabRepo";
 import {
-  getInvestmentAccounts,
-  setInvestmentAccounts,
-  getMortgageAccounts,
-  setMortgageAccounts
+  setSetting,
+  getSetting,
+  INVESTMENT_ACCOUNTS,
+  MORTGAGE_ACCOUNTS
 } from "../uiRepo";
 import topLevelPages from "../topLevelPages";
 import Unauthorized from "./Unauthorized";
@@ -101,19 +101,27 @@ class App extends Component {
                 authorized={authorized}
                 budget={budgetDetails[match.params.budgetId]}
                 budgetId={match.params.budgetId}
-                investmentAccounts={getInvestmentAccounts(
+                investmentAccounts={getSetting(
+                  INVESTMENT_ACCOUNTS,
                   match.params.budgetId
                 )}
-                mortgageAccounts={getMortgageAccounts(match.params.budgetId)}
+                mortgageAccounts={getSetting(
+                  MORTGAGE_ACCOUNTS,
+                  match.params.budgetId
+                )}
                 onAuthorize={this.handleAuthorize}
                 onRequestBudget={this.handleRequestBudget}
                 onUpdateAccounts={({ type, value }) => {
                   if (type === "investment") {
-                    setInvestmentAccounts(match.params.budgetId, value);
+                    setSetting(
+                      INVESTMENT_ACCOUNTS,
+                      match.params.budgetId,
+                      value
+                    );
                     this.forceUpdate();
                   }
                   if (type === "mortgage") {
-                    setMortgageAccounts(match.params.budgetId, value);
+                    setSetting(MORTGAGE_ACCOUNTS, match.params.budgetId, value);
                     this.forceUpdate();
                   }
                 }}
@@ -130,10 +138,14 @@ class App extends Component {
                   authorized={authorized}
                   budget={budgetDetails[match.params.budgetId]}
                   budgetId={match.params.budgetId}
-                  investmentAccounts={getInvestmentAccounts(
+                  investmentAccounts={getSetting(
+                    INVESTMENT_ACCOUNTS,
                     match.params.budgetId
                   )}
-                  mortgageAccounts={getMortgageAccounts(match.params.budgetId)}
+                  mortgageAccounts={getSetting(
+                    MORTGAGE_ACCOUNTS,
+                    match.params.budgetId
+                  )}
                   title={title}
                   onAuthorize={this.handleAuthorize}
                   onRequestBudget={this.handleRequestBudget}

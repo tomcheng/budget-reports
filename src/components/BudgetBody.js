@@ -8,7 +8,7 @@ import maxBy from "lodash/fp/maxBy";
 import reverse from "lodash/fp/reverse";
 import sortBy from "lodash/fp/sortBy";
 import { simpleMemoize } from "../utils";
-import { getExpandedGroups, setExpandedGroups } from "../uiRepo";
+import { getSetting, setSetting, EXPANDED_GROUPS } from "../uiRepo";
 import CategoryGroupListItem from "./CategoryGroupListItem";
 
 class BudgetBody extends PureComponent {
@@ -31,7 +31,7 @@ class BudgetBody extends PureComponent {
 
   constructor(props) {
     super();
-    this.state = { expandedGroups: getExpandedGroups(props.budget.id) };
+    this.state = { expandedGroups: getSetting(EXPANDED_GROUPS, props.budget.id) };
   }
 
   handleToggleGroup = id => {
@@ -44,7 +44,7 @@ class BudgetBody extends PureComponent {
         }
       }),
       () => {
-        setExpandedGroups(this.props.budget.id, this.state.expandedGroups);
+        setSetting(EXPANDED_GROUPS, this.props.budget.id, this.state.expandedGroups);
       }
     );
   };

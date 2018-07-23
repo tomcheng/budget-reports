@@ -3,7 +3,7 @@ import moment from "moment";
 import get from "lodash/fp/get";
 import matches from "lodash/fp/matches";
 import { camelCaseKeys, getStorage, setStorage } from "./utils";
-import { setLastUpdated, getLastUpdated } from "./uiRepo";
+import { setSetting, getSetting, LAST_UPDATED } from "./uiRepo";
 import { sanitizeBudget, mergeBudgets } from "./repoUtils";
 import { getBudgetDetails, setBudgetDetails } from "./localBudgetCache";
 import { clientId, redirectUri } from "./ynabConfig";
@@ -71,7 +71,7 @@ const getBudget = id =>
     const { budget, server_knowledge } = data;
 
     setBudgetDetails({ id, budget, server_knowledge });
-    setLastUpdated(id);
+    setSetting(LAST_UPDATED, id, moment().valueOf());
 
     return { budget: sanitizeBudget(budget), authorized: true };
   });
@@ -83,7 +83,10 @@ export const getUpdatedBudget = id => {
     return getBudget(id);
   }
 
-  if (moment().valueOf() - getLastUpdated(id) < TIME_LIMIT_FOR_FULL_REFRESH) {
+  if (
+    moment().valueOf() - getSetting(LAST_UPDATED, id) <
+    TIME_LIMIT_FOR_FULL_REFRESH
+  ) {
     return getBudget(id);
   }
 
@@ -93,7 +96,7 @@ export const getUpdatedBudget = id => {
       const budget = mergeBudgets(budgetDetails.budget, data.budget);
 
       setBudgetDetails({ id, budget, server_knowledge: data.server_knowledge });
-      setLastUpdated(id);
+      setSetting(LAST_UPDATED, id, moment().valueOf());
 
       return { budget: sanitizeBudget(budget), authorized: true };
     })

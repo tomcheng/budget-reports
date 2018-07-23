@@ -9,10 +9,7 @@ import sumBy from "lodash/fp/sumBy";
 import moment from "moment";
 import tinyColor from "tinycolor2";
 import AnimateHeight from "react-animate-height-auto";
-import {
-  getSpendingMonthsToCompare,
-  setSpendingMonthsToCompare
-} from "../uiRepo";
+import { getSetting, setSetting, SPENDING_MONTHS_TO_COMPARE } from "../uiRepo";
 import { primaryColor, plotBandColor } from "../styleVariables";
 import { MinorText, SecondaryText } from "./typeComponents";
 import { GhostButton, PrimaryButton } from "./Button";
@@ -63,7 +60,7 @@ class SpendingChart extends Component {
     super();
     this.state = {
       isEditingMonthsToCompare: false,
-      monthsToCompare: getSpendingMonthsToCompare(props.budgetId),
+      monthsToCompare: getSetting(SPENDING_MONTHS_TO_COMPARE, props.budgetId),
       previousMonths: null
     };
   }
@@ -79,7 +76,7 @@ class SpendingChart extends Component {
   handleChangeMonths = evt => {
     const monthsToCompare = parseInt(evt.target.value, 10);
     this.setState({ monthsToCompare });
-    setSpendingMonthsToCompare(this.props.budgetId, monthsToCompare);
+    setSetting(SPENDING_MONTHS_TO_COMPARE, this.props.budgetId, monthsToCompare);
   };
 
   handleClickSave = () => {
@@ -90,7 +87,11 @@ class SpendingChart extends Component {
   };
 
   handleClickCancel = () => {
-    setSpendingMonthsToCompare(this.props.budgetId, this.state.previousMonths);
+    setSetting(
+      SPENDING_MONTHS_TO_COMPARE,
+      this.props.budgetId,
+      this.state.previousMonths
+    );
     this.setState(state => ({
       ...state,
       monthsToCompare: state.previousMonths,
