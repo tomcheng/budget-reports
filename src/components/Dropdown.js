@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
+import { selectedPlotBandColor } from "../styleVariables";
 import styled from "styled-components";
 
 const TOP_SPACE = 2;
@@ -24,6 +25,7 @@ const DropdownContent = styled.div`
   box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1), 0 5px 30px rgba(0, 0, 0, 0.15);
   font-size: 16px;
   line-height: 22px;
+  min-width: 140px;
 `;
 
 const DropdownOption = styled.div`
@@ -31,8 +33,11 @@ const DropdownOption = styled.div`
   cursor: pointer;
   font-size: 14px;
   line-height: 22px;
+  background-color: ${props =>
+    props.isSelected ? selectedPlotBandColor : "transparent"};
   &:hover {
-    background-color: #f5f5f5;
+    background-color: ${props =>
+      props.isSelected ? selectedPlotBandColor : "#f5f5f5"};
   }
 `;
 

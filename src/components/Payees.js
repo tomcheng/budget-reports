@@ -9,7 +9,7 @@ import Dropdown from "./Dropdown";
 const SORT_LABELS = {
   amount: "Amount",
   name: "Name",
-  transactions: "Number of Transactions"
+  transactions: "Transactions"
 };
 
 const SORT_OPTIONS = ["amount", "transactions", "name"];
@@ -57,15 +57,16 @@ class Payees extends Component {
         actions={
           <Dropdown
             dropdownContent={({ onClose }) =>
-              SORT_OPTIONS.map(sort => (
+              SORT_OPTIONS.map(sortOption => (
                 <Dropdown.Option
-                  key={sort}
+                  key={sortOption}
                   onClick={() => {
-                    this.handleChangeSort(sort);
+                    this.handleChangeSort(sortOption);
                     onClose();
                   }}
+                  isSelected={sortOption === sort}
                 >
-                  {SORT_LABELS[sort]}
+                  {SORT_LABELS[sortOption]}
                 </Dropdown.Option>
               ))
             }
