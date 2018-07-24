@@ -31,13 +31,21 @@ const StyledLink = styled(NavLink)`
   }
 `;
 
-const SidebarMenuContent = ({ budgetId, onCloseSidebar }) => (
+const SidebarMenuContent = ({ budgetId, onCloseSidebar, open }) => (
   <Fragment>
     <Header>
       <IconWrapper onClick={onCloseSidebar}>
         <Icon icon="times" />
       </IconWrapper>
-      <Link to={`/budgets/${budgetId}/settings`} style={{ display: "flex" }}>
+      <Link
+        to={`/budgets/${budgetId}/settings`}
+        style={{ display: "flex" }}
+        onClick={evt => {
+          if (!open) {
+            evt.preventDefault();
+          }
+        }}
+      >
         <IconWrapper>
           <Icon icon="cog" />
         </IconWrapper>
@@ -51,6 +59,11 @@ const SidebarMenuContent = ({ budgetId, onCloseSidebar }) => (
           backgroundColor: plotBandColor
         }}
         exact
+        onClick={evt => {
+          if (!open) {
+            evt.preventDefault();
+          }
+        }}
       >
         {title}
       </StyledLink>
@@ -60,6 +73,7 @@ const SidebarMenuContent = ({ budgetId, onCloseSidebar }) => (
 
 SidebarMenuContent.propTypes = {
   budgetId: PropTypes.string.isRequired,
+  open: PropTypes.bool.isRequired,
   onCloseSidebar: PropTypes.func.isRequired
 };
 
