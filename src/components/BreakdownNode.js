@@ -14,7 +14,7 @@ class BreakdownNode extends Component {
     amount: PropTypes.number.isRequired,
     id: PropTypes.string.isRequired,
     isTopLevel: PropTypes.bool.isRequired,
-    name: PropTypes.string.isRequired,
+    name: PropTypes.node.isRequired,
     infoRenderer: PropTypes.func,
     nodes: PropTypes.arrayOf(
       PropTypes.shape({

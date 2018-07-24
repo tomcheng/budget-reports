@@ -168,15 +168,19 @@ const payeesWithMetadata = simpleMemoize(budget => {
 
   return mapValuesWithKey((transactions, payeeId) => ({
     ...payeesById[payeeId],
-    transactions: transactions.length,
+    transactions: transactions,
+    transactionCount: transactions.length,
     amount: sumBy("amount")(transactions)
   }))(transactionsByPayee);
 });
 
 export const getProcessedPayees = ({ budget, sort }) => {
-  const sorted = sortBy(sort)(values(payeesWithMetadata(budget)));
+  const sorted = sortBy(sort === "transactions" ? "transactionCount" : sort)(
+    values(payeesWithMetadata(budget))
+  );
 
   return sort === "transactions" ? sorted.reverse() : sorted;
 };
 
-export const getMetadataForPayee = ({ budget, payeeId }) => payeesWithMetadata(budget)[payeeId];
+export const getMetadataForPayee = ({ budget, payeeId }) =>
+  payeesWithMetadata(budget)[payeeId];

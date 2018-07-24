@@ -69,8 +69,8 @@ describe("getProcessedPayees", () => {
 
     expect(payees).toHaveLength(2);
     expect(payees.map(p => p.id)).toEqual(["foo", "bar"]);
-    expect(payees[0].transactions).toEqual(2);
-    expect(payees[1].transactions).toEqual(1);
+    expect(payees[0].transactionCount).toEqual(2);
+    expect(payees[1].transactionCount).toEqual(1);
   });
 
   it("ignores off budget transactions", () => {

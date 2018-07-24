@@ -18,7 +18,7 @@ class PayeesBody extends PureComponent {
         id={payee.id}
         name={payee.name}
         amount={payee.amount}
-        transactions={payee.transactions}
+        transactions={payee.transactionCount}
         budgetId={budget.id}
       />
     ));

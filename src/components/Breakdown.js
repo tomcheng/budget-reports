@@ -20,7 +20,7 @@ Breakdown.propTypes = {
     PropTypes.shape({
       amount: PropTypes.number.isRequired,
       id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
+      name: PropTypes.node.isRequired,
       nodes: PropTypes.array
     })
   ).isRequired,
