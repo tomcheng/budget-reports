@@ -174,10 +174,12 @@ class App extends Component {
             exact
             render={({ match }) => (
               <Category
+                authorized={authorized}
                 budget={budgetDetails[match.params.budgetId]}
                 budgetId={match.params.budgetId}
                 categoryId={match.params.categoryId}
                 currentMonth={currentMonth}
+                onAuthorize={this.handleAuthorize}
                 onRequestBudget={this.handleRequestBudget}
               />
             )}
