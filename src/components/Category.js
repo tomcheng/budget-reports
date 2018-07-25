@@ -1,13 +1,8 @@
-import React, { Fragment } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import propEq from "lodash/fp/propEq";
-import { Link } from "react-router-dom";
-import { getGroupLink } from "../utils";
 import PageWrapper from "./PageWrapper";
-import Separator from "./Separator";
-import TopNumbers from "./TopNumbers";
-import SpendingChart from "./SpendingChart";
-import Transactions from "./Transactions";
+import CategoryTitle from "./CategoryTitle";
+import CategoryBody from "./CategoryBody";
 
 const Category = ({
   authorized,
@@ -25,133 +20,16 @@ const Category = ({
     backLink
     onAuthorize={onAuthorize}
     onRequestBudget={onRequestBudget}
-    title={() => {
-      const category = budget.categories.find(
-        category => category.id === categoryId
-      );
-      const categoryGroup = budget.categoryGroups.find(
-        group => group.id === category.categoryGroupId
-      );
-
-      return (
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <Link
-            to={getGroupLink({
-              budgetId,
-              categoryGroupId: categoryGroup.id
-            })}
-            replace
-          >
-            {categoryGroup.name}
-          </Link>
-          <Separator />
-          {category.name}
-        </div>
-      );
-    }}
-    content={() => {
-      const category = budget.categories.find(
-        category => category.id === categoryId
-      );
-      const transactionsForCategory = budget.transactions.filter(
-        propEq("categoryId", categoryId)
-      );
-      const transactionsForMonth = transactionsForCategory.filter(
-        transaction => transaction.date.slice(0, 7) === currentMonth
-      );
-
-      return (
-        <Fragment>
-          <TopNumbers
-            numbers={[
-              { label: "budgeted", value: category.budgeted },
-              { label: "spent", value: -category.activity },
-              { label: "available", value: category.balance }
-            ]}
-          />
-          <SpendingChart
-            budgetId={budgetId}
-            total={category.balance - category.activity}
-            currentMonth={currentMonth}
-            transactions={transactionsForCategory}
-          />
-          <Transactions
-            transactions={transactionsForMonth}
-            payeesById={budget.payeesById}
-            budgetId={budgetId}
-            linkToPayee
-          />
-        </Fragment>
-      );
-    }}
+    title={() => <CategoryTitle budget={budget} categoryId={categoryId} />}
+    content={() => (
+      <CategoryBody
+        budget={budget}
+        currentMonth={currentMonth}
+        categoryId={categoryId}
+      />
+    )}
   />
 );
-
-/*
-  <EnsureBudgetLoaded
-    budgetId={budgetId}
-    budgetLoaded={!!budget}
-    onRequestBudget={onRequestBudget}
-  >
-    {() => {
-      const category = budget.categories.find(
-        category => category.id === categoryId
-      );
-      const categoryGroup = budget.categoryGroups.find(
-        group => group.id === category.categoryGroupId
-      );
-      const transactionsForCategory = budget.transactions.filter(
-        propEq("categoryId", categoryId)
-      );
-      const transactionsForMonth = transactionsForCategory.filter(
-        transaction => transaction.date.slice(0, 7) === currentMonth
-      );
-
-      return (
-        <Layout>
-          <Layout.Header flushLeft flushRight>
-            <BackLink />
-            <PageTitle
-              style={{ flexGrow: 1, display: "flex", alignItems: "center" }}
-            >
-              <Link
-                to={getGroupLink({
-                  budgetId,
-                  categoryGroupId: categoryGroup.id
-                })}
-              >
-                {categoryGroup.name}
-              </Link>
-              <Separator />
-              {category.name}
-            </PageTitle>
-          </Layout.Header>
-          <Layout.Body>
-            <TopNumbers
-              numbers={[
-                { label: "budgeted", value: category.budgeted },
-                { label: "spent", value: -category.activity },
-                { label: "available", value: category.balance }
-              ]}
-            />
-            <SpendingChart
-              budgetId={budgetId}
-              total={category.balance - category.activity}
-              currentMonth={currentMonth}
-              transactions={transactionsForCategory}
-            />
-            <Transactions
-              transactions={transactionsForMonth}
-              payeesById={budget.payeesById}
-              budgetId={budgetId}
-              linkToPayee
-            />
-          </Layout.Body>
-        </Layout>
-      );
-    }}
-  </EnsureBudgetLoaded>
- */
 
 Category.propTypes = {
   authorized: PropTypes.bool.isRequired,
