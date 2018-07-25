@@ -4,6 +4,7 @@ import anyPass from "lodash/fp/anyPass";
 import compose from "lodash/fp/compose";
 import find from "lodash/fp/find";
 import flatMap from "lodash/fp/flatMap";
+import get from "lodash/fp/get";
 import groupBy from "lodash/fp/groupBy";
 import identity from "lodash/fp/identity";
 import includes from "lodash/fp/includes";
@@ -116,7 +117,9 @@ class IncomeVsExpensesBody extends PureComponent {
         reject(
           anyPass([
             transaction =>
-              PAYEES_TO_EXCLUDE.includes(payeesById[transaction.payeeId].name),
+              PAYEES_TO_EXCLUDE.includes(
+                get([transaction.payeeId, "name"])(payeesById)
+              ),
             transaction => {
               if (mortgageAccounts[transaction.transferAccountId]) {
                 return false;
@@ -172,7 +175,12 @@ class IncomeVsExpensesBody extends PureComponent {
   };
 
   render() {
-    const { budget, investmentAccounts, mortgageAccounts, showing } = this.props;
+    const {
+      budget,
+      investmentAccounts,
+      mortgageAccounts,
+      showing
+    } = this.props;
     const {
       excludeOutliers,
       excludeFirstMonth,

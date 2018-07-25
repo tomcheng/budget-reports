@@ -159,6 +159,9 @@ const payeesWithMetadata = simpleMemoize(budget => {
       ) {
         return true;
       }
+      if (!transaction.payeeId || !payeesById[transaction.payeeId]) {
+        return true;
+      }
       if (payeesById[transaction.payeeId].name === "Starting Balance") {
         return true;
       }
