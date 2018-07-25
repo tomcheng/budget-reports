@@ -82,15 +82,15 @@ export const getGroupLink = ({ budgetId, categoryGroupId }) =>
 export const getCategoryLink = ({ budgetId, categoryId }) =>
   `/budgets/${budgetId}/categories/${categoryId}`;
 
-export const getPayeesLink = ({ budgetId }) => `/budgets/${budgetId}/payees`;
-
 export const getPayeeLink = ({ budgetId, payeeId }) =>
   `/budgets/${budgetId}/payees/${payeeId}`;
 
 export const getPayeeNodes = ({ payeesById, transactions }, divideBy = 1) =>
   compose([
     map((transactions, payeeId) => ({
-      ...pick(["id", "name"])(payeesById[payeeId]),
+      ...(payeesById[payeeId]
+        ? pick(["id", "name"])(payeesById[payeeId])
+        : { id: "no-payee", name: "(no payee)" }),
       amount: sumBy("amount")(transactions) / divideBy
     })),
     groupBy("payeeId")

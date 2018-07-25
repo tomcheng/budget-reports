@@ -16,12 +16,12 @@ const Transaction = ({ payee, date, amount, budgetId, linkToPayee }) => (
   <ListItem>
     <div>
       <SecondaryText>
-        {linkToPayee ? (
+        {linkToPayee && payee ? (
           <Link to={getPayeeLink({ budgetId, payeeId: payee.id })}>
             {payee.name}
           </Link>
         ) : (
-          payee.name
+          payee ? payee.name : "(no payee)"
         )}
       </SecondaryText>
       <Date>{moment(date).format("dddd, MMM D")}</Date>
