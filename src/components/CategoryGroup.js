@@ -44,7 +44,8 @@ const CategoryGroup = ({
         <Dropdown
           links={categories.map(category => ({
             to: getCategoryLink({ budgetId, categoryId: category.id }),
-            label: category.name
+            label: category.name,
+            replace: true
           }))}
         >
           {({ ref, triggerStyle, onClick }) => (

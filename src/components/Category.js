@@ -1,6 +1,8 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import propEq from "lodash/fp/propEq";
+import { Link } from "react-router-dom";
+import { getGroupLink } from "../utils";
 import PageWrapper from "./PageWrapper";
 import Separator from "./Separator";
 import TopNumbers from "./TopNumbers";
@@ -33,7 +35,15 @@ const Category = ({
 
       return (
         <div style={{ display: "flex", alignItems: "center" }}>
-          {categoryGroup.name}
+          <Link
+            to={getGroupLink({
+              budgetId,
+              categoryGroupId: categoryGroup.id
+            })}
+            replace
+          >
+            {categoryGroup.name}
+          </Link>
           <Separator />
           {category.name}
         </div>

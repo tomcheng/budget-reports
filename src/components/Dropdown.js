@@ -118,8 +118,8 @@ class Dropdown extends Component {
                 }}
               >
                 {links &&
-                  links.map(({ to, label }) => (
-                    <StyledLink key={to} to={to}>
+                  links.map(({ to, label, replace }) => (
+                    <StyledLink key={to} to={to} replace={replace}>
                       <DropdownOption>{label}</DropdownOption>
                     </StyledLink>
                   ))}
