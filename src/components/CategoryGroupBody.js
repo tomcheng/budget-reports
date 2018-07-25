@@ -7,6 +7,7 @@ import map from "lodash/fp/map";
 import sumBy from "lodash/fp/sumBy";
 import TopNumbers from "./TopNumbers";
 import SpendingChart from "./SpendingChart";
+import CategoryBreakdown from "./CategoryBreakdown";
 import Transactions from "./Transactions";
 
 class CategoryGroupBody extends PureComponent {
@@ -59,6 +60,11 @@ class CategoryGroupBody extends PureComponent {
           currentMonth={currentMonth}
           total={spent + available}
           transactions={transactionsInGroup}
+        />
+        <CategoryBreakdown
+          budgetId={budgetId}
+          categories={categories}
+          transactions={transactionsForMonth}
         />
         <Transactions
           budgetId={budgetId}
