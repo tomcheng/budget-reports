@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { plotBandColor } from "../styleVariables";
 import EnsureBudgetLoaded from "./EnsureBudgetLoaded";
 import Layout from "./Layout";
 import { PageTitle } from "./typeComponents";
@@ -40,7 +39,7 @@ const PageWrapper = ({
               <div
                 style={{
                   padding: "15px 20px",
-                  backgroundColor: plotBandColor,
+                  backgroundColor: "#fff",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",

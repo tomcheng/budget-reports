@@ -28,6 +28,7 @@ const CategoryBreakdown = ({ budgetId, categories, transactions }) => {
     <Section title="Categories">
       {categoriesWithData.map(({ id, name, count, amount }) => (
         <ListItem
+          key={id}
           style={{
             display: "flex",
             alignItems: "center",

@@ -1,11 +1,15 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
+import compose from "lodash/fp/compose";
 import groupBy from "lodash/fp/groupBy";
 import map from "lodash/fp/map";
+import prop from "lodash/fp/prop";
 import sumBy from "lodash/fp/sumBy";
+import uniq from "lodash/fp/uniq";
 import { getMetadataForPayee } from "../utils";
 import TopNumbers from "./TopNumbers";
+import PayeeCategories from "./PayeeCategories";
 import Breakdown from "./Breakdown";
 import Section from "./Section";
 
@@ -54,6 +58,7 @@ class PayeeBody extends PureComponent {
         id: transaction.id
       }))
     }))(transactionsByMonth);
+    const categoryIds = compose([uniq, map(prop("categoryId"))])(transactions);
 
     return (
       <Fragment>
@@ -72,6 +77,9 @@ class PayeeBody extends PureComponent {
               }
             ]}
           />
+        </Section>
+        <Section title="Categories">
+          <PayeeCategories budget={budget} categoryIds={categoryIds} />
         </Section>
         <Section title="Transactions">
           <Breakdown nodes={nodes} />
