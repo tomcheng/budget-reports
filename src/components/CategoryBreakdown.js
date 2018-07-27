@@ -8,7 +8,7 @@ import sumBy from "lodash/fp/sumBy";
 import { Link } from "react-router-dom";
 import { getCategoryLink } from "../utils";
 import Section from "./Section";
-import { StrongText, SecondaryText } from "./typeComponents";
+import { SecondaryText } from "./typeComponents";
 import ListItem from "./ListItem";
 import Amount from "./Amount";
 
@@ -25,8 +25,7 @@ const CategoryBreakdown = ({ budgetId, categories, transactions }) => {
   ])(categories);
 
   return (
-    <Section>
-      <StrongText>Categories</StrongText>
+    <Section title="Categories">
       {categoriesWithData.map(({ id, name, count, amount }) => (
         <ListItem
           style={{

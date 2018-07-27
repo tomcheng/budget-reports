@@ -1,12 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Transaction from "./Transaction";
-import { StrongText, SecondaryText } from "./typeComponents";
+import { SecondaryText } from "./typeComponents";
 import Section from "./Section";
 
 const Transactions = ({ transactions, payeesById, budgetId, linkToPayee }) => (
-  <Section>
-    <StrongText>Transactions</StrongText>
+  <Section title="Transactions">
     {transactions.length ? (
       transactions.map(({ id, payeeId, date, amount }) => (
         <Transaction

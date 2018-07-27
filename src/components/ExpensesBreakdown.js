@@ -11,7 +11,6 @@ import pick from "lodash/fp/pick";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import { getPayeeNodes } from "../utils";
-import { StrongText } from "./typeComponents";
 import Section from "./Section";
 import Breakdown from "./Breakdown";
 import BreakdownPercentage from "./BreakdownPercentage";
@@ -73,8 +72,7 @@ const ExpensesBreakdown = ({
   ])(groupNodes);
 
   return (
-    <Section>
-      <StrongText>Expenses Breakdown</StrongText>
+    <Section title="Expenses Breakdown">
       <Breakdown
         nodes={nodes}
         infoRenderer={({ amount }) => (

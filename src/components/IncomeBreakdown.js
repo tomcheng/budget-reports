@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import { getPayeeNodes } from "../utils";
-import { StrongText } from "./typeComponents";
 import Section from "./Section";
 import Breakdown from "./Breakdown";
 import BreakdownPercentage from "./BreakdownPercentage";
@@ -12,8 +11,7 @@ const IncomeBreakdown = ({ transactions, payeesById, divideBy }) => {
   const nodes = getPayeeNodes({ payeesById, transactions }, divideBy);
   const total = sumBy("amount")(nodes);
   return (
-    <Section>
-      <StrongText>Income Breakdown</StrongText>
+    <Section title="Income Breakdown">
       <Breakdown
         nodes={sortBy("amount")(nodes).reverse()}
         total={total}

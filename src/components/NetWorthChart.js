@@ -16,7 +16,6 @@ import {
   lightPrimaryColor,
   negativeChartColor
 } from "../styleVariables";
-import Section from "./Section";
 import Chart from "./Chart";
 
 const map = mapRaw.convert({ cap: false });

@@ -7,7 +7,6 @@ import sumBy from "lodash/fp/sumBy";
 import { getMetadataForPayee } from "../utils";
 import TopNumbers from "./TopNumbers";
 import Breakdown from "./Breakdown";
-import { StrongText } from "./typeComponents";
 import Section from "./Section";
 
 const mapWithKeys = map.convert({ cap: false });
@@ -74,8 +73,7 @@ class PayeeBody extends PureComponent {
             ]}
           />
         </Section>
-        <Section>
-          <StrongText>Transactions</StrongText>
+        <Section title="Transactions">
           <Breakdown nodes={nodes} />
         </Section>
       </Fragment>

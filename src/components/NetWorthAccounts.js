@@ -14,7 +14,6 @@ import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import values from "lodash/fp/values";
 import Section from "./Section";
-import { StrongText } from "./typeComponents";
 import Breakdown from "./Breakdown";
 import Icon from "./Icon";
 
@@ -90,8 +89,7 @@ const NetWorthAccounts = ({
 
   return (
     <Fragment>
-      <Section>
-        <StrongText>Accounts</StrongText>
+      <Section title="Accounts">
         <AccountBreakdown
           accountsById={accountsById}
           hiddenAccounts={hiddenAccounts}
@@ -101,8 +99,7 @@ const NetWorthAccounts = ({
       </Section>
 
       {values(hiddenNodes).length > 0 && (
-        <Section>
-          <StrongText>Hidden</StrongText>
+        <Section title="Hidden Accounts">
           <AccountBreakdown
             accountsById={accountsById}
             hiddenAccounts={hiddenAccounts}
