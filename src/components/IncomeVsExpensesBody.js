@@ -27,6 +27,7 @@ import IncomeVsExpensesSummary from "./IncomeVsExpensesSummary";
 import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
 import IncomeVsExpensesChartControls from "./IncomeVsExpensesChartControls";
 import Breakdowns from "./Breakdowns";
+import Section, { Subsection } from "./Section";
 
 const PAYEES_TO_EXCLUDE = [
   "Starting Balance",
@@ -210,39 +211,47 @@ class IncomeVsExpensesBody extends PureComponent {
 
     return (
       <Fragment>
-        <IncomeVsExpensesSummary
-          incomeTransactions={incomeTransactions}
-          expenseTransactions={expenseTransactions}
-          divideBy={showTotals ? 1 : summaries.length}
-        />
-        <IncomeVsExpensesChart
-          data={allSummaries}
-          excludedMonths={excludedMonths}
-          selectedMonths={selectedMonths}
-          onSelectMonth={this.handleSelectMonth}
-        />
-        <IncomeVsExpensesChartControls
-          toggles={[
-            {
-              label: "exclude first",
-              key: "excludeFirstMonth",
-              value: excludeFirstMonth
-            },
-            {
-              label: "exclude last",
-              key: "excludeCurrentMonth",
-              value: excludeCurrentMonth
-            },
-            {
-              label: "exclude outliers",
-              key: "excludeOutliers",
-              value: excludeOutliers
-            }
-          ]}
-          onToggle={this.handleToggleExclusion}
-          onClearSelected={this.handleClearSelectedMonths}
-          hasSelection={selectedMonths.length > 0}
-        />
+        <Section>
+          <Subsection>
+            <IncomeVsExpensesSummary
+              incomeTransactions={incomeTransactions}
+              expenseTransactions={expenseTransactions}
+              divideBy={showTotals ? 1 : summaries.length}
+            />
+          </Subsection>
+          <Subsection>
+            <IncomeVsExpensesChart
+              data={allSummaries}
+              excludedMonths={excludedMonths}
+              selectedMonths={selectedMonths}
+              onSelectMonth={this.handleSelectMonth}
+            />
+          </Subsection>
+          <Subsection>
+            <IncomeVsExpensesChartControls
+              toggles={[
+                {
+                  label: "exclude first",
+                  key: "excludeFirstMonth",
+                  value: excludeFirstMonth
+                },
+                {
+                  label: "exclude last",
+                  key: "excludeCurrentMonth",
+                  value: excludeCurrentMonth
+                },
+                {
+                  label: "exclude outliers",
+                  key: "excludeOutliers",
+                  value: excludeOutliers
+                }
+              ]}
+              onToggle={this.handleToggleExclusion}
+              onClearSelected={this.handleClearSelectedMonths}
+              hasSelection={selectedMonths.length > 0}
+            />
+          </Subsection>
+        </Section>
         <Breakdowns
           categoriesById={categoriesById}
           categoryGroupsById={categoryGroupsById}

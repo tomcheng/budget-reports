@@ -26,6 +26,7 @@ Header.defaultProps = { flushLeft: false, flushRight: false };
 const Body = styled.div`
   flex-grow: 1;
   overflow-y: auto;
+  background-color: #eee;
 `;
 
 class Layout extends Component {

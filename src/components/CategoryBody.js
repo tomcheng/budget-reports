@@ -1,6 +1,7 @@
 import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import propEq from "lodash/fp/propEq";
+import Section, { Subsection } from "./Section";
 import TopNumbers from "./TopNumbers";
 import SpendingChart from "./SpendingChart";
 import Transactions from "./Transactions";
@@ -31,19 +32,25 @@ class CategoryBody extends PureComponent {
 
     return (
       <Fragment>
-        <TopNumbers
-          numbers={[
-            { label: "budgeted", value: category.budgeted },
-            { label: "spent", value: -category.activity },
-            { label: "available", value: category.balance }
-          ]}
-        />
-        <SpendingChart
-          budgetId={budget.id}
-          total={category.balance - category.activity}
-          currentMonth={currentMonth}
-          transactions={transactionsForCategory}
-        />
+        <Section>
+          <Subsection>
+            <TopNumbers
+              numbers={[
+                { label: "budgeted", value: category.budgeted },
+                { label: "spent", value: -category.activity },
+                { label: "available", value: category.balance }
+              ]}
+            />
+          </Subsection>
+          <Subsection>
+            <SpendingChart
+              budgetId={budget.id}
+              total={category.balance - category.activity}
+              currentMonth={currentMonth}
+              transactions={transactionsForCategory}
+            />
+          </Subsection>
+        </Section>
         <Transactions
           transactions={transactionsForMonth}
           payeesById={budget.payeesById}

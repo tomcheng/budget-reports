@@ -54,52 +54,45 @@ const NetWorthChart = ({
   );
 
   return (
-    <Section>
-      <Chart
-        options={{
-          chart: {
-            type: "column",
-            events: {
-              click: event => {
-                onSelectMonth(months[Math.round(event.xAxis[0].value)]);
-              }
+    <Chart
+      options={{
+        chart: {
+          type: "column",
+          events: {
+            click: event => {
+              onSelectMonth(months[Math.round(event.xAxis[0].value)]);
             }
-          },
-          yAxis: { visible: false, endOnTick: false },
-          xAxis: { categories, plotBands },
-          plotOptions: {
-            column: { stacking: "normal" }
-          },
-          series: compose([
-            sortBy(({ stack }) => (stack === FIRST_STACK ? 0 : 1)),
-            map(({ data, id, type }) => {
-              const stack = getStack({ type, id, mortgageAccounts });
-              return {
-                data: map(
-                  compose([
-                    Math.abs,
-                    stack === "liability" ? n => -n : identity
-                  ])
-                )(data),
-                borderWidth: 0,
-                enableMouseTracking: false,
-                color:
-                  stack === "liability"
-                    ? negativeChartColor
-                    : lightPrimaryColor,
-                stack
-              };
-            })
-          ])(data).concat({
-            color: primaryColor,
-            data: netWorthData,
-            enableMouseTracking: false,
-            name: "Net Income",
-            type: "line"
+          }
+        },
+        yAxis: { visible: false, endOnTick: false },
+        xAxis: { categories, plotBands },
+        plotOptions: {
+          column: { stacking: "normal" }
+        },
+        series: compose([
+          sortBy(({ stack }) => (stack === FIRST_STACK ? 0 : 1)),
+          map(({ data, id, type }) => {
+            const stack = getStack({ type, id, mortgageAccounts });
+            return {
+              data: map(
+                compose([Math.abs, stack === "liability" ? n => -n : identity])
+              )(data),
+              borderWidth: 0,
+              enableMouseTracking: false,
+              color:
+                stack === "liability" ? negativeChartColor : lightPrimaryColor,
+              stack
+            };
           })
-        }}
-      />
-    </Section>
+        ])(data).concat({
+          color: primaryColor,
+          data: netWorthData,
+          enableMouseTracking: false,
+          name: "Net Income",
+          type: "line"
+        })
+      }}
+    />
   );
 };
 

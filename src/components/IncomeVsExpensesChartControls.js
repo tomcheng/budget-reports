@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Section from "./Section";
 import Button from "./Button";
 import Toggle from "./Toggle";
 
@@ -10,7 +9,7 @@ const IncomeVsExpensesChartControls = ({
   onClearSelected,
   onToggle
 }) => (
-  <Section
+  <div
     style={{
       display: "flex",
       alignItems: "center",
@@ -31,7 +30,7 @@ const IncomeVsExpensesChartControls = ({
         />
       ))
     )}
-  </Section>
+  </div>
 );
 
 IncomeVsExpensesChartControls.propTypes = {

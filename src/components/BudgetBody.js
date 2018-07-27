@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import compose from "lodash/fp/compose";
@@ -10,6 +10,7 @@ import sortBy from "lodash/fp/sortBy";
 import { simpleMemoize } from "../utils";
 import { getSetting, setSetting, EXPANDED_GROUPS } from "../uiRepo";
 import CategoryGroupListItem from "./CategoryGroupListItem";
+import Section from "./Section"
 
 class BudgetBody extends PureComponent {
   static propTypes = {
@@ -78,7 +79,7 @@ class BudgetBody extends PureComponent {
     const dayOfMonth = parseInt(moment().format("D"), 10);
 
     return (
-      <Fragment>
+      <Section noPadding>
         {this.getSortedCategoryGroups(budget).map(categoryGroup => (
           <CategoryGroupListItem
             key={categoryGroup.id}
@@ -92,7 +93,7 @@ class BudgetBody extends PureComponent {
             onToggleGroup={this.handleToggleGroup}
           />
         ))}
-      </Fragment>
+      </Section>
     );
   }
 }

@@ -5,6 +5,7 @@ import filter from "lodash/fp/filter";
 import matchesProperty from "lodash/fp/matchesProperty";
 import map from "lodash/fp/map";
 import sumBy from "lodash/fp/sumBy";
+import Section, { Subsection } from "./Section";
 import TopNumbers from "./TopNumbers";
 import SpendingChart from "./SpendingChart";
 import CategoryBreakdown from "./CategoryBreakdown";
@@ -48,19 +49,25 @@ class CategoryGroupBody extends PureComponent {
 
     return (
       <Fragment>
-        <TopNumbers
-          numbers={[
-            { label: "budgeted", value: budgeted },
-            { label: "spent", value: spent },
-            { label: "available", value: available }
-          ]}
-        />
-        <SpendingChart
-          budgetId={budgetId}
-          currentMonth={currentMonth}
-          total={spent + available}
-          transactions={transactionsInGroup}
-        />
+        <Section>
+          <Subsection>
+            <TopNumbers
+              numbers={[
+                { label: "budgeted", value: budgeted },
+                { label: "spent", value: spent },
+                { label: "available", value: available }
+              ]}
+            />
+          </Subsection>
+          <Subsection>
+            <SpendingChart
+              budgetId={budgetId}
+              currentMonth={currentMonth}
+              total={spent + available}
+              transactions={transactionsInGroup}
+            />
+          </Subsection>
+        </Section>
         <CategoryBreakdown
           budgetId={budgetId}
           categories={categories}

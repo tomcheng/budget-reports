@@ -19,6 +19,7 @@ import sumBy from "lodash/fp/sumBy";
 import values from "lodash/fp/values";
 import { simpleMemoize } from "../utils";
 import { getSetting, setSetting, NET_WORTH_HIDDEN_ACCOUNTS } from "../uiRepo";
+import Section, { Subsection } from "./Section";
 import NetWorthSummary from "./NetWorthSummary";
 import NetWorthChart from "./NetWorthChart";
 import NetWorthAccounts from "./NetWorthAccounts";
@@ -152,22 +153,30 @@ class NetWorthBody extends PureComponent {
 
     return (
       <Fragment>
-        <NetWorthSummary
-          liabilities={selectedLiabilities}
-          assets={selectedAssets}
-          netWorth={selectedAssets + selectedLiabilities}
-        />
-        <NetWorthChart
-          data={map(({ id, data }) => ({
-            data: hiddenAccounts[id] ? data.map(constant(0)) : data,
-            type: budget.accountsById[id].type,
-            id
-          }))(accountSummaries)}
-          months={months}
-          mortgageAccounts={mortgageAccounts}
-          selectedMonth={selectedMonth}
-          onSelectMonth={this.handleSelectMonth}
-        />
+        <Section>
+          <Subsection>
+            <NetWorthSummary
+              liabilities={selectedLiabilities}
+              assets={selectedAssets}
+              netWorth={selectedAssets + selectedLiabilities}
+            />
+
+          </Subsection>
+          <Subsection>
+            <NetWorthChart
+              data={map(({ id, data }) => ({
+                data: hiddenAccounts[id] ? data.map(constant(0)) : data,
+                type: budget.accountsById[id].type,
+                id
+              }))(accountSummaries)}
+              months={months}
+              mortgageAccounts={mortgageAccounts}
+              selectedMonth={selectedMonth}
+              onSelectMonth={this.handleSelectMonth}
+            />
+
+          </Subsection>
+        </Section>
         <NetWorthAccounts
           accounts={map(account => ({
             ...account,

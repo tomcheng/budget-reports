@@ -13,7 +13,6 @@ import { getSetting, setSetting, SPENDING_MONTHS_TO_COMPARE } from "../uiRepo";
 import { primaryColor, plotBandColor } from "../styleVariables";
 import { MinorText, SecondaryText } from "./typeComponents";
 import { GhostButton, PrimaryButton } from "./Button";
-import Section from "./Section";
 import Icon from "./Icon";
 import Chart from "./Chart";
 
@@ -140,7 +139,7 @@ class SpendingChart extends Component {
     }));
 
     return (
-      <Section>
+      <Fragment>
         <div style={{ marginBottom: 5 }}>
           <MinorText
             style={{
@@ -227,7 +226,7 @@ class SpendingChart extends Component {
           <MinorText>{head(dates).format("MMM D")}</MinorText>
           <MinorText>{last(dates).format("MMM D")}</MinorText>
         </DateLabels>
-      </Section>
+      </Fragment>
     );
   }
 }

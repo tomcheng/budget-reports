@@ -58,16 +58,22 @@ class PayeeBody extends PureComponent {
 
     return (
       <Fragment>
-        <TopNumbers
-          numbers={[
-            { label: "total amount", value: Math.abs(amount) },
-            { label: "transactions", value: transactionCount, currency: false },
-            {
-              label: "amount/transaction",
-              value: Math.abs(amount) / transactionCount
-            }
-          ]}
-        />
+        <Section>
+          <TopNumbers
+            numbers={[
+              { label: "total amount", value: Math.abs(amount) },
+              {
+                label: "transactions",
+                value: transactionCount,
+                currency: false
+              },
+              {
+                label: "amount/transaction",
+                value: Math.abs(amount) / transactionCount
+              }
+            ]}
+          />
+        </Section>
         <Section>
           <StrongText>Transactions</StrongText>
           <Breakdown nodes={nodes} />
