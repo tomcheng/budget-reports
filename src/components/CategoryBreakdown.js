@@ -34,11 +34,7 @@ const CategoryBreakdown = ({ budgetId, categories, transactions }) => {
             justifyContent: "space-between"
           }}
         >
-          <Link
-            key={id}
-            to={getCategoryLink({ budgetId, categoryId: id })}
-            replace
-          >
+          <Link key={id} to={getCategoryLink({ budgetId, categoryId: id })}>
             <SecondaryText>
               {name}{" "}
               <span style={{ opacity: 0.6 }}>

@@ -2,7 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import PageWrapper from "./PageWrapper";
 import CategoryGroupBody from "./CategoryGroupBody";
-import CategoryGroupTitle from "./CategoryGroupTitle";
+import find from "lodash/fp/find";
+import matchesProperty from "lodash/fp/matchesProperty";
 
 const CategoryGroup = ({
   authorized,
@@ -20,9 +21,9 @@ const CategoryGroup = ({
     backLink
     onAuthorize={onAuthorize}
     onRequestBudget={onRequestBudget}
-    title={() => (
-      <CategoryGroupTitle budget={budget} categoryGroupId={categoryGroupId} />
-    )}
+    title={() =>
+      find(matchesProperty("id", categoryGroupId))(budget.categoryGroups).name
+    }
     content={() => (
       <CategoryGroupBody
         budget={budget}

@@ -30,7 +30,6 @@ class CategoryTitle extends PureComponent {
             budgetId: budget.id,
             categoryGroupId: categoryGroup.id
           })}
-          replace
         >
           {categoryGroup.name}
         </Link>
