@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import compose from "lodash/fp/compose";
 import concat from "lodash/fp/concat";
 import filter from "lodash/fp/filter";
@@ -10,7 +11,7 @@ import omit from "lodash/fp/omit";
 import pick from "lodash/fp/pick";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
-import { getPayeeNodes } from "../utils";
+import { getPayeeNodes, getPayeeLink } from "../utils";
 import Section from "./Section";
 import Breakdown from "./Breakdown";
 import BreakdownPercentage from "./BreakdownPercentage";
@@ -23,11 +24,22 @@ const ExpensesBreakdown = ({
   transactions,
   totalIncome,
   payeesById,
-  divideBy
+  divideBy,
+  budgetId
 }) => {
   const categoryNodes = compose([
     map((transactions, categoryId) => {
-      const payeeNodes = getPayeeNodes({ payeesById, transactions }, divideBy);
+      const payeeNodes = getPayeeNodes(
+        { payeesById, transactions },
+        divideBy
+      ).map(payee => ({
+        ...payee,
+        name: (
+          <Link to={getPayeeLink({ budgetId, payeeId: payee.id })}>
+            {payee.name}
+          </Link>
+        )
+      }));
       return {
         ...pick(["id", "name", "categoryGroupId"])(categoriesById[categoryId]),
         nodes: sortBy("amount")(payeeNodes),
@@ -84,6 +96,7 @@ const ExpensesBreakdown = ({
 };
 
 ExpensesBreakdown.propTypes = {
+  budgetId: PropTypes.string.isRequired,
   categoriesById: PropTypes.objectOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,

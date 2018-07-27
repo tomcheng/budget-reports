@@ -253,6 +253,7 @@ class IncomeVsExpensesBody extends PureComponent {
           </Subsection>
         </Section>
         <Breakdowns
+          budgetId={budget.id}
           categoriesById={categoriesById}
           categoryGroupsById={categoryGroupsById}
           payeesById={payeesById}

@@ -2,13 +2,23 @@ import React from "react";
 import PropTypes from "prop-types";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
-import { getPayeeNodes } from "../utils";
+import { Link } from "react-router-dom";
+import { getPayeeNodes, getPayeeLink } from "../utils";
 import Section from "./Section";
 import Breakdown from "./Breakdown";
 import BreakdownPercentage from "./BreakdownPercentage";
 
-const IncomeBreakdown = ({ transactions, payeesById, divideBy }) => {
-  const nodes = getPayeeNodes({ payeesById, transactions }, divideBy);
+const IncomeBreakdown = ({ transactions, payeesById, divideBy, budgetId }) => {
+  const nodes = getPayeeNodes({ payeesById, transactions }, divideBy).map(
+    payee => ({
+      ...payee,
+      name: (
+        <Link to={getPayeeLink({ budgetId, payeeId: payee.id })}>
+          {payee.name}
+        </Link>
+      )
+    })
+  );
   const total = sumBy("amount")(nodes);
   return (
     <Section title="Income Breakdown">
@@ -24,6 +34,7 @@ const IncomeBreakdown = ({ transactions, payeesById, divideBy }) => {
 };
 
 IncomeBreakdown.propTypes = {
+  budgetId: PropTypes.string.isRequired,
   divideBy: PropTypes.number.isRequired,
   payeesById: PropTypes.objectOf(PropTypes.object).isRequired,
   transactions: PropTypes.arrayOf(
