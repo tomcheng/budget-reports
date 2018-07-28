@@ -43,7 +43,8 @@ const PageWrapper = ({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  flexShrink: 0
+                  flexShrink: 0,
+                  borderTop: "1px solid #bbb"
                 }}
               >
                 Your authorization expired.
