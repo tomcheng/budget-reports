@@ -6,8 +6,8 @@ import NetWorth from "./components/NetWorth";
 import Projections from "./components/Projections";
 
 export default [
-  { path: "", title: "Current Month Budget", Component: Budget },
   { path: "/dashboard", title: "Dashboard", Component: Dashboard },
+  { path: "", title: "Current Month Budget", Component: Budget },
   { path: "/payees", title: "Payees", Component: Payees },
   {
     path: "/income-vs-expenses",
