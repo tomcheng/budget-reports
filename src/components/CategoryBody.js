@@ -32,7 +32,7 @@ class CategoryBody extends PureComponent {
 
     return (
       <Fragment>
-        <Section>
+        <Section title="Overview">
           <Subsection>
             <TopNumbers
               numbers={[

@@ -166,7 +166,7 @@ class IncomeVsExpensesBody extends PureComponent {
 
     return (
       <Fragment>
-        <Section>
+        <Section title="Overview">
           <Subsection>
             <IncomeVsExpensesSummary
               incomeTransactions={incomeTransactions}

@@ -6,7 +6,6 @@ import {
   selectedPlotBandColor
 } from "../styleVariables";
 import Chart from "./Chart";
-import Section from "./Section";
 
 const ProjectionsChart = ({
   investmentsProjection,
@@ -14,43 +13,41 @@ const ProjectionsChart = ({
   amountNeededToRetire,
   yearsUntilRetirement
 }) => (
-  <Section>
-    <Chart
-      options={{
-        chart: {
-          type: "column"
-        },
-        xAxis: {
-          type: "category",
-          plotBands: [
-            {
-              color: selectedPlotBandColor,
-              from: Math.floor(yearsUntilRetirement) - 0.5,
-              to: Math.floor(yearsUntilRetirement) + 0.5
-            }
-          ]
-        },
-        yAxis: {
-          title: { text: null },
-          endOnTick: false,
-          plotLines: [
-            {
-              value: amountNeededToRetire,
-              color: "#ccc",
-              width: 1
-            }
-          ]
-        },
-        legend: {
-          enabled: false
-        },
-        series: [
-          { data: investmentsProjection, color: primaryColor, borderWidth: 0 },
-          { data: mortgageProjection, color: negativeColor, borderWidth: 0 }
+  <Chart
+    options={{
+      chart: {
+        type: "column"
+      },
+      xAxis: {
+        type: "category",
+        plotBands: [
+          {
+            color: selectedPlotBandColor,
+            from: Math.floor(yearsUntilRetirement) - 0.5,
+            to: Math.floor(yearsUntilRetirement) + 0.5
+          }
         ]
-      }}
-    />
-  </Section>
+      },
+      yAxis: {
+        title: { text: null },
+        endOnTick: false,
+        plotLines: [
+          {
+            value: amountNeededToRetire,
+            color: "#ccc",
+            width: 1
+          }
+        ]
+      },
+      legend: {
+        enabled: false
+      },
+      series: [
+        { data: investmentsProjection, color: primaryColor, borderWidth: 0 },
+        { data: mortgageProjection, color: negativeColor, borderWidth: 0 }
+      ]
+    }}
+  />
 );
 
 ProjectionsChart.propTypes = {

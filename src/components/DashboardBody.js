@@ -13,7 +13,7 @@ const DashboardBody = ({ budget, currentMonth, investmentAccounts }) => {
 
   return (
     <Fragment>
-      <Section>
+      <Section title="Overview">
         <SpendingChart
           transactions={transactions}
           budgetId={budget.id}

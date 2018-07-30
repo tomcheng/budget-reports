@@ -15,5 +15,5 @@ export default [
     Component: IncomeVsExpenses
   },
   { path: "/net-worth", title: "Net Worth", Component: NetWorth },
-  { path: "/projections", title: "Projections", Component: Projections }
+  { path: "/projections", title: "Retirement Calculator", Component: Projections }
 ];

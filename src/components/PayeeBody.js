@@ -36,7 +36,7 @@ class PayeeBody extends PureComponent {
 
     return (
       <Fragment>
-        <Section>
+        <Section title="Overview">
           <TopNumbers
             numbers={[
               { label: "total amount", value: Math.abs(amount) },

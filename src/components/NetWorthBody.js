@@ -153,7 +153,7 @@ class NetWorthBody extends PureComponent {
 
     return (
       <Fragment>
-        <Section>
+        <Section title="Overview">
           <Subsection>
             <NetWorthSummary
               liabilities={selectedLiabilities}

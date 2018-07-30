@@ -226,13 +226,15 @@ class ProjectionsBody extends PureComponent {
 
     return (
       <Fragment>
-        <ProjectionsChart
-          investmentsProjection={projectionByYear}
-          mortgageProjection={mortgageProjectionByYear}
-          amountNeededToRetire={amountNeededToRetire}
-          yearsUntilRetirement={yearsUntilRetirement}
-        />
-        <Section>
+        <Section title="Projection">
+          <ProjectionsChart
+            investmentsProjection={projectionByYear}
+            mortgageProjection={mortgageProjectionByYear}
+            amountNeededToRetire={amountNeededToRetire}
+            yearsUntilRetirement={yearsUntilRetirement}
+          />
+        </Section>
+        <Section title="Assumptions">
           <Entry
             label="Earliest you can retire"
             value={yearsUntilRetirement}

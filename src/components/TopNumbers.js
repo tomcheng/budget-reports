@@ -15,7 +15,7 @@ const Label = styled(MinorText)`
 `;
 
 const TopNumbers = ({ numbers, roundToDollar }) => (
-  <div style={{ display: "flex" }}>
+  <div style={{ display: "flex", marginTop: 12 }}>
     {numbers.map(({ label, value, currency = true }) => (
       <Group key={label}>
         <LargeNumber>
