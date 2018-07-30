@@ -13,8 +13,8 @@ const DashboardBody = ({ budget, currentMonth, investmentAccounts }) => (
         investmentAccounts={investmentAccounts}
       />
     </Section>
-    <Section title="Transactions in the Past 7 Days">
-      <RecentTransactions budget={budget} />
+    <Section title="Current Month Transactions">
+      <RecentTransactions budget={budget} currentMonth={currentMonth} />
     </Section>
   </Fragment>
 );

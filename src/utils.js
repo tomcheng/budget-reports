@@ -162,7 +162,7 @@ export const splitTransactions = ({
   return { incomeTransactions, expenseTransactions };
 };
 
-export const getMonth = transaction => transaction.date.slice(0, 7);
+export const getTransactionMonth = transaction => transaction.date.slice(0, 7);
 
 const standardDeviation = arr => {
   const avg = mean(arr);

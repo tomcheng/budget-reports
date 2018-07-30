@@ -7,7 +7,7 @@ import map from "lodash/fp/map";
 import prop from "lodash/fp/prop";
 import sumBy from "lodash/fp/sumBy";
 import uniq from "lodash/fp/uniq";
-import { getMetadataForPayee } from "../utils";
+import { getMetadataForPayee, getTransactionMonth } from "../utils";
 import TopNumbers from "./TopNumbers";
 import PayeeCategories from "./PayeeCategories";
 import Breakdown from "./Breakdown";
@@ -36,9 +36,7 @@ class PayeeBody extends PureComponent {
       budget,
       payeeId: payee.id
     });
-    const transactionsByMonth = groupBy(transaction =>
-      transaction.date.slice(0, 7)
-    )(transactions);
+    const transactionsByMonth = groupBy(getTransactionMonth)(transactions);
     const nodes = mapWithKeys((transactions, month) => ({
       amount: sumBy("amount")(transactions),
       id: month,

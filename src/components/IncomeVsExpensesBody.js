@@ -20,7 +20,7 @@ import {
   splitTransactions,
   simpleMemoize,
   getOutliersBy,
-  getMonth
+  getTransactionMonth
 } from "../utils";
 import IncomeVsExpensesSummary from "./IncomeVsExpensesSummary";
 import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
@@ -99,7 +99,7 @@ class IncomeVsExpensesBody extends PureComponent {
           expenses: sumBy("amount")(expenseTransactions)
         };
       }),
-      groupBy(getMonth),
+      groupBy(getTransactionMonth),
       filterTransactions({ budget, investmentAccounts })
     ])(budget.transactions)
   );

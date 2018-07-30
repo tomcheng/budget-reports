@@ -2,8 +2,9 @@ import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import compose from "lodash/fp/compose";
+// import groupBy from "lodash/fp/groupBy";
 import takeWhile from "lodash/fp/takeWhile";
-import { filterTransactions } from "../utils";
+import { getTransactionMonth, filterTransactions } from "../utils";
 import ListItem from "./ListItem";
 import { MinorText, SecondaryText } from "./typeComponents";
 import Amount from "./Amount";
@@ -22,16 +23,21 @@ class RecentTransactions extends PureComponent {
       payeesById: PropTypes.objectOf(
         PropTypes.shape({ name: PropTypes.string.isRequired })
       ).isRequired
-    }).isRequired
+    }).isRequired,
+    currentMonth: PropTypes.string.isRequired,
   };
 
   render() {
-    const { budget } = this.props;
-    const cutOffTime = moment().subtract(30, "days");
+    const { budget, currentMonth } = this.props;
+    // const transactionsByDate = compose([
+    //   groupBy("date"),
+    //   filterTransactions({ budget }),
+    //   takeWhile(transaction => getTransactionMonth(transaction) === currentMonth)
+    // ])(budget.transactions);
 
     return compose([
-      takeWhile(({ date }) => moment(date).isSameOrAfter(cutOffTime)),
-      filterTransactions({ budget })
+      filterTransactions({ budget }),
+      takeWhile(transaction => getTransactionMonth(transaction) === currentMonth)
     ])(budget.transactions).map(transaction => {
       const payee = budget.payeesById[transaction.payeeId];
       return (
