@@ -2,12 +2,10 @@ import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import compose from "lodash/fp/compose";
-// import groupBy from "lodash/fp/groupBy";
+import get from "lodash/fp/get";
 import takeWhile from "lodash/fp/takeWhile";
 import { getTransactionMonth, filterTransactions } from "../utils";
-import ListItem from "./ListItem";
-import { MinorText, SecondaryText } from "./typeComponents";
-import Amount from "./Amount";
+import GroupedTransactions from "./GroupedTransactions";
 
 class RecentTransactions extends PureComponent {
   static propTypes = {
@@ -24,36 +22,28 @@ class RecentTransactions extends PureComponent {
         PropTypes.shape({ name: PropTypes.string.isRequired })
       ).isRequired
     }).isRequired,
-    currentMonth: PropTypes.string.isRequired,
+    currentMonth: PropTypes.string.isRequired
   };
 
   render() {
     const { budget, currentMonth } = this.props;
-    // const transactionsByDate = compose([
-    //   groupBy("date"),
-    //   filterTransactions({ budget }),
-    //   takeWhile(transaction => getTransactionMonth(transaction) === currentMonth)
-    // ])(budget.transactions);
-
-    return compose([
+    const transactions = compose([
       filterTransactions({ budget }),
-      takeWhile(transaction => getTransactionMonth(transaction) === currentMonth)
-    ])(budget.transactions).map(transaction => {
-      const payee = budget.payeesById[transaction.payeeId];
-      return (
-        <ListItem key={transaction.id}>
-          <div>
-            <SecondaryText>{payee.name}</SecondaryText>
-            <MinorText>
-              {moment(transaction.date).format("dddd, MMM D")}
-            </MinorText>
-          </div>
-          <SecondaryText>
-            <Amount amount={transaction.amount} />
-          </SecondaryText>
-        </ListItem>
-      );
-    });
+      takeWhile(
+        transaction => getTransactionMonth(transaction) === currentMonth
+      )
+    ])(budget.transactions);
+
+    return (
+      <GroupedTransactions
+        transactions={transactions}
+        groupBy="date"
+        groupDisplayFunction={day => moment(day).format("dddd, MMMM D")}
+        leafDisplayFunction={transaction =>
+          get(["payeesById", transaction.payeeId, "name"])(budget)
+        }
+      />
+    );
   }
 }
 
