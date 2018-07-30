@@ -1,4 +1,5 @@
 import { utils } from "ynab";
+import anyPass from "lodash/fp/anyPass";
 import camelCase from "lodash/fp/camelCase";
 import compose from "lodash/fp/compose";
 import curry from "lodash/fp/curry";
@@ -17,10 +18,16 @@ import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import values from "lodash/fp/values";
+import get from "lodash/fp/get";
 
 const map = mapRaw.convert({ cap: false });
 const mapKeys = mapKeysRaw.convert({ cap: false });
 const mapValuesWithKey = mapValues.convert({ cap: false });
+
+const PAYEES_TO_EXCLUDE = [
+  "Starting Balance",
+  "Reconciliation Balance Adjustment"
+];
 
 export const simpleMemoize = func => {
   let lastArgs = null;
@@ -106,7 +113,7 @@ const isIncome = ({
   );
 };
 
-export const isTransfer = ({
+const isTransfer = ({
   accountsById,
   investmentAccounts
 }) => transaction => {
@@ -133,6 +140,14 @@ export const isTransfer = ({
 
   return false;
 };
+
+export const filterTransactions = ({ budget, investmentAccounts }) =>
+  reject(anyPass([
+    transaction =>
+      PAYEES_TO_EXCLUDE.includes(
+        get([transaction.payeeId, "name"])(budget.payeesById)
+      ),
+    isTransfer({ accountsById: budget.accountsById, investmentAccounts })]));
 
 export const splitTransactions = ({
   categoryGroupsById,

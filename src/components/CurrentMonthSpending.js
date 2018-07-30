@@ -1,8 +1,7 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import reject from "lodash/fp/reject";
 import SpendingChart from "./SpendingChart";
-import { splitTransactions, isTransfer } from "../utils";
+import { splitTransactions, filterTransactions } from "../utils";
 
 class CurrentMonthSpending extends PureComponent {
   static propTypes = {
@@ -16,7 +15,7 @@ class CurrentMonthSpending extends PureComponent {
   render() {
     const { budget, currentMonth, investmentAccounts } = this.props;
     const { expenseTransactions } = splitTransactions(budget);
-    const transactions = reject(isTransfer({ ...budget, investmentAccounts }))(
+    const transactions = filterTransactions({ budget, investmentAccounts })(
       expenseTransactions
     );
 

@@ -1,10 +1,8 @@
 import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
-import anyPass from "lodash/fp/anyPass";
 import compose from "lodash/fp/compose";
 import find from "lodash/fp/find";
 import flatMap from "lodash/fp/flatMap";
-import get from "lodash/fp/get";
 import groupBy from "lodash/fp/groupBy";
 import identity from "lodash/fp/identity";
 import includes from "lodash/fp/includes";
@@ -18,7 +16,7 @@ import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import {
-  isTransfer,
+  filterTransactions,
   splitTransactions,
   simpleMemoize,
   getOutliersBy,
@@ -29,11 +27,6 @@ import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
 import IncomeVsExpensesChartControls from "./IncomeVsExpensesChartControls";
 import Breakdowns from "./Breakdowns";
 import Section, { Subsection } from "./Section";
-
-const PAYEES_TO_EXCLUDE = [
-  "Starting Balance",
-  "Reconciliation Balance Adjustment"
-];
 
 const map = mapRaw.convert({ cap: false });
 
@@ -90,46 +83,25 @@ class IncomeVsExpensesBody extends PureComponent {
   getSelectedMonths = () =>
     compose([sortBy(identity), keys])(this.state.selectedMonths);
 
-  getSummaries = simpleMemoize(
-    (
-      {
-        categoryGroupsById,
-        categoriesById,
-        transactions,
-        payeesById,
-        accountsById
-      },
-      investmentAccounts
-    ) =>
-      compose([
-        sortBy("month"),
-        map((transactions, month) => {
-          const { incomeTransactions, expenseTransactions } = splitTransactions(
-            {
-              categoryGroupsById,
-              categoriesById,
-              transactions
-            }
-          );
+  getSummaries = simpleMemoize((budget, investmentAccounts) =>
+    compose([
+      sortBy("month"),
+      map((transactions, month) => {
+        const { incomeTransactions, expenseTransactions } = splitTransactions({
+          ...budget,
+          transactions
+        });
 
-          return {
-            month,
-            transactions,
-            income: sumBy("amount")(incomeTransactions),
-            expenses: sumBy("amount")(expenseTransactions)
-          };
-        }),
-        groupBy(getMonth),
-        reject(
-          anyPass([
-            transaction =>
-              PAYEES_TO_EXCLUDE.includes(
-                get([transaction.payeeId, "name"])(payeesById)
-              ),
-            isTransfer({ accountsById, investmentAccounts })
-          ])
-        )
-      ])(transactions)
+        return {
+          month,
+          transactions,
+          income: sumBy("amount")(incomeTransactions),
+          expenses: sumBy("amount")(expenseTransactions)
+        };
+      }),
+      groupBy(getMonth),
+      filterTransactions({ budget, investmentAccounts })
+    ])(budget.transactions)
   );
 
   getExcludedMonths = summaries => {
