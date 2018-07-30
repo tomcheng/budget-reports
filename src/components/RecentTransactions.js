@@ -1,10 +1,9 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import compose from "lodash/fp/compose";
 import get from "lodash/fp/get";
 import takeWhile from "lodash/fp/takeWhile";
-import { getTransactionMonth, filterTransactions } from "../utils";
+import { getTransactionMonth } from "../utils";
 import GroupedTransactions from "./GroupedTransactions";
 
 class RecentTransactions extends PureComponent {
@@ -22,17 +21,15 @@ class RecentTransactions extends PureComponent {
         PropTypes.shape({ name: PropTypes.string.isRequired })
       ).isRequired
     }).isRequired,
-    currentMonth: PropTypes.string.isRequired
+    currentMonth: PropTypes.string.isRequired,
+    transactions: PropTypes.array.isRequired
   };
 
   render() {
-    const { budget, currentMonth } = this.props;
-    const transactions = compose([
-      filterTransactions({ budget }),
-      takeWhile(
-        transaction => getTransactionMonth(transaction) === currentMonth
-      )
-    ])(budget.transactions);
+    const { budget, currentMonth, transactions: allTransactions } = this.props;
+    const transactions = takeWhile(
+      transaction => getTransactionMonth(transaction) === currentMonth
+    )(allTransactions);
 
     return (
       <GroupedTransactions
