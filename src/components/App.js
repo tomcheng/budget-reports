@@ -139,6 +139,7 @@ class App extends Component {
                   authorized={authorized}
                   budget={budgetDetails[match.params.budgetId]}
                   budgetId={match.params.budgetId}
+                  currentMonth={currentMonth}
                   investmentAccounts={getSetting(
                     INVESTMENT_ACCOUNTS,
                     match.params.budgetId

@@ -106,6 +106,27 @@ const isIncome = ({
   );
 };
 
+export const isTransfer = ({ accountsById, investmentAccounts }) => transaction => {
+  const { accountId, transferAccountId } = transaction;
+
+  if (!transferAccountId) {
+    return false;
+  }
+
+  const transferAccount = accountsById[transferAccountId];
+  const account = accountsById[accountId];
+
+  if (transferAccount.onBudget && account.onBudget) {
+    return true;
+  }
+
+  if (investmentAccounts[transferAccountId]) {
+    return true;
+  }
+
+  return false;
+};
+
 export const splitTransactions = ({
   categoryGroupsById,
   categoriesById,

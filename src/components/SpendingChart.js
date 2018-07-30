@@ -46,13 +46,13 @@ class SpendingChart extends Component {
   static propTypes = {
     budgetId: PropTypes.string.isRequired,
     currentMonth: PropTypes.string.isRequired,
-    total: PropTypes.number.isRequired,
     transactions: PropTypes.arrayOf(
       PropTypes.shape({
         amount: PropTypes.number.isRequired,
         date: PropTypes.string.isRequired
       })
-    ).isRequired
+    ).isRequired,
+    total: PropTypes.number,
   };
 
   constructor(props) {
