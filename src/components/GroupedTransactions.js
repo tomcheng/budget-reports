@@ -19,14 +19,16 @@ const GroupedTransactions = ({
   const nodes = mapWithKeys((transactions, key) => ({
     amount: sumBy("amount")(transactions),
     id: key,
-    name: (
+    name: ({ expanded }) => (
       <span>
-        {groupDisplayFunction(key)}{" "}
-        <span style={{ opacity: 0.6 }}>
-          &ndash; {transactions.length} transaction{transactions.length === 1
-            ? ""
-            : "s"}
-        </span>
+        {groupDisplayFunction(key)}
+        {!expanded && (
+          <span style={{ opacity: 0.6 }}>
+            &nbsp;&ndash; {transactions.length} transaction{transactions.length === 1
+              ? ""
+              : "s"}
+          </span>
+        )}
       </span>
     ),
     nodes: transactions.map(transaction => ({
@@ -40,7 +42,7 @@ const GroupedTransactions = ({
 };
 
 GroupedTransactions.propTypes = {
-  groupBy: PropTypes.func.isRequired,
+  groupBy: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
   transactions: PropTypes.array.isRequired,
   groupDisplayFunction: PropTypes.func,
   leafDisplayFunction: PropTypes.func

@@ -14,7 +14,7 @@ class BreakdownNode extends Component {
     amount: PropTypes.number.isRequired,
     id: PropTypes.string.isRequired,
     isTopLevel: PropTypes.bool.isRequired,
-    name: PropTypes.node.isRequired,
+    name: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
     infoRenderer: PropTypes.func,
     nodes: PropTypes.arrayOf(
       PropTypes.shape({
@@ -107,7 +107,7 @@ const ToggleNode = ({ expanded, name, id, amount, infoRenderer, onToggle }) => (
       <IconWrapper>
         <Icon icon="chevron-right" transform={{ rotate: expanded ? 90 : 0 }} />
       </IconWrapper>
-      {name}
+      {typeof name === "function" ? name({ expanded }) : name}
     </SecondaryText>
     <SecondaryText style={{ display: "flex", opacity: expanded ? 0.3 : 1 }}>
       <Amount amount={amount} />
