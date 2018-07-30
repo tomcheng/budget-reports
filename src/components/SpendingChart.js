@@ -149,7 +149,7 @@ class SpendingChart extends Component {
             }}
             onClick={this.handleClickEdit}
           >
-            Showing last {monthsToCompare} month{monthsToCompare === 1
+            Compare with last {monthsToCompare} month{monthsToCompare === 1
               ? ""
               : "s"}&nbsp;&nbsp;
             <Icon icon="pencil" />

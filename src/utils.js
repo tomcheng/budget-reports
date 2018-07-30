@@ -106,15 +106,22 @@ const isIncome = ({
   );
 };
 
-export const isTransfer = ({ accountsById, investmentAccounts }) => transaction => {
+export const isTransfer = ({
+  accountsById,
+  investmentAccounts
+}) => transaction => {
   const { accountId, transferAccountId } = transaction;
+  const account = accountsById[accountId];
+
+  if (!account.onBudget) {
+    return true;
+  }
 
   if (!transferAccountId) {
     return false;
   }
 
   const transferAccount = accountsById[transferAccountId];
-  const account = accountsById[accountId];
 
   if (transferAccount.onBudget && account.onBudget) {
     return true;

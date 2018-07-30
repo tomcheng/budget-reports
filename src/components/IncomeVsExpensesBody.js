@@ -18,6 +18,7 @@ import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import {
+  isTransfer,
   splitTransactions,
   simpleMemoize,
   getOutliersBy,
@@ -56,7 +57,6 @@ class IncomeVsExpensesBody extends PureComponent {
       ).isRequired
     }).isRequired,
     investmentAccounts: PropTypes.object.isRequired,
-    mortgageAccounts: PropTypes.object.isRequired,
     showing: PropTypes.oneOf(["average", "total"]).isRequired
   };
 
@@ -92,9 +92,14 @@ class IncomeVsExpensesBody extends PureComponent {
 
   getSummaries = simpleMemoize(
     (
-      { categoryGroupsById, categoriesById, transactions, payeesById },
-      investmentAccounts,
-      mortgageAccounts
+      {
+        categoryGroupsById,
+        categoriesById,
+        transactions,
+        payeesById,
+        accountsById
+      },
+      investmentAccounts
     ) =>
       compose([
         sortBy("month"),
@@ -121,20 +126,7 @@ class IncomeVsExpensesBody extends PureComponent {
               PAYEES_TO_EXCLUDE.includes(
                 get([transaction.payeeId, "name"])(payeesById)
               ),
-            transaction => {
-              if (mortgageAccounts[transaction.transferAccountId]) {
-                return false;
-              }
-
-              if (
-                mortgageAccounts[transaction.accountId] ||
-                investmentAccounts[transaction.accountId]
-              ) {
-                return true;
-              }
-
-              return prop("transferAccountId")(transaction);
-            }
+            isTransfer({ accountsById, investmentAccounts })
           ])
         )
       ])(transactions)
@@ -176,12 +168,7 @@ class IncomeVsExpensesBody extends PureComponent {
   };
 
   render() {
-    const {
-      budget,
-      investmentAccounts,
-      mortgageAccounts,
-      showing
-    } = this.props;
+    const { budget, investmentAccounts, showing } = this.props;
     const {
       excludeOutliers,
       excludeFirstMonth,
@@ -191,11 +178,7 @@ class IncomeVsExpensesBody extends PureComponent {
 
     const showTotals = showing === "total";
     const selectedMonths = this.getSelectedMonths();
-    const allSummaries = this.getSummaries(
-      budget,
-      investmentAccounts,
-      mortgageAccounts
-    );
+    const allSummaries = this.getSummaries(budget, investmentAccounts);
     const excludedMonths = this.getExcludedMonths(allSummaries);
     const summaries = selectedMonths.length
       ? selectedMonths.map(month =>

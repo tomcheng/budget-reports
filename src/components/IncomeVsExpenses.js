@@ -31,7 +31,6 @@ class IncomeVsExpenses extends Component {
       budget,
       budgetId,
       investmentAccounts,
-      mortgageAccounts,
       title,
       onAuthorize,
       onRequestBudget
@@ -59,7 +58,6 @@ class IncomeVsExpenses extends Component {
             budget={budget}
             showing={showing}
             investmentAccounts={investmentAccounts}
-            mortgageAccounts={mortgageAccounts}
           />
         )}
       />
