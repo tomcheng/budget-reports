@@ -141,7 +141,7 @@ const isTransfer = ({
   return false;
 };
 
-export const filterTransactions = ({ budget, investmentAccounts }) =>
+export const filterTransactions = ({ budget, investmentAccounts = {} }) =>
   reject(anyPass([
     transaction =>
       PAYEES_TO_EXCLUDE.includes(

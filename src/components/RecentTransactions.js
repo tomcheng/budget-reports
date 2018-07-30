@@ -1,7 +1,9 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
+import compose from "lodash/fp/compose";
 import takeWhile from "lodash/fp/takeWhile";
+import { filterTransactions } from "../utils";
 import ListItem from "./ListItem";
 import { MinorText, SecondaryText } from "./typeComponents";
 import Amount from "./Amount";
@@ -25,11 +27,12 @@ class RecentTransactions extends PureComponent {
 
   render() {
     const { budget } = this.props;
-    const cutOffTime = moment().subtract(7, "days");
+    const cutOffTime = moment().subtract(30, "days");
 
-    return takeWhile(({ date }) => moment(date).isSameOrAfter(cutOffTime))(
-      budget.transactions
-    ).map(transaction => {
+    return compose([
+      takeWhile(({ date }) => moment(date).isSameOrAfter(cutOffTime)),
+      filterTransactions({ budget })
+    ])(budget.transactions).map(transaction => {
       const payee = budget.payeesById[transaction.payeeId];
       return (
         <ListItem key={transaction.id}>
