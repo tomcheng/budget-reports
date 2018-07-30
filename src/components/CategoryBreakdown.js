@@ -6,7 +6,7 @@ import map from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import { Link } from "react-router-dom";
-import { getCategoryLink } from "../utils";
+import { getCategoryLink } from "../linkUtils";
 import Section from "./Section";
 import { SecondaryText } from "./typeComponents";
 import ListItem from "./ListItem";

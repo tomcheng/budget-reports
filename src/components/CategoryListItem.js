@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import round from "lodash/fp/round";
 import { Link } from "react-router-dom";
-import { getCategoryLink } from "../utils";
+import { getCategoryLink } from "../linkUtils";
 import { SecondaryText } from "./typeComponents";
 import SummaryChart from "./SummaryChart";
 

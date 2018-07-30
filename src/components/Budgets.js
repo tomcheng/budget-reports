@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { getBudgetLink } from "../utils";
+import { getBudgetLink } from "../linkUtils";
 import { StrongText } from "./typeComponents";
 import Section from "./Section";
 import Loading from "./Loading";

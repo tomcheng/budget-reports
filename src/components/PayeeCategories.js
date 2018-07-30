@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { getCategoryLink, getGroupLink } from "../utils";
+import { getCategoryLink, getGroupLink } from "../linkUtils";
 import ListItem from "./ListItem";
 import { SecondaryText } from "./typeComponents";
 import Separator from "./Separator";

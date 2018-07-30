@@ -74,17 +74,6 @@ export const upsertBy = (arr, key, obj, updater = (prev, curr) => curr) => {
   return exists ? newArr : newArr.concat(obj);
 };
 
-export const getBudgetLink = ({ budgetId }) => `/budgets/${budgetId}`;
-
-export const getGroupLink = ({ budgetId, categoryGroupId }) =>
-  `/budgets/${budgetId}/category-groups/${categoryGroupId}`;
-
-export const getCategoryLink = ({ budgetId, categoryId }) =>
-  `/budgets/${budgetId}/categories/${categoryId}`;
-
-export const getPayeeLink = ({ budgetId, payeeId }) =>
-  `/budgets/${budgetId}/payees/${payeeId}`;
-
 export const getPayeeNodes = ({ payeesById, transactions }, divideBy = 1) =>
   compose([
     map((transactions, payeeId) => ({

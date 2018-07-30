@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { getGroupLink } from "../utils";
+import { getGroupLink } from "../linkUtils";
 import Separator from "./Separator";
 
 class CategoryTitle extends PureComponent {

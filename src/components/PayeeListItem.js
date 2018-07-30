@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { getPayeeLink } from "../utils";
+import { getPayeeLink } from "../linkUtils";
 import { MinorText, SecondaryText } from "./typeComponents";
 import Amount from "./Amount";
 

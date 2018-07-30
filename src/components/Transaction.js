@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import { getPayeeLink } from "../utils";
+import { getPayeeLink } from "../linkUtils";
 import { SecondaryText, MinorText } from "./typeComponents";
 import ListItem from "./ListItem";
 import Amount from "./Amount";
