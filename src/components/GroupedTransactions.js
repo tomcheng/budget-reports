@@ -6,6 +6,7 @@ import map from "lodash/fp/map";
 import prop from "lodash/fp/prop";
 import sumBy from "lodash/fp/sumBy";
 import Breakdown from "./Breakdown";
+import LabelWithTransactionCount from "./LabelWithTransactionCount";
 
 const mapWithKeys = map.convert({ cap: false });
 
@@ -34,17 +35,11 @@ class GroupedTransactions extends PureComponent {
       amount: sumBy("amount")(transactions),
       id: key,
       name: ({ expanded }) => (
-        <span>
-          {groupDisplayFunction(key)}
-          {!expanded && (
-            <span style={{ opacity: 0.6 }}>
-              &nbsp;&ndash; {transactions.length} transaction{transactions.length ===
-              1
-                ? ""
-                : "s"}
-            </span>
-          )}
-        </span>
+        <LabelWithTransactionCount
+          label={groupDisplayFunction(key)}
+          count={transactions.length}
+          showCount={!expanded}
+        />
       ),
       nodes: transactions.map(transaction => ({
         amount: transaction.amount,

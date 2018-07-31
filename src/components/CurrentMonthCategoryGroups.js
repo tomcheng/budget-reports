@@ -12,6 +12,7 @@ import Section from "./Section";
 import ListItem from "./ListItem";
 import { SecondaryText } from "./typeComponents";
 import Amount from "./Amount";
+import LabelWithTransactionCount from "./LabelWithTransactionCount";
 
 const mapWithKeys = map.convert({ cap: false });
 
@@ -23,6 +24,7 @@ const CurrentMonthCategoryGroups = ({ budget, transactions }) => {
       const group = categoryGroupsById[groupId];
       return {
         group,
+        transactions: transactions.length,
         amount: sumBy("amount")(transactions)
       };
     }),
@@ -37,7 +39,10 @@ const CurrentMonthCategoryGroups = ({ budget, transactions }) => {
         <ListItem key={group.id}>
           <Link to={getGroupLink({ budgetId, categoryGroupId: group.id })}>
             <SecondaryText style={{ whiteSpace: "pre" }}>
-              {group.name}
+              <LabelWithTransactionCount
+                label={group.name}
+                count={transactions}
+              />
             </SecondaryText>
           </Link>
           <Amount amount={amount} />

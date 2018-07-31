@@ -11,6 +11,7 @@ import Section from "./Section";
 import { SecondaryText } from "./typeComponents";
 import ListItem from "./ListItem";
 import Amount from "./Amount";
+import LabelWithTransactionCount from "./LabelWithTransactionCount";
 
 const CategoryBreakdown = ({ budgetId, categories, transactions }) => {
   const transactionsByCategory = groupBy("categoryId")(transactions);
@@ -37,10 +38,7 @@ const CategoryBreakdown = ({ budgetId, categories, transactions }) => {
         >
           <Link key={id} to={getCategoryLink({ budgetId, categoryId: id })}>
             <SecondaryText>
-              {name}{" "}
-              <span style={{ opacity: 0.6 }}>
-                &ndash; {count} transaction{count === 1 ? "" : "s"}
-              </span>
+              <LabelWithTransactionCount label={name} count={count} />
             </SecondaryText>
           </Link>
           <SecondaryText>
