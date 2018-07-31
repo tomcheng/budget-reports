@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import { filterTransactions, splitTransactions } from "../utils";
 import Section from "./Section";
 import SpendingChart from "./SpendingChart";
-import RecentTransactions from "./RecentTransactions";
+import CurrentMonthTransactions from "./CurrentMonthTransactions";
 
-const DashboardBody = ({ budget, currentMonth, investmentAccounts }) => {
+const CurrentMonthBody = ({ budget, currentMonth, investmentAccounts }) => {
   const { expenseTransactions } = splitTransactions(budget);
   const transactions = filterTransactions({ budget, investmentAccounts })(
     expenseTransactions
@@ -21,7 +21,7 @@ const DashboardBody = ({ budget, currentMonth, investmentAccounts }) => {
         />
       </Section>
       <Section title="Transactions">
-        <RecentTransactions
+        <CurrentMonthTransactions
           budget={budget}
           currentMonth={currentMonth}
           transactions={transactions}
@@ -31,10 +31,10 @@ const DashboardBody = ({ budget, currentMonth, investmentAccounts }) => {
   );
 };
 
-DashboardBody.propTypes = {
+CurrentMonthBody.propTypes = {
   budget: PropTypes.object.isRequired,
   currentMonth: PropTypes.string.isRequired,
   investmentAccounts: PropTypes.object.isRequired
 };
 
-export default DashboardBody;
+export default CurrentMonthBody;

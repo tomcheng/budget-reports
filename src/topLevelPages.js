@@ -1,13 +1,13 @@
 import Budget from "./components/Budget";
-import Dashboard from "./components/Dashboard";
+import CurrentMonth from "./components/CurrentMonth";
 import Payees from "./components/Payees";
 import IncomeVsExpenses from "./components/IncomeVsExpenses";
 import NetWorth from "./components/NetWorth";
 import Projections from "./components/Projections";
 
 export default [
-  { path: "/dashboard", title: "Current Month Spending", Component: Dashboard },
-  { path: "", title: "Current Month by Category", Component: Budget },
+  { path: "", title: "Current Month", Component: CurrentMonth },
+  { path: "/spending-by-category", title: "Current Month by Category", Component: Budget },
   { path: "/payees", title: "Payees", Component: Payees },
   {
     path: "/income-vs-expenses",

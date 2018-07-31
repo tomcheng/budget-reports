@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import PageWrapper from "./PageWrapper";
-import DashboardBody from "./DashboardBody";
+import CurrentMonthBody from "./CurrentMonthBody";
 
-const Dashboard = ({
+const CurrentMonth = ({
   authorized,
   budget,
   budgetId,
@@ -21,7 +21,7 @@ const Dashboard = ({
     onRequestBudget={onRequestBudget}
     title={title}
     content={() => (
-      <DashboardBody
+      <CurrentMonthBody
         budget={budget}
         currentMonth={currentMonth}
         investmentAccounts={investmentAccounts}
@@ -30,7 +30,7 @@ const Dashboard = ({
   />
 );
 
-Dashboard.propTypes = {
+CurrentMonth.propTypes = {
   authorized: PropTypes.bool.isRequired,
   budgetId: PropTypes.string.isRequired,
   currentMonth: PropTypes.string.isRequired,
@@ -41,4 +41,4 @@ Dashboard.propTypes = {
   budget: PropTypes.object
 };
 
-export default Dashboard;
+export default CurrentMonth;

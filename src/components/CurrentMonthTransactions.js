@@ -6,7 +6,7 @@ import takeWhile from "lodash/fp/takeWhile";
 import { getTransactionMonth } from "../utils";
 import GroupedTransactions from "./GroupedTransactions";
 
-class RecentTransactions extends PureComponent {
+class CurrentMonthTransactions extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       transactions: PropTypes.arrayOf(
@@ -44,4 +44,4 @@ class RecentTransactions extends PureComponent {
   }
 }
 
-export default RecentTransactions;
+export default CurrentMonthTransactions;
