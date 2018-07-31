@@ -45,7 +45,9 @@ const CurrentMonthCategoryGroups = ({ budget, transactions }) => {
               />
             </SecondaryText>
           </Link>
-          <Amount amount={amount} />
+          <SecondaryText>
+            <Amount amount={amount} />
+          </SecondaryText>
         </ListItem>
       ))}
     </Section>
