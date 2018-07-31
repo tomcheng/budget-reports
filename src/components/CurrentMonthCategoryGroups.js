@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import get from "lodash/fp/get";
@@ -16,43 +16,14 @@ import LabelWithTransactionCount from "./LabelWithTransactionCount";
 
 const mapWithKeys = map.convert({ cap: false });
 
-const CurrentMonthCategoryGroups = ({ budget, transactions }) => {
-  const { categoriesById, categoryGroupsById, id: budgetId } = budget;
-  const groups = compose([
-    sortBy("amount"),
-    mapWithKeys((transactions, groupId) => {
-      const group = categoryGroupsById[groupId];
-      return {
-        group,
-        transactions: transactions.length,
-        amount: sumBy("amount")(transactions)
-      };
-    }),
-    groupBy(transaction =>
-      get([transaction.categoryId, "categoryGroupId"])(categoriesById)
-    )
-  ])(transactions);
-
-  return (
-    <Section title="Category Groups">
-      {groups.map(({ group, transactions, amount }) => (
-        <ListItem key={group.id}>
-          <Link to={getGroupLink({ budgetId, categoryGroupId: group.id })}>
-            <SecondaryText style={{ whiteSpace: "pre" }}>
-              <LabelWithTransactionCount
-                label={group.name}
-                count={transactions}
-              />
-            </SecondaryText>
-          </Link>
-          <SecondaryText>
-            <Amount amount={amount} />
-          </SecondaryText>
-        </ListItem>
-      ))}
-    </Section>
-  );
-};
+const CurrentMonthCategoryGroups = ({ budget, transactions }) => (
+  <Section title="Category Groups">
+    <CurrentMonthCategoryGroupsContent
+      budget={budget}
+      transactions={transactions}
+    />
+  </Section>
+);
 
 CurrentMonthCategoryGroups.propTypes = {
   budget: PropTypes.shape({
@@ -76,5 +47,42 @@ CurrentMonthCategoryGroups.propTypes = {
     })
   ).isRequired
 };
+
+class CurrentMonthCategoryGroupsContent extends PureComponent {
+  render() {
+    const { budget, transactions } = this.props;
+    const { categoriesById, categoryGroupsById, id: budgetId } = budget;
+    const groups = compose([
+      sortBy("amount"),
+      mapWithKeys((transactions, groupId) => {
+        const group = categoryGroupsById[groupId];
+        return {
+          group,
+          transactions: transactions.length,
+          amount: sumBy("amount")(transactions)
+        };
+      }),
+      groupBy(transaction =>
+        get([transaction.categoryId, "categoryGroupId"])(categoriesById)
+      )
+    ])(transactions);
+
+    return groups.map(({ group, transactions, amount }) => (
+      <ListItem key={group.id}>
+        <Link to={getGroupLink({ budgetId, categoryGroupId: group.id })}>
+          <SecondaryText style={{ whiteSpace: "pre" }}>
+            <LabelWithTransactionCount
+              label={group.name}
+              count={transactions}
+            />
+          </SecondaryText>
+        </Link>
+        <SecondaryText>
+          <Amount amount={amount} />
+        </SecondaryText>
+      </ListItem>
+    ));
+  }
+}
 
 export default CurrentMonthCategoryGroups;
