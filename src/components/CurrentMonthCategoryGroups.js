@@ -17,7 +17,7 @@ import LabelWithTransactionCount from "./LabelWithTransactionCount";
 const mapWithKeys = map.convert({ cap: false });
 
 const CurrentMonthCategoryGroups = ({ budget, transactions }) => (
-  <Section title="Category Groups">
+  <Section title="Spending Breakdown">
     <CurrentMonthCategoryGroupsContent
       budget={budget}
       transactions={transactions}
