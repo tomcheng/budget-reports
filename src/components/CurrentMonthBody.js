@@ -6,8 +6,7 @@ import {
   splitTransactions,
   getTransactionMonth
 } from "../utils";
-import Section from "./Section";
-import SpendingChart from "./SpendingChart";
+import CurrentMonthOverview from "./CurrentMonthOverview";
 import CurrentMonthTransactions from "./CurrentMonthTransactions";
 
 const CurrentMonthBody = ({ budget, currentMonth, investmentAccounts }) => {
@@ -21,19 +20,15 @@ const CurrentMonthBody = ({ budget, currentMonth, investmentAccounts }) => {
 
   return (
     <Fragment>
-      <Section title="Overview">
-        <SpendingChart
-          transactions={transactions}
-          budgetId={budget.id}
-          currentMonth={currentMonth}
-        />
-      </Section>
-      <Section title="Transactions">
-        <CurrentMonthTransactions
-          budget={budget}
-          transactions={transactionsThisMonth}
-        />
-      </Section>
+      <CurrentMonthOverview
+        budgetId={budget.id}
+        currentMonth={currentMonth}
+        transactions={transactions}
+      />
+      <CurrentMonthTransactions
+        budget={budget}
+        transactions={transactionsThisMonth}
+      />
     </Fragment>
   );
 };
