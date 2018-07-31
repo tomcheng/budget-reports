@@ -4,7 +4,7 @@ import Section from "./Section";
 import SpendingChart from "./SpendingChart";
 
 const CurrentMonthOverview = ({ transactions, budgetId, currentMonth }) => (
-  <Section title="Overview">
+  <Section title="Day By Day">
     <SpendingChart
       transactions={transactions}
       budgetId={budgetId}

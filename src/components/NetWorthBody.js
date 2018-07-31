@@ -19,7 +19,7 @@ import sumBy from "lodash/fp/sumBy";
 import values from "lodash/fp/values";
 import { simpleMemoize } from "../utils";
 import { getSetting, setSetting, NET_WORTH_HIDDEN_ACCOUNTS } from "../uiRepo";
-import Section, { Subsection } from "./Section";
+import Section from "./Section";
 import NetWorthSummary from "./NetWorthSummary";
 import NetWorthChart from "./NetWorthChart";
 import NetWorthAccounts from "./NetWorthAccounts";
@@ -153,29 +153,25 @@ class NetWorthBody extends PureComponent {
 
     return (
       <Fragment>
-        <Section title="Overview">
-          <Subsection>
-            <NetWorthSummary
-              liabilities={selectedLiabilities}
-              assets={selectedAssets}
-              netWorth={selectedAssets + selectedLiabilities}
-            />
-
-          </Subsection>
-          <Subsection>
-            <NetWorthChart
-              data={map(({ id, data }) => ({
-                data: hiddenAccounts[id] ? data.map(constant(0)) : data,
-                type: budget.accountsById[id].type,
-                id
-              }))(accountSummaries)}
-              months={months}
-              mortgageAccounts={mortgageAccounts}
-              selectedMonth={selectedMonth}
-              onSelectMonth={this.handleSelectMonth}
-            />
-
-          </Subsection>
+        <Section>
+          <NetWorthSummary
+            liabilities={selectedLiabilities}
+            assets={selectedAssets}
+            netWorth={selectedAssets + selectedLiabilities}
+          />
+        </Section>
+        <Section title="Monthly Trend">
+          <NetWorthChart
+            data={map(({ id, data }) => ({
+              data: hiddenAccounts[id] ? data.map(constant(0)) : data,
+              type: budget.accountsById[id].type,
+              id
+            }))(accountSummaries)}
+            months={months}
+            mortgageAccounts={mortgageAccounts}
+            selectedMonth={selectedMonth}
+            onSelectMonth={this.handleSelectMonth}
+          />
         </Section>
         <NetWorthAccounts
           accounts={map(account => ({

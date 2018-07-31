@@ -166,14 +166,14 @@ class IncomeVsExpensesBody extends PureComponent {
 
     return (
       <Fragment>
-        <Section title="Overview">
-          <Subsection>
-            <IncomeVsExpensesSummary
-              incomeTransactions={incomeTransactions}
-              expenseTransactions={expenseTransactions}
-              divideBy={showTotals ? 1 : summaries.length}
-            />
-          </Subsection>
+        <Section>
+          <IncomeVsExpensesSummary
+            incomeTransactions={incomeTransactions}
+            expenseTransactions={expenseTransactions}
+            divideBy={showTotals ? 1 : summaries.length}
+          />
+        </Section>
+        <Section title="Monthly Trend">
           <Subsection>
             <IncomeVsExpensesChart
               data={allSummaries}

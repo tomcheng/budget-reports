@@ -8,7 +8,6 @@ import {
 } from "../utils";
 import CurrentMonthOverview from "./CurrentMonthOverview";
 import CurrentMonthCategoryGroups from "./CurrentMonthCategoryGroups";
-import CurrentMonthTransactions from "./CurrentMonthTransactions";
 
 const CurrentMonthBody = ({ budget, currentMonth, investmentAccounts }) => {
   const { expenseTransactions } = splitTransactions(budget);
@@ -27,10 +26,6 @@ const CurrentMonthBody = ({ budget, currentMonth, investmentAccounts }) => {
         transactions={transactions}
       />
       <CurrentMonthCategoryGroups
-        budget={budget}
-        transactions={transactionsThisMonth}
-      />
-      <CurrentMonthTransactions
         budget={budget}
         transactions={transactionsThisMonth}
       />
