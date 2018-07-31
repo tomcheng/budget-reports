@@ -7,6 +7,7 @@ import {
   getTransactionMonth
 } from "../utils";
 import CurrentMonthOverview from "./CurrentMonthOverview";
+import CurrentMonthCategoryGroups from "./CurrentMonthCategoryGroups";
 import CurrentMonthTransactions from "./CurrentMonthTransactions";
 
 const CurrentMonthBody = ({ budget, currentMonth, investmentAccounts }) => {
@@ -24,6 +25,10 @@ const CurrentMonthBody = ({ budget, currentMonth, investmentAccounts }) => {
         budgetId={budget.id}
         currentMonth={currentMonth}
         transactions={transactions}
+      />
+      <CurrentMonthCategoryGroups
+        budget={budget}
+        transactions={transactionsThisMonth}
       />
       <CurrentMonthTransactions
         budget={budget}
