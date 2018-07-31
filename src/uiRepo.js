@@ -1,7 +1,6 @@
 import { getStorage, setStorage } from "./utils";
 import get from "lodash/get";
 
-export const EXPANDED_GROUPS = "expandedGroups";
 export const INVESTMENT_ACCOUNTS = "investmentAccounts";
 export const LAST_UPDATED = "lastUpdated";
 export const MORTGAGE_ACCOUNTS = "mortgageAccounts";
@@ -10,10 +9,6 @@ export const PAYEES_SORT_ORDER = "payeesSortOrder";
 export const SPENDING_MONTHS_TO_COMPARE = "spendingMonthsToCompare";
 
 const SETTINGS = {
-  [EXPANDED_GROUPS]: {
-    key: "budget-reports-expanded-groups",
-    default: {}
-  },
   [INVESTMENT_ACCOUNTS]: {
     key: "budget-reports-investment-accounts",
     default: {}
