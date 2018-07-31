@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import groupBy from "lodash/fp/groupBy";
@@ -42,7 +42,7 @@ const getData = ({ month, transactions }) => {
   });
 };
 
-class SpendingChart extends Component {
+class SpendingChart extends PureComponent {
   static propTypes = {
     budgetId: PropTypes.string.isRequired,
     currentMonth: PropTypes.string.isRequired,
