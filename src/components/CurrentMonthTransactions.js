@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import get from "lodash/fp/get";
+import { getPayeeLink } from "../linkUtils";
+import { Link } from "react-router-dom";
 import Section from "./Section";
 import GroupedTransactions from "./GroupedTransactions";
 
@@ -11,9 +12,19 @@ const CurrentMonthTransactions = ({ budget, transactions }) => (
       transactions={transactions}
       groupBy="date"
       groupDisplayFunction={day => moment(day).format("dddd, MMMM D")}
-      leafDisplayFunction={transaction =>
-        get(["payeesById", transaction.payeeId, "name"])(budget)
-      }
+      leafDisplayFunction={transaction => {
+        const payee = budget.payeesById[transaction.payeeId];
+
+        if (!payee) {
+          return "No payee";
+        }
+
+        return (
+          <Link to={getPayeeLink({ budgetId: budget.id, payeeId: payee.id })}>
+            {payee.name}
+          </Link>
+        );
+      }}
     />
   </Section>
 );
