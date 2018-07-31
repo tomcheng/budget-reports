@@ -2,8 +2,6 @@ import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import get from "lodash/fp/get";
-import takeWhile from "lodash/fp/takeWhile";
-import { getTransactionMonth } from "../utils";
 import GroupedTransactions from "./GroupedTransactions";
 
 class CurrentMonthTransactions extends PureComponent {
@@ -21,15 +19,11 @@ class CurrentMonthTransactions extends PureComponent {
         PropTypes.shape({ name: PropTypes.string.isRequired })
       ).isRequired
     }).isRequired,
-    currentMonth: PropTypes.string.isRequired,
     transactions: PropTypes.array.isRequired
   };
 
   render() {
-    const { budget, currentMonth, transactions: allTransactions } = this.props;
-    const transactions = takeWhile(
-      transaction => getTransactionMonth(transaction) === currentMonth
-    )(allTransactions);
+    const { budget, transactions } = this.props;
 
     return (
       <GroupedTransactions

@@ -1,6 +1,11 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
-import { filterTransactions, splitTransactions } from "../utils";
+import takeWhile from "lodash/fp/takeWhile";
+import {
+  filterTransactions,
+  splitTransactions,
+  getTransactionMonth
+} from "../utils";
 import Section from "./Section";
 import SpendingChart from "./SpendingChart";
 import CurrentMonthTransactions from "./CurrentMonthTransactions";
@@ -10,6 +15,9 @@ const CurrentMonthBody = ({ budget, currentMonth, investmentAccounts }) => {
   const transactions = filterTransactions({ budget, investmentAccounts })(
     expenseTransactions
   );
+  const transactionsThisMonth = takeWhile(
+    transaction => getTransactionMonth(transaction) === currentMonth
+  )(transactions);
 
   return (
     <Fragment>
@@ -23,8 +31,7 @@ const CurrentMonthBody = ({ budget, currentMonth, investmentAccounts }) => {
       <Section title="Transactions">
         <CurrentMonthTransactions
           budget={budget}
-          currentMonth={currentMonth}
-          transactions={transactions}
+          transactions={transactionsThisMonth}
         />
       </Section>
     </Fragment>
