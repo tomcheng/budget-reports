@@ -9,7 +9,7 @@ import { getMetadataForPayee, getTransactionMonth } from "../utils";
 import TopNumbers from "./TopNumbers";
 import PayeeCategories from "./PayeeCategories";
 import GroupedTransactions from "./GroupedTransactions";
-import Section from "./Section";
+import Section, { TopSection } from "./Section";
 
 class PayeeBody extends PureComponent {
   static propTypes = {
@@ -36,7 +36,7 @@ class PayeeBody extends PureComponent {
 
     return (
       <Fragment>
-        <Section>
+        <TopSection>
           <TopNumbers
             numbers={[
               { label: "total amount", value: Math.abs(amount) },
@@ -51,7 +51,7 @@ class PayeeBody extends PureComponent {
               }
             ]}
           />
-        </Section>
+        </TopSection>
         <Section title="Categories">
           <PayeeCategories budget={budget} categoryIds={categoryIds} />
         </Section>

@@ -2,7 +2,7 @@ import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import propEq from "lodash/fp/propEq";
-import Section from "./Section";
+import Section, { TopSection } from "./Section";
 import TopNumbers from "./TopNumbers";
 import SpendingChart from "./SpendingChart";
 import Transactions from "./Transactions";
@@ -33,7 +33,7 @@ class CategoryBody extends PureComponent {
 
     return (
       <Fragment>
-        <Section>
+        <TopSection>
           <TopNumbers
             numbers={[
               { label: "budgeted", value: category.budgeted },
@@ -41,7 +41,7 @@ class CategoryBody extends PureComponent {
               { label: "available", value: category.balance }
             ]}
           />
-        </Section>
+        </TopSection>
         <Section title={`Progress for ${moment(currentMonth).format("MMMM")}`}>
           <SpendingChart
             budgetId={budget.id}

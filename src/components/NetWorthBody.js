@@ -19,7 +19,7 @@ import sumBy from "lodash/fp/sumBy";
 import values from "lodash/fp/values";
 import { simpleMemoize } from "../utils";
 import { getSetting, setSetting, NET_WORTH_HIDDEN_ACCOUNTS } from "../uiRepo";
-import Section from "./Section";
+import Section, { TopSection } from "./Section";
 import NetWorthSummary from "./NetWorthSummary";
 import NetWorthChart from "./NetWorthChart";
 import NetWorthAccounts from "./NetWorthAccounts";
@@ -153,13 +153,13 @@ class NetWorthBody extends PureComponent {
 
     return (
       <Fragment>
-        <Section>
+        <TopSection>
           <NetWorthSummary
             liabilities={selectedLiabilities}
             assets={selectedAssets}
             netWorth={selectedAssets + selectedLiabilities}
           />
-        </Section>
+        </TopSection>
         <Section title="Monthly Trend">
           <NetWorthChart
             data={map(({ id, data }) => ({

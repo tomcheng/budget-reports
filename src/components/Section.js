@@ -13,6 +13,11 @@ const Container = styled.div`
   border-radius: 2px;
 `;
 
+export const TopSection = styled(Container)`
+  margin: 0;
+  border-width: 0 0 1px;
+`;
+
 class Section extends Component {
   static propTypes = {
     children: PropTypes.node.isRequired,

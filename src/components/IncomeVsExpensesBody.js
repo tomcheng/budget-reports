@@ -26,7 +26,7 @@ import IncomeVsExpensesSummary from "./IncomeVsExpensesSummary";
 import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
 import IncomeVsExpensesChartControls from "./IncomeVsExpensesChartControls";
 import Breakdowns from "./Breakdowns";
-import Section, { Subsection } from "./Section";
+import Section, { Subsection, TopSection } from "./Section";
 
 const map = mapRaw.convert({ cap: false });
 
@@ -166,13 +166,13 @@ class IncomeVsExpensesBody extends PureComponent {
 
     return (
       <Fragment>
-        <Section>
+        <TopSection>
           <IncomeVsExpensesSummary
             incomeTransactions={incomeTransactions}
             expenseTransactions={expenseTransactions}
             divideBy={showTotals ? 1 : summaries.length}
           />
-        </Section>
+        </TopSection>
         <Section title="Monthly Trend">
           <Subsection>
             <IncomeVsExpensesChart

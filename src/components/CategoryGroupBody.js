@@ -6,7 +6,7 @@ import filter from "lodash/fp/filter";
 import matchesProperty from "lodash/fp/matchesProperty";
 import map from "lodash/fp/map";
 import sumBy from "lodash/fp/sumBy";
-import Section from "./Section";
+import Section, { TopSection } from "./Section";
 import TopNumbers from "./TopNumbers";
 import SpendingChart from "./SpendingChart";
 import CategoryBreakdown from "./CategoryBreakdown";
@@ -51,7 +51,7 @@ class CategoryGroupBody extends PureComponent {
 
     return (
       <Fragment>
-        <Section>
+        <TopSection>
           <TopNumbers
             numbers={[
               { label: "budgeted", value: budgeted },
@@ -59,7 +59,7 @@ class CategoryGroupBody extends PureComponent {
               { label: "available", value: available }
             ]}
           />
-        </Section>
+        </TopSection>
         <Section title={`Progress for ${moment(currentMonth).format("MMMM")}`}>
           <SpendingChart
             budgetId={budgetId}
