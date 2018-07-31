@@ -13,32 +13,33 @@ import ListItem from "./ListItem";
 import Amount from "./Amount";
 import LabelWithTransactionCount from "./LabelWithTransactionCount";
 
-const CategoryBreakdown = ({ budgetId, categories, transactions }) => {
-  const transactionsByCategory = groupBy("categoryId")(transactions);
+const mapWithKeys = map.convert({ cap: false });
+
+const CategoryBreakdown = ({ budgetId, categoriesById, transactions }) => {
   const categoriesWithData = compose([
     sortBy("amount"),
-    map(category => {
-      const transactions = transactionsByCategory[category.id] || [];
-      const count = transactions.length;
-      const amount = sumBy("amount")(transactions);
-      return { ...category, count, amount };
-    })
-  ])(categories);
+    mapWithKeys((transactions, categoryId) => ({
+      category: categoriesById[categoryId],
+      count: transactions.length,
+      amount: sumBy("amount")(transactions)
+    })),
+    groupBy("categoryId")
+  ])(transactions);
 
   return (
     <Section title="Categories">
-      {categoriesWithData.map(({ id, name, count, amount }) => (
+      {categoriesWithData.map(({ category, count, amount }) => (
         <ListItem
-          key={id}
+          key={category.id}
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between"
           }}
         >
-          <Link key={id} to={getCategoryLink({ budgetId, categoryId: id })}>
+          <Link to={getCategoryLink({ budgetId, categoryId: category.id })}>
             <SecondaryText>
-              <LabelWithTransactionCount label={name} count={count} />
+              <LabelWithTransactionCount label={category.name} count={count} />
             </SecondaryText>
           </Link>
           <SecondaryText>
@@ -52,7 +53,7 @@ const CategoryBreakdown = ({ budgetId, categories, transactions }) => {
 
 CategoryBreakdown.propTypes = {
   budgetId: PropTypes.string.isRequired,
-  categories: PropTypes.arrayOf(
+  categoriesById: PropTypes.objectOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired

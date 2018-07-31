@@ -29,6 +29,7 @@ class CategoryGroupBody extends PureComponent {
       id: budgetId,
       payeesById,
       categories: allCategories,
+      categoriesById,
       transactions: allTransactions
     } = budget;
 
@@ -70,7 +71,7 @@ class CategoryGroupBody extends PureComponent {
         </Section>
         <CategoryBreakdown
           budgetId={budgetId}
-          categories={categories}
+          categoriesById={categoriesById}
           transactions={transactionsForMonth}
         />
         <Transactions
