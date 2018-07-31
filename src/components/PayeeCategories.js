@@ -13,6 +13,10 @@ const PayeeCategories = ({ categoryIds, budget }) => {
     const category = categoriesById[id];
     const categoryGroup = categoryGroupsById[category.categoryGroupId];
 
+    if (!categoryGroup) {
+      return null;
+    }
+
     return (
       <ListItem key={id}>
         <SecondaryText
