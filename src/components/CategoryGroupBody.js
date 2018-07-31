@@ -1,5 +1,6 @@
 import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
+import moment from "moment";
 import includes from "lodash/fp/includes";
 import filter from "lodash/fp/filter";
 import matchesProperty from "lodash/fp/matchesProperty";
@@ -59,7 +60,7 @@ class CategoryGroupBody extends PureComponent {
             ]}
           />
         </Section>
-        <Section title="Day by Day">
+        <Section title={`Progress for ${moment(currentMonth).format("MMMM")}`}>
           <SpendingChart
             budgetId={budgetId}
             currentMonth={currentMonth}

@@ -1,5 +1,6 @@
 import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
+import moment from "moment";
 import propEq from "lodash/fp/propEq";
 import Section from "./Section";
 import TopNumbers from "./TopNumbers";
@@ -41,7 +42,7 @@ class CategoryBody extends PureComponent {
             ]}
           />
         </Section>
-        <Section title="Day By Day">
+        <Section title={`Progress for ${moment(currentMonth).format("MMMM")}`}>
           <SpendingChart
             budgetId={budget.id}
             total={category.balance - category.activity}
