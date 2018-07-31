@@ -113,10 +113,7 @@ const isIncome = ({
   );
 };
 
-const isTransfer = ({
-  accountsById,
-  investmentAccounts
-}) => transaction => {
+const isTransfer = ({ accountsById, investmentAccounts }) => transaction => {
   const { accountId, transferAccountId } = transaction;
   const account = accountsById[accountId];
 
@@ -142,12 +139,15 @@ const isTransfer = ({
 };
 
 export const filterTransactions = ({ budget, investmentAccounts = {} }) =>
-  reject(anyPass([
-    transaction =>
-      PAYEES_TO_EXCLUDE.includes(
-        get([transaction.payeeId, "name"])(budget.payeesById)
-      ),
-    isTransfer({ accountsById: budget.accountsById, investmentAccounts })]));
+  reject(
+    anyPass([
+      transaction =>
+        PAYEES_TO_EXCLUDE.includes(
+          get([transaction.payeeId, "name"])(budget.payeesById)
+        ),
+      isTransfer({ accountsById: budget.accountsById, investmentAccounts })
+    ])
+  );
 
 export const splitTransactions = ({
   categoryGroupsById,
@@ -194,7 +194,7 @@ const payeesWithMetadata = simpleMemoize(budget => {
       if (!transaction.payeeId || !payeesById[transaction.payeeId]) {
         return true;
       }
-      if (payeesById[transaction.payeeId].name === "Starting Balance") {
+      if (PAYEES_TO_EXCLUDE.includes(payeesById[transaction.payeeId].name)) {
         return true;
       }
       return false;
