@@ -21,8 +21,10 @@ export const TopSection = styled(Container)`
 class Section extends Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
+    hasSettings: PropTypes.bool,
     noPadding: PropTypes.bool,
-    title: PropTypes.string
+    title: PropTypes.string,
+    onClickSettings: PropTypes.func
   };
 
   state = { isExpanded: true };
@@ -32,7 +34,13 @@ class Section extends Component {
   };
 
   render() {
-    const { children, noPadding, title } = this.props;
+    const {
+      children,
+      noPadding,
+      title,
+      hasSettings,
+      onClickSettings
+    } = this.props;
     const { isExpanded } = this.state;
 
     return (
@@ -52,9 +60,23 @@ class Section extends Component {
               style={{
                 fontWeight: 400,
                 color: "#888",
-                fontSize: 10
+                fontSize: 10,
+                display: "flex",
+                alignItems: "center"
               }}
             >
+              {hasSettings &&
+                isExpanded && (
+                  <div
+                    style={{ padding: "0 12px" }}
+                    onClick={evt => {
+                      evt.stopPropagation();
+                      onClickSettings();
+                    }}
+                  >
+                    <Icon icon="cog" />
+                  </div>
+                )}
               <Icon
                 icon="chevron-right"
                 transform={{ rotate: isExpanded ? 90 : 0 }}

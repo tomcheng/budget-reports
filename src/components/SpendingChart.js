@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import groupBy from "lodash/fp/groupBy";
@@ -8,13 +8,13 @@ import range from "lodash/fp/range";
 import sumBy from "lodash/fp/sumBy";
 import moment from "moment";
 import tinyColor from "tinycolor2";
-import AnimateHeight from "react-animate-height-auto";
-import { getSetting, setSetting, SPENDING_MONTHS_TO_COMPARE } from "../uiRepo";
 import { primaryColor, plotBandColor } from "../styleVariables";
-import { MinorText, SecondaryText } from "./typeComponents";
-import { GhostButton, PrimaryButton } from "./Button";
-import Icon from "./Icon";
+import { MinorText } from "./typeComponents";
 import Chart from "./Chart";
+
+const Container = styled.div`
+  padding-top: 5px;
+`;
 
 const DateLabels = styled.div`
   border-top: 1px solid #ddd;
@@ -52,56 +52,11 @@ class SpendingChart extends PureComponent {
         date: PropTypes.string.isRequired
       })
     ).isRequired,
-    total: PropTypes.number,
-  };
-
-  constructor(props) {
-    super();
-    this.state = {
-      isEditingMonthsToCompare: false,
-      monthsToCompare: getSetting(SPENDING_MONTHS_TO_COMPARE, props.budgetId),
-      previousMonths: null
-    };
-  }
-
-  handleClickEdit = () => {
-    this.setState(state => ({
-      ...state,
-      isEditingMonthsToCompare: !state.isEditingMonthsToCompare,
-      previousMonths: state.monthsToCompare
-    }));
-  };
-
-  handleChangeMonths = evt => {
-    const monthsToCompare = parseInt(evt.target.value, 10);
-    this.setState({ monthsToCompare });
-    setSetting(SPENDING_MONTHS_TO_COMPARE, this.props.budgetId, monthsToCompare);
-  };
-
-  handleClickSave = () => {
-    this.setState({
-      isEditingMonthsToCompare: false,
-      previousMonths: null
-    });
-  };
-
-  handleClickCancel = () => {
-    setSetting(
-      SPENDING_MONTHS_TO_COMPARE,
-      this.props.budgetId,
-      this.state.previousMonths
-    );
-    this.setState(state => ({
-      ...state,
-      monthsToCompare: state.previousMonths,
-      isEditingMonthsToCompare: false,
-      previousMonths: null
-    }));
+    total: PropTypes.number
   };
 
   render() {
-    const { total, transactions, currentMonth } = this.props;
-    const { monthsToCompare, isEditingMonthsToCompare } = this.state;
+    const { total, transactions, currentMonth, monthsToCompare } = this.props;
 
     const dates = range(-1, moment(currentMonth).daysInMonth()).map(day =>
       moment(currentMonth).add(day, "days")
@@ -139,58 +94,7 @@ class SpendingChart extends PureComponent {
     }));
 
     return (
-      <Fragment>
-        <div style={{ marginBottom: 5 }}>
-          <MinorText
-            style={{
-              userSelect: "none",
-              textAlign: "right",
-              opacity: isEditingMonthsToCompare ? 0.4 : null
-            }}
-            onClick={this.handleClickEdit}
-          >
-            Compare with last {monthsToCompare} month{monthsToCompare === 1
-              ? ""
-              : "s"}&nbsp;&nbsp;
-            <Icon icon="pencil" />
-          </MinorText>
-          <AnimateHeight isExpanded={isEditingMonthsToCompare}>
-            <Fragment>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  paddingTop: 5
-                }}
-              >
-                <SecondaryText>Number of months to show:</SecondaryText>
-                <input
-                  type="range"
-                  value={monthsToCompare}
-                  onChange={this.handleChangeMonths}
-                  min={0}
-                  max={12}
-                  step={1}
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  padding: "5px 0"
-                }}
-              >
-                <GhostButton onClick={this.handleClickCancel}>
-                  cancel
-                </GhostButton>
-                <PrimaryButton onClick={this.handleClickSave}>
-                  Save
-                </PrimaryButton>
-              </div>
-            </Fragment>
-          </AnimateHeight>
-        </div>
+      <Container>
         <Chart
           key={monthsToCompare}
           options={{
@@ -226,7 +130,7 @@ class SpendingChart extends PureComponent {
           <MinorText>{head(dates).format("MMM D")}</MinorText>
           <MinorText>{last(dates).format("MMM D")}</MinorText>
         </DateLabels>
-      </Fragment>
+      </Container>
     );
   }
 }
