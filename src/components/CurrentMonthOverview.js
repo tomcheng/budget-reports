@@ -50,7 +50,11 @@ class CurrentMonthOverview extends Component {
                 monthsToCompare={values.months}
               />
             </Section>
-            <Modal open={modalOpen} onClose={this.handleCloseModal}>
+            <Modal
+              open={modalOpen}
+              title="Chart Settings"
+              onClose={this.handleCloseModal}
+            >
               <Field
                 type="range"
                 label="Months to compare"

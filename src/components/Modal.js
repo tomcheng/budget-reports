@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
 import PropTypes from "prop-types";
+import { StrongText } from "./typeComponents";
 
 const Container = styled.div`
   position: fixed;
@@ -20,7 +21,7 @@ const Overlay = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.6);
   z-index: 1000;
 `;
 
@@ -34,11 +35,12 @@ const ModalContent = styled.div`
 
 const CloseButton = styled.div`
   position: absolute;
-  font-size: 20px;
-  line-height: 16px;
+  font-size: 24px;
+  line-height: 12px;
+  color: #fff;
   top: 0;
-  right: 3px;
-  padding: 5px;
+  right: 0;
+  padding: 15px;
   cursor: pointer;
 `;
 
@@ -46,7 +48,8 @@ class Modal extends Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
     open: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired
+    onClose: PropTypes.func.isRequired,
+    title: PropTypes.string
   };
 
   constructor() {
@@ -63,14 +66,18 @@ class Modal extends Component {
   }
 
   render() {
-    const { onClose, open, children } = this.props;
+    const { onClose, open, children, title } = this.props;
 
     return createPortal(
       open && (
         <Container>
-          <Overlay />
-          <ModalContent>
+          <Overlay>
             <CloseButton onClick={onClose}>&times;</CloseButton>
+          </Overlay>
+          <ModalContent>
+            {title && (
+              <StrongText style={{ marginBottom: 10 }}>{title}</StrongText>
+            )}
             {children}
           </ModalContent>
         </Container>
