@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { getGroupLink } from "../linkUtils";
+import { getCurrentMonthGroupLink } from "../linkUtils";
 import Separator from "./Separator";
 
 class CategoryTitle extends PureComponent {
@@ -26,7 +26,7 @@ class CategoryTitle extends PureComponent {
     return (
       <div style={{ display: "flex", alignItems: "center" }}>
         <Link
-          to={getGroupLink({
+          to={getCurrentMonthGroupLink({
             budgetId: budget.id,
             categoryGroupId: categoryGroup.id
           })}

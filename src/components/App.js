@@ -156,7 +156,7 @@ class App extends Component {
             />
           ))}
           <Route
-            path="/budgets/:budgetId/category-groups/:categoryGroupId"
+            path="/budgets/:budgetId/current/category-groups/:categoryGroupId"
             exact
             render={({ match }) => (
               <CategoryGroup
@@ -171,7 +171,7 @@ class App extends Component {
             )}
           />
           <Route
-            path="/budgets/:budgetId/categories/:categoryId"
+            path="/budgets/:budgetId/current/categories/:categoryId"
             exact
             render={({ match }) => (
               <Category

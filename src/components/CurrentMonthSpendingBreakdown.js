@@ -6,7 +6,7 @@ import groupBy from "lodash/fp/groupBy";
 import map from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
-import { getGroupLink } from "../linkUtils";
+import { getCurrentMonthGroupLink } from "../linkUtils";
 import { Link } from "react-router-dom";
 import Section from "./Section";
 import ListItem from "./ListItem";
@@ -74,7 +74,7 @@ class CurrentMonthCategoryGroupsContent extends PureComponent {
 
     return groups.map(({ group, transactions, amount }) => (
       <ListItem key={group.id}>
-        <Link to={getGroupLink({ budgetId, categoryGroupId: group.id })}>
+        <Link to={getCurrentMonthGroupLink({ budgetId, categoryGroupId: group.id })}>
           <SecondaryText style={{ whiteSpace: "pre" }}>
             <LabelWithTransactionCount
               label={group.name}

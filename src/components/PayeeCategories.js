@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { getCategoryLink, getGroupLink } from "../linkUtils";
+import { getCurrentMonthCategoryLink, getCurrentMonthGroupLink } from "../linkUtils";
 import ListItem from "./ListItem";
 import { SecondaryText } from "./typeComponents";
 import Separator from "./Separator";
@@ -23,7 +23,7 @@ const PayeeCategories = ({ categoryIds, budget }) => {
           style={{ display: "flex", alignItems: "center", whiteSpace: "pre" }}
         >
           <Link
-            to={getGroupLink({
+            to={getCurrentMonthGroupLink({
               budgetId: budget.id,
               categoryGroupId: categoryGroup.id
             })}
@@ -32,7 +32,7 @@ const PayeeCategories = ({ categoryIds, budget }) => {
           </Link>{" "}
           <Separator />{" "}
           <Link
-            to={getCategoryLink({
+            to={getCurrentMonthCategoryLink({
               budgetId: budget.id,
               categoryId: category.id
             })}

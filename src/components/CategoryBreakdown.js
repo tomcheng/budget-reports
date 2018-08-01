@@ -6,7 +6,7 @@ import map from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import { Link } from "react-router-dom";
-import { getCategoryLink } from "../linkUtils";
+import { getCurrentMonthCategoryLink } from "../linkUtils";
 import Section from "./Section";
 import { SecondaryText } from "./typeComponents";
 import ListItem from "./ListItem";
@@ -37,7 +37,7 @@ const CategoryBreakdown = ({ budgetId, categoriesById, transactions }) => {
             justifyContent: "space-between"
           }}
         >
-          <Link to={getCategoryLink({ budgetId, categoryId: category.id })}>
+          <Link to={getCurrentMonthCategoryLink({ budgetId, categoryId: category.id })}>
             <SecondaryText>
               <LabelWithTransactionCount label={category.name} count={count} />
             </SecondaryText>
