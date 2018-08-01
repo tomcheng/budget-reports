@@ -8,11 +8,12 @@ import ChartSettingsModal from "./ChartSettingsModal";
 
 const MAX_MONTHS = 12;
 
-class CurrentMonthProgress extends Component {
+class ProgressSection extends Component {
   static propTypes = {
     budgetId: PropTypes.string.isRequired,
     currentMonth: PropTypes.string.isRequired,
-    transactions: PropTypes.array.isRequired
+    transactions: PropTypes.array.isRequired,
+    total: PropTypes.number
   };
 
   constructor(props) {
@@ -61,7 +62,7 @@ class CurrentMonthProgress extends Component {
   };
 
   render() {
-    const { transactions, budgetId, currentMonth } = this.props;
+    const { transactions, budgetId, currentMonth, total } = this.props;
     const { modalOpen, monthsToCompare } = this.state;
 
     return (
@@ -76,6 +77,7 @@ class CurrentMonthProgress extends Component {
             budgetId={budgetId}
             currentMonth={currentMonth}
             monthsToCompare={monthsToCompare}
+            total={total}
           />
         </Section>
         <ChartSettingsModal
@@ -90,4 +92,4 @@ class CurrentMonthProgress extends Component {
   }
 }
 
-export default CurrentMonthProgress;
+export default ProgressSection;

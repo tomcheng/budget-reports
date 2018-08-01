@@ -1,10 +1,9 @@
 import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
-import moment from "moment";
 import propEq from "lodash/fp/propEq";
-import Section, { TopSection } from "./Section";
+import { TopSection } from "./Section";
 import TopNumbers from "./TopNumbers";
-import SpendingChart from "./SpendingChart";
+import ProgressSection from "./ProgressSection";
 import Transactions from "./Transactions";
 
 class CategoryBody extends PureComponent {
@@ -42,14 +41,12 @@ class CategoryBody extends PureComponent {
             ]}
           />
         </TopSection>
-        <Section title={`Progress for ${moment(currentMonth).format("MMMM")}`}>
-          <SpendingChart
-            budgetId={budget.id}
-            total={category.balance - category.activity}
-            currentMonth={currentMonth}
-            transactions={transactionsForCategory}
-          />
-        </Section>
+        <ProgressSection
+          budgetId={budget.id}
+          currentMonth={currentMonth}
+          transactions={transactionsForCategory}
+          total={category.balance - category.activity}
+        />
         <Transactions
           transactions={transactionsForMonth}
           payeesById={budget.payeesById}

@@ -1,14 +1,13 @@
 import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
-import moment from "moment";
 import includes from "lodash/fp/includes";
 import filter from "lodash/fp/filter";
 import matchesProperty from "lodash/fp/matchesProperty";
 import map from "lodash/fp/map";
 import sumBy from "lodash/fp/sumBy";
-import Section, { TopSection } from "./Section";
+import { TopSection } from "./Section";
 import TopNumbers from "./TopNumbers";
-import SpendingChart from "./SpendingChart";
+import ProgressSection from "./ProgressSection";
 import CategoryBreakdown from "./CategoryBreakdown";
 import Transactions from "./Transactions";
 
@@ -60,14 +59,12 @@ class CategoryGroupBody extends PureComponent {
             ]}
           />
         </TopSection>
-        <Section title={`Progress for ${moment(currentMonth).format("MMMM")}`}>
-          <SpendingChart
-            budgetId={budgetId}
-            currentMonth={currentMonth}
-            total={spent + available}
-            transactions={transactionsInGroup}
-          />
-        </Section>
+        <ProgressSection
+          budgetId={budgetId}
+          currentMonth={currentMonth}
+          transactions={transactionsInGroup}
+          total={spent + available}
+        />
         <CategoryBreakdown
           budgetId={budgetId}
           categoriesById={categoriesById}
