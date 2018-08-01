@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import groupBy from "lodash/fp/groupBy";
-import { getCategoryLink } from "../linkUtils";
+import { getCategoryLink, getCategoryGroupLink } from "../linkUtils";
 import { Link } from "react-router-dom";
 import Section from "./Section";
 
@@ -21,7 +21,16 @@ class CategoriesBody extends PureComponent {
       <Section noPadding>
         {categoryGroups.map(group => (
           <div key={group.id}>
-            <div>{group.name}</div>
+            <div>
+              <Link
+                to={getCategoryGroupLink({
+                  budgetId: budget.id,
+                  categoryGroupId: group.id
+                })}
+              >
+                {group.name}
+              </Link>
+            </div>
             {(categoriesByGroup[group.id] || []).map(category => (
               <div key={category.id}>
                 <Link
