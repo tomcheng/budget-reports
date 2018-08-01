@@ -16,7 +16,7 @@ import LabelWithTransactionCount from "./LabelWithTransactionCount";
 
 const mapWithKeys = map.convert({ cap: false });
 
-const CurrentMonthCategoryGroups = ({ budget, transactions }) => (
+const CurrentMonthSpendingBreakdown = ({ budget, transactions }) => (
   <Section title="Spending Breakdown">
     <CurrentMonthCategoryGroupsContent
       budget={budget}
@@ -25,7 +25,7 @@ const CurrentMonthCategoryGroups = ({ budget, transactions }) => (
   </Section>
 );
 
-CurrentMonthCategoryGroups.propTypes = {
+CurrentMonthSpendingBreakdown.propTypes = {
   budget: PropTypes.shape({
     categoriesById: PropTypes.objectOf(
       PropTypes.shape({
@@ -85,4 +85,4 @@ class CurrentMonthCategoryGroupsContent extends PureComponent {
   }
 }
 
-export default CurrentMonthCategoryGroups;
+export default CurrentMonthSpendingBreakdown;

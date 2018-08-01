@@ -71,8 +71,8 @@ class Modal extends Component {
     return createPortal(
       open && (
         <Container>
-          <Overlay>
-            <CloseButton onClick={onClose}>&times;</CloseButton>
+          <Overlay onClick={onClose}>
+            <CloseButton>&times;</CloseButton>
           </Overlay>
           <ModalContent>
             {title && (

@@ -1,10 +1,12 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { getSetting, SPENDING_MONTHS_TO_COMPARE } from "../uiRepo";
+import { getSetting, setSetting, SPENDING_MONTHS_TO_COMPARE } from "../uiRepo";
 import Section from "./Section";
 import SpendingChart from "./SpendingChart";
 import ChartSettingsModal from "./ChartSettingsModal";
+
+const MAX_MONTHS = 12;
 
 class CurrentMonthOverview extends Component {
   static propTypes = {
@@ -17,7 +19,7 @@ class CurrentMonthOverview extends Component {
     super();
 
     this.state = {
-      modalOpen: true,
+      modalOpen: false,
       monthsToCompare: getSetting(SPENDING_MONTHS_TO_COMPARE, props.budgetId)
     };
   }
@@ -28,6 +30,34 @@ class CurrentMonthOverview extends Component {
 
   handleCloseModal = () => {
     this.setState({ modalOpen: false });
+  };
+
+  handleDecrementMonths = () => {
+    this.setState(
+      state => ({
+        ...state,
+        monthsToCompare: Math.max(state.monthsToCompare - 1, 0)
+      }),
+      this.saveSetting
+    );
+  };
+
+  handleIncrementMonths = () => {
+    this.setState(
+      state => ({
+        ...state,
+        monthsToCompare: Math.min(state.monthsToCompare + 1, MAX_MONTHS)
+      }),
+      this.saveSetting
+    );
+  };
+
+  saveSetting = () => {
+    setSetting(
+      SPENDING_MONTHS_TO_COMPARE,
+      this.props.budgetId,
+      this.state.monthsToCompare
+    );
   };
 
   render() {
@@ -50,8 +80,10 @@ class CurrentMonthOverview extends Component {
         </Section>
         <ChartSettingsModal
           open={modalOpen}
-          onClose={this.handleCloseModal}
           monthsToCompare={monthsToCompare}
+          onClose={this.handleCloseModal}
+          onDecrementMonths={this.handleDecrementMonths}
+          onIncrementMonths={this.handleIncrementMonths}
         />
       </Fragment>
     );

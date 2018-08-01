@@ -7,7 +7,7 @@ import {
   getTransactionMonth
 } from "../utils";
 import CurrentMonthOverview from "./CurrentMonthOverview";
-import CurrentMonthCategoryGroups from "./CurrentMonthCategoryGroups";
+import CurrentMonthSpendingBreakdown from "./CurrentMonthSpendingBreakdown";
 
 class CurrentMonthBody extends PureComponent {
   static propTypes = {
@@ -33,7 +33,7 @@ class CurrentMonthBody extends PureComponent {
           currentMonth={currentMonth}
           transactions={transactions}
         />
-        <CurrentMonthCategoryGroups
+        <CurrentMonthSpendingBreakdown
           budget={budget}
           transactions={transactionsThisMonth}
         />
