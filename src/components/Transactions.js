@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Transaction from "./Transaction";
-import { SecondaryText } from "./typeComponents";
 import Section from "./Section";
+import NoTransactions from "./NoTransactions";
 
 const Transactions = ({ transactions, payeesById, budgetId, linkToPayee }) => (
   <Section title="Transactions">
@@ -18,9 +18,7 @@ const Transactions = ({ transactions, payeesById, budgetId, linkToPayee }) => (
         />
       ))
     ) : (
-      <SecondaryText style={{ textAlign: "center", margin: 10 }}>
-        No transactions this month
-      </SecondaryText>
+      <NoTransactions />
     )}
   </Section>
 );

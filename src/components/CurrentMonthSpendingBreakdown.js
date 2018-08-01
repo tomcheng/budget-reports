@@ -13,6 +13,7 @@ import ListItem from "./ListItem";
 import { SecondaryText } from "./typeComponents";
 import Amount from "./Amount";
 import LabelWithTransactionCount from "./LabelWithTransactionCount";
+import NoTransactions from "./NoTransactions";
 
 const mapWithKeys = map.convert({ cap: false });
 
@@ -66,6 +67,10 @@ class CurrentMonthCategoryGroupsContent extends PureComponent {
         get([transaction.categoryId, "categoryGroupId"])(categoriesById)
       )
     ])(transactions);
+
+    if (groups.length === 0) {
+      return <NoTransactions />;
+    }
 
     return groups.map(({ group, transactions, amount }) => (
       <ListItem key={group.id}>

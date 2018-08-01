@@ -13,7 +13,7 @@ import { MinorText } from "./typeComponents";
 import Chart from "./Chart";
 
 const Container = styled.div`
-  padding-top: 5px;
+  padding-top: 10px;
 `;
 
 const DateLabels = styled.div`
