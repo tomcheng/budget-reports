@@ -1,15 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import PageWrapper from "./PageWrapper";
-import CategoryGroupBody from "./CategoryGroupBody";
-import find from "lodash/fp/find";
-import matchesProperty from "lodash/fp/matchesProperty";
+import CategoryTitle from "./CategoryTitle";
+import CurrentMonthCategoryBody from "./CurrentMonthCategoryBody";
 
-const CategoryGroup = ({
+const CurrentMonthCategory = ({
   authorized,
   budget,
   budgetId,
-  categoryGroupId,
+  categoryId,
   currentMonth,
   onAuthorize,
   onRequestBudget
@@ -21,23 +20,21 @@ const CategoryGroup = ({
     backLink
     onAuthorize={onAuthorize}
     onRequestBudget={onRequestBudget}
-    title={() =>
-      find(matchesProperty("id", categoryGroupId))(budget.categoryGroups).name
-    }
+    title={() => <CategoryTitle budget={budget} categoryId={categoryId} />}
     content={() => (
-      <CategoryGroupBody
+      <CurrentMonthCategoryBody
         budget={budget}
-        categoryGroupId={categoryGroupId}
         currentMonth={currentMonth}
+        categoryId={categoryId}
       />
     )}
   />
 );
 
-CategoryGroup.propTypes = {
+CurrentMonthCategory.propTypes = {
   authorized: PropTypes.bool.isRequired,
   budgetId: PropTypes.string.isRequired,
-  categoryGroupId: PropTypes.string.isRequired,
+  categoryId: PropTypes.string.isRequired,
   currentMonth: PropTypes.string.isRequired,
   onAuthorize: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired,
@@ -67,4 +64,4 @@ CategoryGroup.propTypes = {
   })
 };
 
-export default CategoryGroup;
+export default CurrentMonthCategory;

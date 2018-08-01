@@ -6,7 +6,7 @@ import TopNumbers from "./TopNumbers";
 import ProgressSection from "./ProgressSection";
 import Transactions from "./Transactions";
 
-class CategoryBody extends PureComponent {
+class CurrentMonthCategoryBody extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       categories: PropTypes.array.isRequired,
@@ -58,4 +58,4 @@ class CategoryBody extends PureComponent {
   }
 }
 
-export default CategoryBody;
+export default CurrentMonthCategoryBody;

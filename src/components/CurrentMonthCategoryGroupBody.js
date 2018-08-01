@@ -11,7 +11,7 @@ import ProgressSection from "./ProgressSection";
 import CategoryBreakdown from "./CategoryBreakdown";
 import Transactions from "./Transactions";
 
-class CategoryGroupBody extends PureComponent {
+class CurrentMonthCategoryGroupBody extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       categories: PropTypes.array.isRequired,
@@ -81,4 +81,4 @@ class CategoryGroupBody extends PureComponent {
   }
 }
 
-export default CategoryGroupBody;
+export default CurrentMonthCategoryGroupBody;

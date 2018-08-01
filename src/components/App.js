@@ -16,8 +16,8 @@ import NotFound from "./NotFound";
 import ErrorBoundary from "./ErrorBoundary";
 import Budgets from "./Budgets";
 import Settings from "./Settings";
-import CategoryGroup from "./CategoryGroup";
-import Category from "./Category";
+import CurrentMonthCategoryGroup from "./CurrentMonthCategoryGroup";
+import CurrentMonthCategory from "./CurrentMonthCategory";
 import Payee from "./Payee";
 
 class App extends Component {
@@ -159,7 +159,7 @@ class App extends Component {
             path="/budgets/:budgetId/current/category-groups/:categoryGroupId"
             exact
             render={({ match }) => (
-              <CategoryGroup
+              <CurrentMonthCategoryGroup
                 authorized={authorized}
                 budget={budgetDetails[match.params.budgetId]}
                 budgetId={match.params.budgetId}
@@ -174,7 +174,7 @@ class App extends Component {
             path="/budgets/:budgetId/current/categories/:categoryId"
             exact
             render={({ match }) => (
-              <Category
+              <CurrentMonthCategory
                 authorized={authorized}
                 budget={budgetDetails[match.params.budgetId]}
                 budgetId={match.params.budgetId}
