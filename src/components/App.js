@@ -19,6 +19,7 @@ import Settings from "./Settings";
 import CurrentMonthCategoryGroup from "./CurrentMonthCategoryGroup";
 import CurrentMonthCategory from "./CurrentMonthCategory";
 import Payee from "./Payee";
+import Category from "./Category";
 
 class App extends Component {
   static propTypes = {
@@ -180,6 +181,20 @@ class App extends Component {
                 budgetId={match.params.budgetId}
                 categoryId={match.params.categoryId}
                 currentMonth={currentMonth}
+                onAuthorize={this.handleAuthorize}
+                onRequestBudget={this.handleRequestBudget}
+              />
+            )}
+          />
+          <Route
+            path="/budgets/:budgetId/categories/:categoryId"
+            exact
+            render={({ match }) => (
+              <Category
+                authorized={authorized}
+                budget={budgetDetails[match.params.budgetId]}
+                budgetId={match.params.budgetId}
+                categoryId={match.params.categoryId}
                 onAuthorize={this.handleAuthorize}
                 onRequestBudget={this.handleRequestBudget}
               />
