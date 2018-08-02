@@ -1,39 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
 import { getPayeeLink } from "../linkUtils";
 import { MinorText, SecondaryText } from "./typeComponents";
+import { ListItemLink } from "./ListItem";
 import Amount from "./Amount";
 
-const Container = styled(Link)`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 60px;
-  padding: 0 20px;
-
-  & + & {
-    border-top: 1px solid #eee;
-  }
-`;
-
-const Stats = styled.div`
-  text-align: right;
-`;
-
 const PayeeListItem = ({ name, amount, transactions, id, budgetId }) => (
-  <Container to={getPayeeLink({ budgetId, payeeId: id })}>
+  <ListItemLink to={getPayeeLink({ budgetId, payeeId: id })}>
     {name}
-    <Stats>
+    <div style={{ textAlign: "right" }}>
       <SecondaryText>
         <Amount amount={amount} />
       </SecondaryText>
       <MinorText style={{ whiteSpace: "nowrap" }}>
         {transactions} transaction{transactions === 1 ? "" : "s"}
       </MinorText>
-    </Stats>
-  </Container>
+    </div>
+  </ListItemLink>
 );
 
 PayeeListItem.propTypes = {
