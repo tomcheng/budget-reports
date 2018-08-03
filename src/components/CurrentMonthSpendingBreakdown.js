@@ -7,23 +7,19 @@ import map from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import { getCurrentMonthGroupLink } from "../linkUtils";
-import { Link } from "react-router-dom";
 import Section from "./Section";
-import ListItem from "./ListItem";
-import { SecondaryText } from "./typeComponents";
+import { ListItemLink } from "./ListItem";
+import { SecondaryText, MinorText } from "./typeComponents";
 import Amount from "./Amount";
-import LabelWithTransactionCount from "./LabelWithTransactionCount";
 import NoTransactions from "./NoTransactions";
 
 const mapWithKeys = map.convert({ cap: false });
 
 const CurrentMonthSpendingBreakdown = ({ budget, transactions }) => (
-  <Section title="Spending Breakdown">
-    <CurrentMonthCategoryGroupsContent
-      budget={budget}
-      transactions={transactions}
-    />
-  </Section>
+  <CurrentMonthCategoryGroupsContent
+    budget={budget}
+    transactions={transactions}
+  />
 );
 
 CurrentMonthSpendingBreakdown.propTypes = {
@@ -72,21 +68,29 @@ class CurrentMonthCategoryGroupsContent extends PureComponent {
       return <NoTransactions />;
     }
 
-    return groups.map(({ group, transactions, amount }) => (
-      <ListItem key={group.id}>
-        <Link to={getCurrentMonthGroupLink({ budgetId, categoryGroupId: group.id })}>
-          <SecondaryText style={{ whiteSpace: "pre" }}>
-            <LabelWithTransactionCount
-              label={group.name}
-              count={transactions}
-            />
-          </SecondaryText>
-        </Link>
-        <SecondaryText>
-          <Amount amount={amount} />
-        </SecondaryText>
-      </ListItem>
-    ));
+    return (
+      <Section title="Spending Breakdown" noPadding>
+        {groups.map(({ group, transactions, amount }) => (
+          <ListItemLink
+            key={group.id}
+            to={getCurrentMonthGroupLink({
+              budgetId,
+              categoryGroupId: group.id
+            })}
+          >
+            <SecondaryText style={{ whiteSpace: "pre" }}>
+              {group.name}
+            </SecondaryText>
+            <SecondaryText style={{ textAlign: "right" }}>
+              <Amount amount={amount} />
+              <MinorText>
+                {transactions} transaction{transactions === 1 ? "" : "s"}
+              </MinorText>
+            </SecondaryText>
+          </ListItemLink>
+        ))}{" "}
+      </Section>
+    );
   }
 }
 

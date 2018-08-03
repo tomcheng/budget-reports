@@ -50,6 +50,7 @@ class Section extends Component {
     return (
       <Container noPadding={noPadding} top={top}>
         {title && (
+          <div style={{ padding: noPadding && "15px 20px" }}>
           <StrongText
             onClick={this.handleClickTitle}
             style={{
@@ -87,10 +88,11 @@ class Section extends Component {
               />
             </div>
           </StrongText>
+          </div>
         )}
         <AnimateHeight isExpanded={isExpanded}>
           <div
-            style={{ marginTop: title ? 10 : null }}
+            style={{ marginTop: title ? (noPadding ? -10 : 10) : null }}
             className={isExpanded ? "" : "collapsed"}
           >
             {children}
