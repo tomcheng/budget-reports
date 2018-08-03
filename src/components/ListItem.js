@@ -6,8 +6,10 @@ const ListItem = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 8px 0;
+  margin-top: -4px;
 
   & + & {
+    margin-top: 0;
     border-top: 1px dotted #ddd;
   }
 `;

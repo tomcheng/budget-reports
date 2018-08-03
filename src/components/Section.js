@@ -85,7 +85,7 @@ class Section extends Component {
           </StrongText>
         )}
         <AnimateHeight isExpanded={isExpanded}>
-          <div style={{ marginTop: title ? 5 : null }}>{children}</div>
+          <div style={{ marginTop: title ? 10 : null }}>{children}</div>
         </AnimateHeight>
       </Container>
     );

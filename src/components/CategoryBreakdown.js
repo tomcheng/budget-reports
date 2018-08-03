@@ -37,6 +37,7 @@ const CategoryBreakdown = ({
         <ListItem
           key={category.id}
           style={{
+            borderTop: 0,
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",

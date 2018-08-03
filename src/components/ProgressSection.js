@@ -2,7 +2,8 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { getSetting, setSetting, SPENDING_MONTHS_TO_COMPARE } from "../uiRepo";
-import Section from "./Section";
+import Section, { Subsection } from "./Section";
+import TopNumbers from "./TopNumbers";
 import SpendingChart from "./SpendingChart";
 import ChartSettingsModal from "./ChartSettingsModal";
 
@@ -13,7 +14,8 @@ class ProgressSection extends Component {
     budgetId: PropTypes.string.isRequired,
     currentMonth: PropTypes.string.isRequired,
     transactions: PropTypes.array.isRequired,
-    total: PropTypes.number
+    total: PropTypes.number,
+    topNumbers: PropTypes.array
   };
 
   constructor(props) {
@@ -62,23 +64,36 @@ class ProgressSection extends Component {
   };
 
   render() {
-    const { transactions, budgetId, currentMonth, total } = this.props;
+    const {
+      transactions,
+      budgetId,
+      currentMonth,
+      total,
+      topNumbers
+    } = this.props;
     const { modalOpen, monthsToCompare } = this.state;
 
     return (
       <Fragment>
         <Section
-          title={`Progress for ${moment(currentMonth).format("MMMM")}`}
+          title="Overview"
           hasSettings
           onClickSettings={this.handleClickSettings}
         >
-          <SpendingChart
-            transactions={transactions}
-            budgetId={budgetId}
-            currentMonth={currentMonth}
-            monthsToCompare={monthsToCompare}
-            total={total}
-          />
+          {topNumbers && (
+            <Subsection>
+              <TopNumbers numbers={topNumbers} />
+            </Subsection>
+          )}
+          <Subsection>
+            <SpendingChart
+              transactions={transactions}
+              budgetId={budgetId}
+              currentMonth={currentMonth}
+              monthsToCompare={monthsToCompare}
+              total={total}
+            />
+          </Subsection>
         </Section>
         <ChartSettingsModal
           open={modalOpen}

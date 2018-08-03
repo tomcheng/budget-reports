@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import groupBy from "lodash/fp/groupBy";
@@ -11,10 +11,6 @@ import tinyColor from "tinycolor2";
 import { primaryColor, plotBandColor } from "../styleVariables";
 import { MinorText } from "./typeComponents";
 import Chart from "./Chart";
-
-const Container = styled.div`
-  padding-top: 10px;
-`;
 
 const DateLabels = styled.div`
   border-top: 1px solid #ddd;
@@ -63,7 +59,7 @@ class SpendingChart extends PureComponent {
     );
     const data = getData({ month: currentMonth, transactions });
     const lineData = dates.map(
-      (_, index) => index / (dates.length - 1) * total
+      (_, index) => (index / (dates.length - 1)) * total
     );
     const firstDayOfWeek = parseInt(dates[0].format("d"), 10);
     const plotBands = range(0, 6).map(num => ({
@@ -86,7 +82,7 @@ class SpendingChart extends PureComponent {
           .mix(
             primaryColor,
             "#f2f2f2",
-            30 + numMonths * 70 / (monthsToCompare + 1)
+            30 + (numMonths * 70) / (monthsToCompare + 1)
           )
           .toHex(),
       lineWidth: 1,
@@ -94,7 +90,7 @@ class SpendingChart extends PureComponent {
     }));
 
     return (
-      <Container>
+      <Fragment>
         <Chart
           key={monthsToCompare}
           options={{
@@ -130,7 +126,7 @@ class SpendingChart extends PureComponent {
           <MinorText>{head(dates).format("MMM D")}</MinorText>
           <MinorText>{last(dates).format("MMM D")}</MinorText>
         </DateLabels>
-      </Container>
+      </Fragment>
     );
   }
 }

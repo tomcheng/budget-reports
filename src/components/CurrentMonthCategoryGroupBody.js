@@ -2,8 +2,6 @@ import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import { getTransactionMonth } from "../utils";
 import { sumByProp } from "../optimized";
-import { TopSection } from "./Section";
-import TopNumbers from "./TopNumbers";
 import ProgressSection from "./ProgressSection";
 import CategoryBreakdown from "./CategoryBreakdown";
 import Transactions from "./Transactions";
@@ -73,27 +71,23 @@ class CurrentMonthCategoryGroupBody extends PureComponent {
 
     return (
       <Fragment>
-        <TopSection>
-          <TopNumbers
-            numbers={[
-              { label: "budgeted", value: budgeted },
-              { label: "spent", value: spent },
-              { label: "available", value: available }
-            ]}
-          />
-        </TopSection>
-        <ProgressSection
-          budgetId={budgetId}
-          currentMonth={currentMonth}
-          transactions={transactionsInCategory || transactionsInGroup}
-          total={spent + available}
-        />
         <CategoryBreakdown
           budgetId={budgetId}
           categoriesById={categoriesById}
           selectedCategoryId={selectedCategoryId}
           transactions={transactionsInGroupForMonth}
           onSelectCategory={onSelectCategory}
+        />
+        <ProgressSection
+          budgetId={budgetId}
+          currentMonth={currentMonth}
+          transactions={transactionsInCategory || transactionsInGroup}
+          total={spent + available}
+          topNumbers={[
+            { label: "budgeted", value: budgeted },
+            { label: "spent", value: spent },
+            { label: "available", value: available }
+          ]}
         />
         <Transactions
           budgetId={budgetId}
