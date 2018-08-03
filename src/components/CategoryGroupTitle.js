@@ -24,8 +24,8 @@ class CategoryGroupTitle extends PureComponent {
     );
 
     return (
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <div onClick={onClearCategory} style={{ cursor: "pointer" }}>
+      <div style={{ display: "flex", alignItems: "center", userSelect: "none" }}>
+        <div onClick={onClearCategory}>
           {categoryGroup.name}
         </div>
         {category && (

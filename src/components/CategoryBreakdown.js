@@ -5,6 +5,7 @@ import groupBy from "lodash/fp/groupBy";
 import map from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
+import styled from "styled-components";
 import { selectedPlotBandColor } from "../styleVariables";
 import Section from "./Section";
 import { SecondaryText } from "./typeComponents";
@@ -13,6 +14,24 @@ import Amount from "./Amount";
 import LabelWithTransactionCount from "./LabelWithTransactionCount";
 
 const mapWithKeys = map.convert({ cap: false });
+
+const StyledListItem = styled(ListItem)`
+  background-color: ${props => props.selected && selectedPlotBandColor};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  margin-left: -10px;
+  margin-right: -10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 2px;
+  border-top: 0 !important;
+
+  .collapsed & {
+    background-color: transparent;
+  }
+`;
 
 const CategoryBreakdown = ({
   budgetId,
@@ -34,17 +53,9 @@ const CategoryBreakdown = ({
   return (
     <Section title="Filter by Category" top>
       {categoriesWithData.map(({ category, count, amount }) => (
-        <ListItem
+        <StyledListItem
           key={category.id}
-          style={{
-            borderTop: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            backgroundColor:
-              category.id === selectedCategoryId ? selectedPlotBandColor : null,
-            userSelect: "none"
-          }}
+          selected={category.id === selectedCategoryId}
           onClick={() => {
             onSelectCategory(category.id);
           }}
@@ -55,7 +66,7 @@ const CategoryBreakdown = ({
           <SecondaryText>
             <Amount amount={amount} />
           </SecondaryText>
-        </ListItem>
+        </StyledListItem>
       ))}
     </Section>
   );

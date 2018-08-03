@@ -6,11 +6,12 @@ import { StrongText } from "./typeComponents";
 import Icon from "./Icon";
 
 const Container = styled.div`
-  margin: ${props => props.top ? "0" : "3px"};
-  padding: ${props => (props.noPadding ? "0" : props.top ? "15px 23px" : "15px 20px")};
+  margin: ${props => (props.top ? "0" : "3px")};
+  padding: ${props =>
+    props.noPadding ? "0" : props.top ? "15px 23px" : "15px 20px"};
   background-color: #fff;
   border: 1px solid #e5e5e5;
-  border-width: ${props => props.top ? "0 0 1px" : "1px"};
+  border-width: ${props => (props.top ? "0 0 1px" : "1px")};
   border-radius: 2px;
 `;
 
@@ -88,7 +89,12 @@ class Section extends Component {
           </StrongText>
         )}
         <AnimateHeight isExpanded={isExpanded}>
-          <div style={{ marginTop: title ? 10 : null }}>{children}</div>
+          <div
+            style={{ marginTop: title ? 10 : null }}
+            className={isExpanded ? "" : "collapsed"}
+          >
+            {children}
+          </div>
         </AnimateHeight>
       </Container>
     );
