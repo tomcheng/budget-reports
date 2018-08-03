@@ -84,9 +84,9 @@ class CurrentMonthCategoryGroupBody extends PureComponent {
           transactions={transactionsInCategory || transactionsInGroup}
           total={spent + available}
           topNumbers={[
-            { label: "budgeted", value: budgeted },
             { label: "spent", value: spent },
-            { label: "available", value: available }
+            { label: "available", value: available },
+            { label: "budgeted", value: budgeted }
           ]}
         />
         <Transactions
