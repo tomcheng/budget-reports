@@ -1,12 +1,14 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
+import groupBy from "lodash/fp/groupBy";
+import CategoryGroupMonthByMonthChart from "./CategoryGroupMonthByMonthChart";
 
 class CategoryGroupBody extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       transactions: PropTypes.arrayOf(
         PropTypes.shape({
-          payeeId: PropTypes.string.isRequired
+          categoryId: PropTypes.string
         })
       ).isRequired,
       payeesById: PropTypes.object.isRequired
@@ -17,9 +19,19 @@ class CategoryGroupBody extends PureComponent {
   };
 
   render() {
-    const { categoryGroup } = this.props;
+    const { categoryGroup, budget } = this.props;
+    const { transactions, categories } = budget;
 
-    return <div>{categoryGroup.name}</div>;
+    const categoriesInGroup = categories.filter(
+      category => category.categoryGroupId === categoryGroup.id
+    );
+    const categoryIds = categoriesInGroup.map(category => category.id);
+    const transactionsInGroup = transactions.filter(transaction =>
+      categoryIds.includes(transaction.id)
+    );
+    const transactionsByCategory = groupBy("categoryId")(transactionsInGroup);
+
+    return <CategoryGroupMonthByMonthChart />;
   }
 }
 

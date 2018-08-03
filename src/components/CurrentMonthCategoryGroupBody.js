@@ -1,10 +1,6 @@
 import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
-import includes from "lodash/fp/includes";
-import filter from "lodash/fp/filter";
-import matchesProperty from "lodash/fp/matchesProperty";
-import map from "lodash/fp/map";
-import sumBy from "lodash/fp/sumBy";
+import { sumByProp } from "../optimized";
 import { TopSection } from "./Section";
 import TopNumbers from "./TopNumbers";
 import ProgressSection from "./ProgressSection";
@@ -33,20 +29,20 @@ class CurrentMonthCategoryGroupBody extends PureComponent {
       transactions: allTransactions
     } = budget;
 
-    const categories = filter(
-      matchesProperty("categoryGroupId", categoryGroupId)
-    )(allCategories);
-    const categoryIds = map("id")(categories);
-    const transactionsInGroup = filter(transaction =>
-      includes(transaction.categoryId)(categoryIds)
-    )(allTransactions);
-    const transactionsForMonth = filter(
+    const categories = allCategories.filter(
+      category => category.categoryGroupId === categoryGroupId
+    );
+    const categoryIds = categories.map(category => category.id);
+    const transactionsInGroup = allTransactions.filter(transaction =>
+      categoryIds.includes(transaction.categoryId)
+    );
+    const transactionsForMonth = transactionsInGroup.filter(
       transaction => transaction.date.slice(0, 7) === currentMonth
-    )(transactionsInGroup);
+    );
 
-    const budgeted = sumBy("budgeted")(categories);
-    const spent = -sumBy("activity")(categories);
-    const available = sumBy("balance")(categories);
+    const budgeted = sumByProp("budgeted")(categories);
+    const spent = -sumByProp("activity")(categories);
+    const available = sumByProp("balance")(categories);
 
     return (
       <Fragment>

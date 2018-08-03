@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import findIndex from "lodash/fp/findIndex";
-import map from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
 import {
   plotBandColor,
@@ -19,10 +18,10 @@ const IncomeVsExpensesChart = ({
   onSelectMonth,
   selectedMonths
 }) => {
-  const excludedBands = map(month => {
+  const excludedBands = excludedMonths.map(month => {
     const index = findIndex(matchesProperty("month", month))(data);
     return { color: plotBandColor, from: index - 0.5, to: index + 0.5 };
-  })(excludedMonths);
+  });
 
   const selectedBands = [];
   selectedMonths.forEach(month => {
@@ -46,7 +45,7 @@ const IncomeVsExpensesChart = ({
     }
   });
 
-  const categories = map(d => moment(d.month).format("MMM"))(data);
+  const categories = data.map(d => moment(d.month).format("MMM"));
 
   return (
     <Chart
@@ -70,7 +69,7 @@ const IncomeVsExpensesChart = ({
           {
             borderWidth: 0,
             color: lightPrimaryColor,
-            data: map("income")(data),
+            data: data.map(d => d.income),
             enableMouseTracking: false,
             name: "Income",
             states: { hover: { brightness: 0 } }
@@ -78,14 +77,14 @@ const IncomeVsExpensesChart = ({
           {
             borderWidth: 0,
             color: negativeChartColor,
-            data: map("expenses")(data),
+            data: data.map(d => d.expenses),
             enableMouseTracking: false,
             name: "Expenses",
             states: { hover: { brightness: 0 } }
           },
           {
             color: primaryColor,
-            data: map(d => d.income + d.expenses)(data),
+            data: data.map(d => d.income + d.expenses),
             enableMouseTracking: false,
             name: "Net Income",
             type: "line"
