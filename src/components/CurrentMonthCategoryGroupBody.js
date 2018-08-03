@@ -1,6 +1,5 @@
 import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
-import get from "lodash/fp/get";
 import { getTransactionMonth } from "../utils";
 import { sumByProp } from "../optimized";
 import { TopSection } from "./Section";
