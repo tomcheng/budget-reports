@@ -5,8 +5,7 @@ import groupBy from "lodash/fp/groupBy";
 import map from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
-import { Link } from "react-router-dom";
-import { getCurrentMonthCategoryLink } from "../linkUtils";
+import { selectedPlotBandColor } from "../styleVariables";
 import Section from "./Section";
 import { SecondaryText } from "./typeComponents";
 import ListItem from "./ListItem";
@@ -15,7 +14,13 @@ import LabelWithTransactionCount from "./LabelWithTransactionCount";
 
 const mapWithKeys = map.convert({ cap: false });
 
-const CategoryBreakdown = ({ budgetId, categoriesById, transactions }) => {
+const CategoryBreakdown = ({
+  budgetId,
+  categoriesById,
+  selectedCategoryId,
+  transactions,
+  onSelectCategory
+}) => {
   const categoriesWithData = compose([
     sortBy("amount"),
     mapWithKeys((transactions, categoryId) => ({
@@ -34,14 +39,18 @@ const CategoryBreakdown = ({ budgetId, categoriesById, transactions }) => {
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between"
+            justifyContent: "space-between",
+            backgroundColor:
+              category.id === selectedCategoryId ? selectedPlotBandColor : null,
+            userSelect: "none"
+          }}
+          onClick={() => {
+            onSelectCategory(category.id);
           }}
         >
-          <Link to={getCurrentMonthCategoryLink({ budgetId, categoryId: category.id })}>
-            <SecondaryText>
-              <LabelWithTransactionCount label={category.name} count={count} />
-            </SecondaryText>
-          </Link>
+          <SecondaryText>
+            <LabelWithTransactionCount label={category.name} count={count} />
+          </SecondaryText>
           <SecondaryText>
             <Amount amount={amount} />
           </SecondaryText>
@@ -59,7 +68,9 @@ CategoryBreakdown.propTypes = {
       name: PropTypes.string.isRequired
     })
   ).isRequired,
-  transactions: PropTypes.array.isRequired
+  transactions: PropTypes.array.isRequired,
+  onSelectCategory: PropTypes.func.isRequired,
+  selectedCategoryId: PropTypes.string
 };
 
 export default CategoryBreakdown;
