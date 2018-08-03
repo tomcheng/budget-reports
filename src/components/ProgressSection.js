@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
-import moment from "moment";
 import { getSetting, setSetting, SPENDING_MONTHS_TO_COMPARE } from "../uiRepo";
 import Section, { Subsection } from "./Section";
 import TopNumbers from "./TopNumbers";

@@ -6,10 +6,11 @@ import { StrongText } from "./typeComponents";
 import Icon from "./Icon";
 
 const Container = styled.div`
-  margin: 3px;
-  padding: ${props => (props.noPadding ? "0" : "15px 20px")};
+  margin: ${props => props.top ? "0" : "3px"};
+  padding: ${props => (props.noPadding ? "0" : props.top ? "15px 23px" : "15px 20px")};
   background-color: #fff;
   border: 1px solid #e5e5e5;
+  border-width: ${props => props.top ? "0 0 1px" : "1px"};
   border-radius: 2px;
 `;
 
@@ -24,7 +25,8 @@ class Section extends Component {
     hasSettings: PropTypes.bool,
     noPadding: PropTypes.bool,
     title: PropTypes.string,
-    onClickSettings: PropTypes.func
+    onClickSettings: PropTypes.func,
+    top: PropTypes.bool
   };
 
   state = { isExpanded: true };
@@ -36,15 +38,16 @@ class Section extends Component {
   render() {
     const {
       children,
+      hasSettings,
       noPadding,
       title,
-      hasSettings,
+      top,
       onClickSettings
     } = this.props;
     const { isExpanded } = this.state;
 
     return (
-      <Container noPadding={noPadding}>
+      <Container noPadding={noPadding} top={top}>
         {title && (
           <StrongText
             onClick={this.handleClickTitle}
