@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import { groupByProp } from "../optimized";
+import { getTransactionMonth } from "../utils";
+// import { groupByProp } from "../optimized";
 import CategoryGroupMonthByMonthChart from "./CategoryGroupMonthByMonthChart";
 
 class CategoryGroupBody extends PureComponent {
@@ -29,11 +30,18 @@ class CategoryGroupBody extends PureComponent {
     const transactionsInGroup = transactions.filter(transaction =>
       categoryIds.includes(transaction.categoryId)
     );
-    const transactionsByCategory = groupByProp("categoryId")(
-      transactionsInGroup
-    );
+    // const transactionsByCategory = groupByProp("categoryId")(
+    //   transactionsInGroup
+    // );
 
-    return <CategoryGroupMonthByMonthChart />;
+    return (
+      <CategoryGroupMonthByMonthChart
+        firstMonth={getTransactionMonth(
+          transactions[transactions.length - 1]
+        )}
+        transactions={transactionsInGroup}
+      />
+    );
   }
 }
 

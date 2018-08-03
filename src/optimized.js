@@ -1,3 +1,15 @@
+export const groupBy = func => arr => {
+  const grouped = {};
+  arr.forEach(obj => {
+    const key = func(obj);
+    if (!grouped[key]) {
+      grouped[key] = [];
+    }
+    grouped[key].push(obj);
+  });
+  return grouped;
+};
+
 export const groupByProp = key => arr => {
   const grouped = {};
   arr.forEach(obj => {
