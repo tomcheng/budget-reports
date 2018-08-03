@@ -17,6 +17,7 @@ const Header = styled.div`
   height: 60px;
   padding-left: ${props => (props.flushLeft ? 0 : 20)}px;
   padding-right: ${props => (props.flushRight ? 0 : 20)}px;
+  background-color: #fff;
   border-bottom: 1px solid #bbb;
   white-space: pre;
 `;
@@ -26,7 +27,6 @@ Header.defaultProps = { flushLeft: false, flushRight: false };
 const Body = styled.div`
   flex-grow: 1;
   overflow-y: auto;
-  background-color: #eee;
 `;
 
 class Layout extends Component {

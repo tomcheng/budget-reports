@@ -32,7 +32,7 @@ const CategoryBreakdown = ({
   ])(transactions);
 
   return (
-    <Section title="Categories">
+    <Section title="Filter by Category">
       {categoriesWithData.map(({ category, count, amount }) => (
         <ListItem
           key={category.id}

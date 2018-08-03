@@ -7,7 +7,7 @@ import { PrimaryButton } from "./Button";
 const Unauthorized = ({ onAuthorize }) => (
   <Section>
     <PageTitle>Budget Reports</PageTitle>
-    <p>Get various insights from your YNAB account.</p>
+    <div style={{ marginBottom: 15 }}>Get various insights from your YNAB account.</div>
     <PrimaryButton onClick={onAuthorize}>
       Authorize YNAB
     </PrimaryButton>
