@@ -4,23 +4,12 @@ import get from "lodash/fp/get";
 import PageWrapper from "./PageWrapper";
 import PayeeBody from "./PayeeBody";
 
-const Payee = ({
-  authorized,
-  budget,
-  budgetId,
-  payeeId,
-  onAuthorize,
-  onRequestBudget
-}) => {
+const Payee = ({ budget, payeeId, ...other }) => {
   const payee = get(["payeesById", payeeId])(budget);
-
   return (
     <PageWrapper
-      authorized={authorized}
-      budgetId={budgetId}
+      {...other}
       budgetLoaded={!!budget}
-      onAuthorize={onAuthorize}
-      onRequestBudget={onRequestBudget}
       title={payee ? `Payee: ${payee.name}` : ""}
       content={() => <PayeeBody budget={budget} payee={payee} />}
       backLink

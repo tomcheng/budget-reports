@@ -4,22 +4,14 @@ import PageWrapper from "./PageWrapper";
 import CurrentMonthBody from "./CurrentMonthBody";
 
 const CurrentMonth = ({
-  authorized,
   budget,
-  budgetId,
   currentMonth,
   investmentAccounts,
-  title,
-  onAuthorize,
-  onRequestBudget
+  ...other
 }) => (
   <PageWrapper
-    authorized={authorized}
-    budgetId={budgetId}
+    {...other}
     budgetLoaded={!!budget}
-    onAuthorize={onAuthorize}
-    onRequestBudget={onRequestBudget}
-    title={title}
     content={() => (
       <CurrentMonthBody
         budget={budget}

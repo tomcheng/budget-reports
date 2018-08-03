@@ -4,21 +4,15 @@ import PageWrapper from "./PageWrapper";
 import SettingsBody from "./SettingsBody";
 
 const Settings = ({
-  authorized,
-  budgetId,
   budget,
   investmentAccounts,
   mortgageAccounts,
-  onAuthorize,
-  onRequestBudget,
-  onUpdateAccounts
+  onUpdateAccounts,
+  ...other
 }) => (
   <PageWrapper
-    authorized={authorized}
-    budgetId={budgetId}
+    {...other}
     budgetLoaded={!!budget}
-    onAuthorize={onAuthorize}
-    onRequestBudget={onRequestBudget}
     title="Budget Settings"
     content={() => (
       <SettingsBody

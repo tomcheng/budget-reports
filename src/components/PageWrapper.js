@@ -30,7 +30,7 @@ const PageWrapper = ({
             <Layout.Header flushLeft>
               {backLink ? <BackLink /> : sidebarTrigger}
               <PageTitle style={{ flexGrow: 1 }}>
-                {typeof title === "function" ? title() : title}
+                {title}
               </PageTitle>
               {actions}
             </Layout.Header>
@@ -63,7 +63,7 @@ PageWrapper.propTypes = {
   budgetId: PropTypes.string.isRequired,
   budgetLoaded: PropTypes.bool.isRequired,
   content: PropTypes.func.isRequired,
-  title: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+  title: PropTypes.node.isRequired,
   onAuthorize: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired,
   actions: PropTypes.node,

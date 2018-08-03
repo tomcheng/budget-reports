@@ -26,24 +26,13 @@ class IncomeVsExpenses extends Component {
   };
 
   render() {
-    const {
-      authorized,
-      budget,
-      budgetId,
-      investmentAccounts,
-      title,
-      onAuthorize,
-      onRequestBudget
-    } = this.props;
+    const { budget, investmentAccounts, title, ...other } = this.props;
     const { showing } = this.state;
 
     return (
       <PageWrapper
-        authorized={authorized}
-        budgetId={budgetId}
+        {...other}
         budgetLoaded={!!budget}
-        onAuthorize={onAuthorize}
-        onRequestBudget={onRequestBudget}
         title={title}
         actions={
           <SecondaryText

@@ -4,23 +4,12 @@ import get from "lodash/fp/get";
 import PageWrapper from "./PageWrapper";
 import CategoryGroupBody from "./CategoryGroupBody";
 
-const CategoryGroup = ({
-  authorized,
-  budget,
-  budgetId,
-  categoryGroupId,
-  onAuthorize,
-  onRequestBudget
-}) => {
+const CategoryGroup = ({ budget, categoryGroupId, ...other }) => {
   const group = get(["categoryGroupsById", categoryGroupId])(budget);
-
   return (
     <PageWrapper
-      authorized={authorized}
-      budgetId={budgetId}
+      {...other}
       budgetLoaded={!!budget}
-      onAuthorize={onAuthorize}
-      onRequestBudget={onRequestBudget}
       title={group ? group.name : ""}
       content={() => (
         <CategoryGroupBody budget={budget} categoryGroup={group} />

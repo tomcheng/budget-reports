@@ -5,22 +5,16 @@ import CategoryTitle from "./CategoryTitle";
 import CurrentMonthCategoryBody from "./CurrentMonthCategoryBody";
 
 const CurrentMonthCategory = ({
-  authorized,
   budget,
-  budgetId,
   categoryId,
   currentMonth,
-  onAuthorize,
-  onRequestBudget
+  ...other
 }) => (
   <PageWrapper
-    authorized={authorized}
-    budgetId={budgetId}
+    {...other}
     budgetLoaded={!!budget}
     backLink
-    onAuthorize={onAuthorize}
-    onRequestBudget={onRequestBudget}
-    title={() => <CategoryTitle budget={budget} categoryId={categoryId} />}
+    title={<CategoryTitle budget={budget} categoryId={categoryId} />}
     content={() => (
       <CurrentMonthCategoryBody
         budget={budget}
@@ -38,30 +32,7 @@ CurrentMonthCategory.propTypes = {
   currentMonth: PropTypes.string.isRequired,
   onAuthorize: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired,
-  budget: PropTypes.shape({
-    categories: PropTypes.arrayOf(
-      PropTypes.shape({
-        activity: PropTypes.number.isRequired,
-        balance: PropTypes.number.isRequired,
-        budgeted: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired
-      })
-    ).isRequired,
-    payeesById: PropTypes.objectOf(
-      PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired
-      })
-    ).isRequired,
-    transactions: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        date: PropTypes.string.isRequired,
-        id: PropTypes.string.isRequired,
-        payeeId: PropTypes.string.isRequired
-      })
-    ).isRequired
-  })
+  budget: PropTypes.object
 };
 
 export default CurrentMonthCategory;

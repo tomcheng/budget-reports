@@ -12,7 +12,6 @@ class PayeesBody extends PureComponent {
 
   render() {
     const { budget, sort } = this.props;
-
     return (
       <Section noPadding>
         {getProcessedPayees({ budget, sort }).map(payee => (

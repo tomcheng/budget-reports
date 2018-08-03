@@ -4,23 +4,13 @@ import get from "lodash/fp/get";
 import PageWrapper from "./PageWrapper";
 import CategoryBody from "./CategoryBody";
 
-const Category = ({
-  authorized,
-  budget,
-  budgetId,
-  categoryId,
-  onAuthorize,
-  onRequestBudget
-}) => {
+const Category = ({ budget, categoryId, ...other }) => {
   const category = get(["categoriesById", categoryId])(budget);
 
   return (
     <PageWrapper
-      authorized={authorized}
-      budgetId={budgetId}
+      {...other}
       budgetLoaded={!!budget}
-      onAuthorize={onAuthorize}
-      onRequestBudget={onRequestBudget}
       title={category ? `Category: ${category.name}` : ""}
       content={() => <CategoryBody budget={budget} category={category} />}
       backLink

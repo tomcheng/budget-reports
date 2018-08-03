@@ -25,10 +25,7 @@ class AccountsSelectionForm extends Component {
 
   constructor(props) {
     super();
-
-    this.state = {
-      value: props.initialValue
-    };
+    this.state = { value: props.initialValue };
   }
 
   handleChange = evt => {
@@ -66,7 +63,9 @@ class AccountsSelectionForm extends Component {
             {name}
           </StyledLabel>
         ))}
-        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 5 }}>
+        <div
+          style={{ display: "flex", justifyContent: "flex-end", marginTop: 5 }}
+        >
           <GhostButton onClick={onCancel}>cancel</GhostButton>
           <PrimaryButton onClick={this.handleClickSubmit}>Submit</PrimaryButton>
         </div>

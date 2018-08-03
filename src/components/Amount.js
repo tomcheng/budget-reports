@@ -4,7 +4,8 @@ import { positiveColor } from "../styleVariables";
 
 const Amount = ({ amount, amountAfterDecimal }) => (
   <span style={{ color: amount > 0 && positiveColor }}>
-    {amount > 0 && "+"}{Math.abs(amount).toFixed(amountAfterDecimal)}
+    {amount > 0 && "+"}
+    {Math.abs(amount).toFixed(amountAfterDecimal)}
   </span>
 );
 

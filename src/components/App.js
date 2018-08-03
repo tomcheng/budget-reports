@@ -3,7 +3,12 @@ import PropTypes from "prop-types";
 import { Route, Switch } from "react-router-dom";
 import moment from "moment";
 import keyBy from "lodash/fp/keyBy";
-import { getBudgets, getUpdatedBudget, AUTHORIZE_URL, setLastLocation } from "../ynabRepo";
+import {
+  getBudgets,
+  getUpdatedBudget,
+  AUTHORIZE_URL,
+  setLastLocation
+} from "../ynabRepo";
 import {
   setSetting,
   getSetting,
@@ -90,8 +95,8 @@ class App extends Component {
             exact
             render={() => (
               <Budgets
-                budgetsLoaded={budgetsLoaded}
                 budgets={budgetIds.map(id => budgets[id])}
+                budgetsLoaded={budgetsLoaded}
                 onRequestBudgets={this.handleRequestBudgets}
               />
             )}
@@ -99,62 +104,54 @@ class App extends Component {
           <Route
             path={`/budgets/:budgetId/settings`}
             exact
-            render={({ match }) => (
-              <Settings
-                authorized={authorized}
-                budget={budgetDetails[match.params.budgetId]}
-                budgetId={match.params.budgetId}
-                investmentAccounts={getSetting(
-                  INVESTMENT_ACCOUNTS,
-                  match.params.budgetId
-                )}
-                mortgageAccounts={getSetting(
-                  MORTGAGE_ACCOUNTS,
-                  match.params.budgetId
-                )}
-                onAuthorize={this.handleAuthorize}
-                onRequestBudget={this.handleRequestBudget}
-                onUpdateAccounts={({ type, value }) => {
-                  if (type === "investment") {
-                    setSetting(
-                      INVESTMENT_ACCOUNTS,
-                      match.params.budgetId,
-                      value
-                    );
+            render={props => {
+              const { budgetId } = props.match.params;
+              return (
+                <Settings
+                  authorized={authorized}
+                  budget={budgetDetails[budgetId]}
+                  budgetId={budgetId}
+                  investmentAccounts={getSetting(INVESTMENT_ACCOUNTS, budgetId)}
+                  mortgageAccounts={getSetting(MORTGAGE_ACCOUNTS, budgetId)}
+                  onAuthorize={this.handleAuthorize}
+                  onRequestBudget={this.handleRequestBudget}
+                  onUpdateAccounts={({ type, value }) => {
+                    if (type === "investment") {
+                      setSetting(INVESTMENT_ACCOUNTS, budgetId, value);
+                    }
+                    if (type === "mortgage") {
+                      setSetting(MORTGAGE_ACCOUNTS, budgetId, value);
+                    }
                     this.forceUpdate();
-                  }
-                  if (type === "mortgage") {
-                    setSetting(MORTGAGE_ACCOUNTS, match.params.budgetId, value);
-                    this.forceUpdate();
-                  }
-                }}
-              />
-            )}
+                  }}
+                />
+              );
+            }}
           />
           {topLevelPages.map(({ path, title, Component }) => (
             <Route
               key={path}
               path={`/budgets/:budgetId${path}`}
               exact
-              render={({ match }) => (
-                <Component
-                  authorized={authorized}
-                  budget={budgetDetails[match.params.budgetId]}
-                  budgetId={match.params.budgetId}
-                  currentMonth={currentMonth}
-                  investmentAccounts={getSetting(
-                    INVESTMENT_ACCOUNTS,
-                    match.params.budgetId
-                  )}
-                  mortgageAccounts={getSetting(
-                    MORTGAGE_ACCOUNTS,
-                    match.params.budgetId
-                  )}
-                  title={title}
-                  onAuthorize={this.handleAuthorize}
-                  onRequestBudget={this.handleRequestBudget}
-                />
-              )}
+              render={props => {
+                const { budgetId } = props.match.params;
+                return (
+                  <Component
+                    authorized={authorized}
+                    budget={budgetDetails[budgetId]}
+                    budgetId={budgetId}
+                    currentMonth={currentMonth}
+                    investmentAccounts={getSetting(
+                      INVESTMENT_ACCOUNTS,
+                      budgetId
+                    )}
+                    mortgageAccounts={getSetting(MORTGAGE_ACCOUNTS, budgetId)}
+                    title={title}
+                    onAuthorize={this.handleAuthorize}
+                    onRequestBudget={this.handleRequestBudget}
+                  />
+                );
+              }}
             />
           ))}
           <Route
@@ -175,59 +172,71 @@ class App extends Component {
           <Route
             path="/budgets/:budgetId/current/categories/:categoryId"
             exact
-            render={({ match }) => (
-              <CurrentMonthCategory
-                authorized={authorized}
-                budget={budgetDetails[match.params.budgetId]}
-                budgetId={match.params.budgetId}
-                categoryId={match.params.categoryId}
-                currentMonth={currentMonth}
-                onAuthorize={this.handleAuthorize}
-                onRequestBudget={this.handleRequestBudget}
-              />
-            )}
+            render={props => {
+              const { budgetId, categoryId } = props.match.params;
+              return (
+                <CurrentMonthCategory
+                  authorized={authorized}
+                  budget={budgetDetails[budgetId]}
+                  budgetId={budgetId}
+                  categoryId={categoryId}
+                  currentMonth={currentMonth}
+                  onAuthorize={this.handleAuthorize}
+                  onRequestBudget={this.handleRequestBudget}
+                />
+              );
+            }}
           />
           <Route
             path="/budgets/:budgetId/category-groups/:categoryGroupId"
             exact
-            render={({ match }) => (
-              <CategoryGroup
-                authorized={authorized}
-                budget={budgetDetails[match.params.budgetId]}
-                budgetId={match.params.budgetId}
-                categoryGroupId={match.params.categoryGroupId}
-                onAuthorize={this.handleAuthorize}
-                onRequestBudget={this.handleRequestBudget}
-              />
-            )}
+            render={props => {
+              const { budgetId, categoryGroupId } = props.match.params;
+              return (
+                <CategoryGroup
+                  authorized={authorized}
+                  budget={budgetDetails[budgetId]}
+                  budgetId={budgetId}
+                  categoryGroupId={categoryGroupId}
+                  onAuthorize={this.handleAuthorize}
+                  onRequestBudget={this.handleRequestBudget}
+                />
+              );
+            }}
           />
           <Route
             path="/budgets/:budgetId/categories/:categoryId"
             exact
-            render={({ match }) => (
-              <Category
-                authorized={authorized}
-                budget={budgetDetails[match.params.budgetId]}
-                budgetId={match.params.budgetId}
-                categoryId={match.params.categoryId}
-                onAuthorize={this.handleAuthorize}
-                onRequestBudget={this.handleRequestBudget}
-              />
-            )}
+            render={props => {
+              const { budgetId, categoryId } = props.match.params;
+              return (
+                <Category
+                  authorized={authorized}
+                  budget={budgetDetails[budgetId]}
+                  budgetId={budgetId}
+                  categoryId={categoryId}
+                  onAuthorize={this.handleAuthorize}
+                  onRequestBudget={this.handleRequestBudget}
+                />
+              );
+            }}
           />
           <Route
             path="/budgets/:budgetId/payees/:payeeId"
             exact
-            render={({ match }) => (
-              <Payee
-                authorized={authorized}
-                budget={budgetDetails[match.params.budgetId]}
-                budgetId={match.params.budgetId}
-                payeeId={match.params.payeeId}
-                onAuthorize={this.handleAuthorize}
-                onRequestBudget={this.handleRequestBudget}
-              />
-            )}
+            render={props => {
+              const { budgetId, payeeId } = props.match.params;
+              return (
+                <Payee
+                  authorized={authorized}
+                  budget={budgetDetails[budgetId]}
+                  budgetId={budgetId}
+                  payeeId={payeeId}
+                  onAuthorize={this.handleAuthorize}
+                  onRequestBudget={this.handleRequestBudget}
+                />
+              );
+            }}
           />
           <Route component={NotFound} />
         </Switch>

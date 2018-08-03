@@ -1,29 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
+import get from "lodash/fp/get";
 import PageWrapper from "./PageWrapper";
 import CurrentMonthCategoryGroupBody from "./CurrentMonthCategoryGroupBody";
-import find from "lodash/fp/find";
-import matchesProperty from "lodash/fp/matchesProperty";
 
 const CurrentMonthCategoryGroup = ({
-  authorized,
   budget,
-  budgetId,
   categoryGroupId,
   currentMonth,
-  onAuthorize,
-  onRequestBudget
+  ...other
 }) => (
   <PageWrapper
-    authorized={authorized}
-    budgetId={budgetId}
+    {...other}
     budgetLoaded={!!budget}
     backLink
-    onAuthorize={onAuthorize}
-    onRequestBudget={onRequestBudget}
-    title={() =>
-      find(matchesProperty("id", categoryGroupId))(budget.categoryGroups).name
-    }
+    title={get(["categoryGroupsById", categoryGroupId, "name"])(budget) || ""}
     content={() => (
       <CurrentMonthCategoryGroupBody
         budget={budget}
@@ -42,26 +33,9 @@ CurrentMonthCategoryGroup.propTypes = {
   onAuthorize: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired,
   budget: PropTypes.shape({
-    categories: PropTypes.arrayOf(
+    categoryGroups: PropTypes.arrayOf(
       PropTypes.shape({
-        activity: PropTypes.number.isRequired,
-        balance: PropTypes.number.isRequired,
-        budgeted: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired
-      })
-    ).isRequired,
-    payeesById: PropTypes.objectOf(
-      PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired
-      })
-    ).isRequired,
-    transactions: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        date: PropTypes.string.isRequired,
-        id: PropTypes.string.isRequired,
-        payeeId: PropTypes.string.isRequired
+        id: PropTypes.string.isRequired
       })
     ).isRequired
   })

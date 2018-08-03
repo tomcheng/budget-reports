@@ -26,7 +26,6 @@ class Payees extends Component {
 
   constructor(props) {
     super();
-
     this.state = { sort: getSetting(PAYEES_SORT_ORDER, props.budgetId) };
   }
 
@@ -36,24 +35,13 @@ class Payees extends Component {
   };
 
   render() {
-    const {
-      authorized,
-      budget,
-      budgetId,
-      title,
-      onAuthorize,
-      onRequestBudget
-    } = this.props;
+    const { budget, ...other } = this.props;
     const { sort } = this.state;
 
     return (
       <PageWrapper
-        authorized={authorized}
-        budgetId={budgetId}
+        {...other}
         budgetLoaded={!!budget}
-        onAuthorize={onAuthorize}
-        onRequestBudget={onRequestBudget}
-        title={title}
         actions={
           <Dropdown
             dropdownContent={({ onClose }) =>

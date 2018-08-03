@@ -36,24 +36,13 @@ class Categories extends Component {
   };
 
   render() {
-    const {
-      authorized,
-      budget,
-      budgetId,
-      title,
-      onAuthorize,
-      onRequestBudget
-    } = this.props;
+    const { budget, ...other } = this.props;
     const { sort } = this.state;
 
     return (
       <PageWrapper
-        authorized={authorized}
-        budgetId={budgetId}
+        {...other}
         budgetLoaded={!!budget}
-        onAuthorize={onAuthorize}
-        onRequestBudget={onRequestBudget}
-        title={title}
         actions={
           <Dropdown
             dropdownContent={({ onClose }) =>
