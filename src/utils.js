@@ -1,22 +1,20 @@
 import { utils } from "ynab";
+import { groupByProp, sumBy, sumByProp } from "./optimized";
 import anyPass from "lodash/fp/anyPass";
 import camelCase from "lodash/fp/camelCase";
 import compose from "lodash/fp/compose";
 import curry from "lodash/fp/curry";
 import difference from "lodash/fp/difference";
 import filter from "lodash/fp/filter";
-import groupBy from "lodash/fp/groupBy";
 import isArray from "lodash/fp/isArray";
 import isObject from "lodash/fp/isObject";
 import mapRaw from "lodash/fp/map";
 import mapKeysRaw from "lodash/fp/mapKeys";
 import mapValues from "lodash/fp/mapValues";
-import matchesProperty from "lodash/fp/matchesProperty";
 import mean from "lodash/fp/mean";
 import pick from "lodash/fp/pick";
 import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
-import sumBy from "lodash/fp/sumBy";
 import values from "lodash/fp/values";
 import get from "lodash/fp/get";
 
@@ -87,9 +85,9 @@ export const getPayeeNodes = ({ payeesById, transactions }, divideBy = 1) =>
       ...(payeesById[payeeId]
         ? pick(["id", "name"])(payeesById[payeeId])
         : { id: "no-payee", name: "(no payee)" }),
-      amount: sumBy("amount")(transactions) / divideBy
+      amount: sumByProp("amount")(transactions) / divideBy
     })),
-    groupBy("payeeId")
+    groupByProp("payeeId")
   ])(transactions);
 
 const isIncome = ({
@@ -107,9 +105,11 @@ const isIncome = ({
   }
 
   return (
-    compose([sumBy("amount"), filter(matchesProperty("payeeId", payeeId))])(
-      transactions
-    ) > 0
+    compose([
+      sumByProp("amount"),
+      transactions =>
+        transactions.filter(transaction => transaction.payeeId === payeeId)
+    ])(transactions) > 0
   );
 };
 
@@ -154,9 +154,9 @@ export const splitTransactions = ({
   categoriesById,
   transactions
 }) => {
-  const incomeTransactions = filter(
+  const incomeTransactions = transactions.filter(
     isIncome({ categoryGroupsById, categoriesById, transactions })
-  )(transactions);
+  );
   const expenseTransactions = difference(transactions, incomeTransactions);
 
   return { incomeTransactions, expenseTransactions };
@@ -180,7 +180,7 @@ export const getOutliersBy = f => arr => {
 const payeesWithMetadata = simpleMemoize(budget => {
   const { accountsById, payeesById, transactions } = budget;
   const transactionsByPayee = compose([
-    groupBy("payeeId"),
+    groupByProp("payeeId"),
     reject(transaction => {
       if (!accountsById[transaction.accountId].onBudget) {
         return true;
@@ -205,7 +205,7 @@ const payeesWithMetadata = simpleMemoize(budget => {
     ...payeesById[payeeId],
     transactions: transactions,
     transactionCount: transactions.length,
-    amount: sumBy("amount")(transactions)
+    amount: sumByProp("amount")(transactions)
   }))(transactionsByPayee);
 });
 

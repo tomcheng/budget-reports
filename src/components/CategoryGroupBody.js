@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import groupBy from "lodash/fp/groupBy";
+import { groupByProp } from "../optimized";
 import CategoryGroupMonthByMonthChart from "./CategoryGroupMonthByMonthChart";
 
 class CategoryGroupBody extends PureComponent {
@@ -27,9 +27,11 @@ class CategoryGroupBody extends PureComponent {
     );
     const categoryIds = categoriesInGroup.map(category => category.id);
     const transactionsInGroup = transactions.filter(transaction =>
-      categoryIds.includes(transaction.id)
+      categoryIds.includes(transaction.categoryId)
     );
-    const transactionsByCategory = groupBy("categoryId")(transactionsInGroup);
+    const transactionsByCategory = groupByProp("categoryId")(
+      transactionsInGroup
+    );
 
     return <CategoryGroupMonthByMonthChart />;
   }
