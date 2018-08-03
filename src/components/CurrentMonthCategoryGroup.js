@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import get from "lodash/fp/get";
 import PageWrapper from "./PageWrapper";
+import CategoryGroupTitle from "./CategoryGroupTitle";
 import CurrentMonthCategoryGroupBody from "./CurrentMonthCategoryGroupBody";
 
 class CurrentMonthCategoryGroup extends Component {
@@ -30,6 +30,10 @@ class CurrentMonthCategoryGroup extends Component {
     }));
   };
 
+  handleClearCategory = () => {
+    this.setState({ selectedCategoryId: null });
+  };
+
   render() {
     const { budget, categoryGroupId, currentMonth, ...other } = this.props;
     const { selectedCategoryId } = this.state;
@@ -40,7 +44,16 @@ class CurrentMonthCategoryGroup extends Component {
         budgetLoaded={!!budget}
         backLink
         title={
-          get(["categoryGroupsById", categoryGroupId, "name"])(budget) || ""
+          budget ? (
+            <CategoryGroupTitle
+              budget={budget}
+              categoryGroupId={categoryGroupId}
+              categoryId={selectedCategoryId}
+              onClearCategory={this.handleClearCategory}
+            />
+          ) : (
+            ""
+          )
         }
         content={() => (
           <CurrentMonthCategoryGroupBody
