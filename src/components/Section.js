@@ -92,7 +92,7 @@ class Section extends Component {
         )}
         <AnimateHeight isExpanded={isExpanded}>
           <div
-            style={{ marginTop: title ? (noPadding ? -10 : 10) : null }}
+            style={{ marginTop: title && !noPadding ? 10 : null }}
             className={isExpanded ? "" : "collapsed"}
           >
             {children}

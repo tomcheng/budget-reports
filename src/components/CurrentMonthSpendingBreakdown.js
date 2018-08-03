@@ -77,6 +77,7 @@ class CurrentMonthCategoryGroupsContent extends PureComponent {
               budgetId,
               categoryGroupId: group.id
             })}
+            firstHasBorder
           >
             <SecondaryText style={{ whiteSpace: "pre" }}>
               {group.name}
