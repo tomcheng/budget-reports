@@ -12,11 +12,13 @@ class ProgressSection extends Component {
   static propTypes = {
     budgetId: PropTypes.string.isRequired,
     currentMonth: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
     transactions: PropTypes.array.isRequired,
+    title: PropTypes.string,
     total: PropTypes.number,
     topNumbers: PropTypes.array
   };
+
+  static defaultProps = { title: "Overview" };
 
   constructor(props) {
     super();
