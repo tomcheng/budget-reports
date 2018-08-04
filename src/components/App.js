@@ -154,7 +154,7 @@ class App extends Component {
             />
           ))}
           <Route
-            path="/budgets/:budgetId/current/category-groups/:categoryGroupId"
+            path="/budgets/:budgetId/current/:categoryGroupId"
             exact
             render={({ match }) => (
               <CurrentMonthCategoryGroup
@@ -162,6 +162,22 @@ class App extends Component {
                 budget={budgetDetails[match.params.budgetId]}
                 budgetId={match.params.budgetId}
                 categoryGroupId={match.params.categoryGroupId}
+                currentMonth={currentMonth}
+                onAuthorize={this.handleAuthorize}
+                onRequestBudget={this.handleRequestBudget}
+              />
+            )}
+          />
+          <Route
+            path="/budgets/:budgetId/current/:categoryGroupId/:categoryId"
+            exact
+            render={({ match }) => (
+              <CurrentMonthCategoryGroup
+                authorized={authorized}
+                budget={budgetDetails[match.params.budgetId]}
+                budgetId={match.params.budgetId}
+                categoryGroupId={match.params.categoryGroupId}
+                categoryId={match.params.categoryId}
                 currentMonth={currentMonth}
                 onAuthorize={this.handleAuthorize}
                 onRequestBudget={this.handleRequestBudget}

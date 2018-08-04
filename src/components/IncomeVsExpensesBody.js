@@ -26,7 +26,7 @@ import IncomeVsExpensesSummary from "./IncomeVsExpensesSummary";
 import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
 import IncomeVsExpensesChartControls from "./IncomeVsExpensesChartControls";
 import Breakdowns from "./Breakdowns";
-import Section, { Subsection, TopSection } from "./Section";
+import { Subsection, TopSection } from "./Section";
 import CollapsibleSection from "./CollapsibleSection";
 
 const map = mapRaw.convert({ cap: false });

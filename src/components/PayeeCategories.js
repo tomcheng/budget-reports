@@ -34,6 +34,7 @@ const PayeeCategories = ({ categoryIds, budget }) => {
           <Link
             to={getCurrentMonthCategoryLink({
               budgetId: budget.id,
+              categoryGroupId: categoryGroup.id,
               categoryId: category.id
             })}
           >

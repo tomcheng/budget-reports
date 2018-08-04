@@ -26,10 +26,17 @@ class CurrentMonthCategoryGroup extends Component {
           id: PropTypes.string.isRequired
         })
       ).isRequired
-    })
+    }),
+    categoryId: PropTypes.string
   };
 
-  state = { selectedCategoryId: null, menuExpanded: false };
+  constructor(props) {
+    super();
+    this.state = {
+      selectedCategoryId: props.categoryId || null,
+      menuExpanded: false
+    };
+  }
 
   handleSelectCategory = id => {
     this.setState(state => ({
