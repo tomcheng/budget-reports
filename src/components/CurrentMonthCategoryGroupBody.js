@@ -71,6 +71,9 @@ class CurrentMonthCategoryGroupBody extends PureComponent {
         <ProgressSection
           budgetId={budgetId}
           currentMonth={currentMonth}
+          title={
+            selectedCategory ? `${selectedCategory.name} Overview` : "Overview"
+          }
           transactions={transactionsInCategory || transactionsInGroup}
           total={spent + available}
           topNumbers={[
@@ -82,6 +85,11 @@ class CurrentMonthCategoryGroupBody extends PureComponent {
         <Transactions
           budgetId={budgetId}
           payeesById={payeesById}
+          title={
+            selectedCategory
+              ? `${selectedCategory.name} Transactions`
+              : "Transactions"
+          }
           transactions={
             transactionsInCategoryForMonth || transactionsInGroupForMonth
           }

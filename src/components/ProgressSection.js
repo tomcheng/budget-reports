@@ -12,6 +12,7 @@ class ProgressSection extends Component {
   static propTypes = {
     budgetId: PropTypes.string.isRequired,
     currentMonth: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
     transactions: PropTypes.array.isRequired,
     total: PropTypes.number,
     topNumbers: PropTypes.array
@@ -67,6 +68,7 @@ class ProgressSection extends Component {
       transactions,
       budgetId,
       currentMonth,
+      title,
       total,
       topNumbers
     } = this.props;
@@ -75,7 +77,7 @@ class ProgressSection extends Component {
     return (
       <Fragment>
         <Section
-          title="Overview"
+          title={title}
           hasSettings
           onClickSettings={this.handleClickSettings}
         >

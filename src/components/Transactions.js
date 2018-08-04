@@ -4,8 +4,8 @@ import Transaction from "./Transaction";
 import Section from "./Section";
 import NoTransactions from "./NoTransactions";
 
-const Transactions = ({ transactions, payeesById, budgetId, linkToPayee }) => (
-  <Section title="Transactions">
+const Transactions = ({ transactions, title, payeesById, budgetId, linkToPayee }) => (
+  <Section title={title}>
     {transactions.length ? (
       transactions.map(({ id, payeeId, date, amount }) => (
         <Transaction
@@ -25,6 +25,7 @@ const Transactions = ({ transactions, payeesById, budgetId, linkToPayee }) => (
 
 Transactions.propTypes = {
   payeesById: PropTypes.object,
+  title: PropTypes.string.isRequired,
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       amount: PropTypes.number.isRequired,
