@@ -44,10 +44,7 @@ const PageWrapper = ({
   title,
   actions,
   backLink,
-  headerMenuOptions,
-  optionRenderer,
-  selectedOption,
-  onSelectOption,
+  headerMenu,
   onAuthorize,
   onRequestBudget
 }) => (
@@ -66,13 +63,8 @@ const PageWrapper = ({
                 <PageTitle style={{ flexGrow: 1 }}>{title}</PageTitle>
                 {actions}
               </HeaderTop>
-              {headerMenuOptions && (
-                <HeaderMenu
-                  options={headerMenuOptions}
-                  optionRenderer={optionRenderer}
-                  selectedOption={selectedOption}
-                  onSelectOption={onSelectOption}
-                />
+              {headerMenu && (
+                <HeaderMenu {...headerMenu} />
               )}
             </Header>
             <Body>{content()}</Body>
@@ -109,10 +101,7 @@ PageWrapper.propTypes = {
   onRequestBudget: PropTypes.func.isRequired,
   actions: PropTypes.node,
   backLink: PropTypes.bool,
-  headerMenuOptions: PropTypes.array,
-  optionRenderer: PropTypes.func,
-  selectedOption: PropTypes.string,
-  onSelectOption: PropTypes.func
+  headerMenu: PropTypes.object
 };
 
 export default PageWrapper;

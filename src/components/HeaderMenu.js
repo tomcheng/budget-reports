@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import AnimateHeight from "react-animate-height-auto";
 import { selectedPlotBandColor } from "../styleVariables";
-import Icon from "./Icon";
+import { MinorText } from "./typeComponents";
 
 const ListItem = styled.div`
   display: flex;
@@ -17,14 +17,16 @@ const ListItem = styled.div`
 
 class HeaderMenu extends Component {
   static propTypes = {
-    optionRenderer: PropTypes.func.isRequired,
+    expandedLabel: PropTypes.string.isRequired,
+    collapsedLabel: PropTypes.string.isRequired,
     options: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.string.isRequired
       })
     ).isRequired,
-    onSelectOption: PropTypes.func.isRequired,
-    selectedOption: PropTypes.string
+    renderer: PropTypes.func.isRequired,
+    onSelect: PropTypes.func.isRequired,
+    selected: PropTypes.string
   };
 
   state = { expanded: false };
@@ -35,10 +37,12 @@ class HeaderMenu extends Component {
 
   render() {
     const {
+      expandedLabel,
+      collapsedLabel,
       options,
-      optionRenderer,
-      selectedOption,
-      onSelectOption
+      renderer,
+      selected,
+      onSelect
     } = this.props;
     const { expanded } = this.state;
     return (
@@ -54,34 +58,27 @@ class HeaderMenu extends Component {
             {options.map(option => (
               <ListItem
                 key={option.id}
-                selected={option.id === selectedOption}
+                selected={option.id === selected}
                 onClick={() => {
-                  onSelectOption(option.id);
+                  onSelect(option.id);
                 }}
               >
-                {optionRenderer(option)}
+                {renderer(option)}
               </ListItem>
             ))}
           </div>
         </AnimateHeight>
-        <div
+        <MinorText
           style={{
             textAlign: "center",
             padding: "5px 0",
             userSelect: "none",
-            borderTop: "1px solid #eee",
-            fontWeight: 400,
-            color: "#888",
-            fontSize: 10,
+            borderTop: "1px solid #eee"
           }}
           onClick={this.handleClickToggle}
         >
-          <Icon
-            icon="chevron-right"
-            transform={{ rotate: expanded ? -90 : 90 }}
-          />
-
-        </div>
+          {expanded ? expandedLabel : collapsedLabel}
+        </MinorText>
       </Fragment>
     );
   }

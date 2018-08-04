@@ -100,22 +100,26 @@ class CurrentMonthCategoryGroup extends Component {
             ""
           )
         }
-        headerMenuOptions={headerMenuOptions}
-        optionRenderer={category => (
-          <Fragment key={category.id}>
-            <SecondaryText>
-              <LabelWithTransactionCount
-                count={categoryStats[category.id].transactions}
-                label={category.name}
-              />
-            </SecondaryText>
-            <SecondaryText>
-              <Amount amount={categoryStats[category.id].amount} />
-            </SecondaryText>
-          </Fragment>
-        )}
-        selectedOption={selectedCategoryId}
-        onSelectOption={this.handleSelectCategory}
+        headerMenu={{
+          options: headerMenuOptions,
+          renderer: category => (
+            <Fragment key={category.id}>
+              <SecondaryText>
+                <LabelWithTransactionCount
+                  count={categoryStats[category.id].transactions}
+                  label={category.name}
+                />
+              </SecondaryText>
+              <SecondaryText>
+                <Amount amount={categoryStats[category.id].amount} />
+              </SecondaryText>
+            </Fragment>
+          ),
+          selected: selectedCategoryId,
+          onSelect: this.handleSelectCategory,
+          expandedLabel: "hide categories",
+          collapsedLabel: "show categories"
+        }}
         content={() => (
           <CurrentMonthCategoryGroupBody
             budget={budget}
