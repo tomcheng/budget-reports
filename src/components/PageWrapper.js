@@ -6,6 +6,7 @@ import { PageTitle } from "./typeComponents";
 import { PrimaryButton } from "./Button";
 import SidebarMenu from "./SidebarMenu";
 import BackLink from "./BackLink";
+import HeaderMenu from "./HeaderMenu";
 
 const Container = styled.div`
   height: 100vh;
@@ -16,6 +17,10 @@ const Container = styled.div`
 
 const Header = styled.div`
   flex-shrink: 0;
+  border-bottom: 1px solid #e5e5e5;
+`;
+
+const HeaderTop = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -23,7 +28,6 @@ const Header = styled.div`
   padding-left: 0;
   padding-right: 20px;
   background-color: #fff;
-  // border-bottom: 1px solid #bbb;
   white-space: pre;
 `;
 
@@ -40,7 +44,8 @@ const PageWrapper = ({
   title,
   actions,
   backLink,
-  bodyStyle,
+  headerMenuOptions,
+  optionRenderer,
   onAuthorize,
   onRequestBudget
 }) => (
@@ -54,11 +59,19 @@ const PageWrapper = ({
         {({ sidebarTrigger }) => (
           <Container>
             <Header flushLeft>
-              {backLink ? <BackLink /> : sidebarTrigger}
-              <PageTitle style={{ flexGrow: 1 }}>{title}</PageTitle>
-              {actions}
+              <HeaderTop>
+                {backLink ? <BackLink /> : sidebarTrigger}
+                <PageTitle style={{ flexGrow: 1 }}>{title}</PageTitle>
+                {actions}
+              </HeaderTop>
+              {headerMenuOptions && (
+                <HeaderMenu
+                  options={headerMenuOptions}
+                  optionRenderer={optionRenderer}
+                />
+              )}
             </Header>
-            <Body style={bodyStyle}>{content()}</Body>
+            <Body>{content()}</Body>
             {!authorized && (
               <div
                 style={{
@@ -92,7 +105,12 @@ PageWrapper.propTypes = {
   onRequestBudget: PropTypes.func.isRequired,
   actions: PropTypes.node,
   backLink: PropTypes.bool,
-  bodyStyle: PropTypes.object
+  headerMenuOptions: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired
+    })
+  ),
+  optionRenderer: PropTypes.func
 };
 
 export default PageWrapper;

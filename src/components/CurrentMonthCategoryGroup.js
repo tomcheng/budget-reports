@@ -1,5 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import compose from "lodash/fp/compose";
+import sortBy from "lodash/fp/sortBy";
+import takeWhile from "lodash/fp/takeWhile";
+import { sumByProp } from "../optimized";
+import { getTransactionMonth } from "../utils";
 import PageWrapper from "./PageWrapper";
 import CategoryGroupTitle from "./CategoryGroupTitle";
 import CurrentMonthCategoryGroupBody from "./CurrentMonthCategoryGroupBody";
@@ -37,6 +42,38 @@ class CurrentMonthCategoryGroup extends Component {
   render() {
     const { budget, categoryGroupId, currentMonth, ...other } = this.props;
     const { selectedCategoryId } = this.state;
+    let headerMenuOptions = null;
+    let categoryStats = {};
+
+    if (budget) {
+      const { categories, transactions } = budget;
+
+      const categoriesInGroup = categories.filter(
+        category => category.categoryGroupId === categoryGroupId
+      );
+
+      const transactionsThisMonth = takeWhile(
+        transaction => getTransactionMonth(transaction) === currentMonth
+      )(transactions);
+
+      categoryStats = categoriesInGroup.reduce((stats, category) => {
+        const transactionsInCategory = transactionsThisMonth.filter(
+          transaction => transaction.categoryId === category.id
+        );
+        return {
+          ...stats,
+          [category.id]: {
+            transactions: transactionsInCategory.length,
+            amount: sumByProp("amount")(transactionsInCategory)
+          }
+        };
+      }, {});
+
+      headerMenuOptions = compose([
+        sortBy(category => categoryStats[category.id].amount),
+        sortBy("name")
+      ])(categoriesInGroup);
+    }
 
     return (
       <PageWrapper
@@ -60,6 +97,8 @@ class CurrentMonthCategoryGroup extends Component {
             ""
           )
         }
+        headerMenuOptions={headerMenuOptions}
+        optionRenderer={category => <div key={category.id}>{category.name} {categoryStats[category.id].amount}</div>}
         content={() => (
           <CurrentMonthCategoryGroupBody
             budget={budget}
