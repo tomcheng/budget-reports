@@ -67,7 +67,7 @@ class SpendingChart extends PureComponent {
       from: num * 7 - 1.5 - firstDayOfWeek,
       to: num * 7 + 0.5 - firstDayOfWeek
     }));
-    const comparisonSeries = range(1, monthsToCompare + 1).map(numMonths => ({
+    const comparisonSeries = range(monthsToCompare, 0).map(numMonths => ({
       type: "spline",
       data: getData({
         month: moment(currentMonth)
@@ -82,7 +82,7 @@ class SpendingChart extends PureComponent {
           .mix(
             primaryColor,
             "#f2f2f2",
-            30 + (numMonths * 70) / (monthsToCompare + 1)
+            30 + ((numMonths - 1) * 70) / monthsToCompare
           )
           .toHex(),
       lineWidth: 1,
