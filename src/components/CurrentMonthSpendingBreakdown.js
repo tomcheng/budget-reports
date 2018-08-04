@@ -10,9 +10,9 @@ import { getCurrentMonthGroupLink } from "../linkUtils";
 import { sumByProp } from "../optimized";
 import Section from "./Section";
 import { ListItemLink } from "./ListItem";
-import { SecondaryText, MinorText } from "./typeComponents";
+import { SecondaryText } from "./typeComponents";
 import LabelWithTransactionCount from "./LabelWithTransactionCount";
-import Amount from "./Amount";
+import AmountWithPercentage from "./AmountWithPercentage";
 import NoTransactions from "./NoTransactions";
 
 const mapWithKeys = map.convert({ cap: false });
@@ -80,7 +80,7 @@ class CurrentMonthCategoryGroupsContent extends PureComponent {
               budgetId,
               categoryGroupId: group.id
             })}
-            style={{ borderTop: "1px solid #eee"}}
+            style={{ borderTop: "1px solid #eee" }}
           >
             <div>
               <SecondaryText style={{ whiteSpace: "pre" }}>
@@ -90,16 +90,9 @@ class CurrentMonthCategoryGroupsContent extends PureComponent {
                 />
               </SecondaryText>
             </div>
-            <div style={{ textAlign: "right" }}>
-              <SecondaryText>
-                <Amount amount={amount} />
-              </SecondaryText>
-              <MinorText>
-                {(amount / total * 100).toFixed(1)}%
-              </MinorText>
-            </div>
+            <AmountWithPercentage amount={amount} total={total} />
           </ListItemLink>
-        ))}{" "}
+        ))}
       </Section>
     );
   }

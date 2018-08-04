@@ -6,8 +6,8 @@ import Amount from "./Amount";
 const AmountWithPercentage = ({ amount, total, faded }) => (
   <SecondaryText style={{ display: "flex", opacity: faded ? 0.3 : 1 }}>
     <Amount amount={amount} />
-    <MinorText style={{ width: 36, textAlign: "right" }}>
-      {total ? `${Math.round((amount / total) * 100)}%` : `–`}
+    <MinorText style={{ width: 42, textAlign: "right" }}>
+      {total ? `${(amount / total * 100).toFixed(1)}%` : `–`}
     </MinorText>
   </SecondaryText>
 );
