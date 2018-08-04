@@ -18,6 +18,19 @@ export const ListItemLink = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 8px 0;
+  margin-top: -4px;
+
+  & + & {
+    margin-top: 0;
+    border-top: 1px dotted #ddd;
+  }
+`;
+
+export const LargeListItemLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   height: 60px;
   padding: 0 20px;
 

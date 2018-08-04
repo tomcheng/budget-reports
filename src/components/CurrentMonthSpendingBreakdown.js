@@ -72,7 +72,7 @@ class CurrentMonthCategoryGroupsContent extends PureComponent {
     }
 
     return (
-      <Section title="Spending Breakdown" noPadding>
+      <Section title="Spending Breakdown">
         {groups.map(({ group, transactions, amount }) => (
           <ListItemLink
             key={group.id}
@@ -80,7 +80,6 @@ class CurrentMonthCategoryGroupsContent extends PureComponent {
               budgetId,
               categoryGroupId: group.id
             })}
-            style={{ borderTop: "1px solid #eee" }}
           >
             <div>
               <SecondaryText style={{ whiteSpace: "pre" }}>

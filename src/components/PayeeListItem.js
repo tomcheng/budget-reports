@@ -2,11 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import { getPayeeLink } from "../linkUtils";
 import { MinorText, SecondaryText } from "./typeComponents";
-import { ListItemLink } from "./ListItem";
+import { LargeListItemLink } from "./ListItem";
 import Amount from "./Amount";
 
 const PayeeListItem = ({ name, amount, transactions, id, budgetId }) => (
-  <ListItemLink to={getPayeeLink({ budgetId, payeeId: id })}>
+  <LargeListItemLink to={getPayeeLink({ budgetId, payeeId: id })}>
     {name}
     <div style={{ textAlign: "right" }}>
       <SecondaryText>
@@ -16,7 +16,7 @@ const PayeeListItem = ({ name, amount, transactions, id, budgetId }) => (
         {transactions} transaction{transactions === 1 ? "" : "s"}
       </MinorText>
     </div>
-  </ListItemLink>
+  </LargeListItemLink>
 );
 
 PayeeListItem.propTypes = {
