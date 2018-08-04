@@ -80,7 +80,7 @@ class CurrentMonthCategoryGroupsContent extends PureComponent {
               budgetId,
               categoryGroupId: group.id
             })}
-            firstHasBorder
+            style={{ borderTop: "1px solid #eee"}}
           >
             <div>
               <SecondaryText style={{ whiteSpace: "pre" }}>

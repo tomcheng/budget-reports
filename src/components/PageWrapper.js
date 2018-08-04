@@ -18,7 +18,7 @@ const Container = styled.div`
 const Header = styled.div`
   flex-shrink: 0;
   background-color: #fff;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #ccc;
 `;
 
 const HeaderTop = styled.div`
@@ -85,7 +85,7 @@ const PageWrapper = ({
                   justifyContent: "space-between",
                   alignItems: "center",
                   flexShrink: 0,
-                  borderTop: "1px solid #bbb"
+                  borderTop: "1px solid #ccc"
                 }}
               >
                 Your authorization expired.

@@ -20,7 +20,6 @@ export const ListItemLink = styled(Link)`
   justify-content: space-between;
   height: 60px;
   padding: 0 20px;
-  border-top: ${props => props.firstHasBorder && "1px solid #eee"};
 
   & + & {
     border-top: 1px solid #eee;
