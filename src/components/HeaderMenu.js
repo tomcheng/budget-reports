@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import AnimateHeight from "react-animate-height-auto";
 import { selectedPlotBandColor } from "../styleVariables";
-import { MinorText } from "./typeComponents";
+import Icon from "./Icon";
 
 const ListItem = styled.div`
   display: flex;
@@ -12,6 +12,7 @@ const ListItem = styled.div`
   background-color: ${props => props.selected && selectedPlotBandColor};
   padding: 8px 10px;
   border-radius: 2px;
+  user-select: none;
 `;
 
 class HeaderMenu extends Component {
@@ -63,17 +64,24 @@ class HeaderMenu extends Component {
             ))}
           </div>
         </AnimateHeight>
-        <MinorText
+        <div
           style={{
             textAlign: "center",
             padding: "5px 0",
             userSelect: "none",
-            borderTop: "1px solid #eee"
+            borderTop: "1px solid #eee",
+            fontWeight: 400,
+            color: "#888",
+            fontSize: 10,
           }}
           onClick={this.handleClickToggle}
         >
-          {expanded ? "hide" : "show"} categories
-        </MinorText>
+          <Icon
+            icon="chevron-right"
+            transform={{ rotate: expanded ? -90 : 90 }}
+          />
+
+        </div>
       </Fragment>
     );
   }
