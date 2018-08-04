@@ -7,10 +7,10 @@ import { sumByProp } from "../optimized";
 import { getTransactionMonth } from "../utils";
 import PageWrapper from "./PageWrapper";
 import { SecondaryText } from "./typeComponents";
-import Amount from "./Amount";
 import CategoryGroupTitle from "./CategoryGroupTitle";
 import CurrentMonthCategoryGroupBody from "./CurrentMonthCategoryGroupBody";
 import LabelWithTransactionCount from "./LabelWithTransactionCount";
+import AmountWithPercentage from "./AmountWithPercentage";
 
 class CurrentMonthCategoryGroup extends Component {
   static propTypes = {
@@ -45,8 +45,9 @@ class CurrentMonthCategoryGroup extends Component {
   render() {
     const { budget, categoryGroupId, currentMonth, ...other } = this.props;
     const { selectedCategoryId } = this.state;
-    let headerMenuOptions = null;
-    let categoryStats = {};
+    let headerMenuOptions;
+    let categoryStats;
+    let amountForGroup;
 
     if (budget) {
       const { categories, transactions } = budget;
@@ -59,15 +60,21 @@ class CurrentMonthCategoryGroup extends Component {
         transaction => getTransactionMonth(transaction) === currentMonth
       )(transactions);
 
+      amountForGroup = 0;
+
       categoryStats = categoriesInGroup.reduce((stats, category) => {
         const transactionsInCategory = transactionsThisMonth.filter(
           transaction => transaction.categoryId === category.id
         );
+        const amountForCategory = sumByProp("amount")(transactionsInCategory);
+
+        amountForGroup += amountForCategory;
+
         return {
           ...stats,
           [category.id]: {
             transactions: transactionsInCategory.length,
-            amount: sumByProp("amount")(transactionsInCategory)
+            amount: amountForCategory
           }
         };
       }, {});
@@ -115,7 +122,10 @@ class CurrentMonthCategoryGroup extends Component {
                 />
               </SecondaryText>
               <SecondaryText>
-                <Amount amount={categoryStats[category.id].amount} />
+                <AmountWithPercentage
+                  amount={categoryStats[category.id].amount}
+                  total={amountForGroup}
+                />
               </SecondaryText>
             </Fragment>
           ),
