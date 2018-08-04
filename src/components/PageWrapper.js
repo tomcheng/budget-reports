@@ -1,11 +1,36 @@
 import React from "react";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 import EnsureBudgetLoaded from "./EnsureBudgetLoaded";
-import Layout from "./Layout";
 import { PageTitle } from "./typeComponents";
 import { PrimaryButton } from "./Button";
 import SidebarMenu from "./SidebarMenu";
 import BackLink from "./BackLink";
+
+const Container = styled.div`
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+`;
+
+const Header = styled.div`
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding-left: 0;
+  padding-right: 20px;
+  background-color: #fff;
+  // border-bottom: 1px solid #bbb;
+  white-space: pre;
+`;
+
+const Body = styled.div`
+  flex-grow: 1;
+  overflow-y: auto;
+`;
 
 const PageWrapper = ({
   content,
@@ -27,13 +52,13 @@ const PageWrapper = ({
     {() => (
       <SidebarMenu budgetId={budgetId}>
         {({ sidebarTrigger }) => (
-          <Layout>
-            <Layout.Header flushLeft>
+          <Container>
+            <Header flushLeft>
               {backLink ? <BackLink /> : sidebarTrigger}
               <PageTitle style={{ flexGrow: 1 }}>{title}</PageTitle>
               {actions}
-            </Layout.Header>
-            <Layout.Body style={bodyStyle}>{content()}</Layout.Body>
+            </Header>
+            <Body style={bodyStyle}>{content()}</Body>
             {!authorized && (
               <div
                 style={{
@@ -50,7 +75,7 @@ const PageWrapper = ({
                 <PrimaryButton onClick={onAuthorize}>Reauthorize</PrimaryButton>
               </div>
             )}
-          </Layout>
+          </Container>
         )}
       </SidebarMenu>
     )}
