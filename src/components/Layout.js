@@ -18,7 +18,7 @@ const Header = styled.div`
   padding-left: ${props => (props.flushLeft ? 0 : 20)}px;
   padding-right: ${props => (props.flushRight ? 0 : 20)}px;
   background-color: #fff;
-  border-bottom: 1px solid #bbb;
+  // border-bottom: 1px solid #bbb;
   white-space: pre;
 `;
 Header.propTypes = { flushLeft: PropTypes.bool, flushRight: PropTypes.bool };

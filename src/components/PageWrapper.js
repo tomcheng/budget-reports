@@ -15,6 +15,7 @@ const PageWrapper = ({
   title,
   actions,
   backLink,
+  bodyStyle,
   onAuthorize,
   onRequestBudget
 }) => (
@@ -29,12 +30,10 @@ const PageWrapper = ({
           <Layout>
             <Layout.Header flushLeft>
               {backLink ? <BackLink /> : sidebarTrigger}
-              <PageTitle style={{ flexGrow: 1 }}>
-                {title}
-              </PageTitle>
+              <PageTitle style={{ flexGrow: 1 }}>{title}</PageTitle>
               {actions}
             </Layout.Header>
-            <Layout.Body>{content()}</Layout.Body>
+            <Layout.Body style={bodyStyle}>{content()}</Layout.Body>
             {!authorized && (
               <div
                 style={{
@@ -67,7 +66,8 @@ PageWrapper.propTypes = {
   onAuthorize: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired,
   actions: PropTypes.node,
-  backLink: PropTypes.bool
+  backLink: PropTypes.bool,
+  bodyStyle: PropTypes.object
 };
 
 export default PageWrapper;

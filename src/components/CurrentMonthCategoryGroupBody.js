@@ -71,32 +71,35 @@ class CurrentMonthCategoryGroupBody extends PureComponent {
 
     return (
       <Fragment>
-        <CategoryBreakdown
-          budgetId={budgetId}
-          categoriesById={categoriesById}
-          selectedCategoryId={selectedCategoryId}
-          transactions={transactionsInGroupForMonth}
-          onSelectCategory={onSelectCategory}
-        />
-        <ProgressSection
-          budgetId={budgetId}
-          currentMonth={currentMonth}
-          transactions={transactionsInCategory || transactionsInGroup}
-          total={spent + available}
-          topNumbers={[
-            { label: "spent", value: spent },
-            { label: "available", value: available },
-            { label: "budgeted", value: budgeted }
-          ]}
-        />
-        <Transactions
-          budgetId={budgetId}
-          payeesById={payeesById}
-          transactions={
-            transactionsInCategoryForMonth || transactionsInGroupForMonth
-          }
-          linkToPayee
-        />
+        <div style={{ flexGrow: 0, flexShrink: 0 }}>
+          <CategoryBreakdown
+            categoriesById={categoriesById}
+            selectedCategoryId={selectedCategoryId}
+            transactions={transactionsInGroupForMonth}
+            onSelectCategory={onSelectCategory}
+          />
+        </div>
+        <div style={{ flexShrink: 1, flexGrow: 1, overflow: "auto" }}>
+          <ProgressSection
+            budgetId={budgetId}
+            currentMonth={currentMonth}
+            transactions={transactionsInCategory || transactionsInGroup}
+            total={spent + available}
+            topNumbers={[
+              { label: "spent", value: spent },
+              { label: "available", value: available },
+              { label: "budgeted", value: budgeted }
+            ]}
+          />
+          <Transactions
+            budgetId={budgetId}
+            payeesById={payeesById}
+            transactions={
+              transactionsInCategoryForMonth || transactionsInGroupForMonth
+            }
+            linkToPayee
+          />
+        </div>
       </Fragment>
     );
   }

@@ -7,9 +7,11 @@ import map from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import { getCurrentMonthGroupLink } from "../linkUtils";
+import { sumByProp } from "../optimized";
 import Section from "./Section";
 import { ListItemLink } from "./ListItem";
 import { SecondaryText, MinorText } from "./typeComponents";
+import LabelWithTransactionCount from "./LabelWithTransactionCount";
 import Amount from "./Amount";
 import NoTransactions from "./NoTransactions";
 
@@ -63,6 +65,7 @@ class CurrentMonthCategoryGroupsContent extends PureComponent {
         get([transaction.categoryId, "categoryGroupId"])(categoriesById)
       )
     ])(transactions);
+    const total = sumByProp("amount")(groups);
 
     if (groups.length === 0) {
       return <NoTransactions />;
@@ -79,15 +82,22 @@ class CurrentMonthCategoryGroupsContent extends PureComponent {
             })}
             firstHasBorder
           >
-            <SecondaryText style={{ whiteSpace: "pre" }}>
-              {group.name}
-            </SecondaryText>
-            <SecondaryText style={{ textAlign: "right" }}>
-              <Amount amount={amount} />
+            <div>
+              <SecondaryText style={{ whiteSpace: "pre" }}>
+                <LabelWithTransactionCount
+                  count={transactions}
+                  label={group.name}
+                />
+              </SecondaryText>
+            </div>
+            <div style={{ textAlign: "right" }}>
+              <SecondaryText>
+                <Amount amount={amount} />
+              </SecondaryText>
               <MinorText>
-                {transactions} transaction{transactions === 1 ? "" : "s"}
+                {(amount / total * 100).toFixed(1)}%
               </MinorText>
-            </SecondaryText>
+            </div>
           </ListItemLink>
         ))}{" "}
       </Section>

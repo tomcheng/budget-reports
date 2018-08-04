@@ -25,6 +25,7 @@ class Section extends Component {
     children: PropTypes.node.isRequired,
     hasSettings: PropTypes.bool,
     noPadding: PropTypes.bool,
+    style: PropTypes.object,
     title: PropTypes.string,
     onClickSettings: PropTypes.func,
     top: PropTypes.bool
@@ -41,6 +42,7 @@ class Section extends Component {
       children,
       hasSettings,
       noPadding,
+      style,
       title,
       top,
       onClickSettings
@@ -48,7 +50,7 @@ class Section extends Component {
     const { isExpanded } = this.state;
 
     return (
-      <Container noPadding={noPadding} top={top}>
+      <Container noPadding={noPadding} top={top} style={style}>
         {title && (
           <div style={{ padding: noPadding && "15px 20px" }}>
           <StrongText

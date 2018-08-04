@@ -43,6 +43,11 @@ class CurrentMonthCategoryGroup extends Component {
         {...other}
         budgetLoaded={!!budget}
         backLink
+        bodyStyle={{
+          overflowY: "hidden",
+          display: "flex",
+          flexDirection: "column"
+        }}
         title={
           budget ? (
             <CategoryGroupTitle
