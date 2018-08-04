@@ -56,9 +56,6 @@ class CurrentMonthCategoryGroupBody extends PureComponent {
       transaction => getTransactionMonth(transaction) === currentMonth
     );
 
-    const budgeted = selectedCategory
-      ? selectedCategory.budgeted
-      : sumByProp("budgeted")(categories);
     const spent = selectedCategory
       ? -selectedCategory.activity
       : -sumByProp("activity")(categories);
@@ -76,11 +73,6 @@ class CurrentMonthCategoryGroupBody extends PureComponent {
           }
           transactions={transactionsInCategory || transactionsInGroup}
           total={spent + available}
-          topNumbers={[
-            { label: "spent", value: spent },
-            { label: "available", value: available },
-            { label: "budgeted", value: budgeted }
-          ]}
         />
         <Transactions
           budgetId={budgetId}

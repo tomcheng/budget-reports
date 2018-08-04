@@ -1,16 +1,22 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import moment from "moment";
+import tinyColor from "tinycolor2";
+import compose from "lodash/fp/compose";
 import groupBy from "lodash/fp/groupBy";
 import head from "lodash/fp/head";
+import isNumber from "lodash/fp/isNumber";
 import last from "lodash/fp/last";
 import range from "lodash/fp/range";
 import sumBy from "lodash/fp/sumBy";
-import moment from "moment";
-import tinyColor from "tinycolor2";
+import takeWhile from "lodash/fp/takeWhile";
+import { sumByProp } from "../optimized";
+import { getTransactionMonth } from "../utils";
 import { primaryColor, plotBandColor } from "../styleVariables";
 import { MinorText } from "./typeComponents";
 import Chart from "./Chart";
+import Amount from "./Amount";
 
 const DateLabels = styled.div`
   border-top: 1px solid #ddd;
@@ -88,40 +94,68 @@ class SpendingChart extends PureComponent {
       lineWidth: 1,
       marker: { enabled: false }
     }));
+    const spent = compose([
+      sumByProp("amount"),
+      takeWhile(
+        transaction => getTransactionMonth(transaction) === currentMonth
+      )
+    ])(transactions);
+    const available = isNumber(total) && total + spent;
 
     return (
       <Fragment>
-        <Chart
-          key={monthsToCompare}
-          options={{
-            chart: { spacing: [0, 0, 0, 0], height: 180 },
-            plotOptions: { series: { animation: false } },
-            xAxis: {
-              labels: { enabled: false },
-              plotBands
-            },
-            yAxis: { visible: false, endOnTick: false },
-            series: [
-              {
-                type: "line",
-                color: "#aaa",
-                dashStyle: "Dot",
-                lineWidth: 1,
-                data: lineData,
-                enableMouseTracking: false,
-                marker: { enabled: false }
+        <div style={{ position: "relative" }}>
+          <MinorText
+            style={{
+              position: "absolute",
+              bottom: 3,
+              right: 0,
+              zIndex: 1,
+              textAlign: "right",
+              lineHeight: "16px"
+            }}
+          >
+            <div>
+              spent: <Amount amount={spent} />
+            </div>
+            {isNumber(available) && (
+              <div>
+                available: <Amount amount={-available} />
+              </div>
+            )}
+          </MinorText>
+          <Chart
+            key={monthsToCompare}
+            options={{
+              chart: { spacing: [0, 0, 0, 0], height: 180 },
+              plotOptions: { series: { animation: false } },
+              xAxis: {
+                labels: { enabled: false },
+                plotBands
               },
-              ...comparisonSeries,
-              {
-                type: "spline",
-                data,
-                enableMouseTracking: false,
-                color: primaryColor,
-                marker: { enabled: false }
-              }
-            ]
-          }}
-        />
+              yAxis: { visible: false, endOnTick: false },
+              series: [
+                {
+                  type: "line",
+                  color: "#aaa",
+                  dashStyle: "Dot",
+                  lineWidth: 1,
+                  data: lineData,
+                  enableMouseTracking: false,
+                  marker: { enabled: false }
+                },
+                ...comparisonSeries,
+                {
+                  type: "spline",
+                  data,
+                  enableMouseTracking: false,
+                  color: primaryColor,
+                  marker: { enabled: false }
+                }
+              ]
+            }}
+          />
+        </div>
         <DateLabels>
           <MinorText>{head(dates).format("MMM D")}</MinorText>
           <MinorText>{last(dates).format("MMM D")}</MinorText>

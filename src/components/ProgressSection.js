@@ -1,9 +1,7 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { getSetting, setSetting, SPENDING_MONTHS_TO_COMPARE } from "../uiRepo";
-import { Subsection } from "./Section";
 import CollapsibleSection from "./CollapsibleSection";
-import TopNumbers from "./TopNumbers";
 import SpendingChart from "./SpendingChart";
 import ChartSettingsModal from "./ChartSettingsModal";
 
@@ -15,8 +13,7 @@ class ProgressSection extends Component {
     currentMonth: PropTypes.string.isRequired,
     transactions: PropTypes.array.isRequired,
     title: PropTypes.string,
-    total: PropTypes.number,
-    topNumbers: PropTypes.array
+    total: PropTypes.number
   };
 
   static defaultProps = { title: "Overview" };
@@ -67,14 +64,7 @@ class ProgressSection extends Component {
   };
 
   render() {
-    const {
-      transactions,
-      budgetId,
-      currentMonth,
-      title,
-      total,
-      topNumbers
-    } = this.props;
+    const { transactions, budgetId, currentMonth, title, total } = this.props;
     const { modalOpen, monthsToCompare } = this.state;
 
     return (
@@ -84,20 +74,13 @@ class ProgressSection extends Component {
           hasSettings
           onClickSettings={this.handleClickSettings}
         >
-          {topNumbers && (
-            <Subsection>
-              <TopNumbers numbers={topNumbers} />
-            </Subsection>
-          )}
-          <Subsection>
-            <SpendingChart
-              transactions={transactions}
-              budgetId={budgetId}
-              currentMonth={currentMonth}
-              monthsToCompare={monthsToCompare}
-              total={total}
-            />
-          </Subsection>
+          <SpendingChart
+            transactions={transactions}
+            budgetId={budgetId}
+            currentMonth={currentMonth}
+            monthsToCompare={monthsToCompare}
+            total={total}
+          />
         </CollapsibleSection>
         <ChartSettingsModal
           open={modalOpen}
