@@ -22,7 +22,6 @@ import ErrorBoundary from "./ErrorBoundary";
 import Budgets from "./Budgets";
 import Settings from "./Settings";
 import CurrentMonthCategoryGroup from "./CurrentMonthCategoryGroup";
-import CurrentMonthCategory from "./CurrentMonthCategory";
 import CategoryGroup from "./CategoryGroup";
 import Category from "./Category";
 import Payee from "./Payee";
@@ -168,24 +167,6 @@ class App extends Component {
                 onRequestBudget={this.handleRequestBudget}
               />
             )}
-          />
-          <Route
-            path="/budgets/:budgetId/current/categories/:categoryId"
-            exact
-            render={props => {
-              const { budgetId, categoryId } = props.match.params;
-              return (
-                <CurrentMonthCategory
-                  authorized={authorized}
-                  budget={budgetDetails[budgetId]}
-                  budgetId={budgetId}
-                  categoryId={categoryId}
-                  currentMonth={currentMonth}
-                  onAuthorize={this.handleAuthorize}
-                  onRequestBudget={this.handleRequestBudget}
-                />
-              );
-            }}
           />
           <Route
             path="/budgets/:budgetId/category-groups/:categoryGroupId"
