@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { getTransactionMonth } from "../utils";
 import { sumByProp } from "../optimized";
 import ProgressSection from "./ProgressSection";
-import CategoryBreakdown from "./CategoryBreakdown";
 import Transactions from "./Transactions";
 
 class CurrentMonthCategoryGroupBody extends PureComponent {
@@ -16,7 +15,6 @@ class CurrentMonthCategoryGroupBody extends PureComponent {
     }).isRequired,
     categoryGroupId: PropTypes.string.isRequired,
     currentMonth: PropTypes.string.isRequired,
-    onSelectCategory: PropTypes.func.isRequired,
     selectedCategoryId: PropTypes.string
   };
 
@@ -25,8 +23,7 @@ class CurrentMonthCategoryGroupBody extends PureComponent {
       budget,
       categoryGroupId,
       currentMonth,
-      selectedCategoryId,
-      onSelectCategory
+      selectedCategoryId
     } = this.props;
     const {
       id: budgetId,
@@ -71,12 +68,6 @@ class CurrentMonthCategoryGroupBody extends PureComponent {
 
     return (
       <Fragment>
-        <CategoryBreakdown
-          categoriesById={categoriesById}
-          selectedCategoryId={selectedCategoryId}
-          transactions={transactionsInGroupForMonth}
-          onSelectCategory={onSelectCategory}
-        />
         <ProgressSection
           budgetId={budgetId}
           currentMonth={currentMonth}

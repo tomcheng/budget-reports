@@ -17,6 +17,7 @@ const Container = styled.div`
 
 const Header = styled.div`
   flex-shrink: 0;
+  background-color: #fff;
   border-bottom: 1px solid #e5e5e5;
 `;
 
@@ -27,7 +28,6 @@ const HeaderTop = styled.div`
   height: 60px;
   padding-left: 0;
   padding-right: 20px;
-  background-color: #fff;
   white-space: pre;
 `;
 
@@ -46,6 +46,8 @@ const PageWrapper = ({
   backLink,
   headerMenuOptions,
   optionRenderer,
+  selectedOption,
+  onSelectOption,
   onAuthorize,
   onRequestBudget
 }) => (
@@ -68,6 +70,8 @@ const PageWrapper = ({
                 <HeaderMenu
                   options={headerMenuOptions}
                   optionRenderer={optionRenderer}
+                  selectedOption={selectedOption}
+                  onSelectOption={onSelectOption}
                 />
               )}
             </Header>
@@ -105,12 +109,10 @@ PageWrapper.propTypes = {
   onRequestBudget: PropTypes.func.isRequired,
   actions: PropTypes.node,
   backLink: PropTypes.bool,
-  headerMenuOptions: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired
-    })
-  ),
-  optionRenderer: PropTypes.func
+  headerMenuOptions: PropTypes.array,
+  optionRenderer: PropTypes.func,
+  selectedOption: PropTypes.string,
+  onSelectOption: PropTypes.func
 };
 
 export default PageWrapper;

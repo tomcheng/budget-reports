@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import sortBy from "lodash/fp/sortBy";
@@ -6,8 +6,11 @@ import takeWhile from "lodash/fp/takeWhile";
 import { sumByProp } from "../optimized";
 import { getTransactionMonth } from "../utils";
 import PageWrapper from "./PageWrapper";
+import { SecondaryText } from "./typeComponents";
+import Amount from "./Amount";
 import CategoryGroupTitle from "./CategoryGroupTitle";
 import CurrentMonthCategoryGroupBody from "./CurrentMonthCategoryGroupBody";
+import LabelWithTransactionCount from "./LabelWithTransactionCount";
 
 class CurrentMonthCategoryGroup extends Component {
   static propTypes = {
@@ -98,14 +101,27 @@ class CurrentMonthCategoryGroup extends Component {
           )
         }
         headerMenuOptions={headerMenuOptions}
-        optionRenderer={category => <div key={category.id}>{category.name} {categoryStats[category.id].amount}</div>}
+        optionRenderer={category => (
+          <Fragment key={category.id}>
+            <SecondaryText>
+              <LabelWithTransactionCount
+                count={categoryStats[category.id].transactions}
+                label={category.name}
+              />
+            </SecondaryText>
+            <SecondaryText>
+              <Amount amount={categoryStats[category.id].amount} />
+            </SecondaryText>
+          </Fragment>
+        )}
+        selectedOption={selectedCategoryId}
+        onSelectOption={this.handleSelectCategory}
         content={() => (
           <CurrentMonthCategoryGroupBody
             budget={budget}
             categoryGroupId={categoryGroupId}
             currentMonth={currentMonth}
             selectedCategoryId={selectedCategoryId}
-            onSelectCategory={this.handleSelectCategory}
           />
         )}
       />
