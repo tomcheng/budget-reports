@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import BreakdownNode from "./BreakdownNode";
 
-const Breakdown = ({ nodes, infoRenderer }) =>
+const Breakdown = ({ nodes, valueRenderer }) =>
   nodes.map(({ id, name, amount, nodes }) => (
     <BreakdownNode
       key={id}
@@ -10,7 +10,7 @@ const Breakdown = ({ nodes, infoRenderer }) =>
       name={name}
       amount={amount}
       nodes={nodes}
-      infoRenderer={infoRenderer}
+      valueRenderer={valueRenderer}
       isTopLevel
     />
   ));
@@ -24,7 +24,7 @@ Breakdown.propTypes = {
       nodes: PropTypes.array
     })
   ).isRequired,
-  infoRenderer: PropTypes.func
+  valueRenderer: PropTypes.func
 };
 
 Breakdown.defaultProps = { reverse: false };

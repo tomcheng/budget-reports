@@ -15,7 +15,7 @@ import { getPayeeNodes } from "../utils";
 import { getPayeeLink } from "../linkUtils";
 import Section from "./Section";
 import Breakdown from "./Breakdown";
-import BreakdownPercentage from "./BreakdownPercentage";
+import AmountWithPercentage from "./AmountWithPercentage";
 
 const map = mapRaw.convert({ cap: false });
 
@@ -88,8 +88,8 @@ const ExpensesBreakdown = ({
     <Section title="Expenses Breakdown">
       <Breakdown
         nodes={nodes}
-        infoRenderer={({ amount }) => (
-          <BreakdownPercentage amount={amount} total={-totalIncome} />
+        valueRenderer={node => (
+          <AmountWithPercentage {...node} total={-totalIncome} />
         )}
       />
     </Section>

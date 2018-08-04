@@ -15,12 +15,12 @@ class BreakdownNode extends Component {
     id: PropTypes.string.isRequired,
     isTopLevel: PropTypes.bool.isRequired,
     name: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-    infoRenderer: PropTypes.func,
     nodes: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.string.isRequired
       })
-    )
+    ),
+    valueRenderer: PropTypes.func
   };
 
   state = { expanded: false };
@@ -30,7 +30,14 @@ class BreakdownNode extends Component {
   };
 
   render() {
-    const { name, id, amount, nodes, isTopLevel, infoRenderer } = this.props;
+    const {
+      name,
+      id,
+      amount,
+      nodes,
+      isTopLevel,
+      valueRenderer
+    } = this.props;
     const { expanded } = this.state;
     const hasChildNodes = !!nodes && nodes.length > 0;
 
@@ -43,20 +50,23 @@ class BreakdownNode extends Component {
             amount={amount}
             expanded={expanded}
             onToggle={this.handleToggleExpand}
-            infoRenderer={infoRenderer}
+            valueRenderer={valueRenderer}
           />
         ) : (
           <LeafNode
             id={id}
             name={name}
             amount={amount}
-            infoRenderer={infoRenderer}
+            valueRenderer={valueRenderer}
           />
         )}
 
         {hasChildNodes && (
           <AnimateHeight isExpanded={expanded}>
-            <Nodes nodes={nodes} infoRenderer={infoRenderer} />
+            <Nodes
+              nodes={nodes}
+              valueRenderer={valueRenderer}
+            />
           </AnimateHeight>
         )}
       </Container>
@@ -66,7 +76,7 @@ class BreakdownNode extends Component {
 
 class Nodes extends PureComponent {
   render() {
-    const { nodes, infoRenderer } = this.props;
+    const { nodes, valueRenderer } = this.props;
     return (
       <div style={{ paddingLeft: INDENTATION }}>
         {nodes.map(node => (
@@ -74,7 +84,7 @@ class Nodes extends PureComponent {
             {...node}
             key={node.id}
             isTopLevel={false}
-            infoRenderer={infoRenderer}
+            valueRenderer={valueRenderer}
           />
         ))}
       </div>
@@ -99,7 +109,14 @@ const IconWrapper = styled.div`
   font-size: 10px;
 `;
 
-const ToggleNode = ({ expanded, name, id, amount, infoRenderer, onToggle }) => (
+const ToggleNode = ({
+  expanded,
+  name,
+  id,
+  amount,
+  valueRenderer,
+  onToggle
+}) => (
   <NodeWrapper onClick={onToggle}>
     <SecondaryText
       style={{ whiteSpace: "pre", display: "flex", alignItems: "center" }}
@@ -109,20 +126,26 @@ const ToggleNode = ({ expanded, name, id, amount, infoRenderer, onToggle }) => (
       </IconWrapper>
       {typeof name === "function" ? name({ expanded }) : name}
     </SecondaryText>
-    <SecondaryText style={{ display: "flex", opacity: expanded ? 0.3 : 1 }}>
-      <Amount amount={amount} />
-      {infoRenderer && infoRenderer({ amount, id })}
-    </SecondaryText>
+    {valueRenderer ? (
+      valueRenderer({ amount, id, faded: expanded })
+    ) : (
+      <SecondaryText style={{ opacity: expanded ? 0.3 : 1 }}>
+        <Amount amount={amount} />
+      </SecondaryText>
+    )}
   </NodeWrapper>
 );
 
-const LeafNode = ({ name, id, amount, infoRenderer }) => (
+const LeafNode = ({ name, id, amount, valueRenderer }) => (
   <NodeWrapper>
     <SecondaryText>{name}</SecondaryText>
-    <SecondaryText style={{ display: "flex" }}>
-      <Amount amount={amount} />
-      {infoRenderer && infoRenderer({ amount, id })}
-    </SecondaryText>
+    {valueRenderer ? (
+      valueRenderer({ amount, id })
+    ) : (
+      <SecondaryText>
+        <Amount amount={amount} />
+      </SecondaryText>
+    )}
   </NodeWrapper>
 );
 

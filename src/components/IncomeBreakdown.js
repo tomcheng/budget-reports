@@ -7,7 +7,7 @@ import { getPayeeNodes } from "../utils";
 import { getPayeeLink } from "../linkUtils";
 import Section from "./Section";
 import Breakdown from "./Breakdown";
-import BreakdownPercentage from "./BreakdownPercentage";
+import AmountWithPercentage from "./AmountWithPercentage";
 
 const IncomeBreakdown = ({ transactions, payeesById, divideBy, budgetId }) => {
   const nodes = getPayeeNodes({ payeesById, transactions }, divideBy).map(
@@ -26,9 +26,7 @@ const IncomeBreakdown = ({ transactions, payeesById, divideBy, budgetId }) => {
       <Breakdown
         nodes={sortBy("amount")(nodes).reverse()}
         total={total}
-        infoRenderer={({ amount }) => (
-          <BreakdownPercentage amount={amount} total={total} />
-        )}
+        valueRenderer={node => <AmountWithPercentage {...node} total={total} />}
       />
     </Section>
   );

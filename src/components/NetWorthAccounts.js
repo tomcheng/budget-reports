@@ -15,6 +15,8 @@ import sumBy from "lodash/fp/sumBy";
 import values from "lodash/fp/values";
 import Section from "./Section";
 import Breakdown from "./Breakdown";
+import { SecondaryText } from "./typeComponents";
+import Amount from "./Amount";
 import Icon from "./Icon";
 
 const map = mapRaw.convert({ cap: false });
@@ -134,24 +136,27 @@ const AccountBreakdown = ({
 }) => (
   <Breakdown
     nodes={nodes}
-    infoRenderer={({ id }) => {
+    valueRenderer={({ id, amount }) => {
       const node = nodes.find(propEq("id", id));
       const accounts = node ? node.accounts : [accountsById[id]];
 
       return (
-        <div
-          style={{ width: 36, textAlign: "center" }}
-          onClick={evt => {
-            evt.stopPropagation();
-            onToggleAccounts({ ids: map("id")(accounts) });
-          }}
-        >
-          {every(account => hiddenAccounts[account.id])(accounts) ? (
-            <Icon icon="eye-slash" />
-          ) : (
-            <Icon icon="eye" />
-          )}
-        </div>
+        <SecondaryText style={{ display: "flex", alignItems: "center" }}>
+          <Amount amount={amount} />
+          <div
+            style={{ width: 36, textAlign: "center" }}
+            onClick={evt => {
+              evt.stopPropagation();
+              onToggleAccounts({ ids: map("id")(accounts) });
+            }}
+          >
+            {every(account => hiddenAccounts[account.id])(accounts) ? (
+              <Icon icon="eye-slash" />
+            ) : (
+              <Icon icon="eye" />
+            )}
+          </div>
+        </SecondaryText>
       );
     }}
   />
