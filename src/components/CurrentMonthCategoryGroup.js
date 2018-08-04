@@ -74,7 +74,11 @@ class CurrentMonthCategoryGroup extends Component {
 
       headerMenuOptions = compose([
         sortBy(category => categoryStats[category.id].amount),
-        sortBy("name")
+        sortBy("name"),
+        categories =>
+          categories.filter(
+            category => categoryStats[category.id].transactions > 0
+          )
       ])(categoriesInGroup);
     }
 
