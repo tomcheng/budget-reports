@@ -53,41 +53,37 @@ const PageWrapper = ({
     budgetLoaded={budgetLoaded}
     onRequestBudget={onRequestBudget}
   >
-    {() => (
-      <SidebarMenu budgetId={budgetId}>
-        {({ sidebarTrigger }) => (
-          <Container>
-            <Header flushLeft>
-              <HeaderTop>
-                {backLink ? <BackLink /> : sidebarTrigger}
-                <PageTitle style={{ flexGrow: 1 }}>{title}</PageTitle>
-                {actions}
-              </HeaderTop>
-              {headerMenu && (
-                <HeaderMenu {...headerMenu} />
-              )}
-            </Header>
-            <Body>{content()}</Body>
-            {!authorized && (
-              <div
-                style={{
-                  padding: "15px 20px",
-                  backgroundColor: "#fff",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  flexShrink: 0,
-                  borderTop: "1px solid #ccc"
-                }}
-              >
-                Your authorization expired.
-                <PrimaryButton onClick={onAuthorize}>Reauthorize</PrimaryButton>
-              </div>
-            )}
-          </Container>
-        )}
-      </SidebarMenu>
-    )}
+    <SidebarMenu budgetId={budgetId}>
+      {({ sidebarTrigger }) => (
+        <Container>
+          <Header flushLeft>
+            <HeaderTop>
+              {backLink ? <BackLink /> : sidebarTrigger}
+              <PageTitle style={{ flexGrow: 1 }}>{title}</PageTitle>
+              {actions}
+            </HeaderTop>
+            {headerMenu && <HeaderMenu {...headerMenu} />}
+          </Header>
+          <Body>{content()}</Body>
+          {!authorized && (
+            <div
+              style={{
+                padding: "15px 20px",
+                backgroundColor: "#fff",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexShrink: 0,
+                borderTop: "1px solid #ccc"
+              }}
+            >
+              Your authorization expired.
+              <PrimaryButton onClick={onAuthorize}>Reauthorize</PrimaryButton>
+            </div>
+          )}
+        </Container>
+      )}
+    </SidebarMenu>
   </EnsureBudgetLoaded>
 );
 

@@ -6,7 +6,7 @@ class EnsureBudgetLoaded extends Component {
   static propTypes = {
     budgetId: PropTypes.string.isRequired,
     budgetLoaded: PropTypes.bool.isRequired,
-    children: PropTypes.func.isRequired,
+    children: PropTypes.node.isRequired,
     onRequestBudget: PropTypes.func.isRequired
   };
 
@@ -23,7 +23,7 @@ class EnsureBudgetLoaded extends Component {
       return <Loading />
     }
 
-    return this.props.children();
+    return this.props.children;
   }
 }
 
