@@ -29,22 +29,27 @@ class CurrentMonthCategoryGroup extends Component {
     })
   };
 
-  state = { selectedCategoryId: null };
+  state = { selectedCategoryId: null, menuExpanded: false };
 
   handleSelectCategory = id => {
     this.setState(state => ({
       ...state,
-      selectedCategoryId: id === state.selectedCategoryId ? null : id
+      selectedCategoryId: id === state.selectedCategoryId ? null : id,
+      menuExpanded: false
     }));
   };
 
   handleClearCategory = () => {
-    this.setState({ selectedCategoryId: null });
+    this.setState({ selectedCategoryId: null, menuExpanded: false });
+  };
+
+  handleToggleMenu = () => {
+    this.setState(state => ({ ...state, menuExpanded: !state.menuExpanded }));
   };
 
   render() {
     const { budget, categoryGroupId, currentMonth, ...other } = this.props;
-    const { selectedCategoryId } = this.state;
+    const { selectedCategoryId, menuExpanded } = this.state;
     let headerMenuOptions;
     let categoryStats;
     let amountForGroup;
@@ -131,6 +136,8 @@ class CurrentMonthCategoryGroup extends Component {
           ),
           selected: selectedCategoryId,
           onSelect: this.handleSelectCategory,
+          onToggle: this.handleToggleMenu,
+          expanded: menuExpanded,
           expandedLabel: "hide categories",
           collapsedLabel: "show categories"
         }}
