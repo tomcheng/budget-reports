@@ -13,6 +13,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
 `;
 
 const Overlay = styled.div`
@@ -22,7 +23,6 @@ const Overlay = styled.div`
   left: 0;
   right: 0;
   background-color: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
 `;
 
 const ModalContent = styled.div`
@@ -30,7 +30,6 @@ const ModalContent = styled.div`
   padding: 15px 20px;
   background-color: #fff;
   border-radius: 2px;
-  z-index: 1000;
 `;
 
 const CloseButton = styled.div`
