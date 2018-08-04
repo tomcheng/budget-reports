@@ -27,6 +27,7 @@ import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
 import IncomeVsExpensesChartControls from "./IncomeVsExpensesChartControls";
 import Breakdowns from "./Breakdowns";
 import Section, { Subsection, TopSection } from "./Section";
+import CollapsibleSection from "./CollapsibleSection";
 
 const map = mapRaw.convert({ cap: false });
 
@@ -173,7 +174,7 @@ class IncomeVsExpensesBody extends PureComponent {
             divideBy={showTotals ? 1 : summaries.length}
           />
         </TopSection>
-        <Section title="Monthly Trend">
+        <CollapsibleSection title="Monthly Trend">
           <Subsection>
             <IncomeVsExpensesChart
               data={allSummaries}
@@ -206,7 +207,7 @@ class IncomeVsExpensesBody extends PureComponent {
               hasSelection={selectedMonths.length > 0}
             />
           </Subsection>
-        </Section>
+        </CollapsibleSection>
         <Breakdowns
           budgetId={budget.id}
           categoriesById={categoriesById}

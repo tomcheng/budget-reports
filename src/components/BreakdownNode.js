@@ -98,6 +98,10 @@ const NodeWrapper = styled.div`
   align-items: center;
   padding: 8px 0;
   user-select: none;
+  
+  ${ListItem}:first-child > & {
+    padding-top: 0;
+  }
 `;
 
 const IconWrapper = styled.div`

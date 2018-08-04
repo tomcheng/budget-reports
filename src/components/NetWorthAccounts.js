@@ -13,7 +13,7 @@ import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import values from "lodash/fp/values";
-import Section from "./Section";
+import CollapsibleSection from "./CollapsibleSection";
 import Breakdown from "./Breakdown";
 import { SecondaryText } from "./typeComponents";
 import Amount from "./Amount";
@@ -91,24 +91,24 @@ const NetWorthAccounts = ({
 
   return (
     <Fragment>
-      <Section title="Accounts">
+      <CollapsibleSection title="Accounts">
         <AccountBreakdown
           accountsById={accountsById}
           hiddenAccounts={hiddenAccounts}
           nodes={visibleNodes}
           onToggleAccounts={onToggleAccounts}
         />
-      </Section>
+      </CollapsibleSection>
 
       {values(hiddenNodes).length > 0 && (
-        <Section title="Hidden Accounts">
+        <CollapsibleSection title="Hidden Accounts">
           <AccountBreakdown
             accountsById={accountsById}
             hiddenAccounts={hiddenAccounts}
             nodes={hiddenNodes}
             onToggleAccounts={onToggleAccounts}
           />
-        </Section>
+        </CollapsibleSection>
       )}
     </Fragment>
   );

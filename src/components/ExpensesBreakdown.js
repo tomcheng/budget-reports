@@ -13,7 +13,7 @@ import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import { getPayeeNodes } from "../utils";
 import { getPayeeLink } from "../linkUtils";
-import Section from "./Section";
+import CollapsibleSection from "./CollapsibleSection";
 import Breakdown from "./Breakdown";
 import AmountWithPercentage from "./AmountWithPercentage";
 
@@ -85,14 +85,14 @@ const ExpensesBreakdown = ({
   ])(groupNodes);
 
   return (
-    <Section title="Expenses Breakdown">
+    <CollapsibleSection title="Expenses Breakdown">
       <Breakdown
         nodes={nodes}
         valueRenderer={node => (
           <AmountWithPercentage {...node} total={-totalIncome} />
         )}
       />
-    </Section>
+    </CollapsibleSection>
   );
 };
 

@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { getSetting, setSetting, SPENDING_MONTHS_TO_COMPARE } from "../uiRepo";
-import Section, { Subsection } from "./Section";
+import { Subsection } from "./Section";
+import CollapsibleSection from "./CollapsibleSection";
 import TopNumbers from "./TopNumbers";
 import SpendingChart from "./SpendingChart";
 import ChartSettingsModal from "./ChartSettingsModal";
@@ -78,7 +79,7 @@ class ProgressSection extends Component {
 
     return (
       <Fragment>
-        <Section
+        <CollapsibleSection
           title={title}
           hasSettings
           onClickSettings={this.handleClickSettings}
@@ -97,7 +98,7 @@ class ProgressSection extends Component {
               total={total}
             />
           </Subsection>
-        </Section>
+        </CollapsibleSection>
         <ChartSettingsModal
           open={modalOpen}
           monthsToCompare={monthsToCompare}

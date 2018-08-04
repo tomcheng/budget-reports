@@ -8,7 +8,7 @@ import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import { getCurrentMonthGroupLink } from "../linkUtils";
 import { sumByProp } from "../optimized";
-import Section from "./Section";
+import CollapsibleSection from "./CollapsibleSection";
 import { ListItemLink } from "./ListItem";
 import { SecondaryText } from "./typeComponents";
 import LabelWithTransactionCount from "./LabelWithTransactionCount";
@@ -72,7 +72,7 @@ class CurrentMonthCategoryGroupsContent extends PureComponent {
     }
 
     return (
-      <Section title="Spending Breakdown">
+      <CollapsibleSection title="Spending Breakdown">
         {groups.map(({ group, transactions, amount }) => (
           <ListItemLink
             key={group.id}
@@ -81,18 +81,16 @@ class CurrentMonthCategoryGroupsContent extends PureComponent {
               categoryGroupId: group.id
             })}
           >
-            <div>
-              <SecondaryText style={{ whiteSpace: "pre" }}>
-                <LabelWithTransactionCount
-                  count={transactions}
-                  label={group.name}
-                />
-              </SecondaryText>
-            </div>
+            <SecondaryText style={{ whiteSpace: "pre" }}>
+              <LabelWithTransactionCount
+                count={transactions}
+                label={group.name}
+              />
+            </SecondaryText>
             <AmountWithPercentage amount={amount} total={total} />
           </ListItemLink>
         ))}
-      </Section>
+      </CollapsibleSection>
     );
   }
 }

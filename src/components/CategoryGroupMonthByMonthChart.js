@@ -4,8 +4,8 @@ import moment from "moment";
 import { getTransactionMonth } from "../utils";
 import { groupBy, sumByProp } from "../optimized";
 import { lightPrimaryColor } from "../styleVariables";
+import CollapsibleSection from "./CollapsibleSection";
 import MonthlyChart from "./MonthlyChart";
-import Section from "./Section";
 
 const CategoryGroupMonthByMonthChart = ({ transactions, firstMonth }) => {
   const currentMonth = moment().format("YYYY-MM");
@@ -26,14 +26,12 @@ const CategoryGroupMonthByMonthChart = ({ transactions, firstMonth }) => {
   }));
 
   return (
-    <Section title="Month by Month">
-      <div style={{ paddingTop: 10 }}>
-        <MonthlyChart
-          data={data}
-          series={[{ color: lightPrimaryColor, valueFunction: d => d.amount }]}
-        />
-      </div>
-    </Section>
+    <CollapsibleSection title="Month by Month">
+      <MonthlyChart
+        data={data}
+        series={[{ color: lightPrimaryColor, valueFunction: d => d.amount }]}
+      />
+    </CollapsibleSection>
   );
 };
 

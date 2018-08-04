@@ -5,7 +5,7 @@ import sumBy from "lodash/fp/sumBy";
 import { Link } from "react-router-dom";
 import { getPayeeNodes } from "../utils";
 import { getPayeeLink } from "../linkUtils";
-import Section from "./Section";
+import CollapsibleSection from "./CollapsibleSection";
 import Breakdown from "./Breakdown";
 import AmountWithPercentage from "./AmountWithPercentage";
 
@@ -22,13 +22,13 @@ const IncomeBreakdown = ({ transactions, payeesById, divideBy, budgetId }) => {
   );
   const total = sumBy("amount")(nodes);
   return (
-    <Section title="Income Breakdown">
+    <CollapsibleSection title="Income Breakdown">
       <Breakdown
         nodes={sortBy("amount")(nodes).reverse()}
         total={total}
         valueRenderer={node => <AmountWithPercentage {...node} total={total} />}
       />
-    </Section>
+    </CollapsibleSection>
   );
 };
 

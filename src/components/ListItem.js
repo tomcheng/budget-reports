@@ -6,11 +6,11 @@ const ListItem = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 8px 0;
-  margin-top: -4px;
+  border-top: 1px dotted #ddd;
 
-  & + & {
-    margin-top: 0;
-    border-top: 1px dotted #ddd;
+  &:first-child {
+    border-top: 0;
+    padding-top: 0;
   }
 `;
 
@@ -19,11 +19,11 @@ export const ListItemLink = styled(Link)`
   align-items: center;
   justify-content: space-between;
   padding: 8px 0;
-  margin-top: -4px;
+  border-top: 1px dotted #ddd;
 
-  & + & {
-    margin-top: 0;
-    border-top: 1px dotted #ddd;
+  &:first-child {
+    border-top: 0;
+    padding-top: 0;
   }
 `;
 
@@ -33,9 +33,10 @@ export const LargeListItemLink = styled(Link)`
   justify-content: space-between;
   height: 60px;
   padding: 0 20px;
+  border-top: 1px solid #eee;
 
-  & + & {
-    border-top: 1px solid #eee;
+  &:first-child {
+    border-top: 0;
   }
 `;
 

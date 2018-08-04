@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
+import CollapsibleSection from "./CollapsibleSection";
 import Transaction from "./Transaction";
-import Section from "./Section";
 import NoTransactions from "./NoTransactions";
 
 const Transactions = ({ transactions, title, payeesById, budgetId, linkToPayee }) => (
-  <Section title={title}>
+  <CollapsibleSection title={title}>
     {transactions.length ? (
       transactions.map(({ id, payeeId, date, amount }) => (
         <Transaction
@@ -20,7 +20,7 @@ const Transactions = ({ transactions, title, payeesById, budgetId, linkToPayee }
     ) : (
       <NoTransactions />
     )}
-  </Section>
+  </CollapsibleSection>
 );
 
 Transactions.propTypes = {

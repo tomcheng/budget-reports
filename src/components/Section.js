@@ -52,7 +52,7 @@ class Section extends Component {
     return (
       <Container noPadding={noPadding} top={top} style={style}>
         {title && (
-          <div style={{ padding: noPadding && "15px 20px" }}>
+          <div style={{ padding: noPadding && "15px 20px", backgroundColor: "red" }}>
           <StrongText
             onClick={this.handleClickTitle}
             style={{

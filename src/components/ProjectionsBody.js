@@ -18,7 +18,7 @@ import {
   getProjection,
   getProjectionWithRetirement
 } from "../projectionUtils";
-import Section from "./Section";
+import CollapsibleSection from "./CollapsibleSection";
 import ProjectionsChart from "./ProjectionsChart";
 import ProjectionsSlider from "./ProjectionsSlider";
 
@@ -226,15 +226,15 @@ class ProjectionsBody extends PureComponent {
 
     return (
       <Fragment>
-        <Section title="Projection">
+        <CollapsibleSection title="Projection">
           <ProjectionsChart
             investmentsProjection={projectionByYear}
             mortgageProjection={mortgageProjectionByYear}
             amountNeededToRetire={amountNeededToRetire}
             yearsUntilRetirement={yearsUntilRetirement}
           />
-        </Section>
-        <Section title="Assumptions">
+        </CollapsibleSection>
+        <CollapsibleSection title="Assumptions">
           <Entry
             label="Earliest you can retire"
             value={yearsUntilRetirement}
@@ -272,7 +272,7 @@ class ProjectionsBody extends PureComponent {
               />
             </Fragment>
           )}
-        </Section>
+        </CollapsibleSection>
         <ProjectionsSlider
           name={adjustingName}
           label={get([adjustingName, "label"])(adjustableEntriesByName)}

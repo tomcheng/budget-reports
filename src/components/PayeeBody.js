@@ -9,7 +9,8 @@ import { getMetadataForPayee, getTransactionMonth } from "../utils";
 import TopNumbers from "./TopNumbers";
 import PayeeCategories from "./PayeeCategories";
 import GroupedTransactions from "./GroupedTransactions";
-import Section, { TopSection } from "./Section";
+import CollapsibleSection from "./CollapsibleSection";
+import { TopSection } from "./Section";
 
 class PayeeBody extends PureComponent {
   static propTypes = {
@@ -52,10 +53,10 @@ class PayeeBody extends PureComponent {
             ]}
           />
         </TopSection>
-        <Section title="Categories">
+        <CollapsibleSection title="Categories">
           <PayeeCategories budget={budget} categoryIds={categoryIds} />
-        </Section>
-        <Section title="Transactions">
+        </CollapsibleSection>
+        <CollapsibleSection title="Transactions">
           <GroupedTransactions
             transactions={transactions}
             groupBy={getTransactionMonth}
@@ -64,7 +65,7 @@ class PayeeBody extends PureComponent {
               moment(transaction.date).format("dddd, MMMM D")
             }
           />
-        </Section>
+        </CollapsibleSection>
       </Fragment>
     );
   }
