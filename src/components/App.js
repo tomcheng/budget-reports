@@ -204,16 +204,17 @@ class App extends Component {
             }}
           />
           <Route
-            path="/budgets/:budgetId/categories/:categoryId"
+            path="/budgets/:budgetId/category-groups/:categoryGroupId/:categoryId"
             exact
             render={props => {
-              const { budgetId, categoryId } = props.match.params;
+              const { budgetId, categoryId, categoryGroupId } = props.match.params;
               return (
                 <Category
                   authorized={authorized}
                   budget={budgetDetails[budgetId]}
                   budgetId={budgetId}
                   categoryId={categoryId}
+                  categoryGroupId={categoryGroupId}
                   onAuthorize={this.handleAuthorize}
                   onRequestBudget={this.handleRequestBudget}
                 />
