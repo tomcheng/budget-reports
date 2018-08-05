@@ -1,8 +1,10 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
+import compose from "lodash/fp/compose";
+import sortBy from "lodash/fp/sortBy";
 import { getTransactionMonth } from "../utils";
-// import { groupByProp } from "../optimized";
 import CategoryGroupMonthByMonthChart from "./CategoryGroupMonthByMonthChart";
+import Transactions from "./Transactions";
 
 class CategoryGroupBody extends PureComponent {
   static propTypes = {
@@ -31,7 +33,7 @@ class CategoryGroupBody extends PureComponent {
   render() {
     const { categoryGroup, budget } = this.props;
     const { selectedMonth } = this.state;
-    const { transactions, categories } = budget;
+    const { transactions, categories, payeesById, id: budgetId } = budget;
 
     const categoriesInGroup = categories.filter(
       category => category.categoryGroupId === categoryGroup.id
@@ -40,17 +42,36 @@ class CategoryGroupBody extends PureComponent {
     const transactionsInGroup = transactions.filter(transaction =>
       categoryIds.includes(transaction.categoryId)
     );
-    // const transactionsByCategory = groupByProp("categoryId")(
-    //   transactionsInGroup
-    // );
+    const transactionsInSelectedMonth =
+      selectedMonth &&
+      compose([
+        sortBy("amount"),
+        transactions =>
+          transactions.filter(
+            transaction => getTransactionMonth(transaction) === selectedMonth
+          )
+      ])(transactionsInGroup);
 
     return (
-      <CategoryGroupMonthByMonthChart
-        firstMonth={getTransactionMonth(transactions[transactions.length - 1])}
-        selectedMonth={selectedMonth}
-        transactions={transactionsInGroup}
-        onSelectMonth={this.handleSelectMonth}
-      />
+      <Fragment>
+        <CategoryGroupMonthByMonthChart
+          firstMonth={getTransactionMonth(
+            transactions[transactions.length - 1]
+          )}
+          selectedMonth={selectedMonth}
+          transactions={transactionsInGroup}
+          onSelectMonth={this.handleSelectMonth}
+        />
+        {selectedMonth && (
+          <Transactions
+            title="Transactions"
+            transactions={transactionsInSelectedMonth}
+            budgetId={budgetId}
+            payeesById={payeesById}
+            linkToPayee
+          />
+        )}
+      </Fragment>
     );
   }
 }
