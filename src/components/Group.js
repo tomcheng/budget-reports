@@ -13,13 +13,13 @@ const Group = ({ budget, budgetId, categoryGroupId, ...other }) => {
       budgetId={budgetId}
       budgetLoaded={!!budget}
       title={group ? group.name : ""}
-      parentLink={{
-        label: "Categories",
-        to: getCategoryGroupsLink({ budgetId })
-      }}
-      content={() => (
-        <GroupBody budget={budget} categoryGroup={group} />
-      )}
+      breadcrumbs={[
+        {
+          label: "Categories",
+          to: getCategoryGroupsLink({ budgetId })
+        }
+      ]}
+      content={() => <GroupBody budget={budget} categoryGroup={group} />}
       backLink
     />
   );
