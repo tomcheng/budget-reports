@@ -1,7 +1,9 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import { getTransactionMonth } from "../utils";
+import { getPayeeLink } from "../linkUtils";
 import MonthByMonthSection from "./MonthByMonthSection";
+import GenericEntitiesSection from "./GenericEntitiesSection";
 
 class CategoryBody extends PureComponent {
   static propTypes = {
@@ -30,13 +32,18 @@ class CategoryBody extends PureComponent {
   render() {
     const { category, budget } = this.props;
     const { selectedMonth } = this.state;
-    const { transactions } = budget;
+    const { transactions, payeesById, id: budgetId } = budget;
     const firstMonth = getTransactionMonth(
       transactions[transactions.length - 1]
     );
     const transactionsForCategory = transactions.filter(
       transaction => transaction.categoryId === category.id
     );
+    const transactionsForMonth =
+      selectedMonth &&
+      transactionsForCategory.filter(
+        transaction => getTransactionMonth(transaction) === selectedMonth
+      );
 
     return (
       <Fragment>
@@ -45,6 +52,13 @@ class CategoryBody extends PureComponent {
           transactions={transactionsForCategory}
           selectedMonth={selectedMonth}
           onSelectMonth={this.handleSelectMonth}
+        />
+        <GenericEntitiesSection
+          entitiesById={payeesById}
+          entityKey="payeeId"
+          linkFunction={payeeId => getPayeeLink({ budgetId, payeeId })}
+          title="Payees"
+          transactions={transactionsForMonth || transactionsForCategory}
         />
       </Fragment>
     );

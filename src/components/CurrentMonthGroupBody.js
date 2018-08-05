@@ -73,7 +73,6 @@ class CurrentMonthGroupBody extends PureComponent {
           <GenericEntitiesSection
             entityKey="categoryId"
             entitiesById={categoriesById}
-            transactions={transactionsInGroupForMonth}
             linkFunction={categoryId =>
               getCurrentMonthCategoryLink({
                 budgetId,
@@ -81,6 +80,8 @@ class CurrentMonthGroupBody extends PureComponent {
                 categoryId
               })
             }
+            title="Categories"
+            transactions={transactionsInGroupForMonth}
           />
         )}
         <TransactionsSection

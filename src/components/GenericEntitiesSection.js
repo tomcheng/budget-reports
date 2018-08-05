@@ -12,7 +12,13 @@ import AmountWithPercentage from "./AmountWithPercentage";
 
 const mapWithKeys = map.convert({ cap: false });
 
-const GenericEntitiesSection = ({ entityKey, entitiesById, linkFunction, transactions }) => {
+const GenericEntitiesSection = ({
+  entityKey,
+  entitiesById,
+  linkFunction,
+  title,
+  transactions
+}) => {
   let total = 0;
   const entities = compose([
     sortBy("amount"),
@@ -30,7 +36,7 @@ const GenericEntitiesSection = ({ entityKey, entitiesById, linkFunction, transac
   ])(transactions);
 
   return (
-    <CollapsibleSection title="Categories">
+    <CollapsibleSection title={title}>
       {entities.map(({ entityId, transactions, amount }) => (
         <ListItemLink key={entityId} to={linkFunction(entityId)}>
           <SecondaryText style={{ whiteSpace: "pre" }}>
@@ -50,7 +56,8 @@ GenericEntitiesSection.propTypes = {
   entityKey: PropTypes.string.isRequired,
   entitiesById: PropTypes.object.isRequired,
   linkFunction: PropTypes.func.isRequired,
-  transactions: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  title: PropTypes.string.isRequired,
+  transactions: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
 export default GenericEntitiesSection;

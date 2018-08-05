@@ -73,6 +73,7 @@ class GroupBody extends PureComponent {
               categoryId
             })
           }
+          title="Categories"
           transactions={transactionsInSelectedMonth || transactionsInGroup}
         />
       </Fragment>
