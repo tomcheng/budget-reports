@@ -1,9 +1,10 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import EnsureBudgetLoaded from "./EnsureBudgetLoaded";
 import { PageTitle, MinorText } from "./typeComponents";
+import Icon from "./Icon";
 import { PrimaryButton } from "./Button";
 import SidebarMenu from "./SidebarMenu";
 
@@ -41,7 +42,7 @@ const PageWrapper = ({
   budgetLoaded,
   title,
   actions,
-  parentLink,
+  breadcrumbs,
   onAuthorize,
   onRequestBudget
 }) => (
@@ -57,12 +58,31 @@ const PageWrapper = ({
             <HeaderTop>
               {sidebarTrigger}
               <div style={{ flexGrow: 1 }}>
-                {parentLink && (
-                  <MinorText style={{ lineHeight: 1, paddingBottom: 8 }}>
-                    <Link to={parentLink.to}>{parentLink.label}</Link>
+                {breadcrumbs && (
+                  <MinorText style={{ lineHeight: 1, whiteSpace: "normal" }}>
+                    {breadcrumbs.map(({ label, to }, index) => (
+                      <Fragment>
+                        <Link
+                          key={to}
+                          to={to}
+                          style={{
+                            paddingBottom: 8,
+                            display: "inline-block"
+                          }}
+                        >
+                          {label}
+                        </Link>
+                        {index !== breadcrumbs.length - 1 && (
+                          <Icon
+                            icon="chevron-right"
+                            style={{ padding: "0 5px", fontSize: 8 }}
+                          />
+                        )}
+                      </Fragment>
+                    ))}
                   </MinorText>
                 )}
-                <PageTitle style={{ lineHeight: parentLink && 1 }}>
+                <PageTitle style={{ lineHeight: breadcrumbs && 1 }}>
                   {title}
                 </PageTitle>
               </div>
@@ -101,10 +121,12 @@ PageWrapper.propTypes = {
   onAuthorize: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired,
   actions: PropTypes.node,
-  parentLink: PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    to: PropTypes.string.isRequired
-  })
+  breadcrumbs: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      to: PropTypes.string.isRequired
+    })
+  )
 };
 
 export default PageWrapper;

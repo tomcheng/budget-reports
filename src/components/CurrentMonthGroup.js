@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { getCurrentMonthLink } from "../linkUtils";
+import { getCurrentMonthLink, getCurrentMonthGroupLink } from "../linkUtils";
 import PageWrapper from "./PageWrapper";
 import CurrentMonthGroupBody from "./CurrentMonthGroupBody";
 
@@ -33,10 +33,24 @@ class CurrentMonthGroup extends Component {
     } = this.props;
 
     let title = "";
+    const breadcrumbs = [
+      {
+        label: "Current Month Spending",
+        to: getCurrentMonthLink({ budgetId })
+      }
+    ];
+
     if (budget) {
-      title = categoryId
-        ? budget.categoriesById[categoryId].name
-        : budget.categoryGroupsById[categoryGroupId].name;
+      const category = categoryId && budget.categoriesById[categoryId];
+      const group = budget.categoryGroupsById[categoryGroupId];
+      title = category ? category.name : group.name;
+
+      if (category) {
+        breadcrumbs.push({
+          label: group.name,
+          to: getCurrentMonthGroupLink({ budgetId, categoryGroupId })
+        });
+      }
     }
 
     return (
@@ -50,10 +64,7 @@ class CurrentMonthGroup extends Component {
           display: "flex",
           flexDirection: "column"
         }}
-        parentLink={{
-          label: "Current Month Spending",
-          to: getCurrentMonthLink({ budgetId })
-        }}
+        breadcrumbs={breadcrumbs}
         title={title}
         content={() => (
           <CurrentMonthGroupBody
