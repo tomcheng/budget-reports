@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { getTransactionMonth } from "../utils";
 import { sumByProp } from "../optimized";
 import DayByDaySection from "./DayByDaySection";
-import CategoriesSection from "./CategoriesSection";
+import GenericEntitiesSection from "./GenericEntitiesSection";
 import TransactionsSection from "./TransactionsSection";
 import { getCurrentMonthCategoryLink } from "../linkUtils";
 
@@ -70,8 +70,9 @@ class CurrentMonthGroupBody extends PureComponent {
           total={spent + available}
         />
         {!category && (
-          <CategoriesSection
-            budget={budget}
+          <GenericEntitiesSection
+            entityKey="categoryId"
+            entitiesById={categoriesById}
             transactions={transactionsInGroupForMonth}
             linkFunction={categoryId =>
               getCurrentMonthCategoryLink({

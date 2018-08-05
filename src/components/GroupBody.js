@@ -5,7 +5,7 @@ import sortBy from "lodash/fp/sortBy";
 import { getTransactionMonth } from "../utils";
 import { getCategoryLink } from "../linkUtils";
 import MonthByMonthSection from "./MonthByMonthSection";
-import CategoriesSection from "./CategoriesSection";
+import GenericEntitiesSection from "./GenericEntitiesSection";
 
 class GroupBody extends PureComponent {
   static propTypes = {
@@ -34,7 +34,7 @@ class GroupBody extends PureComponent {
   render() {
     const { categoryGroup, budget } = this.props;
     const { selectedMonth } = this.state;
-    const { transactions, categories, id: budgetId } = budget;
+    const { transactions, categories, categoriesById, id: budgetId } = budget;
 
     const categoriesInGroup = categories.filter(
       category => category.categoryGroupId === categoryGroup.id
@@ -63,8 +63,9 @@ class GroupBody extends PureComponent {
           transactions={transactionsInGroup}
           onSelectMonth={this.handleSelectMonth}
         />
-        <CategoriesSection
-          budget={budget}
+        <GenericEntitiesSection
+          entityKey="categoryId"
+          entitiesById={categoriesById}
           linkFunction={categoryId =>
             getCategoryLink({
               budgetId,

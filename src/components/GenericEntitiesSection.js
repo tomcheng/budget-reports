@@ -12,32 +12,31 @@ import AmountWithPercentage from "./AmountWithPercentage";
 
 const mapWithKeys = map.convert({ cap: false });
 
-const CategoriesSection = ({ budget, linkFunction, transactions }) => {
-  const { categoriesById } = budget;
+const GenericEntitiesSection = ({ entityKey, entitiesById, linkFunction, transactions }) => {
   let total = 0;
-  const categories = compose([
+  const entities = compose([
     sortBy("amount"),
-    mapWithKeys((transactions, categoryId) => {
+    mapWithKeys((transactions, entityId) => {
       const amount = sumByProp("amount")(transactions);
       total += amount;
 
       return {
-        category: categoriesById[categoryId],
+        entityId,
         transactions: transactions.length,
         amount
       };
     }),
-    groupByProp("categoryId")
+    groupByProp(entityKey)
   ])(transactions);
 
   return (
     <CollapsibleSection title="Categories">
-      {categories.map(({ category, transactions, amount }) => (
-        <ListItemLink key={category.id} to={linkFunction(category.id)}>
+      {entities.map(({ entityId, transactions, amount }) => (
+        <ListItemLink key={entityId} to={linkFunction(entityId)}>
           <SecondaryText style={{ whiteSpace: "pre" }}>
             <LabelWithTransactionCount
               count={transactions}
-              label={category.name}
+              label={entitiesById[entityId].name}
             />
           </SecondaryText>
           <AmountWithPercentage amount={amount} total={total} />
@@ -47,12 +46,11 @@ const CategoriesSection = ({ budget, linkFunction, transactions }) => {
   );
 };
 
-CategoriesSection.propTypes = {
-  budget: PropTypes.shape({
-    categoriesById: PropTypes.object.isRequired
-  }).isRequired,
+GenericEntitiesSection.propTypes = {
+  entityKey: PropTypes.string.isRequired,
+  entitiesById: PropTypes.object.isRequired,
   linkFunction: PropTypes.func.isRequired,
   transactions: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 };
 
-export default CategoriesSection;
+export default GenericEntitiesSection;
