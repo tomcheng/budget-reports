@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import sortBy from "lodash/fp/sortBy";
 import { getTransactionMonth } from "../utils";
+import { getCategoryLink } from "../linkUtils";
 import GroupMonthlySection from "./GroupMonthlySection";
 import CategoriesSection from "./CategoriesSection";
 
@@ -33,7 +34,7 @@ class GroupBody extends PureComponent {
   render() {
     const { categoryGroup, budget } = this.props;
     const { selectedMonth } = this.state;
-    const { transactions, categories } = budget;
+    const { transactions, categories, id: budgetId } = budget;
 
     const categoriesInGroup = categories.filter(
       category => category.categoryGroupId === categoryGroup.id
@@ -65,6 +66,13 @@ class GroupBody extends PureComponent {
         <CategoriesSection
           budget={budget}
           categoryGroupId={categoryGroup.id}
+          linkFunction={categoryId =>
+            getCategoryLink({
+              budgetId,
+              categoryGroupId: categoryGroup.id,
+              categoryId
+            })
+          }
           transactions={transactionsInSelectedMonth || transactionsInGroup}
         />
       </Fragment>

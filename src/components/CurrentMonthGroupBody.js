@@ -5,6 +5,7 @@ import { sumByProp } from "../optimized";
 import DayByDaySection from "./DayByDaySection";
 import CategoriesSection from "./CategoriesSection";
 import TransactionsSection from "./TransactionsSection";
+import { getCurrentMonthCategoryLink } from "../linkUtils";
 
 class CurrentMonthGroupBody extends PureComponent {
   static propTypes = {
@@ -73,6 +74,13 @@ class CurrentMonthGroupBody extends PureComponent {
             budget={budget}
             categoryGroupId={categoryGroupId}
             transactions={transactionsInGroupForMonth}
+            linkFunction={categoryId =>
+              getCurrentMonthCategoryLink({
+                budgetId,
+                categoryGroupId,
+                categoryId
+              })
+            }
           />
         )}
         <TransactionsSection

@@ -4,7 +4,6 @@ import compose from "lodash/fp/compose";
 import map from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
 import { groupByProp, sumByProp } from "../optimized";
-import { getCurrentMonthCategoryLink } from "../linkUtils";
 import CollapsibleSection from "./CollapsibleSection";
 import { SecondaryText } from "./typeComponents";
 import { ListItemLink } from "./ListItem";
@@ -16,6 +15,7 @@ const mapWithKeys = map.convert({ cap: false });
 const CategoriesSection = ({
   budget,
   categoryGroupId,
+  linkFunction,
   transactions
 }) => {
   const { categoriesById } = budget;
@@ -38,14 +38,7 @@ const CategoriesSection = ({
   return (
     <CollapsibleSection title="Categories">
       {categories.map(({ category, transactions, amount }) => (
-        <ListItemLink
-          key={category.id}
-          to={getCurrentMonthCategoryLink({
-            budgetId: budget.id,
-            categoryGroupId,
-            categoryId: category.id
-          })}
-        >
+        <ListItemLink key={category.id} to={linkFunction(category.id)}>
           <SecondaryText style={{ whiteSpace: "pre" }}>
             <LabelWithTransactionCount
               count={transactions}
@@ -64,6 +57,7 @@ CategoriesSection.propTypes = {
     categoriesById: PropTypes.object.isRequired
   }).isRequired,
   categoryGroupId: PropTypes.string.isRequired,
+  linkFunction: PropTypes.func.isRequired,
   transactions: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 };
 

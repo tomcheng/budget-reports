@@ -61,9 +61,8 @@ const PageWrapper = ({
                 {breadcrumbs && (
                   <MinorText style={{ lineHeight: 1, whiteSpace: "normal" }}>
                     {breadcrumbs.map(({ label, to }, index) => (
-                      <Fragment>
+                      <Fragment key={to}>
                         <Link
-                          key={to}
                           to={to}
                           style={{
                             paddingBottom: 8,
