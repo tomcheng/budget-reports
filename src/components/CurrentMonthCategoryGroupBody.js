@@ -66,6 +66,7 @@ class CurrentMonthCategoryGroupBody extends PureComponent {
     return (
       <Fragment>
         <ProgressSection
+          key={selectedCategory ? selectedCategory.name : "overview"}
           budgetId={budgetId}
           currentMonth={currentMonth}
           title={

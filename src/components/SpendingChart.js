@@ -128,7 +128,6 @@ class SpendingChart extends PureComponent {
             key={monthsToCompare}
             options={{
               chart: { spacing: [0, 0, 0, 0], height: 180 },
-              plotOptions: { series: { animation: false } },
               xAxis: {
                 labels: { enabled: false },
                 plotBands
