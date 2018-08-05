@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import EnsureBudgetLoaded from "./EnsureBudgetLoaded";
-import { PageTitle } from "./typeComponents";
+import { PageTitle, MinorText } from "./typeComponents";
 import { PrimaryButton } from "./Button";
 import SidebarMenu from "./SidebarMenu";
-import BackLink from "./BackLink";
 import HeaderMenu from "./HeaderMenu";
 
 const Container = styled.div`
@@ -24,7 +24,6 @@ const Header = styled.div`
 const HeaderTop = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
   height: 60px;
   padding-left: 0;
   padding-right: 20px;
@@ -43,8 +42,8 @@ const PageWrapper = ({
   budgetLoaded,
   title,
   actions,
-  backLink,
   headerMenu,
+  parentLink,
   onAuthorize,
   onRequestBudget
 }) => (
@@ -58,8 +57,17 @@ const PageWrapper = ({
         <Container>
           <Header flushLeft>
             <HeaderTop>
-              {backLink ? <BackLink /> : sidebarTrigger}
-              <PageTitle style={{ flexGrow: 1 }}>{title}</PageTitle>
+              {sidebarTrigger}
+              <div style={{ flexGrow: 1 }}>
+                {parentLink && (
+                  <MinorText style={{ lineHeight: 1, paddingBottom: 8 }}>
+                    <Link to={parentLink.to}>{parentLink.label}</Link>
+                  </MinorText>
+                )}
+                <PageTitle style={{ lineHeight: parentLink && 1 }}>
+                  {title}
+                </PageTitle>
+              </div>
               {actions}
             </HeaderTop>
             {headerMenu && <HeaderMenu {...headerMenu} />}
@@ -96,8 +104,11 @@ PageWrapper.propTypes = {
   onAuthorize: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired,
   actions: PropTypes.node,
-  backLink: PropTypes.bool,
-  headerMenu: PropTypes.object
+  headerMenu: PropTypes.object,
+  parentLink: PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    to: PropTypes.string.isRequired
+  })
 };
 
 export default PageWrapper;

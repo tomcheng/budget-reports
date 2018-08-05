@@ -51,9 +51,9 @@ class CategoriesBody extends PureComponent {
               categoryGroupId: group.id
             })}
           >
-            <SecondaryText style={{ whiteSpace: "pre" }}>
+            <div style={{ whiteSpace: "pre" }}>
               {group.name}
-            </SecondaryText>
+            </div>
             <SecondaryText style={{ textAlign: "right" }}>
               <Amount amount={group.amount} />
               <MinorText>

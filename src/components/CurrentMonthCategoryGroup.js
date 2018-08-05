@@ -5,6 +5,7 @@ import sortBy from "lodash/fp/sortBy";
 import takeWhile from "lodash/fp/takeWhile";
 import { sumByProp } from "../optimized";
 import { getTransactionMonth } from "../utils";
+import { getCurrentMonthLink } from "../linkUtils";
 import PageWrapper from "./PageWrapper";
 import { SecondaryText } from "./typeComponents";
 import CategoryGroupTitle from "./CategoryGroupTitle";
@@ -55,7 +56,7 @@ class CurrentMonthCategoryGroup extends Component {
   };
 
   render() {
-    const { budget, categoryGroupId, currentMonth, ...other } = this.props;
+    const { budget, budgetId, categoryGroupId, currentMonth, ...other } = this.props;
     const { selectedCategoryId, menuExpanded } = this.state;
     let headerMenuOptions;
     let categoryStats;
@@ -104,12 +105,17 @@ class CurrentMonthCategoryGroup extends Component {
     return (
       <PageWrapper
         {...other}
+        budgetId={budgetId}
         budgetLoaded={!!budget}
         backLink
         bodyStyle={{
           overflowY: "hidden",
           display: "flex",
           flexDirection: "column"
+        }}
+        parentLink={{
+          label: "Current Month Spending",
+          to: getCurrentMonthLink({ budgetId })
         }}
         title={
           budget ? (
