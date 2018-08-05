@@ -3,16 +3,13 @@ import PropTypes from "prop-types";
 import { setSetting, getSetting, PAYEES_SORT_ORDER } from "../uiRepo";
 import PageWrapper from "./PageWrapper";
 import CategoriesBody from "./CategoriesBody";
-import { MinorText, SecondaryText } from "./typeComponents";
-import Dropdown from "./Dropdown";
+import SortDropdown from "./SortDropdown";
 
-const SORT_LABELS = {
-  amount: "Amount",
-  name: "Name",
-  transactions: "Transactions"
-};
-
-const SORT_OPTIONS = ["amount", "transactions", "name"];
+const SORT_OPTIONS = [
+  { label: "Amount", value: "amount" },
+  { label: "Transactions", value: "transactions" },
+  { label: "Name", value: "name" }
+];
 
 class Categories extends Component {
   static propTypes = {
@@ -44,34 +41,11 @@ class Categories extends Component {
         {...other}
         budgetLoaded={!!budget}
         actions={
-          <Dropdown
-            dropdownContent={({ onClose }) =>
-              SORT_OPTIONS.map(sortOption => (
-                <Dropdown.Option
-                  key={sortOption}
-                  onClick={() => {
-                    this.handleChangeSort(sortOption);
-                    onClose();
-                  }}
-                  isSelected={sortOption === sort}
-                >
-                  {SORT_LABELS[sortOption]}
-                </Dropdown.Option>
-              ))
-            }
-            align="right"
-          >
-            {({ triggerStyle, onClick, ref }) => (
-              <div
-                style={{ ...triggerStyle, textAlign: "right" }}
-                onClick={onClick}
-                ref={ref}
-              >
-                <MinorText>Sort by:</MinorText>
-                <SecondaryText>{SORT_LABELS[sort]}</SecondaryText>
-              </div>
-            )}
-          </Dropdown>
+          <SortDropdown
+            options={SORT_OPTIONS}
+            selected={sort}
+            onChange={this.handleChangeSort}
+          />
         }
         content={() => <CategoriesBody budget={budget} sort={sort} />}
       />
