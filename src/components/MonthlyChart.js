@@ -49,6 +49,7 @@ const MonthlyChart = ({
     <Chart
       options={{
         chart: {
+          height: 180,
           type: "column",
           events: {
             click: event => {

@@ -14,7 +14,7 @@ import takeWhile from "lodash/fp/takeWhile";
 import { sumByProp } from "../optimized";
 import { getTransactionMonth } from "../utils";
 import { primaryColor, plotBandColor } from "../styleVariables";
-import { MinorText } from "./typeComponents";
+import { MinorText, LargeNumber } from "./typeComponents";
 import Chart from "./Chart";
 import Amount from "./Amount";
 
@@ -105,29 +105,34 @@ class SpendingChart extends PureComponent {
     return (
       <Fragment>
         <div style={{ position: "relative" }}>
-          <MinorText
+          <div
             style={{
-              position: "absolute",
-              bottom: 3,
-              right: 0,
-              zIndex: 1,
               textAlign: "right",
-              lineHeight: "16px"
+              lineHeight: "16px",
+              display: "flex",
+              justifyContent: "flex-end",
+              marginBottom: 8
             }}
           >
-            <div>
-              spent: <Amount amount={spent} />
-            </div>
             {isNumber(available) && (
-              <div>
-                available: <Amount amount={-available} />
+              <div style={{ marginRight: 20 }}>
+                <LargeNumber style={{ lineHeight: "16px" }}>
+                  <Amount amount={-available} />
+                </LargeNumber>
+                <MinorText>available</MinorText>
               </div>
             )}
-          </MinorText>
+            <div>
+              <LargeNumber style={{ lineHeight: "16px" }}>
+                <Amount amount={spent} />
+              </LargeNumber>
+              <MinorText>spent</MinorText>
+            </div>
+          </div>
           <Chart
             key={monthsToCompare}
             options={{
-              chart: { spacing: [0, 0, 0, 0], height: 180 },
+              chart: { spacing: [0, 0, 0, 0], height: 140 },
               xAxis: {
                 labels: { enabled: false },
                 plotBands

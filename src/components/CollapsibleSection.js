@@ -22,6 +22,7 @@ const Header = styled(StrongText)`
 
 const SettingsContainer = styled.div`
   padding: 0 10px;
+  margin-right: -10px;
   align-self: stretch;
   display: flex;
   align-items: center;
@@ -29,7 +30,7 @@ const SettingsContainer = styled.div`
 
 const StyledIcon = styled(Icon)`
   font-weight: 400;
-  color: #888;
+  color: #aaa;
   font-size: 10px;
 `;
 
