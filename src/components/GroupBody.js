@@ -65,7 +65,6 @@ class GroupBody extends PureComponent {
         />
         <CategoriesSection
           budget={budget}
-          categoryGroupId={categoryGroup.id}
           linkFunction={categoryId =>
             getCategoryLink({
               budgetId,

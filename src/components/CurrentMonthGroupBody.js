@@ -72,7 +72,6 @@ class CurrentMonthGroupBody extends PureComponent {
         {!category && (
           <CategoriesSection
             budget={budget}
-            categoryGroupId={categoryGroupId}
             transactions={transactionsInGroupForMonth}
             linkFunction={categoryId =>
               getCurrentMonthCategoryLink({

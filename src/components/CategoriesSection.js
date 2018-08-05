@@ -12,12 +12,7 @@ import AmountWithPercentage from "./AmountWithPercentage";
 
 const mapWithKeys = map.convert({ cap: false });
 
-const CategoriesSection = ({
-  budget,
-  categoryGroupId,
-  linkFunction,
-  transactions
-}) => {
+const CategoriesSection = ({ budget, linkFunction, transactions }) => {
   const { categoriesById } = budget;
   let total = 0;
   const categories = compose([
@@ -56,7 +51,6 @@ CategoriesSection.propTypes = {
   budget: PropTypes.shape({
     categoriesById: PropTypes.object.isRequired
   }).isRequired,
-  categoryGroupId: PropTypes.string.isRequired,
   linkFunction: PropTypes.func.isRequired,
   transactions: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 };
