@@ -4,7 +4,7 @@ import compose from "lodash/fp/compose";
 import sortBy from "lodash/fp/sortBy";
 import { getTransactionMonth } from "../utils";
 import { getCategoryLink } from "../linkUtils";
-import GroupMonthlySection from "./GroupMonthlySection";
+import MonthByMonthSection from "./MonthByMonthSection";
 import CategoriesSection from "./CategoriesSection";
 
 class GroupBody extends PureComponent {
@@ -55,7 +55,7 @@ class GroupBody extends PureComponent {
 
     return (
       <Fragment>
-        <GroupMonthlySection
+        <MonthByMonthSection
           firstMonth={getTransactionMonth(
             transactions[transactions.length - 1]
           )}
