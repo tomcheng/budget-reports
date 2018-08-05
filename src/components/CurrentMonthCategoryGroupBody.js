@@ -66,11 +66,11 @@ class CurrentMonthCategoryGroupBody extends PureComponent {
     return (
       <Fragment>
         <ProgressSection
-          key={selectedCategory ? selectedCategory.name : "overview"}
+          key={selectedCategory ? selectedCategory.name : "day-by-day"}
           budgetId={budgetId}
           currentMonth={currentMonth}
           title={
-            selectedCategory ? `${selectedCategory.name} Overview` : "Overview"
+            selectedCategory ? `${selectedCategory.name} Day by Day` : "Day by Day"
           }
           transactions={transactionsInCategory || transactionsInGroup}
           total={spent + available}

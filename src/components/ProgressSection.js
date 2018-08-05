@@ -16,7 +16,7 @@ class ProgressSection extends Component {
     total: PropTypes.number
   };
 
-  static defaultProps = { title: "Overview" };
+  static defaultProps = { title: "Day by Day" };
 
   constructor(props) {
     super();

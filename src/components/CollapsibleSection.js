@@ -20,9 +20,14 @@ const Header = styled(StrongText)`
   user-select: none;
 `;
 
-const Actions = styled.div`
+const SettingsContainer = styled.div`
+  padding: 0 10px;
+  align-self: stretch;
   display: flex;
   align-items: center;
+`;
+
+const StyledIcon = styled(Icon)`
   font-weight: 400;
   color: #888;
   font-size: 10px;
@@ -60,26 +65,24 @@ class CollapsibleSection extends Component {
 
     return (
       <Container>
-        <Header onClick={this.handleClickTitle}>
-          {title}
-          <Actions>
-            {hasSettings &&
-              expanded && (
-                <div
-                  style={{ padding: "0 12px" }}
-                  onClick={evt => {
-                    evt.stopPropagation();
-                    onClickSettings();
-                  }}
-                >
-                  <Icon icon="cog" />
-                </div>
-              )}
-            <Icon
+        <Header>
+          <div
+            style={{ display: "flex", alignItems: "center" }}
+            onClick={this.handleClickTitle}
+          >
+            {title}
+            <StyledIcon
               icon="chevron-right"
               transform={{ rotate: expanded ? 90 : 0 }}
+              style={{ marginLeft: 10 }}
             />
-          </Actions>
+          </div>
+          {hasSettings &&
+            expanded && (
+              <SettingsContainer onClick={onClickSettings}>
+                <StyledIcon icon="cog" />
+              </SettingsContainer>
+            )}
         </Header>
         <AnimateHeight isExpanded={expanded}>
           <Body style={{ padding: noPadding && 0 }}>{children}</Body>

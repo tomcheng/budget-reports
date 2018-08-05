@@ -17,37 +17,30 @@ import NoTransactions from "./NoTransactions";
 
 const mapWithKeys = map.convert({ cap: false });
 
-const CurrentMonthSpendingBreakdown = ({ budget, transactions }) => (
-  <CurrentMonthCategoryGroupsContent
-    budget={budget}
-    transactions={transactions}
-  />
-);
-
-CurrentMonthSpendingBreakdown.propTypes = {
-  budget: PropTypes.shape({
-    categoriesById: PropTypes.objectOf(
+class CurrentMonthSpendingBreakdown extends PureComponent {
+  static propTypes = {
+    budget: PropTypes.shape({
+      categoriesById: PropTypes.objectOf(
+        PropTypes.shape({
+          categoryGroupId: PropTypes.string.isRequired,
+          id: PropTypes.string.isRequired
+        })
+      ).isRequired,
+      categoryGroupsById: PropTypes.objectOf(
+        PropTypes.shape({
+          id: PropTypes.string.isRequired
+        })
+      ).isRequired,
+      id: PropTypes.string.isRequired
+    }).isRequired,
+    transactions: PropTypes.arrayOf(
       PropTypes.shape({
-        categoryGroupId: PropTypes.string.isRequired,
-        id: PropTypes.string.isRequired
+        amount: PropTypes.number.isRequired,
+        categoryId: PropTypes.string.isRequired
       })
-    ).isRequired,
-    categoryGroupsById: PropTypes.objectOf(
-      PropTypes.shape({
-        id: PropTypes.string.isRequired
-      })
-    ).isRequired,
-    id: PropTypes.string.isRequired
-  }).isRequired,
-  transactions: PropTypes.arrayOf(
-    PropTypes.shape({
-      amount: PropTypes.number.isRequired,
-      categoryId: PropTypes.string.isRequired
-    })
-  ).isRequired
-};
+    ).isRequired
+  };
 
-class CurrentMonthCategoryGroupsContent extends PureComponent {
   render() {
     const { budget, transactions } = this.props;
     const { categoriesById, categoryGroupsById, id: budgetId } = budget;
@@ -72,7 +65,7 @@ class CurrentMonthCategoryGroupsContent extends PureComponent {
     }
 
     return (
-      <CollapsibleSection title="Spending Breakdown">
+      <CollapsibleSection title="Spending by Group">
         {groups.map(({ group, transactions, amount }) => (
           <ListItemLink
             key={group.id}
