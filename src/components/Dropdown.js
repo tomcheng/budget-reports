@@ -100,7 +100,7 @@ class Dropdown extends Component {
     return (
       <Fragment>
         {children({
-          triggerStyle: { cursor: "pointer", userSelect: "none" },
+          triggerStyle: { userSelect: "none" },
           onClick: this.handleClickTrigger,
           ref: el => {
             this.trigger = el;
