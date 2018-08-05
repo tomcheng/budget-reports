@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { getTransactionMonth } from "../utils";
 import { sumByProp } from "../optimized";
 import DayByDaySection from "./DayByDaySection";
-import CurrentMonthGroupCategoriesSection from "./CurrentMonthGroupCategoriesSection";
+import CategoriesSection from "./CategoriesSection";
 import TransactionsSection from "./TransactionsSection";
 
 class CurrentMonthGroupBody extends PureComponent {
@@ -69,7 +69,7 @@ class CurrentMonthGroupBody extends PureComponent {
           total={spent + available}
         />
         {!category && (
-          <CurrentMonthGroupCategoriesSection
+          <CategoriesSection
             budget={budget}
             categoryGroupId={categoryGroupId}
             transactions={transactionsInGroupForMonth}

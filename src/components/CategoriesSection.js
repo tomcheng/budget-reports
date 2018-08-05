@@ -13,7 +13,7 @@ import AmountWithPercentage from "./AmountWithPercentage";
 
 const mapWithKeys = map.convert({ cap: false });
 
-const CurrentMonthGroupCategoriesSection = ({
+const CategoriesSection = ({
   budget,
   categoryGroupId,
   transactions
@@ -59,7 +59,7 @@ const CurrentMonthGroupCategoriesSection = ({
   );
 };
 
-CurrentMonthGroupCategoriesSection.propTypes = {
+CategoriesSection.propTypes = {
   budget: PropTypes.shape({
     categoriesById: PropTypes.object.isRequired
   }).isRequired,
@@ -67,4 +67,4 @@ CurrentMonthGroupCategoriesSection.propTypes = {
   transactions: PropTypes.arrayOf(PropTypes.shape({})).isRequired
 };
 
-export default CurrentMonthGroupCategoriesSection;
+export default CategoriesSection;
