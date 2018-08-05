@@ -1,8 +1,7 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { getCurrentMonthLink } from "../linkUtils";
 import PageWrapper from "./PageWrapper";
-import CategoryGroupTitle from "./CategoryGroupTitle";
 import CurrentMonthGroupBody from "./CurrentMonthGroupBody";
 
 class CurrentMonthGroup extends Component {
@@ -23,33 +22,22 @@ class CurrentMonthGroup extends Component {
     categoryId: PropTypes.string
   };
 
-  constructor(props) {
-    super();
-    this.state = {
-      selectedCategoryId: props.categoryId || null,
-      menuExpanded: false
-    };
-  }
-
-  handleSelectCategory = id => {
-    this.setState(state => ({
-      ...state,
-      selectedCategoryId: id === state.selectedCategoryId ? null : id,
-      menuExpanded: false
-    }));
-  };
-
-  handleClearCategory = () => {
-    this.setState({ selectedCategoryId: null, menuExpanded: false });
-  };
-
-  handleToggleMenu = () => {
-    this.setState(state => ({ ...state, menuExpanded: !state.menuExpanded }));
-  };
-
   render() {
-    const { budget, budgetId, categoryGroupId, currentMonth, ...other } = this.props;
-    const { selectedCategoryId } = this.state;
+    const {
+      budget,
+      budgetId,
+      categoryGroupId,
+      currentMonth,
+      categoryId,
+      ...other
+    } = this.props;
+
+    let title = "";
+    if (budget) {
+      title = categoryId
+        ? budget.categoriesById[categoryId].name
+        : budget.categoryGroupsById[categoryGroupId].name;
+    }
 
     return (
       <PageWrapper
@@ -66,24 +54,13 @@ class CurrentMonthGroup extends Component {
           label: "Current Month Spending",
           to: getCurrentMonthLink({ budgetId })
         }}
-        title={
-          budget ? (
-            <CategoryGroupTitle
-              budget={budget}
-              categoryGroupId={categoryGroupId}
-              categoryId={selectedCategoryId}
-              onClearCategory={this.handleClearCategory}
-            />
-          ) : (
-            ""
-          )
-        }
+        title={title}
         content={() => (
           <CurrentMonthGroupBody
             budget={budget}
             categoryGroupId={categoryGroupId}
             currentMonth={currentMonth}
-            selectedCategoryId={selectedCategoryId}
+            categoryId={categoryId}
           />
         )}
       />

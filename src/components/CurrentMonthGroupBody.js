@@ -16,16 +16,11 @@ class CurrentMonthGroupBody extends PureComponent {
     }).isRequired,
     categoryGroupId: PropTypes.string.isRequired,
     currentMonth: PropTypes.string.isRequired,
-    selectedCategoryId: PropTypes.string
+    categoryId: PropTypes.string
   };
 
   render() {
-    const {
-      budget,
-      categoryGroupId,
-      currentMonth,
-      selectedCategoryId
-    } = this.props;
+    const { budget, categoryGroupId, currentMonth, categoryId } = this.props;
     const {
       id: budgetId,
       payeesById,
@@ -37,13 +32,12 @@ class CurrentMonthGroupBody extends PureComponent {
     const categories = allCategories.filter(
       category => category.categoryGroupId === categoryGroupId
     );
-    const selectedCategory =
-      selectedCategoryId && categoriesById[selectedCategoryId];
+    const category = categoryId && categoriesById[categoryId];
     const categoryIds = categories.map(category => category.id);
     const transactionsInCategory =
-      selectedCategoryId &&
+      categoryId &&
       allTransactions.filter(
-        transaction => transaction.categoryId === selectedCategoryId
+        transaction => transaction.categoryId === categoryId
       );
     const transactionsInCategoryForMonth =
       transactionsInCategory &&
@@ -57,24 +51,24 @@ class CurrentMonthGroupBody extends PureComponent {
       transaction => getTransactionMonth(transaction) === currentMonth
     );
 
-    const spent = selectedCategory
-      ? -selectedCategory.activity
+    const spent = category
+      ? -category.activity
       : -sumByProp("activity")(categories);
-    const available = selectedCategory
-      ? selectedCategory.balance
+    const available = category
+      ? category.balance
       : sumByProp("balance")(categories);
 
     return (
       <Fragment>
         <DayByDaySection
-          key={selectedCategory ? selectedCategory.name : "day-by-day"}
+          key={category ? category.name : "day-by-day"}
           budgetId={budgetId}
           currentMonth={currentMonth}
           title="Day by Day"
           transactions={transactionsInCategory || transactionsInGroup}
           total={spent + available}
         />
-        {!selectedCategory && (
+        {!category && (
           <CurrentMonthGroupCategoriesSection
             budget={budget}
             categoryGroupId={categoryGroupId}
