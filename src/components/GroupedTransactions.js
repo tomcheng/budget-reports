@@ -4,7 +4,7 @@ import groupBy from "lodash/fp/groupBy";
 import identity from "lodash/fp/identity";
 import map from "lodash/fp/map";
 import prop from "lodash/fp/prop";
-import sumBy from "lodash/fp/sumBy";
+import { sumByProp } from "../optimized";
 import Breakdown from "./Breakdown";
 import LabelWithTransactionCount from "./LabelWithTransactionCount";
 
@@ -32,7 +32,7 @@ class GroupedTransactions extends PureComponent {
     } = this.props;
     const groupedTransactions = groupBy(groupByFunction)(transactions);
     const nodes = mapWithKeys((transactions, key) => ({
-      amount: sumBy("amount")(transactions),
+      amount: sumByProp("amount")(transactions),
       id: key,
       name: ({ expanded }) => (
         <LabelWithTransactionCount
