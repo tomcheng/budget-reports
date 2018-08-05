@@ -7,7 +7,7 @@ import ChartSettingsModal from "./ChartSettingsModal";
 
 const MAX_MONTHS = 12;
 
-class ProgressSection extends Component {
+class DayByDaySection extends Component {
   static propTypes = {
     budgetId: PropTypes.string.isRequired,
     currentMonth: PropTypes.string.isRequired,
@@ -94,4 +94,4 @@ class ProgressSection extends Component {
   }
 }
 
-export default ProgressSection;
+export default DayByDaySection;

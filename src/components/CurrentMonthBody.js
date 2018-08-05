@@ -6,8 +6,8 @@ import {
   splitTransactions,
   getTransactionMonth
 } from "../utils";
-import ProgressSection from "./ProgressSection";
-import CurrentMonthSpendingBreakdown from "./CurrentMonthSpendingBreakdown";
+import DayByDaySection from "./DayByDaySection";
+import CurrentMonthGroupsSection from "./CurrentMonthGroupsSection";
 
 class CurrentMonthBody extends PureComponent {
   static propTypes = {
@@ -28,12 +28,12 @@ class CurrentMonthBody extends PureComponent {
 
     return (
       <Fragment>
-        <ProgressSection
+        <DayByDaySection
           budgetId={budget.id}
           currentMonth={currentMonth}
           transactions={transactions}
         />
-        <CurrentMonthSpendingBreakdown
+        <CurrentMonthGroupsSection
           budget={budget}
           transactions={transactionsThisMonth}
         />

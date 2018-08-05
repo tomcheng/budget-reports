@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import get from "lodash/fp/get";
 import { getCategoryGroupsLink } from "../linkUtils";
 import PageWrapper from "./PageWrapper";
-import CategoryGroupBody from "./CategoryGroupBody";
+import GroupBody from "./GroupBody";
 
-const CategoryGroup = ({ budget, budgetId, categoryGroupId, ...other }) => {
+const Group = ({ budget, budgetId, categoryGroupId, ...other }) => {
   const group = get(["categoryGroupsById", categoryGroupId])(budget);
   return (
     <PageWrapper
@@ -18,14 +18,14 @@ const CategoryGroup = ({ budget, budgetId, categoryGroupId, ...other }) => {
         to: getCategoryGroupsLink({ budgetId })
       }}
       content={() => (
-        <CategoryGroupBody budget={budget} categoryGroup={group} />
+        <GroupBody budget={budget} categoryGroup={group} />
       )}
       backLink
     />
   );
 };
 
-CategoryGroup.propTypes = {
+Group.propTypes = {
   authorized: PropTypes.bool.isRequired,
   budgetId: PropTypes.string.isRequired,
   categoryGroupId: PropTypes.string.isRequired,
@@ -34,4 +34,4 @@ CategoryGroup.propTypes = {
   budget: PropTypes.object
 };
 
-export default CategoryGroup;
+export default Group;

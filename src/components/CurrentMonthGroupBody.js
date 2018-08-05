@@ -2,10 +2,10 @@ import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import { getTransactionMonth } from "../utils";
 import { sumByProp } from "../optimized";
-import ProgressSection from "./ProgressSection";
-import Transactions from "./Transactions";
+import DayByDaySection from "./DayByDaySection";
+import TransactionsSection from "./TransactionsSection";
 
-class CurrentMonthCategoryGroupBody extends PureComponent {
+class CurrentMonthGroupBody extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       categories: PropTypes.array.isRequired,
@@ -65,7 +65,7 @@ class CurrentMonthCategoryGroupBody extends PureComponent {
 
     return (
       <Fragment>
-        <ProgressSection
+        <DayByDaySection
           key={selectedCategory ? selectedCategory.name : "day-by-day"}
           budgetId={budgetId}
           currentMonth={currentMonth}
@@ -75,7 +75,7 @@ class CurrentMonthCategoryGroupBody extends PureComponent {
           transactions={transactionsInCategory || transactionsInGroup}
           total={spent + available}
         />
-        <Transactions
+        <TransactionsSection
           budgetId={budgetId}
           payeesById={payeesById}
           title={
@@ -93,4 +93,4 @@ class CurrentMonthCategoryGroupBody extends PureComponent {
   }
 }
 
-export default CurrentMonthCategoryGroupBody;
+export default CurrentMonthGroupBody;

@@ -4,7 +4,13 @@ import CollapsibleSection from "./CollapsibleSection";
 import Transaction from "./Transaction";
 import NoTransactions from "./NoTransactions";
 
-const Transactions = ({ transactions, title, payeesById, budgetId, linkToPayee }) => (
+const TransactionsSection = ({
+  transactions,
+  title,
+  payeesById,
+  budgetId,
+  linkToPayee
+}) => (
   <CollapsibleSection title={title}>
     {transactions.length ? (
       transactions.map(({ id, payeeId, date, amount }) => (
@@ -23,9 +29,8 @@ const Transactions = ({ transactions, title, payeesById, budgetId, linkToPayee }
   </CollapsibleSection>
 );
 
-Transactions.propTypes = {
+TransactionsSection.propTypes = {
   payeesById: PropTypes.object,
-  title: PropTypes.string.isRequired,
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       amount: PropTypes.number.isRequired,
@@ -35,7 +40,10 @@ Transactions.propTypes = {
     })
   ).isRequired,
   budgetId: PropTypes.string,
-  linkToPayee: PropTypes.bool
+  linkToPayee: PropTypes.bool,
+  title: PropTypes.string
 };
 
-export default Transactions;
+TransactionsSection.defaultProps = { title: "Transactions" };
+
+export default TransactionsSection;

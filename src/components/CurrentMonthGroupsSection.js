@@ -17,7 +17,7 @@ import NoTransactions from "./NoTransactions";
 
 const mapWithKeys = map.convert({ cap: false });
 
-class CurrentMonthSpendingBreakdown extends PureComponent {
+class CurrentMonthGroupsSection extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       categoriesById: PropTypes.objectOf(
@@ -65,7 +65,7 @@ class CurrentMonthSpendingBreakdown extends PureComponent {
     }
 
     return (
-      <CollapsibleSection title="Spending by Group">
+      <CollapsibleSection title="Category Groups">
         {groups.map(({ group, transactions, amount }) => (
           <ListItemLink
             key={group.id}
@@ -88,4 +88,4 @@ class CurrentMonthSpendingBreakdown extends PureComponent {
   }
 }
 
-export default CurrentMonthSpendingBreakdown;
+export default CurrentMonthGroupsSection;

@@ -9,11 +9,11 @@ import { getCurrentMonthLink } from "../linkUtils";
 import PageWrapper from "./PageWrapper";
 import { SecondaryText } from "./typeComponents";
 import CategoryGroupTitle from "./CategoryGroupTitle";
-import CurrentMonthCategoryGroupBody from "./CurrentMonthCategoryGroupBody";
+import CurrentMonthGroupBody from "./CurrentMonthGroupBody";
 import LabelWithTransactionCount from "./LabelWithTransactionCount";
 import AmountWithPercentage from "./AmountWithPercentage";
 
-class CurrentMonthCategoryGroup extends Component {
+class CurrentMonthGroup extends Component {
   static propTypes = {
     authorized: PropTypes.bool.isRequired,
     budgetId: PropTypes.string.isRequired,
@@ -155,7 +155,7 @@ class CurrentMonthCategoryGroup extends Component {
           collapsedLabel: "show categories"
         }}
         content={() => (
-          <CurrentMonthCategoryGroupBody
+          <CurrentMonthGroupBody
             budget={budget}
             categoryGroupId={categoryGroupId}
             currentMonth={currentMonth}
@@ -167,4 +167,4 @@ class CurrentMonthCategoryGroup extends Component {
   }
 }
 
-export default CurrentMonthCategoryGroup;
+export default CurrentMonthGroup;

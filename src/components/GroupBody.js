@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import sortBy from "lodash/fp/sortBy";
 import { getTransactionMonth } from "../utils";
-import CategoryGroupMonthByMonthChart from "./CategoryGroupMonthByMonthChart";
-import Transactions from "./Transactions";
+import GroupMonthlySection from "./GroupMonthlySection";
+import TransactionsSection from "./TransactionsSection";
 
-class CategoryGroupBody extends PureComponent {
+class GroupBody extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       transactions: PropTypes.arrayOf(
@@ -54,7 +54,7 @@ class CategoryGroupBody extends PureComponent {
 
     return (
       <Fragment>
-        <CategoryGroupMonthByMonthChart
+        <GroupMonthlySection
           firstMonth={getTransactionMonth(
             transactions[transactions.length - 1]
           )}
@@ -63,8 +63,7 @@ class CategoryGroupBody extends PureComponent {
           onSelectMonth={this.handleSelectMonth}
         />
         {selectedMonth && (
-          <Transactions
-            title="Transactions"
+          <TransactionsSection
             transactions={transactionsInSelectedMonth}
             budgetId={budgetId}
             payeesById={payeesById}
@@ -76,4 +75,4 @@ class CategoryGroupBody extends PureComponent {
   }
 }
 
-export default CategoryGroupBody;
+export default GroupBody;

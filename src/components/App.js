@@ -21,8 +21,8 @@ import NotFound from "./NotFound";
 import ErrorBoundary from "./ErrorBoundary";
 import Budgets from "./Budgets";
 import Settings from "./Settings";
-import CurrentMonthCategoryGroup from "./CurrentMonthCategoryGroup";
-import CategoryGroup from "./CategoryGroup";
+import CurrentMonthGroup from "./CurrentMonthGroup";
+import Group from "./Group";
 import Category from "./Category";
 import Payee from "./Payee";
 
@@ -157,7 +157,7 @@ class App extends Component {
             path="/budgets/:budgetId/current/:categoryGroupId"
             exact
             render={({ match }) => (
-              <CurrentMonthCategoryGroup
+              <CurrentMonthGroup
                 authorized={authorized}
                 budget={budgetDetails[match.params.budgetId]}
                 budgetId={match.params.budgetId}
@@ -172,7 +172,7 @@ class App extends Component {
             path="/budgets/:budgetId/current/:categoryGroupId/:categoryId"
             exact
             render={({ match }) => (
-              <CurrentMonthCategoryGroup
+              <CurrentMonthGroup
                 authorized={authorized}
                 budget={budgetDetails[match.params.budgetId]}
                 budgetId={match.params.budgetId}
@@ -190,7 +190,7 @@ class App extends Component {
             render={props => {
               const { budgetId, categoryGroupId } = props.match.params;
               return (
-                <CategoryGroup
+                <Group
                   authorized={authorized}
                   budget={budgetDetails[budgetId]}
                   budgetId={budgetId}
