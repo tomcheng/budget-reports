@@ -1,8 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {
-  plotBandColor,
-  selectedPlotBandColor,
   primaryColor,
   lightPrimaryColor,
   negativeChartColor
@@ -17,11 +15,8 @@ const IncomeVsExpensesChart = ({
 }) => (
   <MonthlyChart
     data={data}
-    highlights={
-      selectedMonths.length
-        ? { months: selectedMonths, color: selectedPlotBandColor }
-        : { months: excludedMonths, color: plotBandColor }
-    }
+    selectedMonths={selectedMonths}
+    excludedMonths={excludedMonths}
     series={[
       { color: lightPrimaryColor, valueFunction: d => d.income },
       { color: negativeChartColor, valueFunction: d => d.expenses },

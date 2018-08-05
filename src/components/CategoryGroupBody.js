@@ -19,8 +19,18 @@ class CategoryGroupBody extends PureComponent {
     }).isRequired
   };
 
+  state = { selectedMonth: null };
+
+  handleSelectMonth = month => {
+    this.setState(state => ({
+      ...state,
+      selectedMonth: state.selectedMonth === month ? null : month
+    }));
+  };
+
   render() {
     const { categoryGroup, budget } = this.props;
+    const { selectedMonth } = this.state;
     const { transactions, categories } = budget;
 
     const categoriesInGroup = categories.filter(
@@ -36,10 +46,10 @@ class CategoryGroupBody extends PureComponent {
 
     return (
       <CategoryGroupMonthByMonthChart
-        firstMonth={getTransactionMonth(
-          transactions[transactions.length - 1]
-        )}
+        firstMonth={getTransactionMonth(transactions[transactions.length - 1])}
+        selectedMonth={selectedMonth}
         transactions={transactionsInGroup}
+        onSelectMonth={this.handleSelectMonth}
       />
     );
   }

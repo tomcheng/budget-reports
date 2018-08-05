@@ -7,7 +7,7 @@ import { lightPrimaryColor } from "../styleVariables";
 import CollapsibleSection from "./CollapsibleSection";
 import MonthlyChart from "./MonthlyChart";
 
-const CategoryGroupMonthByMonthChart = ({ transactions, firstMonth }) => {
+const CategoryGroupMonthByMonthChart = ({ transactions, firstMonth, selectedMonth, onSelectMonth }) => {
   const currentMonth = moment().format("YYYY-MM");
   const months = [firstMonth];
   let m = firstMonth;
@@ -30,6 +30,8 @@ const CategoryGroupMonthByMonthChart = ({ transactions, firstMonth }) => {
       <MonthlyChart
         data={data}
         series={[{ color: lightPrimaryColor, valueFunction: d => d.amount }]}
+        selectedMonths={selectedMonth && [selectedMonth]}
+        onSelectMonth={onSelectMonth}
       />
     </CollapsibleSection>
   );
@@ -37,7 +39,9 @@ const CategoryGroupMonthByMonthChart = ({ transactions, firstMonth }) => {
 
 CategoryGroupMonthByMonthChart.propTypes = {
   firstMonth: PropTypes.string.isRequired,
-  transactions: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  transactions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  onSelectMonth: PropTypes.func.isRequired,
+  selectedMonth: PropTypes.string
 };
 
 export default CategoryGroupMonthByMonthChart;

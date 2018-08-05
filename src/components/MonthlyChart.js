@@ -2,12 +2,26 @@ import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import findIndex from "lodash/fp/findIndex";
+import { plotBandColor, selectedPlotBandColor } from "../styleVariables";
 import Chart from "./Chart";
 
-const MonthlyChart = ({ data, series, highlights, onSelectMonth }) => {
+const MonthlyChart = ({
+  data,
+  series,
+  selectedMonths,
+  excludedMonths,
+  onSelectMonth
+}) => {
   const yearLines = [];
   const plotBands = [];
   const categories = data.map(d => moment(d.month).format("MMM"));
+  let highlights = null;
+
+  if (selectedMonths && selectedMonths.length) {
+    highlights = { months: selectedMonths, color: selectedPlotBandColor };
+  } else if (excludedMonths && excludedMonths.length) {
+    highlights = { months: excludedMonths, color: plotBandColor };
+  }
 
   data.forEach(({ month }, index) => {
     if (moment(month).format("MMM") === "Jan") {
@@ -86,10 +100,8 @@ MonthlyChart.propTypes = {
       type: PropTypes.oneOf(["line"])
     })
   ).isRequired,
-  highlights: PropTypes.shape({
-    color: PropTypes.string.isRequired,
-    months: PropTypes.arrayOf(PropTypes.string).isRequired
-  }),
+  excludedMonths: PropTypes.arrayOf(PropTypes.string),
+  selectedMonths: PropTypes.arrayOf(PropTypes.string),
   onSelectMonth: PropTypes.func
 };
 
