@@ -11,6 +11,9 @@ export const getCurrentMonthCategoryLink = ({
   categoryId
 }) => `/budgets/${budgetId}/current/${categoryGroupId}/${categoryId}`;
 
+export const getCategoryGroupsLink = ({ budgetId }) =>
+  `/budgets/${budgetId}/categories`;
+
 export const getCategoryGroupLink = ({ budgetId, categoryGroupId }) =>
   `/budgets/${budgetId}/category-groups/${categoryGroupId}`;
 
