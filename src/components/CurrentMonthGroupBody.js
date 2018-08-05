@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { getTransactionMonth } from "../utils";
 import { sumByProp } from "../optimized";
 import DayByDaySection from "./DayByDaySection";
+import CurrentMonthGroupCategoriesSection from "./CurrentMonthGroupCategoriesSection";
 import TransactionsSection from "./TransactionsSection";
 
 class CurrentMonthGroupBody extends PureComponent {
@@ -69,20 +70,20 @@ class CurrentMonthGroupBody extends PureComponent {
           key={selectedCategory ? selectedCategory.name : "day-by-day"}
           budgetId={budgetId}
           currentMonth={currentMonth}
-          title={
-            selectedCategory ? `${selectedCategory.name} Day by Day` : "Day by Day"
-          }
+          title="Day by Day"
           transactions={transactionsInCategory || transactionsInGroup}
           total={spent + available}
         />
+        {!selectedCategory && (
+          <CurrentMonthGroupCategoriesSection
+            budget={budget}
+            categoryGroupId={categoryGroupId}
+            transactions={transactionsInGroupForMonth}
+          />
+        )}
         <TransactionsSection
           budgetId={budgetId}
           payeesById={payeesById}
-          title={
-            selectedCategory
-              ? `${selectedCategory.name} Transactions`
-              : "Transactions"
-          }
           transactions={
             transactionsInCategoryForMonth || transactionsInGroupForMonth
           }

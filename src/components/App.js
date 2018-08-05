@@ -158,6 +158,7 @@ class App extends Component {
             exact
             render={({ match }) => (
               <CurrentMonthGroup
+                key={match.params.categoryGroupId}
                 authorized={authorized}
                 budget={budgetDetails[match.params.budgetId]}
                 budgetId={match.params.budgetId}
@@ -173,6 +174,7 @@ class App extends Component {
             exact
             render={({ match }) => (
               <CurrentMonthGroup
+                key={match.params.categoryId}
                 authorized={authorized}
                 budget={budgetDetails[match.params.budgetId]}
                 budgetId={match.params.budgetId}
