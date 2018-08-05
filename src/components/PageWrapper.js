@@ -6,7 +6,6 @@ import EnsureBudgetLoaded from "./EnsureBudgetLoaded";
 import { PageTitle, MinorText } from "./typeComponents";
 import { PrimaryButton } from "./Button";
 import SidebarMenu from "./SidebarMenu";
-import HeaderMenu from "./HeaderMenu";
 
 const Container = styled.div`
   height: 100vh;
@@ -42,7 +41,6 @@ const PageWrapper = ({
   budgetLoaded,
   title,
   actions,
-  headerMenu,
   parentLink,
   onAuthorize,
   onRequestBudget
@@ -70,7 +68,6 @@ const PageWrapper = ({
               </div>
               {actions}
             </HeaderTop>
-            {headerMenu && <HeaderMenu {...headerMenu} />}
           </Header>
           <Body>{content()}</Body>
           {!authorized && (
@@ -104,7 +101,6 @@ PageWrapper.propTypes = {
   onAuthorize: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired,
   actions: PropTypes.node,
-  headerMenu: PropTypes.object,
   parentLink: PropTypes.shape({
     label: PropTypes.string.isRequired,
     to: PropTypes.string.isRequired
