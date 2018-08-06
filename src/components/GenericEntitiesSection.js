@@ -39,7 +39,13 @@ const GenericEntitiesSection = ({
     <CollapsibleSection title={title}>
       {entities.map(({ entityId, transactions, amount }) => (
         <ListItemLink key={entityId} to={linkFunction(entityId)}>
-          <SecondaryText style={{ whiteSpace: "pre" }}>
+          <SecondaryText
+            style={{
+              whiteSpace: "pre",
+              overflow: "hidden",
+              textOverflow: "ellipsis"
+            }}
+          >
             <LabelWithTransactionCount
               count={transactions}
               label={entitiesById[entityId].name}
