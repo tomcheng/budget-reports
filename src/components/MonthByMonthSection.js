@@ -38,18 +38,24 @@ const MonthByMonthSection = ({
     return { month, amount: -amount };
   });
 
+  const chartNumbers = selectedMonth
+    ? [
+        {
+          amount: selectedMonthTotal,
+          label: moment(selectedMonth).format("MMM YYYY")
+        }
+      ]
+    : [
+        { amount: total / months.length, label: "spent/month" },
+        {
+          amount: total,
+          label: "total spent"
+        }
+      ];
+
   return (
     <CollapsibleSection title="Month by Month">
-      <ChartNumbers
-        numbers={[
-          {
-            amount: selectedMonth ? selectedMonthTotal : total,
-            label: selectedMonth
-              ? moment(selectedMonth).format("MMM YYYY")
-              : "spent"
-          }
-        ]}
-      />
+      <ChartNumbers numbers={chartNumbers} />
       <MonthlyChart
         data={data}
         series={[{ color: lightPrimaryColor, valueFunction: d => d.amount }]}
