@@ -100,48 +100,44 @@ class SpendingChart extends PureComponent {
         transaction => getTransactionMonth(transaction) === currentMonth
       )
     ])(transactions);
-    const chartNumbers = [
-      { amount: spent, label: "spent" },
-    ];
+    const chartNumbers = [{ amount: spent, label: "spent" }];
     if (isNumber(total)) {
       chartNumbers.push({ amount: -(total + spent), label: "available" });
     }
 
     return (
       <Fragment>
-        <div style={{ position: "relative" }}>
-          <ChartNumbers numbers={chartNumbers} />
-          <Chart
-            key={monthsToCompare}
-            options={{
-              chart: { spacing: [0, 0, 0, 0], height: 140 },
-              xAxis: {
-                labels: { enabled: false },
-                plotBands
+        <ChartNumbers numbers={chartNumbers} />
+        <Chart
+          key={monthsToCompare}
+          options={{
+            chart: { spacing: [0, 0, 0, 0], height: 140 },
+            xAxis: {
+              labels: { enabled: false },
+              plotBands
+            },
+            yAxis: { visible: false, endOnTick: false },
+            series: [
+              {
+                type: "line",
+                color: "#aaa",
+                dashStyle: "Dot",
+                lineWidth: 1,
+                data: lineData,
+                enableMouseTracking: false,
+                marker: { enabled: false }
               },
-              yAxis: { visible: false, endOnTick: false },
-              series: [
-                {
-                  type: "line",
-                  color: "#aaa",
-                  dashStyle: "Dot",
-                  lineWidth: 1,
-                  data: lineData,
-                  enableMouseTracking: false,
-                  marker: { enabled: false }
-                },
-                ...comparisonSeries,
-                {
-                  type: "spline",
-                  data,
-                  enableMouseTracking: false,
-                  color: primaryColor,
-                  marker: { enabled: false }
-                }
-              ]
-            }}
-          />
-        </div>
+              ...comparisonSeries,
+              {
+                type: "spline",
+                data,
+                enableMouseTracking: false,
+                color: primaryColor,
+                marker: { enabled: false }
+              }
+            ]
+          }}
+        />
         <DateLabels>
           <MinorText>{head(dates).format("MMM D")}</MinorText>
           <MinorText>{last(dates).format("MMM D")}</MinorText>
