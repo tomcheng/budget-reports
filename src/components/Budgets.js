@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { getBudgetLink } from "../linkUtils";
+import pages, { makeLink } from "../pages";
 import { StrongText } from "./typeComponents";
 import Section from "./Section";
 import Loading from "./Loading";
@@ -36,7 +36,9 @@ class Budgets extends Component {
         <StrongText>Select a budget:</StrongText>
         {budgets.map(({ id, name }) => (
           <div key={id}>
-            <Link to={getBudgetLink({ budgetId: id })}>{name}</Link>
+            <Link to={makeLink(pages.currentMonth.path, { budgetId: id })}>
+              {name}
+            </Link>
           </div>
         ))}
       </Section>

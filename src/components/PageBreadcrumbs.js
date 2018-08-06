@@ -1,13 +1,7 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { Link, Route, Switch } from "react-router-dom";
-import {
-  getCurrentMonthLink,
-  getCurrentMonthGroupLink,
-  getCategoryGroupLink,
-  getCategoryGroupsLink,
-  getPayeesLink
-} from "../linkUtils";
+import pages, { makeLink } from "../pages";
 import { MinorText } from "./typeComponents";
 import Icon from "./Icon";
 
@@ -17,7 +11,7 @@ const routes = [
     breadcrumbs: params => [
       {
         label: "Current Month Spending",
-        to: getCurrentMonthLink({ budgetId: params.budgetId })
+        to: makeLink(pages.currentMonth.path, { budgetId: params.budgetId })
       }
     ]
   },
@@ -26,11 +20,11 @@ const routes = [
     breadcrumbs: (params, budget) => [
       {
         label: "Current Month Spending",
-        to: getCurrentMonthLink({ budgetId: params.budgetId })
+        to: makeLink(pages.currentMonth.path, { budgetId: params.budgetId })
       },
       {
         label: budget.categoryGroupsById[params.categoryGroupId].name,
-        to: getCurrentMonthGroupLink({
+        to: makeLink(pages.currentMonthGroup.path, {
           budgetId: params.budgetId,
           categoryGroupId: params.categoryGroupId
         })
@@ -42,7 +36,7 @@ const routes = [
     breadcrumbs: params => [
       {
         label: "Categories",
-        to: getCategoryGroupsLink({ budgetId: params.budgetId })
+        to: makeLink(pages.categories.path, { budgetId: params.budgetId })
       }
     ]
   },
@@ -51,11 +45,11 @@ const routes = [
     breadcrumbs: (params, budget) => [
       {
         label: "Categories",
-        to: getCategoryGroupsLink({ budgetId: params.budgetId })
+        to: makeLink(pages.categories.path, { budgetId: params.budgetId })
       },
       {
         label: budget.categoryGroupsById[params.categoryGroupId].name,
-        to: getCategoryGroupLink({
+        to: makeLink(pages.group.path, {
           budgetId: params.budgetId,
           categoryGroupId: params.categoryGroupId
         })
@@ -67,7 +61,7 @@ const routes = [
     breadcrumbs: params => [
       {
         label: "Payees",
-        to: getPayeesLink({ budgetId: params.budgetId })
+        to: makeLink(pages.payees.path, { budgetId: params.budgetId })
       }
     ]
   }
