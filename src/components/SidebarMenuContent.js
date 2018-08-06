@@ -38,7 +38,7 @@ const SidebarMenuContent = ({ budgetId, onCloseSidebar, open }) => (
         <Icon icon="times" />
       </IconWrapper>
       <Link
-        to={`/budgets/${budgetId}/settings`}
+        to={pages.settings.linkFunction({ budgetId })}
         style={{ display: "flex" }}
         onClick={evt => {
           if (!open) {

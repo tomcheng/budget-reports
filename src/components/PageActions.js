@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import pages from "../pages";
 import { Switch, Route } from "react-router-dom";
 import SortDropdown from "./SortDropdown";
 import { SecondaryText } from "./typeComponents";
@@ -13,7 +14,7 @@ const defaultSortOptions = [
 const PageActions = ({ settings, onChangeSetting }) => (
   <Switch>
     <Route
-      path="/budgets/:budgetId/categories"
+      path={pages.categories.path}
       exact
       render={() => (
         <SortDropdown
@@ -26,7 +27,7 @@ const PageActions = ({ settings, onChangeSetting }) => (
       )}
     />
     <Route
-      path="/budgets/:budgetId/payees"
+      path={pages.payees.path}
       exact
       render={() => (
         <SortDropdown
@@ -37,7 +38,7 @@ const PageActions = ({ settings, onChangeSetting }) => (
       )}
     />
     <Route
-      path="/budgets/:budgetId/income-vs-expenses"
+      path={pages.incomeVsExpenses.path}
       exact
       render={() => (
         <SecondaryText
