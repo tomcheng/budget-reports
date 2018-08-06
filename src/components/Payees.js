@@ -4,7 +4,7 @@ import { getProcessedPayees } from "../utils";
 import PayeeListItem from "./PayeeListItem";
 import Section from "./Section";
 
-class PayeesBody extends PureComponent {
+class Payees extends PureComponent {
   static propTypes = {
     budget: PropTypes.object.isRequired,
     sort: PropTypes.oneOf(["amount", "name", "transactions"]).isRequired
@@ -29,4 +29,4 @@ class PayeesBody extends PureComponent {
   }
 }
 
-export default PayeesBody;
+export default Payees;

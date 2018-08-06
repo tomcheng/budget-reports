@@ -34,7 +34,7 @@ const map = mapRaw.convert({ cap: false });
 const propertyIncludedIn = (property, arr) => obj =>
   includes(obj[property], arr);
 
-class IncomeVsExpensesBody extends PureComponent {
+class IncomeVsExpenses extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       id: PropTypes.string.isRequired,
@@ -222,4 +222,4 @@ class IncomeVsExpensesBody extends PureComponent {
   }
 }
 
-export default IncomeVsExpensesBody;
+export default IncomeVsExpenses;

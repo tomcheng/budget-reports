@@ -11,7 +11,7 @@ import { SecondaryText, MinorText } from "./typeComponents";
 import Section from "./Section";
 import Amount from "./Amount";
 
-class CategoriesBody extends PureComponent {
+class Categories extends PureComponent {
   static propTypes = {
     budget: PropTypes.object.isRequired,
     sort: PropTypes.oneOf(["amount", "name", "transactions"]).isRequired
@@ -69,4 +69,4 @@ class CategoriesBody extends PureComponent {
   }
 }
 
-export default CategoriesBody;
+export default Categories;

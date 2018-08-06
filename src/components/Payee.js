@@ -12,7 +12,7 @@ import GroupedTransactions from "./GroupedTransactions";
 import CollapsibleSection from "./CollapsibleSection";
 import { TopSection } from "./Section";
 
-class PayeeBody extends PureComponent {
+class Payee extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       transactions: PropTypes.arrayOf(
@@ -71,4 +71,4 @@ class PayeeBody extends PureComponent {
   }
 }
 
-export default PayeeBody;
+export default Payee;

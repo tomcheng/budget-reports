@@ -31,7 +31,7 @@ const cumulative = arr =>
     []
   );
 
-class NetWorthBody extends PureComponent {
+class NetWorth extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       accounts: PropTypes.arrayOf(
@@ -189,4 +189,4 @@ class NetWorthBody extends PureComponent {
   }
 }
 
-export default NetWorthBody;
+export default NetWorth;

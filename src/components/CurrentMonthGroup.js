@@ -7,7 +7,7 @@ import DayByDaySection from "./DayByDaySection";
 import GenericEntitiesSection from "./GenericEntitiesSection";
 import TransactionsSection from "./TransactionsSection";
 
-class CurrentMonthGroupBody extends PureComponent {
+class CurrentMonthGroup extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       categories: PropTypes.array.isRequired,
@@ -97,4 +97,4 @@ class CurrentMonthGroupBody extends PureComponent {
   }
 }
 
-export default CurrentMonthGroupBody;
+export default CurrentMonthGroup;

@@ -96,7 +96,7 @@ const getInitialState = simpleMemoize(
   }
 );
 
-class ProjectionsBody extends PureComponent {
+class Projections extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       transactions: PropTypes.array.isRequired
@@ -325,4 +325,4 @@ const Entry = ({
   </div>
 );
 
-export default ProjectionsBody;
+export default Projections;

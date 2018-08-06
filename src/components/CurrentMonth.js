@@ -9,7 +9,7 @@ import {
 import DayByDaySection from "./DayByDaySection";
 import CurrentMonthGroupsSection from "./CurrentMonthGroupsSection";
 
-class CurrentMonthBody extends PureComponent {
+class CurrentMonth extends PureComponent {
   static propTypes = {
     budget: PropTypes.object.isRequired,
     currentMonth: PropTypes.string.isRequired,
@@ -42,4 +42,4 @@ class CurrentMonthBody extends PureComponent {
   }
 }
 
-export default CurrentMonthBody;
+export default CurrentMonth;

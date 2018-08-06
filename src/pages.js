@@ -1,14 +1,14 @@
-import CurrentMonthBody from "./components/CurrentMonthBody";
-import CurrentMonthGroupBody from "./components/CurrentMonthGroupBody";
-import CategoriesBody from "./components/CategoriesBody";
-import GroupBody from "./components/GroupBody";
-import CategoryBody from "./components/CategoryBody";
-import PayeesBody from "./components/PayeesBody";
-import PayeeBody from "./components/PayeeBody";
-import IncomeVsExpensesBody from "./components/IncomeVsExpensesBody";
-import NetWorthBody from "./components/NetWorthBody";
-import ProjectionsBody from "./components/ProjectionsBody";
-import SettingsBody from "./components/SettingsBody";
+import CurrentMonth from "./components/CurrentMonth";
+import CurrentMonthGroup from "./components/CurrentMonthGroup";
+import Categories from "./components/Categories";
+import Group from "./components/Group";
+import Category from "./components/Category";
+import Payees from "./components/Payees";
+import Payee from "./components/Payee";
+import IncomeVsExpenses from "./components/IncomeVsExpenses";
+import NetWorth from "./components/NetWorth";
+import Projections from "./components/Projections";
+import Settings from "./components/Settings";
 
 export const makeLink = (path, params) =>
   path.replace(/:([a-zA-Z]*)/g, (_, part) => params[part]);
@@ -17,7 +17,7 @@ const pages = {
   currentMonth: {
     path: "/budgets/:budgetId",
     title: "Current Month Spending",
-    Component: CurrentMonthBody,
+    Component: CurrentMonth,
     props: props => ({
       budget: props.budget,
       currentMonth: props.currentMonth,
@@ -28,7 +28,7 @@ const pages = {
     path: "/budgets/:budgetId/current/:categoryGroupId",
     title: (params, budget) =>
       budget.categoryGroupsById[params.categoryGroupId].name,
-    Component: CurrentMonthGroupBody,
+    Component: CurrentMonthGroup,
     props: (props, params) => ({
       budget: props.budget,
       categoryGroupId: params.categoryGroupId,
@@ -38,7 +38,7 @@ const pages = {
   currentMonthCategory: {
     path: "/budgets/:budgetId/current/:categoryGroupId/:categoryId",
     title: (params, budget) => budget.categoriesById[params.categoryId].name,
-    Component: CurrentMonthGroupBody,
+    Component: CurrentMonthGroup,
     props: (props, params) => ({
       budget: props.budget,
       categoryId: params.categoryId,
@@ -49,7 +49,7 @@ const pages = {
   categories: {
     path: "/budgets/:budgetId/categories",
     title: "Categories",
-    Component: CategoriesBody,
+    Component: Categories,
     props: props => ({
       budget: props.budget,
       sort: props.settings.categoriesSort
@@ -59,7 +59,7 @@ const pages = {
     path: "/budgets/:budgetId/category-groups/:categoryGroupId",
     title: (params, budget) =>
       budget.categoryGroupsById[params.categoryGroupId].name,
-    Component: GroupBody,
+    Component: Group,
     props: (props, params) => ({
       budget: props.budget,
       categoryGroup: props.budget.categoryGroupsById[params.categoryGroupId]
@@ -68,7 +68,7 @@ const pages = {
   category: {
     path: "/budgets/:budgetId/category-groups/:categoryGroupId/:categoryId",
     title: (params, budget) => budget.categoriesById[params.categoryId].name,
-    Component: CategoryBody,
+    Component: Category,
     props: (props, params) => ({
       budget: props.budget,
       category: props.budget.categoriesById[params.categoryId]
@@ -77,7 +77,7 @@ const pages = {
   payees: {
     path: "/budgets/:budgetId/payees",
     title: "Payees",
-    Component: PayeesBody,
+    Component: Payees,
     props: props => ({
       budget: props.budget,
       sort: props.settings.payeesSort
@@ -86,7 +86,7 @@ const pages = {
   payee: {
     path: "/budgets/:budgetId/payees/:payeeId",
     title: (params, budget) => budget.payeesById[params.payeeId].name,
-    Component: PayeeBody,
+    Component: Payee,
     props: (props, params) => ({
       budget: props.budget,
       payee: props.budget.payeesById[params.payeeId]
@@ -95,7 +95,7 @@ const pages = {
   incomeVsExpenses: {
     path: "/budgets/:budgetId/income-vs-expenses",
     title: "Income vs Expenses",
-    Component: IncomeVsExpensesBody,
+    Component: IncomeVsExpenses,
     props: props => ({
       budget: props.budget,
       investmentAccounts: props.investmentAccounts,
@@ -105,7 +105,7 @@ const pages = {
   netWorth: {
     path: "/budgets/:budgetId/net-worth",
     title: "Net Worth",
-    Component: NetWorthBody,
+    Component: NetWorth,
     props: props => ({
       budget: props.budget,
       investmentAccounts: props.investmentAccounts,
@@ -115,7 +115,7 @@ const pages = {
   projections: {
     path: "/budgets/:budgetId/projections",
     title: "Retirement Calculator",
-    Component: ProjectionsBody,
+    Component: Projections,
     props: props => ({
       budget: props.budget,
       investmentAccounts: props.investmentAccounts,
@@ -125,7 +125,7 @@ const pages = {
   settings: {
     path: "/budgets/:budgetId/settings",
     title: "Budget Settings",
-    Component: SettingsBody,
+    Component: Settings,
     props: props => ({
       budget: props.budget,
       investmentAccounts: props.investmentAccounts,

@@ -11,7 +11,7 @@ const SectionHeader = styled.div`
   justify-content: space-between;
 `;
 
-class SettingsBody extends Component {
+class Settings extends Component {
   static propTypes = {
     budget: PropTypes.shape({
       accounts: PropTypes.arrayOf(
@@ -107,4 +107,4 @@ class SettingsBody extends Component {
   }
 }
 
-export default SettingsBody;
+export default Settings;

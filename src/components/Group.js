@@ -7,7 +7,7 @@ import pages, { makeLink } from "../pages";
 import MonthByMonthSection from "./MonthByMonthSection";
 import GenericEntitiesSection from "./GenericEntitiesSection";
 
-class GroupBody extends PureComponent {
+class Group extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       transactions: PropTypes.arrayOf(
@@ -81,4 +81,4 @@ class GroupBody extends PureComponent {
   }
 }
 
-export default GroupBody;
+export default Group;
