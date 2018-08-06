@@ -10,6 +10,7 @@ import PayeesBody from "./PayeesBody";
 import PayeeBody from "./PayeeBody";
 import IncomeVsExpensesBody from "./IncomeVsExpensesBody";
 import NetWorthBody from "./NetWorthBody";
+import ProjectionsBody from "./ProjectionsBody";
 
 const routes = [
   {
@@ -92,6 +93,15 @@ const routes = [
   {
     path: "/budgets/:budgetId/net-worth",
     Component: NetWorthBody,
+    props: props => ({
+      budget: props.budget,
+      investmentAccounts: props.investmentAccounts,
+      mortgageAccounts: props.mortgageAccounts
+    })
+  },
+  {
+    path: "/budgets/:budgetId/projections",
+    Component: ProjectionsBody,
     props: props => ({
       budget: props.budget,
       investmentAccounts: props.investmentAccounts,
