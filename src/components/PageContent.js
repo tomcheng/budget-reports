@@ -8,6 +8,7 @@ import GroupBody from "./GroupBody";
 import CategoryBody from "./CategoryBody";
 import PayeesBody from "./PayeesBody";
 import PayeeBody from "./PayeeBody";
+import IncomeVsExpensesBody from "./IncomeVsExpensesBody";
 
 const routes = [
   {
@@ -76,6 +77,15 @@ const routes = [
     props: (props, params) => ({
       budget: props.budget,
       payee: props.budget.payeesById[params.payeeId]
+    })
+  },
+  {
+    path: "/budgets/:budgetId/income-vs-expenses",
+    Component: IncomeVsExpensesBody,
+    props: props => ({
+      budget: props.budget,
+      investmentAccounts: props.investmentAccounts,
+      showing: props.settings.incomeVsExpensesShowing
     })
   }
 ];

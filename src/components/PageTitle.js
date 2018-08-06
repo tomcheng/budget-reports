@@ -37,6 +37,10 @@ const routes = [
   {
     path: "/budgets/:budgetId/payees/:payeeId",
     title: (params, budget) => budget.payeesById[params.payeeId].name
+  },
+  {
+    path: "/budgets/:budgetId/income-vs-expenses",
+    title: "Income vs Expenses"
   }
 ];
 

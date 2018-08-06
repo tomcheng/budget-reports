@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Switch, Route } from "react-router-dom";
 import SortDropdown from "./SortDropdown";
+import { SecondaryText } from "./typeComponents";
 
 const defaultSortOptions = [
   { label: "Amount", value: "amount" },
@@ -33,6 +34,26 @@ const PageActions = ({ settings, onChangeSetting }) => (
           selected={settings.payeesSort}
           onChange={value => onChangeSetting({ setting: "payeesSort", value })}
         />
+      )}
+    />
+    <Route
+      path="/budgets/:budgetId/income-vs-expenses"
+      exact
+      render={() => (
+        <SecondaryText
+          onClick={() => {
+            onChangeSetting({
+              setting: "incomeVsExpensesShowing",
+              value:
+                settings.incomeVsExpensesShowing === "average"
+                  ? "total"
+                  : "average"
+            });
+          }}
+          style={{ userSelect: "none" }}
+        >
+          {settings.incomeVsExpensesShowing}
+        </SecondaryText>
       )}
     />
   </Switch>

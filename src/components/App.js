@@ -45,7 +45,8 @@ class App extends Component {
     currentMonth: moment().format("YYYY-MM"),
     settings: {
       categoriesSort: "amount",
-      payeesSort: "amount"
+      payeesSort: "amount",
+      incomeVsExpensesShowing: "average"
     }
   };
 
