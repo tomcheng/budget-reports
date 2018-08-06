@@ -80,6 +80,7 @@ class Group extends PureComponent {
           }
           title="Categories"
           transactions={transactionsInSelectedMonth || transactionsInGroup}
+          showTransactionCount={false}
         />
         <GenericEntitiesSection
           entityKey="payeeId"
@@ -92,6 +93,7 @@ class Group extends PureComponent {
           }
           title="Payees"
           transactions={transactionsInSelectedMonth || transactionsInGroup}
+          showTransactionCount={false}
         />
       </Fragment>
     );

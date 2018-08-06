@@ -16,6 +16,7 @@ const GenericEntitiesSection = ({
   entityKey,
   entitiesById,
   linkFunction,
+  showTransactionCount,
   title,
   transactions
 }) => {
@@ -46,10 +47,14 @@ const GenericEntitiesSection = ({
               textOverflow: "ellipsis"
             }}
           >
-            <LabelWithTransactionCount
-              count={transactions}
-              label={entitiesById[entityId].name}
-            />
+            {showTransactionCount ? (
+              <LabelWithTransactionCount
+                count={transactions}
+                label={entitiesById[entityId].name}
+              />
+            ) : (
+              entitiesById[entityId].name
+            )}
           </SecondaryText>
           <AmountWithPercentage amount={amount} total={total} />
         </ListItemLink>
@@ -63,7 +68,10 @@ GenericEntitiesSection.propTypes = {
   entitiesById: PropTypes.object.isRequired,
   linkFunction: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  transactions: PropTypes.arrayOf(PropTypes.object).isRequired
+  transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  showTransactionCount: PropTypes.bool
 };
+
+GenericEntitiesSection.defaultProps = { showTransactionCount: true };
 
 export default GenericEntitiesSection;

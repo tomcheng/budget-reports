@@ -18,7 +18,10 @@ const PageActions = ({ settings, onChangeSetting }) => (
       exact
       render={() => (
         <SortDropdown
-          options={defaultSortOptions}
+          options={[
+            { label: "Amount", value: "amount" },
+            { label: "Name", value: "name" }
+          ]}
           selected={settings.categoriesSort}
           onChange={value =>
             onChangeSetting({ setting: "categoriesSort", value })

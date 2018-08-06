@@ -7,7 +7,7 @@ import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import pages, { makeLink } from "../pages";
 import { LargeListItemLink } from "./ListItem";
-import { SecondaryText, MinorText } from "./typeComponents";
+import { SecondaryText } from "./typeComponents";
 import Section from "./Section";
 import Amount from "./Amount";
 
@@ -23,7 +23,6 @@ class Categories extends PureComponent {
     const transactionsByCategory = groupBy("categoryId")(transactions);
     const categoriesByGroup = groupBy("categoryGroupId")(categories);
     const groupsWithMeta = compose([
-      groups => (sort === "transactions" ? groups.reverse() : groups),
       sortBy(
         sort === "name"
           ? group => group.name.replace(/[^a-zA-Z0-9]/g, "")
@@ -56,11 +55,6 @@ class Categories extends PureComponent {
             </div>
             <SecondaryText style={{ textAlign: "right" }}>
               <Amount amount={group.amount} />
-              <MinorText>
-                {group.transactions} transaction{group.transactions === 1
-                  ? ""
-                  : "s"}
-              </MinorText>
             </SecondaryText>
           </LargeListItemLink>
         ))}
