@@ -2,10 +2,23 @@ import React from "react";
 import PropTypes from "prop-types";
 import { positiveColor } from "../styleVariables";
 
+export const addCommas = nStr => {
+  nStr += "";
+
+  const x = nStr.split(".");
+  let x1 = x[0];
+  const x2 = x.length > 1 ? "." + x[1] : "";
+  const rgx = /(\d+)(\d{3})/;
+  while (rgx.test(x1)) {
+    x1 = x1.replace(rgx, "$1,$2");
+  }
+  return x1 + x2;
+};
+
 const Amount = ({ amount, amountAfterDecimal, style }) => (
   <span style={{ color: amount > 0 && positiveColor, ...style }}>
     {amount > 0 && "+"}
-    {Math.abs(amount).toFixed(amountAfterDecimal)}
+    {addCommas(Math.abs(amount).toFixed(amountAfterDecimal))}
   </span>
 );
 
