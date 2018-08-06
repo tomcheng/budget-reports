@@ -116,7 +116,7 @@ class SpendingChart extends PureComponent {
               labels: { enabled: false },
               plotBands
             },
-            yAxis: { visible: false, endOnTick: false },
+            yAxis: { visible: false, endOnTick: false, startOnTick: false },
             series: [
               {
                 type: "line",

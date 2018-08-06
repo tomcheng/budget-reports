@@ -17,7 +17,8 @@ const MonthByMonthSection = ({
   const currentMonth = moment().format("YYYY-MM");
   const months = [firstMonth];
   let m = firstMonth;
-  let totalAmount = 0;
+  let total = 0;
+  let selectedMonthTotal = 0;
 
   while (m !== currentMonth) {
     m = moment(m)
@@ -29,14 +30,26 @@ const MonthByMonthSection = ({
   const transactionsByMonth = groupBy(getTransactionMonth)(transactions);
   const data = months.map(month => {
     const amount = sumByProp("amount")(transactionsByMonth[month] || []);
-    totalAmount += amount;
+    total += amount;
+    if (month === selectedMonth) {
+      selectedMonthTotal = amount;
+    }
 
     return { month, amount: -amount };
   });
 
   return (
     <CollapsibleSection title="Month by Month">
-      <ChartNumbers numbers={[{ amount: totalAmount, label: "spent" }]} />
+      <ChartNumbers
+        numbers={[
+          {
+            amount: selectedMonth ? selectedMonthTotal : total,
+            label: selectedMonth
+              ? moment(selectedMonth).format("MMM YYYY")
+              : "spent"
+          }
+        ]}
+      />
       <MonthlyChart
         data={data}
         series={[{ color: lightPrimaryColor, valueFunction: d => d.amount }]}

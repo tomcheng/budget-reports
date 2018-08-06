@@ -63,7 +63,7 @@ const MonthlyChart = ({
           plotBands,
           plotLines: yearLines
         },
-        yAxis: { visible: false, endOnTick: false },
+        yAxis: { visible: false, endOnTick: false, startOnTick: false },
         plotOptions: { series: { stacking: "normal" } },
         series: series.map(s => {
           if (s.type === "line") {
