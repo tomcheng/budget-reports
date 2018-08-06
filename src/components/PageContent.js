@@ -11,6 +11,7 @@ import PayeeBody from "./PayeeBody";
 import IncomeVsExpensesBody from "./IncomeVsExpensesBody";
 import NetWorthBody from "./NetWorthBody";
 import ProjectionsBody from "./ProjectionsBody";
+import SettingsBody from "./SettingsBody";
 
 const routes = [
   {
@@ -107,6 +108,16 @@ const routes = [
       investmentAccounts: props.investmentAccounts,
       mortgageAccounts: props.mortgageAccounts
     })
+  },
+  {
+    path: "/budgets/:budgetId/settings",
+    Component: SettingsBody,
+    props: props => ({
+      budget: props.budget,
+      investmentAccounts: props.investmentAccounts,
+      mortgageAccounts: props.mortgageAccounts,
+      onUpdateAccounts: props.onUpdateAccounts
+    })
   }
 ];
 
@@ -131,6 +142,7 @@ PageContent.propTypes = {
   investmentAccounts: PropTypes.object.isRequired,
   mortgageAccounts: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
+  onUpdateAccounts: PropTypes.func.isRequired,
   budget: PropTypes.object
 };
 

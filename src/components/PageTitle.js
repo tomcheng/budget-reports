@@ -42,7 +42,8 @@ const routes = [
     title: "Income vs Expenses"
   },
   { path: "/budgets/:budgetId/net-worth", title: "Net Worth" },
-  { path: "/budgets/:budgetId/projections", title: "Retirement Calculator" }
+  { path: "/budgets/:budgetId/projections", title: "Retirement Calculator" },
+  { path: "/budgets/:budgetId/settings", title: "Budget Settings" }
 ];
 
 const PageTitle = ({ budget }) =>

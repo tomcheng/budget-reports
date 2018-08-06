@@ -148,6 +148,15 @@ class App extends Component {
                       )}
                       mortgageAccounts={getSetting(MORTGAGE_ACCOUNTS, budgetId)}
                       settings={settings}
+                      onUpdateAccounts={({ type, value }) => {
+                        if (type === "investment") {
+                          setSetting(INVESTMENT_ACCOUNTS, budgetId, value);
+                        }
+                        if (type === "mortgage") {
+                          setSetting(MORTGAGE_ACCOUNTS, budgetId, value);
+                        }
+                        this.forceUpdate();
+                      }}
                     />
                   }
                 />
