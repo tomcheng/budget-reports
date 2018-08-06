@@ -59,11 +59,6 @@ class CurrentMonthGroup extends Component {
         budgetId={budgetId}
         budgetLoaded={!!budget}
         backLink
-        bodyStyle={{
-          overflowY: "hidden",
-          display: "flex",
-          flexDirection: "column"
-        }}
         breadcrumbs={breadcrumbs}
         title={title}
         content={() => (

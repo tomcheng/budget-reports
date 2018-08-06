@@ -5,6 +5,10 @@ import { Switch, Route } from "react-router-dom";
 
 const routes = [
   {
+    path: "/budgets/:budgetId",
+    title: "Current Month Spending"
+  },
+  {
     path: "/budgets/:budgetId/categories",
     title: "Categories"
   },

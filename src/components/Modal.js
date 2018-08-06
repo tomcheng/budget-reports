@@ -68,19 +68,17 @@ class Modal extends Component {
     const { onClose, open, children, title } = this.props;
 
     return createPortal(
-      open && (
-        <Container>
-          <Overlay onClick={onClose}>
-            <CloseButton>&times;</CloseButton>
-          </Overlay>
-          <ModalContent>
-            {title && (
-              <StrongText style={{ marginBottom: 10 }}>{title}</StrongText>
-            )}
-            {children}
-          </ModalContent>
-        </Container>
-      ),
+      <Container style={{ display: !open && "none" }}>
+        <Overlay onClick={onClose}>
+          <CloseButton>&times;</CloseButton>
+        </Overlay>
+        <ModalContent>
+          {title && (
+            <StrongText style={{ marginBottom: 10 }}>{title}</StrongText>
+          )}
+          {children}
+        </ModalContent>
+      </Container>,
       this.el
     );
   }
