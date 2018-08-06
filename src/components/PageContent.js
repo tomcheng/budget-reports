@@ -29,6 +29,16 @@ const routes = [
     })
   },
   {
+    path: "/budgets/:budgetId/current/:categoryGroupId/:categoryId",
+    Component: CurrentMonthGroupBody,
+    props: (props, params) => ({
+      budget: props.budget,
+      categoryId: params.categoryId,
+      categoryGroupId: params.categoryGroupId,
+      currentMonth: props.currentMonth
+    })
+  },
+  {
     path: "/budgets/:budgetId/categories",
     Component: CategoriesBody,
     props: props => ({

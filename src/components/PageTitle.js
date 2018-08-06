@@ -13,6 +13,11 @@ const routes = [
       budget.categoryGroupsById[params.categoryGroupId].name
   },
   {
+    path: "/budgets/:budgetId/current/:categoryGroupId/:categoryId",
+    title: (params, budget) =>
+      budget.categoriesById[params.categoryId].name
+  },
+  {
     path: "/budgets/:budgetId/categories",
     title: "Categories"
   },

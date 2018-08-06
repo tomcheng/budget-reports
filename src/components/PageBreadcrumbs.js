@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Link, Route, Switch } from "react-router-dom";
 import {
   getCurrentMonthLink,
+  getCurrentMonthGroupLink,
   getCategoryGroupLink,
   getCategoryGroupsLink,
   getPayeesLink
@@ -17,6 +18,22 @@ const routes = [
       {
         label: "Current Month Spending",
         to: getCurrentMonthLink({ budgetId: params.budgetId })
+      }
+    ]
+  },
+  {
+    path: "/budgets/:budgetId/current/:categoryGroupId/:categoryId",
+    breadcrumbs: (params, budget) => [
+      {
+        label: "Current Month Spending",
+        to: getCurrentMonthLink({ budgetId: params.budgetId })
+      },
+      {
+        label: budget.categoryGroupsById[params.categoryGroupId].name,
+        to: getCurrentMonthGroupLink({
+          budgetId: params.budgetId,
+          categoryGroupId: params.categoryGroupId
+        })
       }
     ]
   },
