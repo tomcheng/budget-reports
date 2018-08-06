@@ -34,7 +34,8 @@ const pages = {
       budget: props.budget,
       categoryGroupId: params.categoryGroupId,
       currentMonth: props.currentMonth
-    })
+    }),
+    breadcrumbs: ["currentMonth"]
   },
   currentMonthCategory: {
     path: "/budgets/:budgetId/current/:categoryGroupId/:categoryId",
@@ -45,10 +46,11 @@ const pages = {
       categoryId: params.categoryId,
       categoryGroupId: params.categoryGroupId,
       currentMonth: props.currentMonth
-    })
+    }),
+    breadcrumbs: ["currentMonth", "currentMonthGroup"]
   },
   categories: {
-    path: "/budgets/:budgetId/categories",
+    path: "/budgets/:budgetId/groups",
     title: "Categories",
     Component: Categories,
     props: props => ({
@@ -57,23 +59,25 @@ const pages = {
     })
   },
   group: {
-    path: "/budgets/:budgetId/category-groups/:categoryGroupId",
+    path: "/budgets/:budgetId/groups/:categoryGroupId",
     title: (params, budget) =>
       budget.categoryGroupsById[params.categoryGroupId].name,
     Component: Group,
     props: (props, params) => ({
       budget: props.budget,
       categoryGroup: props.budget.categoryGroupsById[params.categoryGroupId]
-    })
+    }),
+    breadcrumbs: ["categories"]
   },
   category: {
-    path: "/budgets/:budgetId/category-groups/:categoryGroupId/:categoryId",
+    path: "/budgets/:budgetId/groups/:categoryGroupId/categories/:categoryId",
     title: (params, budget) => budget.categoriesById[params.categoryId].name,
     Component: Category,
     props: (props, params) => ({
       budget: props.budget,
       category: props.budget.categoriesById[params.categoryId]
-    })
+    }),
+    breadcrumbs: ["categories", "group"]
   },
   payees: {
     path: "/budgets/:budgetId/payees",
@@ -91,7 +95,8 @@ const pages = {
     props: (props, params) => ({
       budget: props.budget,
       payee: props.budget.payeesById[params.payeeId]
-    })
+    }),
+    breadcrumbs: ["payee"]
   },
   incomeVsExpenses: {
     path: "/budgets/:budgetId/income-vs-expenses",
