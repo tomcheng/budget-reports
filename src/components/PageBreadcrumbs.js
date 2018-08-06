@@ -7,23 +7,23 @@ import Icon from "./Icon";
 
 const routes = [
   {
-    path: "/budgets/:budgetId/current/:categoryGroupId",
+    path: pages.currentMonthGroup.path,
     breadcrumbs: params => [
       {
-        label: "Current Month Spending",
+        label: pages.currentMonth.title,
         to: makeLink(pages.currentMonth.path, { budgetId: params.budgetId })
       }
     ]
   },
   {
-    path: "/budgets/:budgetId/current/:categoryGroupId/:categoryId",
+    path: pages.currentMonthCategory.path,
     breadcrumbs: (params, budget) => [
       {
-        label: "Current Month Spending",
+        label: pages.currentMonth.title,
         to: makeLink(pages.currentMonth.path, { budgetId: params.budgetId })
       },
       {
-        label: budget.categoryGroupsById[params.categoryGroupId].name,
+        label: pages.currentMonthGroup.title(params, budget),
         to: makeLink(pages.currentMonthGroup.path, {
           budgetId: params.budgetId,
           categoryGroupId: params.categoryGroupId
@@ -32,23 +32,23 @@ const routes = [
     ]
   },
   {
-    path: "/budgets/:budgetId/category-groups/:categoryGroupId",
+    path: pages.group.path,
     breadcrumbs: params => [
       {
-        label: "Categories",
+        label: pages.categories.title,
         to: makeLink(pages.categories.path, { budgetId: params.budgetId })
       }
     ]
   },
   {
-    path: "/budgets/:budgetId/category-groups/:categoryGroupId/:categoryId",
+    path: pages.category.path,
     breadcrumbs: (params, budget) => [
       {
-        label: "Categories",
+        label: pages.categories.title,
         to: makeLink(pages.categories.path, { budgetId: params.budgetId })
       },
       {
-        label: budget.categoryGroupsById[params.categoryGroupId].name,
+        label: pages.group.title(params, budget),
         to: makeLink(pages.group.path, {
           budgetId: params.budgetId,
           categoryGroupId: params.categoryGroupId
@@ -57,10 +57,10 @@ const routes = [
     ]
   },
   {
-    path: "/budgets/:budgetId/payees/:payeeId",
+    path: pages.payee.path,
     breadcrumbs: params => [
       {
-        label: "Payees",
+        label: pages.payees.title,
         to: makeLink(pages.payees.path, { budgetId: params.budgetId })
       }
     ]
