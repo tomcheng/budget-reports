@@ -13,10 +13,12 @@ const Payee = ({ budget, budgetId, payeeId, ...other }) => {
       budgetId={budgetId}
       budgetLoaded={!!budget}
       title={payee.name}
-      parentLink={{
-        label: "Payees",
-        to: getPayeesLink({ budgetId })
-      }}
+      breadcrumbs={[
+        {
+          label: "Payees",
+          to: getPayeesLink({ budgetId })
+        }
+      ]}
       content={() => <PayeeBody budget={budget} payee={payee} />}
       backLink
     />
