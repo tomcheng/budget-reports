@@ -1,10 +1,8 @@
-import React, { Fragment } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 import EnsureBudgetLoaded from "./EnsureBudgetLoaded";
-import { PageTitle, MinorText } from "./typeComponents";
-import Icon from "./Icon";
+import { PageTitle } from "./typeComponents";
 import { PrimaryButton } from "./Button";
 import SidebarMenu from "./SidebarMenu";
 
@@ -58,32 +56,8 @@ const PageWrapper = ({
             <HeaderTop>
               {sidebarTrigger}
               <div style={{ flexGrow: 1 }}>
-                {breadcrumbs && (
-                  <MinorText style={{ lineHeight: 1, whiteSpace: "normal" }}>
-                    {breadcrumbs.map(({ label, to }, index) => (
-                      <Fragment key={to}>
-                        <Link
-                          to={to}
-                          style={{
-                            paddingBottom: 8,
-                            display: "inline-block"
-                          }}
-                        >
-                          {label}
-                        </Link>
-                        {index !== breadcrumbs.length - 1 && (
-                          <Icon
-                            icon="chevron-right"
-                            style={{ padding: "0 5px", fontSize: 8 }}
-                          />
-                        )}
-                      </Fragment>
-                    ))}
-                  </MinorText>
-                )}
-                <PageTitle style={{ lineHeight: breadcrumbs && 1 }}>
-                  {title}
-                </PageTitle>
+                {breadcrumbs}
+                <PageTitle style={{ lineHeight: 1 }}>{title}</PageTitle>
               </div>
               {actions}
             </HeaderTop>
@@ -112,20 +86,15 @@ const PageWrapper = ({
 );
 
 PageWrapper.propTypes = {
+  actions: PropTypes.node.isRequired,
   authorized: PropTypes.bool.isRequired,
+  breadcrumbs: PropTypes.node.isRequired,
   budgetId: PropTypes.string.isRequired,
   budgetLoaded: PropTypes.bool.isRequired,
   content: PropTypes.func.isRequired,
   title: PropTypes.node.isRequired,
   onAuthorize: PropTypes.func.isRequired,
-  onRequestBudget: PropTypes.func.isRequired,
-  actions: PropTypes.node,
-  breadcrumbs: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string.isRequired,
-      to: PropTypes.string.isRequired
-    })
-  )
+  onRequestBudget: PropTypes.func.isRequired
 };
 
 export default PageWrapper;

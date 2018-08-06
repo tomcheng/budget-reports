@@ -15,6 +15,11 @@ import {
   INVESTMENT_ACCOUNTS,
   MORTGAGE_ACCOUNTS
 } from "../uiRepo";
+import PageWrapper from "./PageWrapper";
+import PageTitle from "./PageTitle";
+import PageBreadcrumbs from "./PageBreadcrumbs";
+import PageActions from "./PageActions";
+import PageContent from "./PageContent";
 import topLevelPages from "../topLevelPages";
 import Unauthorized from "./Unauthorized";
 import NotFound from "./NotFound";
@@ -37,7 +42,11 @@ class App extends Component {
     budgetIds: [],
     budgets: {},
     budgetDetails: {},
-    currentMonth: moment().format("YYYY-MM")
+    currentMonth: moment().format("YYYY-MM"),
+    settings: {
+      categoriesSort: "amount",
+      payeesSort: "amount"
+    }
   };
 
   handleRequestBudgets = callback => {
@@ -71,6 +80,13 @@ class App extends Component {
     window.location.replace(AUTHORIZE_URL);
   };
 
+  handleChangeSetting = ({ setting, value }) => {
+    this.setState(state => ({
+      ...state,
+      settings: { ...state.settings, [setting]: value }
+    }));
+  };
+
   render() {
     const { hasToken } = this.props;
     const {
@@ -79,7 +95,8 @@ class App extends Component {
       budgetIds,
       budgets,
       budgetDetails,
-      currentMonth
+      currentMonth,
+      settings
     } = this.state;
 
     if (!hasToken) {
@@ -101,7 +118,34 @@ class App extends Component {
             )}
           />
           <Route
-            path={`/budgets/:budgetId/settings`}
+            path="/budgets/:budgetId"
+            render={props => {
+              const { budgetId } = props.match.params;
+              const budget = budgetDetails[budgetId];
+              return (
+                <PageWrapper
+                  authorized={authorized}
+                  budgetId={budgetId}
+                  budgetLoaded={!!budget}
+                  onAuthorize={this.handleAuthorize}
+                  onRequestBudget={this.handleRequestBudget}
+                  title={<PageTitle budget={budget} />}
+                  breadcrumbs={<PageBreadcrumbs budget={budget} />}
+                  actions={
+                    <PageActions
+                      settings={settings}
+                      onChangeSetting={this.handleChangeSetting}
+                    />
+                  }
+                  content={() => (
+                    <PageContent budget={budget} settings={settings} />
+                  )}
+                />
+              );
+            }}
+          />
+          <Route
+            path="/budgets/:budgetId/settings"
             exact
             render={props => {
               const { budgetId } = props.match.params;
@@ -207,7 +251,11 @@ class App extends Component {
             path="/budgets/:budgetId/category-groups/:categoryGroupId/:categoryId"
             exact
             render={props => {
-              const { budgetId, categoryId, categoryGroupId } = props.match.params;
+              const {
+                budgetId,
+                categoryId,
+                categoryGroupId
+              } = props.match.params;
               return (
                 <Category
                   authorized={authorized}
