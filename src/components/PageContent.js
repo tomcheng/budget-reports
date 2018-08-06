@@ -7,7 +7,7 @@ import pages from "../pages";
 const PageContent = props =>
   props.budget && (
     <Switch>
-      {values(pages).map(({ path, props: propsFunction = () => ({}), Component = () => <div>Foo</div> }) => (
+      {values(pages).map(({ path, props: propsFunction, Component }) => (
         <Route
           key={path}
           path={path}
