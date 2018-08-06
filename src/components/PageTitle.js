@@ -19,6 +19,7 @@ const PageTitle = ({ budget }) =>
           }
         />
       ))}
+      <Route render={() => "Page Not Found"} />
     </Switch>
   );
 

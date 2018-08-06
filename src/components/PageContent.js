@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import { Switch, Route } from "react-router-dom";
 import values from "lodash/fp/values";
-import pages from "../pages";
+import pages, { makeLink } from "../pages";
 
 const PageContent = props =>
   props.budget && (
@@ -17,6 +18,19 @@ const PageContent = props =>
           )}
         />
       ))}
+      <Route
+        render={() => (
+          <div style={{ padding: 20 }}>
+            <Link
+              to={makeLink(pages.currentMonth.path, {
+                budgetId: props.budget.id
+              })}
+            >
+              Return to {pages.currentMonth.title}
+            </Link>
+          </div>
+        )}
+      />
     </Switch>
   );
 
