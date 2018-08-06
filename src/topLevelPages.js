@@ -1,19 +1,11 @@
-import CurrentMonth from "./components/CurrentMonth";
-import Categories from "./components/Categories";
-import Payees from "./components/Payees";
-import IncomeVsExpenses from "./components/IncomeVsExpenses";
-import NetWorth from "./components/NetWorth";
-import Projections from "./components/Projections";
-
 export default [
-  { path: "/", title: "Current Month Spending", Component: CurrentMonth },
-  { path: "/categories", title: "Categories", Component: Categories },
-  { path: "/payees", title: "Payees", Component: Payees },
+  { path: "/", title: "Current Month Spending" },
+  { path: "/categories", title: "Categories" },
+  { path: "/payees", title: "Payees" },
   {
     path: "/income-vs-expenses",
-    title: "Income vs Expenses",
-    Component: IncomeVsExpenses
+    title: "Income vs Expenses"
   },
-  { path: "/net-worth", title: "Net Worth", Component: NetWorth },
-  { path: "/projections", title: "Retirement Calculator", Component: Projections }
+  { path: "/net-worth", title: "Net Worth" },
+  { path: "/projections", title: "Retirement Calculator" }
 ];

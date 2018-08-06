@@ -20,16 +20,10 @@ import PageTitle from "./PageTitle";
 import PageBreadcrumbs from "./PageBreadcrumbs";
 import PageActions from "./PageActions";
 import PageContent from "./PageContent";
-import topLevelPages from "../topLevelPages";
 import Unauthorized from "./Unauthorized";
 import NotFound from "./NotFound";
 import ErrorBoundary from "./ErrorBoundary";
 import Budgets from "./Budgets";
-import Settings from "./Settings";
-import CurrentMonthGroup from "./CurrentMonthGroup";
-import Group from "./Group";
-import Category from "./Category";
-import Payee from "./Payee";
 
 class App extends Component {
   static propTypes = {
@@ -159,148 +153,6 @@ class App extends Component {
                       }}
                     />
                   }
-                />
-              );
-            }}
-          />
-          <Route
-            path="/budgets/:budgetId/settings"
-            exact
-            render={props => {
-              const { budgetId } = props.match.params;
-              return (
-                <Settings
-                  authorized={authorized}
-                  budget={budgetDetails[budgetId]}
-                  budgetId={budgetId}
-                  investmentAccounts={getSetting(INVESTMENT_ACCOUNTS, budgetId)}
-                  mortgageAccounts={getSetting(MORTGAGE_ACCOUNTS, budgetId)}
-                  onAuthorize={this.handleAuthorize}
-                  onRequestBudget={this.handleRequestBudget}
-                  onUpdateAccounts={({ type, value }) => {
-                    if (type === "investment") {
-                      setSetting(INVESTMENT_ACCOUNTS, budgetId, value);
-                    }
-                    if (type === "mortgage") {
-                      setSetting(MORTGAGE_ACCOUNTS, budgetId, value);
-                    }
-                    this.forceUpdate();
-                  }}
-                />
-              );
-            }}
-          />
-          {topLevelPages.map(({ path, title, Component }) => (
-            <Route
-              key={path}
-              path={`/budgets/:budgetId${path}`}
-              exact
-              render={props => {
-                const { budgetId } = props.match.params;
-                return (
-                  <Component
-                    authorized={authorized}
-                    budget={budgetDetails[budgetId]}
-                    budgetId={budgetId}
-                    currentMonth={currentMonth}
-                    investmentAccounts={getSetting(
-                      INVESTMENT_ACCOUNTS,
-                      budgetId
-                    )}
-                    mortgageAccounts={getSetting(MORTGAGE_ACCOUNTS, budgetId)}
-                    title={title}
-                    onAuthorize={this.handleAuthorize}
-                    onRequestBudget={this.handleRequestBudget}
-                  />
-                );
-              }}
-            />
-          ))}
-          <Route
-            path="/budgets/:budgetId/current/:categoryGroupId"
-            exact
-            render={({ match }) => (
-              <CurrentMonthGroup
-                key={match.params.categoryGroupId}
-                authorized={authorized}
-                budget={budgetDetails[match.params.budgetId]}
-                budgetId={match.params.budgetId}
-                categoryGroupId={match.params.categoryGroupId}
-                currentMonth={currentMonth}
-                onAuthorize={this.handleAuthorize}
-                onRequestBudget={this.handleRequestBudget}
-              />
-            )}
-          />
-          <Route
-            path="/budgets/:budgetId/current/:categoryGroupId/:categoryId"
-            exact
-            render={({ match }) => (
-              <CurrentMonthGroup
-                key={match.params.categoryId}
-                authorized={authorized}
-                budget={budgetDetails[match.params.budgetId]}
-                budgetId={match.params.budgetId}
-                categoryGroupId={match.params.categoryGroupId}
-                categoryId={match.params.categoryId}
-                currentMonth={currentMonth}
-                onAuthorize={this.handleAuthorize}
-                onRequestBudget={this.handleRequestBudget}
-              />
-            )}
-          />
-          <Route
-            path="/budgets/:budgetId/category-groups/:categoryGroupId"
-            exact
-            render={props => {
-              const { budgetId, categoryGroupId } = props.match.params;
-              return (
-                <Group
-                  authorized={authorized}
-                  budget={budgetDetails[budgetId]}
-                  budgetId={budgetId}
-                  categoryGroupId={categoryGroupId}
-                  onAuthorize={this.handleAuthorize}
-                  onRequestBudget={this.handleRequestBudget}
-                />
-              );
-            }}
-          />
-          <Route
-            path="/budgets/:budgetId/category-groups/:categoryGroupId/:categoryId"
-            exact
-            render={props => {
-              const {
-                budgetId,
-                categoryId,
-                categoryGroupId
-              } = props.match.params;
-              return (
-                <Category
-                  authorized={authorized}
-                  budget={budgetDetails[budgetId]}
-                  budgetId={budgetId}
-                  categoryId={categoryId}
-                  categoryGroupId={categoryGroupId}
-                  onAuthorize={this.handleAuthorize}
-                  onRequestBudget={this.handleRequestBudget}
-                />
-              );
-            }}
-          />
-          <Route
-            path="/budgets/:budgetId/payees/:payeeId"
-            exact
-            render={props => {
-              const { budgetId, payeeId } = props.match.params;
-              return (
-                <Payee
-                  authorized={authorized}
-                  budget={budgetDetails[budgetId]}
-                  budgetId={budgetId}
-                  payeeId={payeeId}
-                  onAuthorize={this.handleAuthorize}
-                  onRequestBudget={this.handleRequestBudget}
                 />
               );
             }}
