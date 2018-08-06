@@ -5,13 +5,11 @@ import compose from "lodash/fp/compose";
 import map from "lodash/fp/map";
 import prop from "lodash/fp/prop";
 import uniq from "lodash/fp/uniq";
-import {
-  getFirstMonth,
-  getTransactionMonth
-} from "../utils";
+import { getFirstMonth, getTransactionMonth } from "../utils";
 import MonthByMonthSection from "./MonthByMonthSection";
 import PayeeCategoriesSection from "./PayeeCategoriesSection";
 import GroupedTransactionsSection from "./GroupedTransactionsSection";
+import PayeeTransactionsSection from "./PayeeTransactionsSection";
 
 class Payee extends PureComponent {
   static propTypes = {
@@ -40,9 +38,16 @@ class Payee extends PureComponent {
   render() {
     const { payee, budget } = this.props;
     const { selectedMonth } = this.state;
-    const { transactions: allTransactions } = budget;
-    const transactions = allTransactions.filter(transaction => transaction.payeeId === payee.id);
-    const categoryIds = compose([uniq, map(prop("categoryId"))])(transactions);
+    const { transactions } = budget;
+    const transactionsForPayee = transactions.filter(
+      transaction => transaction.payeeId === payee.id
+    );
+    const transactionsForSelectedMonth =
+      selectedMonth &&
+      transactionsForPayee.filter(
+        transaction => getTransactionMonth(transaction) === selectedMonth
+      );
+    const categoryIds = compose([uniq, map(prop("categoryId"))])(transactionsForPayee);
     const firstMonth = getFirstMonth(budget);
 
     return (
@@ -50,18 +55,23 @@ class Payee extends PureComponent {
         <MonthByMonthSection
           firstMonth={firstMonth}
           selectedMonth={selectedMonth}
-          transactions={transactions}
+          transactions={transactionsForPayee}
           onSelectMonth={this.handleSelectMonth}
         />
         <PayeeCategoriesSection budget={budget} categoryIds={categoryIds} />
-        <GroupedTransactionsSection
-          transactions={transactions}
-          groupBy={getTransactionMonth}
-          groupDisplayFunction={month => moment(month).format("MMMM YYYY")}
-          leafDisplayFunction={transaction =>
-            moment(transaction.date).format("dddd, MMMM D")
-          }
-        />
+        {selectedMonth ? (
+          <PayeeTransactionsSection transactions={transactionsForSelectedMonth} />
+          ) : (
+          <GroupedTransactionsSection
+            transactions={transactionsForPayee}
+            groupBy={getTransactionMonth}
+            groupDisplayFunction={month => moment(month).format("MMMM YYYY")}
+            leafDisplayFunction={transaction =>
+              moment(transaction.date).format("dddd, MMMM D")
+            }
+          />
+        )}
+
       </Fragment>
     );
   }
