@@ -14,8 +14,7 @@ const routes = [
   },
   {
     path: "/budgets/:budgetId/current/:categoryGroupId/:categoryId",
-    title: (params, budget) =>
-      budget.categoriesById[params.categoryId].name
+    title: (params, budget) => budget.categoriesById[params.categoryId].name
   },
   {
     path: "/budgets/:budgetId/categories",
@@ -41,7 +40,8 @@ const routes = [
   {
     path: "/budgets/:budgetId/income-vs-expenses",
     title: "Income vs Expenses"
-  }
+  },
+  { path: "/budgets/:budgetId/net-worth", title: "Net Worth" }
 ];
 
 const PageTitle = ({ budget }) =>

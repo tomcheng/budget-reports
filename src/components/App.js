@@ -146,6 +146,7 @@ class App extends Component {
                         INVESTMENT_ACCOUNTS,
                         budgetId
                       )}
+                      mortgageAccounts={getSetting(MORTGAGE_ACCOUNTS, budgetId)}
                       settings={settings}
                     />
                   }

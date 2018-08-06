@@ -9,6 +9,7 @@ import CategoryBody from "./CategoryBody";
 import PayeesBody from "./PayeesBody";
 import PayeeBody from "./PayeeBody";
 import IncomeVsExpensesBody from "./IncomeVsExpensesBody";
+import NetWorthBody from "./NetWorthBody";
 
 const routes = [
   {
@@ -87,6 +88,15 @@ const routes = [
       investmentAccounts: props.investmentAccounts,
       showing: props.settings.incomeVsExpensesShowing
     })
+  },
+  {
+    path: "/budgets/:budgetId/net-worth",
+    Component: NetWorthBody,
+    props: props => ({
+      budget: props.budget,
+      investmentAccounts: props.investmentAccounts,
+      mortgageAccounts: props.mortgageAccounts
+    })
   }
 ];
 
@@ -109,6 +119,7 @@ const PageContent = props =>
 PageContent.propTypes = {
   currentMonth: PropTypes.string.isRequired,
   investmentAccounts: PropTypes.object.isRequired,
+  mortgageAccounts: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
   budget: PropTypes.object
 };
