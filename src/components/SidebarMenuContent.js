@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
-import topLevelPages from "../topLevelPages";
+import pages from "../pages";
 import Icon from "./Icon";
 import { plotBandColor, iconWidth } from "../styleVariables";
 
@@ -53,25 +53,35 @@ const SidebarMenuContent = ({ budgetId, onCloseSidebar, open }) => (
         </IconWrapper>
       </Link>
     </Header>
-    {topLevelPages.map(({ path, title }) => (
-      <StyledLink
-        key={path}
-        to={`/budgets/${budgetId}${path}`}
-        activeStyle={{
-          backgroundColor: plotBandColor
-        }}
-        exact
-        onClick={evt => {
-          if (!open) {
-            evt.preventDefault();
-            return;
-          }
-          onCloseSidebar();
-        }}
-      >
-        {title}
-      </StyledLink>
-    ))}
+    {[
+      "currentMonth",
+      "categories",
+      "payees",
+      "incomeVsExpenses",
+      "netWorth",
+      "projections"
+    ].map(page => {
+      const { path, title, linkFunction } = pages[page];
+      return (
+        <StyledLink
+          key={path}
+          to={linkFunction({ budgetId })}
+          activeStyle={{
+            backgroundColor: plotBandColor
+          }}
+          exact
+          onClick={evt => {
+            if (!open) {
+              evt.preventDefault();
+              return;
+            }
+            onCloseSidebar();
+          }}
+        >
+          {title}
+        </StyledLink>
+      );
+    })}
   </Fragment>
 );
 
