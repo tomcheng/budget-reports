@@ -14,9 +14,9 @@ import takeWhile from "lodash/fp/takeWhile";
 import { sumByProp } from "../optimized";
 import { getTransactionMonth } from "../utils";
 import { primaryColor, plotBandColor } from "../styleVariables";
-import { MinorText, LargeNumber } from "./typeComponents";
+import { MinorText } from "./typeComponents";
 import Chart from "./Chart";
-import Amount from "./Amount";
+import ChartNumbers from "./ChartNumbers";
 
 const DateLabels = styled.div`
   border-top: 1px solid #ddd;
@@ -100,35 +100,17 @@ class SpendingChart extends PureComponent {
         transaction => getTransactionMonth(transaction) === currentMonth
       )
     ])(transactions);
-    const available = isNumber(total) && total + spent;
+    const chartNumbers = [
+      { amount: spent, label: "spent" },
+    ];
+    if (isNumber(total)) {
+      chartNumbers.push({ amount: -(total + spent), label: "available" });
+    }
 
     return (
       <Fragment>
         <div style={{ position: "relative" }}>
-          <div
-            style={{
-              textAlign: "right",
-              lineHeight: "16px",
-              display: "flex",
-              justifyContent: "flex-end",
-              marginBottom: 8
-            }}
-          >
-            {isNumber(available) && (
-              <div style={{ marginRight: 20 }}>
-                <LargeNumber style={{ lineHeight: "16px" }}>
-                  <Amount amount={-available} />
-                </LargeNumber>
-                <MinorText>available</MinorText>
-              </div>
-            )}
-            <div>
-              <LargeNumber style={{ lineHeight: "16px" }}>
-                <Amount amount={spent} />
-              </LargeNumber>
-              <MinorText>spent</MinorText>
-            </div>
-          </div>
+          <ChartNumbers numbers={chartNumbers} />
           <Chart
             key={monthsToCompare}
             options={{
