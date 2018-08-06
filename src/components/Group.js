@@ -34,7 +34,13 @@ class Group extends PureComponent {
   render() {
     const { categoryGroup, budget } = this.props;
     const { selectedMonth } = this.state;
-    const { transactions, categories, categoriesById, id: budgetId } = budget;
+    const {
+      transactions,
+      categories,
+      categoriesById,
+      payeesById,
+      id: budgetId
+    } = budget;
 
     const categoriesInGroup = categories.filter(
       category => category.categoryGroupId === categoryGroup.id
@@ -74,6 +80,18 @@ class Group extends PureComponent {
             })
           }
           title="Categories"
+          transactions={transactionsInSelectedMonth || transactionsInGroup}
+        />
+        <GenericEntitiesSection
+          entityKey="payeeId"
+          entitiesById={payeesById}
+          linkFunction={payeeId =>
+            makeLink(pages.payee.path, {
+              budgetId,
+              payeeId
+            })
+          }
+          title="Payees"
           transactions={transactionsInSelectedMonth || transactionsInGroup}
         />
       </Fragment>
