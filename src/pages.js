@@ -10,11 +10,13 @@ import NetWorthBody from "./components/NetWorthBody";
 import ProjectionsBody from "./components/ProjectionsBody";
 import SettingsBody from "./components/SettingsBody";
 
+export const makeLink = (path, params) =>
+  path.replace(/:([a-zA-Z]*)/g, (_, part) => params[part]);
+
 const pages = {
   currentMonth: {
     path: "/budgets/:budgetId",
     title: "Current Month Spending",
-    linkFunction: ({ budgetId }) => `/budgets/${budgetId}`,
     Component: CurrentMonthBody,
     props: props => ({
       budget: props.budget,
@@ -47,7 +49,6 @@ const pages = {
   categories: {
     path: "/budgets/:budgetId/categories",
     title: "Categories",
-    linkFunction: ({ budgetId }) => `/budgets/${budgetId}/categories`,
     Component: CategoriesBody,
     props: props => ({
       budget: props.budget,
@@ -76,7 +77,6 @@ const pages = {
   payees: {
     path: "/budgets/:budgetId/payees",
     title: "Payees",
-    linkFunction: ({ budgetId }) => `/budgets/${budgetId}/payees`,
     Component: PayeesBody,
     props: props => ({
       budget: props.budget,
@@ -95,7 +95,6 @@ const pages = {
   incomeVsExpenses: {
     path: "/budgets/:budgetId/income-vs-expenses",
     title: "Income vs Expenses",
-    linkFunction: ({ budgetId }) => `/budgets/${budgetId}/income-vs-expenses`,
     Component: IncomeVsExpensesBody,
     props: props => ({
       budget: props.budget,
@@ -106,7 +105,6 @@ const pages = {
   netWorth: {
     path: "/budgets/:budgetId/net-worth",
     title: "Net Worth",
-    linkFunction: ({ budgetId }) => `/budgets/${budgetId}/net-worth`,
     Component: NetWorthBody,
     props: props => ({
       budget: props.budget,
@@ -117,7 +115,6 @@ const pages = {
   projections: {
     path: "/budgets/:budgetId/projections",
     title: "Retirement Calculator",
-    linkFunction: ({ budgetId }) => `/budgets/${budgetId}/projections`,
     Component: ProjectionsBody,
     props: props => ({
       budget: props.budget,
@@ -128,7 +125,6 @@ const pages = {
   settings: {
     path: "/budgets/:budgetId/settings",
     title: "Budget Settings",
-    linkFunction: ({ budgetId }) => `/budgets/${budgetId}/settings`,
     Component: SettingsBody,
     props: props => ({
       budget: props.budget,

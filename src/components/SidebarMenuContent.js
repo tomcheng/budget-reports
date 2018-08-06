@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
-import pages from "../pages";
+import pages, { makeLink } from "../pages";
 import Icon from "./Icon";
 import { plotBandColor, iconWidth } from "../styleVariables";
 
@@ -38,7 +38,7 @@ const SidebarMenuContent = ({ budgetId, onCloseSidebar, open }) => (
         <Icon icon="times" />
       </IconWrapper>
       <Link
-        to={pages.settings.linkFunction({ budgetId })}
+        to={makeLink(pages.settings.path, { budgetId })}
         style={{ display: "flex" }}
         onClick={evt => {
           if (!open) {
@@ -61,11 +61,11 @@ const SidebarMenuContent = ({ budgetId, onCloseSidebar, open }) => (
       "netWorth",
       "projections"
     ].map(page => {
-      const { path, title, linkFunction } = pages[page];
+      const { path, title } = pages[page];
       return (
         <StyledLink
           key={path}
-          to={linkFunction({ budgetId })}
+          to={makeLink(path, { budgetId })}
           activeStyle={{
             backgroundColor: plotBandColor
           }}
