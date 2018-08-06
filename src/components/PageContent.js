@@ -50,24 +50,25 @@ const routes = [
   }
 ];
 
-const PageContent = ({ budget, settings }) => (
-  <Switch>
-    {routes.map(({ path, props, Component }) => (
-      <Route
-        key={path}
-        path={path}
-        exact
-        render={({ match }) => (
-          <Component {...props(match.params, { budget, settings })} />
-        )}
-      />
-    ))}
-  </Switch>
-);
+const PageContent = ({ budget, settings }) =>
+  budget && (
+    <Switch>
+      {routes.map(({ path, props, Component }) => (
+        <Route
+          key={path}
+          path={path}
+          exact
+          render={({ match }) => (
+            <Component {...props(match.params, { budget, settings })} />
+          )}
+        />
+      ))}
+    </Switch>
+  );
 
 PageContent.propTypes = {
-  budget: PropTypes.object.isRequired,
-  settings: PropTypes.object.isRequired
+  settings: PropTypes.object.isRequired,
+  budget: PropTypes.object
 };
 
 export default PageContent;

@@ -137,9 +137,7 @@ class App extends Component {
                       onChangeSetting={this.handleChangeSetting}
                     />
                   }
-                  content={() => (
-                    <PageContent budget={budget} settings={settings} />
-                  )}
+                  content={<PageContent budget={budget} settings={settings} />}
                 />
               );
             }}

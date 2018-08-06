@@ -62,7 +62,7 @@ const PageWrapper = ({
               {actions}
             </HeaderTop>
           </Header>
-          <Body>{content()}</Body>
+          <Body>{content}</Body>
           {!authorized && (
             <div
               style={{
@@ -91,7 +91,7 @@ PageWrapper.propTypes = {
   breadcrumbs: PropTypes.node.isRequired,
   budgetId: PropTypes.string.isRequired,
   budgetLoaded: PropTypes.bool.isRequired,
-  content: PropTypes.func.isRequired,
+  content: PropTypes.node.isRequired,
   title: PropTypes.node.isRequired,
   onAuthorize: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired

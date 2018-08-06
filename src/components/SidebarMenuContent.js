@@ -43,7 +43,9 @@ const SidebarMenuContent = ({ budgetId, onCloseSidebar, open }) => (
         onClick={evt => {
           if (!open) {
             evt.preventDefault();
+            return;
           }
+          onCloseSidebar();
         }}
       >
         <IconWrapper>
@@ -62,7 +64,9 @@ const SidebarMenuContent = ({ budgetId, onCloseSidebar, open }) => (
         onClick={evt => {
           if (!open) {
             evt.preventDefault();
+            return;
           }
+          onCloseSidebar();
         }}
       >
         {title}
