@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import get from "lodash/fp/get";
 import { Switch, Route } from "react-router-dom";
 
 const routes = [
@@ -9,18 +8,22 @@ const routes = [
     title: "Current Month Spending"
   },
   {
+    path: "/budgets/:budgetId/current/:categoryGroupId",
+    title: (params, budget) =>
+      budget.categoryGroupsById[params.categoryGroupId].name
+  },
+  {
     path: "/budgets/:budgetId/categories",
     title: "Categories"
   },
   {
     path: "/budgets/:budgetId/category-groups/:categoryGroupId",
     title: (params, budget) =>
-      get(["categoryGroupsById", params.categoryGroupId, "name"])(budget)
+      budget.categoryGroupsById[params.categoryGroupId].name
   },
   {
     path: "/budgets/:budgetId/category-groups/:categoryGroupId/:categoryId",
-    title: (params, budget) =>
-      get(["categoriesById", params.categoryId, "name"])(budget)
+    title: (params, budget) => budget.categoriesById[params.categoryId].name
   },
   {
     path: "/budgets/:budgetId/payees",
@@ -28,8 +31,7 @@ const routes = [
   },
   {
     path: "/budgets/:budgetId/payees/:payeeId",
-    title: (params, budget) =>
-      get(["payeesById", params.payeeId, "name"])(budget)
+    title: (params, budget) => budget.payeesById[params.payeeId].name
   }
 ];
 

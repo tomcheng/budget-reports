@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { Link, Route, Switch } from "react-router-dom";
 import {
+  getCurrentMonthLink,
   getCategoryGroupLink,
   getCategoryGroupsLink,
   getPayeesLink
@@ -10,6 +11,15 @@ import { MinorText } from "./typeComponents";
 import Icon from "./Icon";
 
 const routes = [
+  {
+    path: "/budgets/:budgetId/current/:categoryGroupId",
+    breadcrumbs: params => [
+      {
+        label: "Current Month Spending",
+        to: getCurrentMonthLink({ budgetId: params.budgetId })
+      }
+    ]
+  },
   {
     path: "/budgets/:budgetId/category-groups/:categoryGroupId",
     breadcrumbs: params => [
