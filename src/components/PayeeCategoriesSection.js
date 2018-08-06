@@ -12,45 +12,47 @@ const PayeeCategoriesSection = ({ categoryIds, budget }) => {
 
   return (
     <CollapsibleSection title="Categories">
-      {categoryIds.map(id => {
-        const category = categoriesById[id];
-        const categoryGroup = categoryGroupsById[category.categoryGroupId];
+      {categoryIds
+        .filter(
+          id =>
+            !!categoriesById[id] &&
+            !!categoryGroupsById[categoriesById[id].categoryGroupId]
+        )
+        .map(id => {
+          const category = categoriesById[id];
+          const categoryGroup = categoryGroupsById[category.categoryGroupId];
 
-        if (!categoryGroup) {
-          return null;
-        }
-
-        return (
-          <ListItem key={id}>
-            <SecondaryText
-              style={{
-                display: "flex",
-                alignItems: "center",
-                whiteSpace: "pre"
-              }}
-            >
-              <Link
-                to={makeLink(pages.group.path, {
-                  budgetId: budget.id,
-                  categoryGroupId: categoryGroup.id
-                })}
+          return (
+            <ListItem key={id}>
+              <SecondaryText
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  whiteSpace: "pre"
+                }}
               >
-                {categoryGroup.name}
-              </Link>{" "}
-              <Separator />{" "}
-              <Link
-                to={makeLink(pages.category.path, {
-                  budgetId: budget.id,
-                  categoryGroupId: categoryGroup.id,
-                  categoryId: category.id
-                })}
-              >
-                {category.name}
-              </Link>
-            </SecondaryText>
-          </ListItem>
-        );
-      })}
+                <Link
+                  to={makeLink(pages.group.path, {
+                    budgetId: budget.id,
+                    categoryGroupId: categoryGroup.id
+                  })}
+                >
+                  {categoryGroup.name}
+                </Link>{" "}
+                <Separator />{" "}
+                <Link
+                  to={makeLink(pages.category.path, {
+                    budgetId: budget.id,
+                    categoryGroupId: categoryGroup.id,
+                    categoryId: category.id
+                  })}
+                >
+                  {category.name}
+                </Link>
+              </SecondaryText>
+            </ListItem>
+          );
+        })}
     </CollapsibleSection>
   );
 };

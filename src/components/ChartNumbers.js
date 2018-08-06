@@ -15,7 +15,7 @@ const ChartNumbers = ({ numbers }) => (
     }}
   >
     {numbers.map(({ amount, label }) => (
-      <div style={{ marginLeft: 20 }}>
+      <div key={label} style={{ marginLeft: 20 }}>
         <LargeNumber style={{ lineHeight: "16px" }}>
           <Amount amount={amount} />
         </LargeNumber>
