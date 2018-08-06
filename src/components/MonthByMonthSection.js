@@ -5,12 +5,19 @@ import { getTransactionMonth } from "../utils";
 import { groupBy, sumByProp } from "../optimized";
 import { lightPrimaryColor } from "../styleVariables";
 import CollapsibleSection from "./CollapsibleSection";
+import ChartNumbers from "./ChartNumbers";
 import MonthlyChart from "./MonthlyChart";
 
-const MonthByMonthSection = ({ transactions, firstMonth, selectedMonth, onSelectMonth }) => {
+const MonthByMonthSection = ({
+  transactions,
+  firstMonth,
+  selectedMonth,
+  onSelectMonth
+}) => {
   const currentMonth = moment().format("YYYY-MM");
   const months = [firstMonth];
   let m = firstMonth;
+  let totalAmount = 0;
 
   while (m !== currentMonth) {
     m = moment(m)
@@ -20,13 +27,16 @@ const MonthByMonthSection = ({ transactions, firstMonth, selectedMonth, onSelect
   }
 
   const transactionsByMonth = groupBy(getTransactionMonth)(transactions);
-  const data = months.map(month => ({
-    month,
-    amount: -sumByProp("amount")(transactionsByMonth[month] || [])
-  }));
+  const data = months.map(month => {
+    const amount = sumByProp("amount")(transactionsByMonth[month] || []);
+    totalAmount += amount;
+
+    return { month, amount: -amount };
+  });
 
   return (
     <CollapsibleSection title="Month by Month">
+      <ChartNumbers numbers={[{ amount: totalAmount, label: "spent" }]} />
       <MonthlyChart
         data={data}
         series={[{ color: lightPrimaryColor, valueFunction: d => d.amount }]}

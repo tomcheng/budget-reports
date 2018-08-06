@@ -49,7 +49,7 @@ const MonthlyChart = ({
     <Chart
       options={{
         chart: {
-          height: 180,
+          height: 140,
           type: "column",
           events: {
             click: event => {
@@ -63,7 +63,7 @@ const MonthlyChart = ({
           plotBands,
           plotLines: yearLines
         },
-        yAxis: { labels: { enabled: false }, title: { text: null } },
+        yAxis: { visible: false, endOnTick: false },
         plotOptions: { series: { stacking: "normal" } },
         series: series.map(s => {
           if (s.type === "line") {

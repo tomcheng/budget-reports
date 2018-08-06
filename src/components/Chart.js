@@ -4,7 +4,7 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 const CHART_DEFAULTS = {
-  chart: { height: 240, spacing: [5, 5, 5, 5] },
+  chart: { height: 240, spacing: [0, 0, 0, 0] },
   credits: { enabled: false },
   legend: { enabled: false },
   title: { text: "" },
