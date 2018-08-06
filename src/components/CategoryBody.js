@@ -1,7 +1,7 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import { getTransactionMonth } from "../utils";
-import { getPayeeLink } from "../linkUtils";
+import pages, { makeLink } from "../pages";
 import MonthByMonthSection from "./MonthByMonthSection";
 import GenericEntitiesSection from "./GenericEntitiesSection";
 
@@ -56,7 +56,9 @@ class CategoryBody extends PureComponent {
         <GenericEntitiesSection
           entitiesById={payeesById}
           entityKey="payeeId"
-          linkFunction={payeeId => getPayeeLink({ budgetId, payeeId })}
+          linkFunction={payeeId =>
+            makeLink(pages.payee.path, { budgetId, payeeId })
+          }
           title="Payees"
           transactions={transactionsForMonth || transactionsForCategory}
         />

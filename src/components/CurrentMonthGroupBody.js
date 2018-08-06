@@ -2,10 +2,10 @@ import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import { getTransactionMonth } from "../utils";
 import { sumByProp } from "../optimized";
+import pages, { makeLink } from "../pages";
 import DayByDaySection from "./DayByDaySection";
 import GenericEntitiesSection from "./GenericEntitiesSection";
 import TransactionsSection from "./TransactionsSection";
-import { getCurrentMonthCategoryLink } from "../linkUtils";
 
 class CurrentMonthGroupBody extends PureComponent {
   static propTypes = {
@@ -74,7 +74,7 @@ class CurrentMonthGroupBody extends PureComponent {
             entityKey="categoryId"
             entitiesById={categoriesById}
             linkFunction={categoryId =>
-              getCurrentMonthCategoryLink({
+              makeLink(pages.currentMonthCategory.path, {
                 budgetId,
                 categoryGroupId,
                 categoryId

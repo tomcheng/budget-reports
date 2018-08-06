@@ -1,12 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { getPayeeLink } from "../linkUtils";
+import pages, { makeLink } from "../pages";
 import { MinorText, SecondaryText } from "./typeComponents";
 import { LargeListItemLink } from "./ListItem";
 import Amount from "./Amount";
 
 const PayeeListItem = ({ name, amount, transactions, id, budgetId }) => (
-  <LargeListItemLink to={getPayeeLink({ budgetId, payeeId: id })}>
+  <LargeListItemLink to={makeLink(pages.payee.path, { budgetId, payeeId: id })}>
     {name}
     <div style={{ textAlign: "right" }}>
       <SecondaryText>

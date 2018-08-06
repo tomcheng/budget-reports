@@ -4,7 +4,7 @@ import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import { Link } from "react-router-dom";
 import { getPayeeNodes } from "../utils";
-import { getPayeeLink } from "../linkUtils";
+import pages, { makeLink } from "../pages";
 import CollapsibleSection from "./CollapsibleSection";
 import Breakdown from "./Breakdown";
 import AmountWithPercentage from "./AmountWithPercentage";
@@ -14,7 +14,7 @@ const IncomeBreakdown = ({ transactions, payeesById, divideBy, budgetId }) => {
     payee => ({
       ...payee,
       name: (
-        <Link to={getPayeeLink({ budgetId, payeeId: payee.id })}>
+        <Link to={makeLink(pages.payee.path, { budgetId, payeeId: payee.id })}>
           {payee.name}
         </Link>
       )

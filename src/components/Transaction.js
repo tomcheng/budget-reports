@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import { getPayeeLink } from "../linkUtils";
+import pages, { makeLink } from "../pages";
 import { SecondaryText, MinorText } from "./typeComponents";
 import ListItem from "./ListItem";
 import Amount from "./Amount";
@@ -17,11 +17,15 @@ const Transaction = ({ payee, date, amount, budgetId, linkToPayee }) => (
     <div>
       <SecondaryText>
         {linkToPayee && payee ? (
-          <Link to={getPayeeLink({ budgetId, payeeId: payee.id })}>
+          <Link
+            to={makeLink(pages.payee.path, { budgetId, payeeId: payee.id })}
+          >
             {payee.name}
           </Link>
+        ) : payee ? (
+          payee.name
         ) : (
-          payee ? payee.name : "(no payee)"
+          "(no payee)"
         )}
       </SecondaryText>
       <Date>{moment(date).format("dddd, MMM D")}</Date>

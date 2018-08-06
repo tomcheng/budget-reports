@@ -5,7 +5,7 @@ import groupBy from "lodash/fp/groupBy";
 import map from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
-import { getCategoryGroupLink } from "../linkUtils";
+import pages, { makeLink } from "../pages";
 import { LargeListItemLink } from "./ListItem";
 import { SecondaryText, MinorText } from "./typeComponents";
 import Section from "./Section";
@@ -46,7 +46,7 @@ class CategoriesBody extends PureComponent {
         {groupsWithMeta.map(group => (
           <LargeListItemLink
             key={group.id}
-            to={getCategoryGroupLink({
+            to={makeLink(pages.group.path, {
               budgetId: budget.id,
               categoryGroupId: group.id
             })}

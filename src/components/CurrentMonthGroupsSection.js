@@ -6,7 +6,7 @@ import groupBy from "lodash/fp/groupBy";
 import map from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
-import { getCurrentMonthGroupLink } from "../linkUtils";
+import pages, { makeLink } from "../pages";
 import { sumByProp } from "../optimized";
 import CollapsibleSection from "./CollapsibleSection";
 import { ListItemLink } from "./ListItem";
@@ -69,7 +69,7 @@ class CurrentMonthGroupsSection extends PureComponent {
         {groups.map(({ group, transactions, amount }) => (
           <ListItemLink
             key={group.id}
-            to={getCurrentMonthGroupLink({
+            to={makeLink(pages.currentMonthGroup.path, {
               budgetId,
               categoryGroupId: group.id
             })}

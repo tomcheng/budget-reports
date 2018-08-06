@@ -12,7 +12,7 @@ import pick from "lodash/fp/pick";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import { getPayeeNodes } from "../utils";
-import { getPayeeLink } from "../linkUtils";
+import pages, { makeLink } from "../pages";
 import CollapsibleSection from "./CollapsibleSection";
 import Breakdown from "./Breakdown";
 import AmountWithPercentage from "./AmountWithPercentage";
@@ -36,7 +36,9 @@ const ExpensesBreakdown = ({
       ).map(payee => ({
         ...payee,
         name: (
-          <Link to={getPayeeLink({ budgetId, payeeId: payee.id })}>
+          <Link
+            to={makeLink(pages.payee.path, { budgetId, payeeId: payee.id })}
+          >
             {payee.name}
           </Link>
         )

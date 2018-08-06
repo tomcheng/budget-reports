@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import sortBy from "lodash/fp/sortBy";
 import { getTransactionMonth } from "../utils";
-import { getCategoryLink } from "../linkUtils";
+import pages, { makeLink } from "../pages";
 import MonthByMonthSection from "./MonthByMonthSection";
 import GenericEntitiesSection from "./GenericEntitiesSection";
 
@@ -67,7 +67,7 @@ class GroupBody extends PureComponent {
           entityKey="categoryId"
           entitiesById={categoriesById}
           linkFunction={categoryId =>
-            getCategoryLink({
+            makeLink(pages.category.path, {
               budgetId,
               categoryGroupId: categoryGroup.id,
               categoryId
