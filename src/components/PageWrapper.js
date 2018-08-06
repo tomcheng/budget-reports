@@ -15,17 +15,15 @@ const Container = styled.div`
 
 const Header = styled.div`
   flex-shrink: 0;
-  background-color: #fff;
-  border-bottom: 1px solid #ccc;
-`;
-
-const HeaderTop = styled.div`
   display: flex;
   align-items: center;
   height: 60px;
   padding-left: 0;
   padding-right: 20px;
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
   white-space: pre;
+  user-select: none;
 `;
 
 const Body = styled.div`
@@ -52,15 +50,13 @@ const PageWrapper = ({
     <SidebarMenu budgetId={budgetId}>
       {({ sidebarTrigger }) => (
         <Container>
-          <Header flushLeft>
-            <HeaderTop>
-              {sidebarTrigger}
-              <div style={{ flexGrow: 1 }}>
-                {breadcrumbs}
-                <PageTitle style={{ lineHeight: 1 }}>{title}</PageTitle>
-              </div>
-              {actions}
-            </HeaderTop>
+          <Header>
+            {sidebarTrigger}
+            <div style={{ flexGrow: 1 }}>
+              {breadcrumbs}
+              <PageTitle style={{ lineHeight: 1 }}>{title}</PageTitle>
+            </div>
+            {actions}
           </Header>
           <Body>{content}</Body>
           {!authorized && (
