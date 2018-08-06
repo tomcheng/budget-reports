@@ -5,8 +5,13 @@ import compose from "lodash/fp/compose";
 import map from "lodash/fp/map";
 import prop from "lodash/fp/prop";
 import uniq from "lodash/fp/uniq";
-import { getMetadataForPayee, getTransactionMonth } from "../utils";
+import {
+  getMetadataForPayee,
+  getFirstMonth,
+  getTransactionMonth
+} from "../utils";
 import TopNumbers from "./TopNumbers";
+import MonthByMonthSection from "./MonthByMonthSection";
 import PayeeCategoriesSection from "./PayeeCategoriesSection";
 import GroupedTransactionsSection from "./GroupedTransactionsSection";
 import { TopSection } from "./Section";
@@ -26,13 +31,24 @@ class Payee extends PureComponent {
     }).isRequired
   };
 
+  state = { selectedMonth: null };
+
+  handleSelectMonth = month => {
+    this.setState(state => ({
+      ...state,
+      selectedMonth: state.selectedMonth === month ? null : month
+    }));
+  };
+
   render() {
     const { payee, budget } = this.props;
+    const { selectedMonth } = this.state;
     const { amount, transactions, transactionCount } = getMetadataForPayee({
       budget,
       payeeId: payee.id
     });
     const categoryIds = compose([uniq, map(prop("categoryId"))])(transactions);
+    const firstMonth = getFirstMonth(budget);
 
     return (
       <Fragment>
@@ -52,6 +68,12 @@ class Payee extends PureComponent {
             ]}
           />
         </TopSection>
+        <MonthByMonthSection
+          firstMonth={firstMonth}
+          selectedMonth={selectedMonth}
+          transactions={transactions}
+          onSelectMonth={this.handleSelectMonth}
+        />
         <PayeeCategoriesSection budget={budget} categoryIds={categoryIds} />
         <GroupedTransactionsSection
           transactions={transactions}

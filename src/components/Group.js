@@ -2,7 +2,7 @@ import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import sortBy from "lodash/fp/sortBy";
-import { getTransactionMonth } from "../utils";
+import { getTransactionMonth, getFirstMonth } from "../utils";
 import pages, { makeLink } from "../pages";
 import MonthByMonthSection from "./MonthByMonthSection";
 import GenericEntitiesSection from "./GenericEntitiesSection";
@@ -41,6 +41,7 @@ class Group extends PureComponent {
       payeesById,
       id: budgetId
     } = budget;
+    const firstMonth = getFirstMonth(budget);
 
     const categoriesInGroup = categories.filter(
       category => category.categoryGroupId === categoryGroup.id
@@ -62,9 +63,7 @@ class Group extends PureComponent {
     return (
       <Fragment>
         <MonthByMonthSection
-          firstMonth={getTransactionMonth(
-            transactions[transactions.length - 1]
-          )}
+          firstMonth={firstMonth}
           selectedMonth={selectedMonth}
           transactions={transactionsInGroup}
           onSelectMonth={this.handleSelectMonth}

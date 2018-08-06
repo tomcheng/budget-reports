@@ -1,6 +1,6 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
-import { getTransactionMonth } from "../utils";
+import { getFirstMonth, getTransactionMonth } from "../utils";
 import pages, { makeLink } from "../pages";
 import MonthByMonthSection from "./MonthByMonthSection";
 import GenericEntitiesSection from "./GenericEntitiesSection";
@@ -33,9 +33,7 @@ class Category extends PureComponent {
     const { category, budget } = this.props;
     const { selectedMonth } = this.state;
     const { transactions, payeesById, id: budgetId } = budget;
-    const firstMonth = getTransactionMonth(
-      transactions[transactions.length - 1]
-    );
+    const firstMonth = getFirstMonth(budget);
     const transactionsForCategory = transactions.filter(
       transaction => transaction.categoryId === category.id
     );

@@ -69,7 +69,7 @@ const MonthByMonthSection = ({
 
 MonthByMonthSection.propTypes = {
   firstMonth: PropTypes.string.isRequired,
-  transactions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
   onSelectMonth: PropTypes.func.isRequired,
   selectedMonth: PropTypes.string
 };
