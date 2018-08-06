@@ -58,6 +58,7 @@ const MonthByMonthSection = ({
       <ChartNumbers numbers={chartNumbers} />
       <MonthlyChart
         data={data}
+        average={total / months.length}
         series={[{ color: lightPrimaryColor, valueFunction: d => d.amount }]}
         selectedMonths={selectedMonth && [selectedMonth]}
         onSelectMonth={onSelectMonth}

@@ -6,6 +6,7 @@ import { plotBandColor, selectedPlotBandColor } from "../styleVariables";
 import Chart from "./Chart";
 
 const MonthlyChart = ({
+  average,
   data,
   series,
   selectedMonths,
@@ -63,7 +64,22 @@ const MonthlyChart = ({
           plotBands,
           plotLines: yearLines
         },
-        yAxis: { visible: false, endOnTick: false, startOnTick: false },
+        yAxis: {
+          endOnTick: false,
+          startOnTick: false,
+          gridLineColor: "transparent",
+          labels: { enabled: false },
+          title: { text: null },
+          plotLines: average && [
+            {
+              color: "#aaa",
+              dashStyle: "Dot",
+              width: 1,
+              value: -average,
+              zIndex: 2
+            }
+          ]
+        },
         plotOptions: { series: { stacking: "normal" } },
         series: series.map(s => {
           if (s.type === "line") {
@@ -101,6 +117,7 @@ MonthlyChart.propTypes = {
       type: PropTypes.oneOf(["line"])
     })
   ).isRequired,
+  average: PropTypes.number,
   excludedMonths: PropTypes.arrayOf(PropTypes.string),
   selectedMonths: PropTypes.arrayOf(PropTypes.string),
   onSelectMonth: PropTypes.func
