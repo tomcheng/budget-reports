@@ -5,12 +5,13 @@ import identity from "lodash/fp/identity";
 import map from "lodash/fp/map";
 import prop from "lodash/fp/prop";
 import { sumByProp } from "../optimized";
+import CollapsibleSection from "./CollapsibleSection";
 import Breakdown from "./Breakdown";
 import LabelWithTransactionCount from "./LabelWithTransactionCount";
 
 const mapWithKeys = map.convert({ cap: false });
 
-class GroupedTransactions extends PureComponent {
+class GroupedTransactionsSection extends PureComponent {
   static propTypes = {
     groupBy: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
     transactions: PropTypes.array.isRequired,
@@ -48,8 +49,12 @@ class GroupedTransactions extends PureComponent {
       }))
     }))(groupedTransactions);
 
-    return <Breakdown nodes={nodes} />;
+    return (
+      <CollapsibleSection title="Transactions">
+        <Breakdown nodes={nodes} />
+      </CollapsibleSection>
+    );
   }
 }
 
-export default GroupedTransactions;
+export default GroupedTransactionsSection;

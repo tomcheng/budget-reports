@@ -7,9 +7,8 @@ import prop from "lodash/fp/prop";
 import uniq from "lodash/fp/uniq";
 import { getMetadataForPayee, getTransactionMonth } from "../utils";
 import TopNumbers from "./TopNumbers";
-import PayeeCategories from "./PayeeCategories";
-import GroupedTransactions from "./GroupedTransactions";
-import CollapsibleSection from "./CollapsibleSection";
+import PayeeCategoriesSection from "./PayeeCategoriesSection";
+import GroupedTransactionsSection from "./GroupedTransactionsSection";
 import { TopSection } from "./Section";
 
 class Payee extends PureComponent {
@@ -53,19 +52,15 @@ class Payee extends PureComponent {
             ]}
           />
         </TopSection>
-        <CollapsibleSection title="Categories">
-          <PayeeCategories budget={budget} categoryIds={categoryIds} />
-        </CollapsibleSection>
-        <CollapsibleSection title="Transactions">
-          <GroupedTransactions
-            transactions={transactions}
-            groupBy={getTransactionMonth}
-            groupDisplayFunction={month => moment(month).format("MMMM YYYY")}
-            leafDisplayFunction={transaction =>
-              moment(transaction.date).format("dddd, MMMM D")
-            }
-          />
-        </CollapsibleSection>
+        <PayeeCategoriesSection budget={budget} categoryIds={categoryIds} />
+        <GroupedTransactionsSection
+          transactions={transactions}
+          groupBy={getTransactionMonth}
+          groupDisplayFunction={month => moment(month).format("MMMM YYYY")}
+          leafDisplayFunction={transaction =>
+            moment(transaction.date).format("dddd, MMMM D")
+          }
+        />
       </Fragment>
     );
   }
