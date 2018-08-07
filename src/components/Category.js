@@ -49,7 +49,6 @@ class Category extends PureComponent {
           <TransactionsByMonthSection
             payeesById={payeesById}
             transactions={transactionsForCategory}
-            firstMonth={firstMonth}
             selectedMonth={selectedMonth}
           />
         )}

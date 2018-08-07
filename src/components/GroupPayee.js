@@ -55,7 +55,6 @@ class GroupPayee extends PureComponent {
         />
         {selectedMonth && (
           <TransactionsByMonthSection
-            firstMonth={firstMonth}
             payeesById={payeesById}
             selectedMonth={selectedMonth}
             transactions={transactionsForGroupAndPayee}
