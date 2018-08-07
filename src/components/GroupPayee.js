@@ -58,6 +58,7 @@ class GroupPayee extends PureComponent {
             payeesById={payeesById}
             selectedMonth={selectedMonth}
             transactions={transactionsForGroupAndPayee}
+            limitShowing={false}
           />
         )}
       </Fragment>

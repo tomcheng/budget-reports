@@ -50,6 +50,7 @@ class Payee extends PureComponent {
             payeesById={payeesById}
             selectedMonth={selectedMonth}
             transactions={transactionsForPayee}
+            limitShowing={false}
           />
         )}
       </Fragment>

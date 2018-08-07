@@ -16,8 +16,11 @@ class TransactionsByMonthSection extends Component {
   static propTypes = {
     payeesById: PropTypes.object.isRequired,
     selectedMonth: PropTypes.string.isRequired,
-    transactions: PropTypes.arrayOf(PropTypes.object).isRequired
+    transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
+    limitShowing: PropTypes.bool
   };
+
+  static defaultProps = { limitShowing: true };
 
   state = { showAll: false };
 
@@ -26,17 +29,17 @@ class TransactionsByMonthSection extends Component {
   };
 
   render() {
-    const { payeesById, selectedMonth, transactions } = this.props;
+    const { payeesById, selectedMonth, transactions, limitShowing: limitShowingProp } = this.props;
     const { showAll } = this.state;
 
     const transactionsForMonth = compose([
-      sortBy("amount"),
+      limitShowingProp ? sortBy("amount") : transactions => transactions.reverse(),
       transactions =>
         transactions.filter(
           transaction => getTransactionMonth(transaction) === selectedMonth
         )
     ])(transactions);
-    const limitShowing = transactionsForMonth.length > LIMIT + 2;
+    const limitShowing = limitShowingProp && transactionsForMonth.length > LIMIT + 2;
     const topTransactions = limitShowing ? transactionsForMonth.slice(0, LIMIT) : transactionsForMonth;
     const otherTransactions = limitShowing ? transactionsForMonth.slice(LIMIT) : [];
 

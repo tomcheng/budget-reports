@@ -60,6 +60,7 @@ class Category extends PureComponent {
             payeesById={payeesById}
             selectedMonth={selectedMonth}
             transactions={transactionsForCategoryAndPayee}
+            limitShowing={false}
           />
         )}
       </Fragment>

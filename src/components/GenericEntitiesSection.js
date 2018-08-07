@@ -30,6 +30,7 @@ class GenericEntitiesSection extends Component {
     showTransactionCount: PropTypes.bool,
     limitShowing: PropTypes.bool
   };
+
   static defaultProps = { showTransactionCount: true };
 
   state = { showAll: false };
