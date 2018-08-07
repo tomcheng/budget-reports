@@ -67,11 +67,7 @@ const pages = {
     Component: Group,
     props: (props, params) => ({
       budget: props.budget,
-      categoryGroup: props.budget.categoryGroupsById[params.categoryGroupId],
-      selectedMonth: props.settings.categoriesMonth,
-      onSelectMonth: month => {
-        props.onChangeSetting({ setting: "categoriesMonth", value: month });
-      }
+      categoryGroup: props.budget.categoryGroupsById[params.categoryGroupId]
     }),
     breadcrumbs: ["categories"]
   },
@@ -82,11 +78,7 @@ const pages = {
     props: (props, params) => ({
       budget: props.budget,
       categoryGroup: props.budget.categoryGroupsById[params.categoryGroupId],
-      payee: props.budget.payeesById[params.payeeId],
-      selectedMonth: props.settings.categoriesMonth,
-      onSelectMonth: month => {
-        props.onChangeSetting({ setting: "categoriesMonth", value: month });
-      }
+      payee: props.budget.payeesById[params.payeeId]
     }),
     breadcrumbs: ["categories", "group"]
   },
@@ -96,11 +88,7 @@ const pages = {
     Component: Category,
     props: (props, params) => ({
       budget: props.budget,
-      category: props.budget.categoriesById[params.categoryId],
-      selectedMonth: props.settings.categoriesMonth,
-      onSelectMonth: month => {
-        props.onChangeSetting({ setting: "categoriesMonth", value: month });
-      }
+      category: props.budget.categoriesById[params.categoryId]
     }),
     breadcrumbs: ["categories", "group"]
   },
@@ -112,11 +100,7 @@ const pages = {
     props: (props, params) => ({
       budget: props.budget,
       category: props.budget.categoriesById[params.categoryId],
-      payee: props.budget.payeesById[params.payeeId],
-      selectedMonth: props.settings.categoriesMonth,
-      onSelectMonth: month => {
-        props.onChangeSetting({ setting: "categoriesMonth", value: month });
-      }
+      payee: props.budget.payeesById[params.payeeId]
     }),
     breadcrumbs: ["categories", "group", "category"]
   },

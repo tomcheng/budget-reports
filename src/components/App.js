@@ -40,8 +40,7 @@ class App extends Component {
     settings: {
       categoriesSort: "amount",
       payeesSort: "amount",
-      incomeVsExpensesShowing: "average",
-      categoriesMonth: null
+      incomeVsExpensesShowing: "average"
     }
   };
 
@@ -81,11 +80,7 @@ class App extends Component {
       ...state,
       settings: {
         ...state.settings,
-        [setting]:
-          setting === "categoriesMonth" &&
-          state.settings.categoriesMonth === value
-            ? null
-            : value
+        [setting]: value
       }
     }));
   };
