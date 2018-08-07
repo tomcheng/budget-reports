@@ -10,7 +10,7 @@ import NoTransactions from "./NoTransactions";
 const PayeeTransactionsSection = ({ payeeName, transactions }) => (
   <CollapsibleSection title="Transactions">
     {transactions.length ? (
-      transactions.map(({ id, date, amount }) => (
+      transactions.reverse().map(({ id, date, amount }) => (
         <ListItem key={id}>
           <div>
             <SecondaryText>{payeeName}</SecondaryText>

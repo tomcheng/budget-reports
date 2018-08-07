@@ -32,7 +32,7 @@ class Group extends PureComponent {
   };
 
   render() {
-    const { categoryGroup, budget } = this.props;
+    const { budget, categoryGroup } = this.props;
     const { selectedMonth } = this.state;
     const {
       transactions,
@@ -86,8 +86,9 @@ class Group extends PureComponent {
           entityKey="payeeId"
           entitiesById={payeesById}
           linkFunction={payeeId =>
-            makeLink(pages.payee.path, {
+            makeLink(pages.groupPayee.path, {
               budgetId,
+              categoryGroupId: categoryGroup.id,
               payeeId
             })
           }
