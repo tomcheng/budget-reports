@@ -1,16 +1,18 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { SecondaryText } from "./typeComponents";
+import { MinorText } from "./typeComponents";
 
-const SeeAll = ({ showAll, onToggle }) => (
-  <SecondaryText style={{ textAlign: "center", color: "#999" }} onClick={onToggle}>
-    {showAll ? "see less" : "see all"}
-  </SecondaryText>
+const SeeAll = ({ count, pluralizedName, showAll, onToggle }) => (
+  <MinorText style={{ textAlign: "center", marginTop: 5 }} onClick={onToggle}>
+    {showAll ? "see less" : `see all ${count} ${pluralizedName}`}
+  </MinorText>
 );
 
 SeeAll.propTypes = {
+  count: PropTypes.number.isRequired,
+  pluralizedName: PropTypes.string.isRequired,
   showAll: PropTypes.bool.isRequired,
-  onToggle: PropTypes.func.isRequired,
+  onToggle: PropTypes.func.isRequired
 };
 
 export default SeeAll;

@@ -15,6 +15,11 @@ import SeeAll from "./SeeAll";
 const mapWithKeys = map.convert({ cap: false });
 const LIMIT = 5;
 
+const keyToPluralizedName = {
+  categoryId: "categories",
+  payeeId: "payees"
+};
+
 class GenericEntitiesSection extends Component {
   static propTypes = {
     entityKey: PropTypes.string.isRequired,
@@ -130,7 +135,12 @@ class GenericEntitiesSection extends Component {
         </AnimateHeight>
         {!!otherEntities.length &&
           limitShowing && (
-            <SeeAll showAll={showAll} onToggle={this.handleToggleShowAll} />
+            <SeeAll
+              count={entities.length}
+              pluralizedName={keyToPluralizedName[entityKey]}
+              showAll={showAll}
+              onToggle={this.handleToggleShowAll}
+            />
           )}
       </CollapsibleSection>
     );

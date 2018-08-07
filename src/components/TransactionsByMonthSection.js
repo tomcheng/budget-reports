@@ -70,7 +70,7 @@ class TransactionsByMonthSection extends Component {
           </Fragment>
         </AnimateHeight>
         {!!otherTransactions.length && (
-          <SeeAll showAll={showAll} onToggle={this.handleToggleShowAll} />
+          <SeeAll count={transactionsForMonth.length} pluralizedName="transactions" showAll={showAll} onToggle={this.handleToggleShowAll} />
         )}
       </CollapsibleSection>
     );
