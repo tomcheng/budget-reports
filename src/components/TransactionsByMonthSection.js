@@ -69,7 +69,7 @@ const NoSelectedMonth = ({ firstMonth, transactions, onSelectMonth }) => {
   const months = getMonthsToNow(firstMonth);
   const transactionsByMonth = groupBy(getTransactionMonth)(transactions);
 
-  return months.map(month => (
+  return months.filter(month => !!transactionsByMonth[month]).map(month => (
     <ListItem
       key={month}
       onClick={() => {
@@ -79,12 +79,12 @@ const NoSelectedMonth = ({ firstMonth, transactions, onSelectMonth }) => {
       <SecondaryText>
         <LabelWithTransactionCount
           label={moment(month).format("MMMM YYYY")}
-          count={(transactionsByMonth[month] || []).length}
+          count={transactionsByMonth[month].length}
         />
       </SecondaryText>
       <SecondaryText>
         <Amount
-          amount={sumByProp("amount")(transactionsByMonth[month] || [])}
+          amount={sumByProp("amount")(transactionsByMonth[month])}
         />
       </SecondaryText>
     </ListItem>
