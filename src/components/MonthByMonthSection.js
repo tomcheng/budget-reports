@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { getTransactionMonth } from "../utils";
+import { getTransactionMonth, getMonthsToNow } from "../utils";
 import { groupBy, sumByProp } from "../optimized";
 import { lightPrimaryColor } from "../styleVariables";
 import CollapsibleSection from "./CollapsibleSection";
@@ -14,18 +14,9 @@ const MonthByMonthSection = ({
   selectedMonth,
   onSelectMonth
 }) => {
-  const currentMonth = moment().format("YYYY-MM");
-  const months = [firstMonth];
-  let m = firstMonth;
+  const months = getMonthsToNow(firstMonth);
   let total = 0;
   let selectedMonthTotal = 0;
-
-  while (m !== currentMonth) {
-    m = moment(m)
-      .add(1, "months")
-      .format("YYYY-MM");
-    months.push(m);
-  }
 
   const transactionsByMonth = groupBy(getTransactionMonth)(transactions);
   const data = months.map(month => {

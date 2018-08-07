@@ -46,9 +46,11 @@ class Payee extends PureComponent {
           onSelectMonth={this.handleSelectMonth}
         />
         <TransactionsForPayeeSection
-          payeeName={payee.name}
+          firstMonth={firstMonth}
+          payee={payee}
           selectedMonth={selectedMonth}
           transactions={transactionsForPayee}
+          onSelectMonth={this.handleSelectMonth}
         />
       </Fragment>
     );

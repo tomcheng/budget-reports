@@ -50,9 +50,11 @@ class Category extends PureComponent {
           onSelectMonth={onSelectMonth}
         />
         <TransactionsForPayeeSection
-          payeeName={payee.name}
+          firstMonth={firstMonth}
+          payee={payee}
           selectedMonth={selectedMonth}
           transactions={transactionsForCategoryAndPayee}
+          onSelectMonth={onSelectMonth}
         />
       </Fragment>
     );

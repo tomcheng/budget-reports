@@ -1,4 +1,5 @@
 import { utils } from "ynab";
+import moment from "moment";
 import { groupByProp, sumBy, sumByProp } from "./optimized";
 import anyPass from "lodash/fp/anyPass";
 import camelCase from "lodash/fp/camelCase";
@@ -166,6 +167,21 @@ export const getTransactionMonth = transaction => transaction.date.slice(0, 7);
 
 export const getFirstMonth = budget =>
   getTransactionMonth(budget.transactions[budget.transactions.length - 1]);
+
+export const getMonthsToNow = firstMonth => {
+  const currentMonth = moment().format("YYYY-MM");
+  const months = [firstMonth];
+  let m = firstMonth;
+
+  while (m !== currentMonth) {
+    m = moment(m)
+      .add(1, "months")
+      .format("YYYY-MM");
+    months.push(m);
+  }
+
+  return months;
+};
 
 const standardDeviation = arr => {
   const avg = mean(arr);
