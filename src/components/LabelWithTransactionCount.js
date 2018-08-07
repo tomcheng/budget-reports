@@ -1,21 +1,23 @@
-import React, { Fragment } from "react";
+import React  from "react";
 import PropTypes from "prop-types";
+import { SecondaryText, MinorText } from "./typeComponents";
 
-const LabelWithTransactionCount = ({ label, count, showCount }) => (
-  <Fragment>
+const LabelWithTransactionCount = ({ label, count, showCount, style }) => (
+  <SecondaryText style={style}>
     {label}
     {showCount && (
-      <span style={{ opacity: 0.6 }}>
+      <MinorText style={{ lineHeight: "inherit", display: "inline" }}>
         &nbsp;&ndash; {count} transaction{count === 1 ? "" : "s"}
-      </span>
+      </MinorText>
     )}
-  </Fragment>
+  </SecondaryText>
 );
 
 LabelWithTransactionCount.propTypes = {
   count: PropTypes.number.isRequired,
   label: PropTypes.string.isRequired,
-  showCount: PropTypes.bool
+  showCount: PropTypes.bool,
+  style: PropTypes.object
 };
 
 LabelWithTransactionCount.defaultProps = { showCount: true };

@@ -74,12 +74,11 @@ class CurrentMonthGroupsSection extends PureComponent {
               categoryGroupId: group.id
             })}
           >
-            <SecondaryText style={{ whiteSpace: "pre" }}>
-              <LabelWithTransactionCount
-                count={transactions}
-                label={group.name}
-              />
-            </SecondaryText>
+            <LabelWithTransactionCount
+              count={transactions}
+              label={group.name}
+              style={{ whiteSpace: "pre" }}
+            />
             <AmountWithPercentage amount={amount} total={total} />
           </ListItemLink>
         ))}

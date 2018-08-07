@@ -58,7 +58,12 @@ const WithSelectedMonth = ({ transactions, selectedMonth, payeesById }) => {
     transactionsForMonth
       .reverse()
       .map(({ id, date, amount, payeeId }) => (
-        <Transaction key={id} amount={amount} payee={payeesById[payeeId]} date={date} />
+        <Transaction
+          key={id}
+          amount={amount}
+          payee={payeesById[payeeId]}
+          date={date}
+        />
       ))
   ) : (
     <NoTransactions />
@@ -76,16 +81,12 @@ const NoSelectedMonth = ({ firstMonth, transactions, onSelectMonth }) => {
         onSelectMonth(month);
       }}
     >
+      <LabelWithTransactionCount
+        label={moment(month).format("MMMM YYYY")}
+        count={transactionsByMonth[month].length}
+      />
       <SecondaryText>
-        <LabelWithTransactionCount
-          label={moment(month).format("MMMM YYYY")}
-          count={transactionsByMonth[month].length}
-        />
-      </SecondaryText>
-      <SecondaryText>
-        <Amount
-          amount={sumByProp("amount")(transactionsByMonth[month])}
-        />
+        <Amount amount={sumByProp("amount")(transactionsByMonth[month])} />
       </SecondaryText>
     </ListItem>
   ));

@@ -11,6 +11,7 @@ import LabelWithTransactionCount from "./LabelWithTransactionCount";
 import AmountWithPercentage from "./AmountWithPercentage";
 
 const mapWithKeys = map.convert({ cap: false });
+const LIMIT = 5;
 
 class GenericEntitiesSection extends Component {
   static propTypes = {
@@ -24,10 +25,10 @@ class GenericEntitiesSection extends Component {
   };
   static defaultProps = { showTransactionCount: true };
 
-  state = { limit: 10 };
+  state = { limit: LIMIT };
 
   handleClickOther = () => {
-    this.setState(state => ({ ...state, limit: state.limit + 10 }));
+    this.setState(state => ({ ...state, limit: state.limit + LIMIT }));
   };
 
   render() {
@@ -64,22 +65,27 @@ class GenericEntitiesSection extends Component {
         {(limitShowing ? topEntities : entities).map(
           ({ entityId, transactions, amount }) => (
             <ListItemLink key={entityId} to={linkFunction(entityId)}>
-              <SecondaryText
-                style={{
-                  whiteSpace: "pre",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis"
-                }}
-              >
-                {showTransactionCount ? (
-                  <LabelWithTransactionCount
-                    count={transactions}
-                    label={entitiesById[entityId].name}
-                  />
-                ) : (
-                  entitiesById[entityId].name
-                )}
-              </SecondaryText>
+              {showTransactionCount ? (
+                <LabelWithTransactionCount
+                  count={transactions}
+                  label={entitiesById[entityId].name}
+                  style={{
+                    whiteSpace: "pre",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis"
+                  }}
+                />
+              ) : (
+                <SecondaryText
+                  style={{
+                    whiteSpace: "pre",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis"
+                  }}
+                >
+                  {entitiesById[entityId].name}
+                </SecondaryText>
+              )}
               <AmountWithPercentage amount={amount} total={total} />
             </ListItemLink>
           )
@@ -93,20 +99,20 @@ class GenericEntitiesSection extends Component {
                 this.handleClickOther();
               }}
             >
-              <SecondaryText>
-                {showTransactionCount ? (
-                  <LabelWithTransactionCount
-                    count={sumByProp("transactions")(otherEntities)}
-                    label={`+ ${otherEntities.length} other${
-                      otherEntities.length === 1 ? "" : "s"
-                    }`}
-                  />
-                ) : (
-                  `+ ${otherEntities.length} other${
+              {showTransactionCount ? (
+                <LabelWithTransactionCount
+                  count={sumByProp("transactions")(otherEntities)}
+                  label={`+ ${otherEntities.length} other${
                     otherEntities.length === 1 ? "" : "s"
-                  }`
-                )}
-              </SecondaryText>
+                  }`}
+                />
+              ) : (
+                <SecondaryText>
+                  {`+ ${otherEntities.length} other${
+                    otherEntities.length === 1 ? "" : "s"
+                  }`}
+                </SecondaryText>
+              )}
               <AmountWithPercentage
                 amount={sumByProp("amount")(otherEntities)}
                 total={total}
