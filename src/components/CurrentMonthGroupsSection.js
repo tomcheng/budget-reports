@@ -10,7 +10,6 @@ import pages, { makeLink } from "../pages";
 import { sumByProp } from "../optimized";
 import CollapsibleSection from "./CollapsibleSection";
 import { ListItemLink } from "./ListItem";
-import { SecondaryText } from "./typeComponents";
 import LabelWithTransactionCount from "./LabelWithTransactionCount";
 import AmountWithPercentage from "./AmountWithPercentage";
 import NoTransactions from "./NoTransactions";

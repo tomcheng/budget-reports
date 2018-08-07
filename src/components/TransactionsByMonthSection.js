@@ -21,7 +21,7 @@ const TransactionsByMonthSection = ({
   <CollapsibleSection
     title={
       selectedMonth
-        ? `Transactions for ${moment(selectedMonth).format("MMMM YYYY")}`
+        ? `Transactions for ${moment(selectedMonth).format("MMMM")}`
         : "Transactions by Month"
     }
   >

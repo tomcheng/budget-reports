@@ -73,7 +73,7 @@ class Group extends PureComponent {
           }
           title={
             selectedMonth
-              ? `Categories for ${moment(selectedMonth).format("MMMM YYYY")}`
+              ? `Categories for ${moment(selectedMonth).format("MMMM")}`
               : "Categories"
           }
           transactions={transactionsInSelectedMonth || transactionsInGroup}
@@ -91,7 +91,7 @@ class Group extends PureComponent {
           }
           title={
             selectedMonth
-              ? `Payees for ${moment(selectedMonth).format("MMMM YYYY")}`
+              ? `Payees for ${moment(selectedMonth).format("MMMM")}`
               : "Payees"
           }
           transactions={transactionsInSelectedMonth || transactionsInGroup}

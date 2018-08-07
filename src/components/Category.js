@@ -58,7 +58,7 @@ class Category extends PureComponent {
           }
           title={
             selectedMonth
-              ? `Payees for ${moment(selectedMonth).format("MMMM YYYY")}`
+              ? `Payees for ${moment(selectedMonth).format("MMMM")}`
               : "Payees"
           }
           transactions={transactionsForMonth || transactionsForCategory}
