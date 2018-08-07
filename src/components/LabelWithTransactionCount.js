@@ -6,7 +6,7 @@ const LabelWithTransactionCount = ({ label, count, showCount }) => (
     {label}
     {showCount && (
       <span style={{ opacity: 0.6 }}>
-        &nbsp;&ndash; {count} transaction{count === 1 ? "" : "s"}
+        &nbsp;&ndash; {count} time{count === 1 ? "" : "s"}
       </span>
     )}
   </Fragment>
