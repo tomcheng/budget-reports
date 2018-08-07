@@ -32,7 +32,13 @@ class Category extends PureComponent {
   };
 
   render() {
-    const { budget, category, payee, selectedMonth, onSelectMonth } = this.props;
+    const {
+      budget,
+      category,
+      payee,
+      selectedMonth,
+      onSelectMonth
+    } = this.props;
     const { transactions, payeesById } = budget;
     const firstMonth = getFirstMonth(budget);
     const transactionsForCategoryAndPayee = transactions.filter(
@@ -49,13 +55,14 @@ class Category extends PureComponent {
           selectedMonth={selectedMonth}
           onSelectMonth={onSelectMonth}
         />
-        <TransactionsByMonthSection
-          firstMonth={firstMonth}
-          payeesById={payeesById}
-          selectedMonth={selectedMonth}
-          transactions={transactionsForCategoryAndPayee}
-          onSelectMonth={onSelectMonth}
-        />
+        {selectedMonth && (
+          <TransactionsByMonthSection
+            firstMonth={firstMonth}
+            payeesById={payeesById}
+            selectedMonth={selectedMonth}
+            transactions={transactionsForCategoryAndPayee}
+          />
+        )}
       </Fragment>
     );
   }

@@ -45,6 +45,14 @@ class Category extends PureComponent {
           selectedMonth={selectedMonth}
           onSelectMonth={onSelectMonth}
         />
+        {selectedMonth && (
+          <TransactionsByMonthSection
+            payeesById={payeesById}
+            transactions={transactionsForCategory}
+            firstMonth={firstMonth}
+            selectedMonth={selectedMonth}
+          />
+        )}
         <GenericEntitiesSection
           entitiesById={payeesById}
           entityKey="payeeId"
@@ -64,13 +72,6 @@ class Category extends PureComponent {
           transactions={transactionsForMonth || transactionsForCategory}
           showTransactionCount
           limitShowing
-        />
-        <TransactionsByMonthSection
-          onSelectMonth={onSelectMonth}
-          payeesById={payeesById}
-          transactions={transactionsForCategory}
-          firstMonth={firstMonth}
-          selectedMonth={selectedMonth}
         />
       </Fragment>
     );
