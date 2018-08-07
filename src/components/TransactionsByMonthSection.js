@@ -10,7 +10,7 @@ import Transaction from "./Transaction";
 import NoTransactions from "./NoTransactions";
 import SeeAll from "./SeeAll";
 
-const LIMIT = 4;
+const LIMIT = 3;
 
 class TransactionsByMonthSection extends Component {
   static propTypes = {

@@ -13,7 +13,7 @@ import AmountWithPercentage from "./AmountWithPercentage";
 import SeeAll from "./SeeAll";
 
 const mapWithKeys = map.convert({ cap: false });
-const LIMIT = 5;
+const LIMIT = 4;
 
 class GenericEntitiesSection extends Component {
   static propTypes = {
