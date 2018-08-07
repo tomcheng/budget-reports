@@ -1,9 +1,8 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
-import { getFirstMonth, getTransactionMonth } from "../utils";
-import pages, { makeLink } from "../pages";
+import { getFirstMonth } from "../utils";
 import MonthByMonthSection from "./MonthByMonthSection";
-import GenericEntitiesSection from "./GenericEntitiesSection";
+import TransactionsForPayeeSection from "./TransactionsForPayeeSection";
 
 class Category extends PureComponent {
   static propTypes = {
@@ -16,6 +15,9 @@ class Category extends PureComponent {
       payeesById: PropTypes.object.isRequired
     }).isRequired,
     category: PropTypes.shape({
+      id: PropTypes.string.isRequired
+    }).isRequired,
+    payee: PropTypes.shape({
       id: PropTypes.string.isRequired
     }).isRequired
   };
@@ -30,41 +32,28 @@ class Category extends PureComponent {
   };
 
   render() {
-    const { category, budget } = this.props;
+    const { budget, category, payee } = this.props;
     const { selectedMonth } = this.state;
-    const { transactions, payeesById, id: budgetId } = budget;
+    const { transactions } = budget;
     const firstMonth = getFirstMonth(budget);
-    const transactionsForCategory = transactions.filter(
-      transaction => transaction.categoryId === category.id
+    const transactionsForCategoryAndPayee = transactions.filter(
+      transaction =>
+        transaction.categoryId === category.id &&
+        transaction.payeeId === payee.id
     );
-    const transactionsForMonth =
-      selectedMonth &&
-      transactionsForCategory.filter(
-        transaction => getTransactionMonth(transaction) === selectedMonth
-      );
 
     return (
       <Fragment>
         <MonthByMonthSection
           firstMonth={firstMonth}
-          transactions={transactionsForCategory}
+          transactions={transactionsForCategoryAndPayee}
           selectedMonth={selectedMonth}
           onSelectMonth={this.handleSelectMonth}
         />
-        <GenericEntitiesSection
-          entitiesById={payeesById}
-          entityKey="payeeId"
-          linkFunction={payeeId =>
-            makeLink(pages.categoryPayee.path, {
-              budgetId,
-              categoryGroupId: category.categoryGroupId,
-              categoryId: category.id,
-              payeeId
-            })
-          }
-          title="Payees"
-          transactions={transactionsForMonth || transactionsForCategory}
-          showTransactionCount={false}
+        <TransactionsForPayeeSection
+          payeeName={payee.name}
+          selectedMonth={selectedMonth}
+          transactions={transactionsForCategoryAndPayee}
         />
       </Fragment>
     );

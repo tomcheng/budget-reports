@@ -4,6 +4,7 @@ import CurrentMonthCategory from "./components/CurrentMonthCategory";
 import Categories from "./components/Categories";
 import Group from "./components/Group";
 import Category from "./components/Category";
+import CategoryPayee from "./components/CategoryPayee";
 import Payees from "./components/Payees";
 import Payee from "./components/Payee";
 import IncomeVsExpenses from "./components/IncomeVsExpenses";
@@ -79,6 +80,17 @@ const pages = {
     }),
     breadcrumbs: ["categories", "group"]
   },
+  categoryPayee: {
+    path: "/budgets/:budgetId/groups/:categoryGroupId/categories/:categoryId/payees/:payeeId",
+    title: (params, budget) => budget.payeesById[params.payeeId].name,
+    Component: CategoryPayee,
+    props: (props, params) => ({
+      budget: props.budget,
+      category: props.budget.categoriesById[params.categoryId],
+      payee: props.budget.payeesById[params.payeeId]
+    }),
+    breadcrumbs: ["categories", "group", "category"]
+  },
   payees: {
     path: "/budgets/:budgetId/payees",
     title: "Payees",
@@ -96,7 +108,7 @@ const pages = {
       budget: props.budget,
       payee: props.budget.payeesById[params.payeeId]
     }),
-    breadcrumbs: ["payee"]
+    breadcrumbs: ["payees"]
   },
   incomeVsExpenses: {
     path: "/budgets/:budgetId/income-vs-expenses",

@@ -2,17 +2,21 @@ import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import CollapsibleSection from "./CollapsibleSection";
-import { SecondaryText } from "./typeComponents";
+import { SecondaryText, MinorText } from "./typeComponents";
 import ListItem from "./ListItem";
 import Amount from "./Amount";
 import NoTransactions from "./NoTransactions";
 
-const PayeeTransactionsSection = ({ transactions }) => (
+const PayeeTransactionsSection = ({ payeeName, transactions }) => (
   <CollapsibleSection title="Transactions">
     {transactions.length ? (
       transactions.map(({ id, date, amount }) => (
         <ListItem key={id}>
-          <SecondaryText>{moment(date).format("dddd, MMMM D")}</SecondaryText>
+          <div>
+            <SecondaryText>{payeeName}</SecondaryText>
+            <MinorText>{moment(date).format("dddd, MMMM D")}</MinorText>
+            
+          </div>
           <SecondaryText>
             <Amount amount={amount} />
           </SecondaryText>
@@ -25,6 +29,7 @@ const PayeeTransactionsSection = ({ transactions }) => (
 );
 
 PayeeTransactionsSection.propTypes = {
+  payeeName: PropTypes.string.isRequired,
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       amount: PropTypes.number.isRequired,
