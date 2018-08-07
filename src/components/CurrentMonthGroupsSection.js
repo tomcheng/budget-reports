@@ -76,7 +76,6 @@ class CurrentMonthGroupsSection extends PureComponent {
             <LabelWithTransactionCount
               count={transactions}
               label={group.name}
-              style={{ whiteSpace: "pre" }}
             />
             <AmountWithPercentage amount={amount} total={total} />
           </ListItemLink>

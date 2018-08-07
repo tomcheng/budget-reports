@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import map from "lodash/fp/map";
@@ -74,63 +74,30 @@ class GenericEntitiesSection extends Component {
       <CollapsibleSection title={title}>
         {(limitShowing ? topEntities : entities).map(
           ({ entityId, transactions, amount }) => (
-            <ListItemLink key={entityId} to={linkFunction(entityId)}>
-              {showTransactionCount ? (
-                <LabelWithTransactionCount
-                  count={transactions}
-                  label={entitiesById[entityId].name}
-                  style={{
-                    whiteSpace: "pre",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis"
-                  }}
-                />
-              ) : (
-                <SecondaryText
-                  style={{
-                    whiteSpace: "pre",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis"
-                  }}
-                >
-                  {entitiesById[entityId].name}
-                </SecondaryText>
-              )}
-              <AmountWithPercentage amount={amount} total={total} />
-            </ListItemLink>
+            <GenericItemLink
+              key={entityId}
+              showTransactionCount={showTransactionCount}
+              to={linkFunction(entityId)}
+              transactions={transactions}
+              name={entitiesById[entityId].name}
+              amount={amount}
+              total={total}
+            />
           )
         )}
         <AnimateHeight isExpanded={showAll}>
           <Fragment>
             {otherEntities.map(({ entityId, transactions, amount }) => (
-              <ListItemLink
+              <GenericItemLink
                 key={entityId}
+                showTransactionCount={showTransactionCount}
                 to={linkFunction(entityId)}
+                transactions={transactions}
+                name={entitiesById[entityId].name}
+                amount={amount}
+                total={total}
                 isContinuing
-              >
-                {showTransactionCount ? (
-                  <LabelWithTransactionCount
-                    count={transactions}
-                    label={entitiesById[entityId].name}
-                    style={{
-                      whiteSpace: "pre",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis"
-                    }}
-                  />
-                ) : (
-                  <SecondaryText
-                    style={{
-                      whiteSpace: "pre",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis"
-                    }}
-                  >
-                    {entitiesById[entityId].name}
-                  </SecondaryText>
-                )}
-                <AmountWithPercentage amount={amount} total={total} />
-              </ListItemLink>
+              />
             ))}
           </Fragment>
         </AnimateHeight>
@@ -147,5 +114,47 @@ class GenericEntitiesSection extends Component {
     );
   }
 }
+
+class GenericItemLink extends PureComponent {
+  render() {
+    const {
+      showTransactionCount,
+      to,
+      transactions,
+      name,
+      amount,
+      total,
+      isContinuing
+    } = this.props;
+    return (
+      <ListItemLink to={to} isContinuing={isContinuing}>
+        {showTransactionCount ? (
+          <LabelWithTransactionCount count={transactions} label={name} />
+        ) : (
+          <SecondaryText
+            style={{
+              whiteSpace: "pre",
+              overflow: "hidden",
+              textOverflow: "ellipsis"
+            }}
+          >
+            {name}
+          </SecondaryText>
+        )}
+        <AmountWithPercentage amount={amount} total={total} />
+      </ListItemLink>
+    );
+  }
+}
+
+GenericItemLink.propTypes = {
+  amount: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  to: PropTypes.string.isRequired,
+  total: PropTypes.number.isRequired,
+  transactions: PropTypes.number.isRequired,
+  isContinuing: PropTypes.bool,
+  showTransactionCount: PropTypes.bool
+};
 
 export default GenericEntitiesSection;
