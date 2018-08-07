@@ -19,21 +19,13 @@ class Group extends PureComponent {
     }).isRequired,
     categoryGroup: PropTypes.shape({
       id: PropTypes.string.isRequired
-    }).isRequired
-  };
-
-  state = { selectedMonth: null };
-
-  handleSelectMonth = month => {
-    this.setState(state => ({
-      ...state,
-      selectedMonth: state.selectedMonth === month ? null : month
-    }));
+    }).isRequired,
+    onSelectMonth: PropTypes.func.isRequired,
+    selectedMonth: PropTypes.string
   };
 
   render() {
-    const { budget, categoryGroup } = this.props;
-    const { selectedMonth } = this.state;
+    const { budget, categoryGroup, selectedMonth, onSelectMonth } = this.props;
     const {
       transactions,
       categories,
@@ -66,7 +58,7 @@ class Group extends PureComponent {
           firstMonth={firstMonth}
           selectedMonth={selectedMonth}
           transactions={transactionsInGroup}
-          onSelectMonth={this.handleSelectMonth}
+          onSelectMonth={onSelectMonth}
         />
         <GenericEntitiesSection
           entityKey="categoryId"

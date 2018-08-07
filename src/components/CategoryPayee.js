@@ -19,10 +19,10 @@ class Category extends PureComponent {
     }).isRequired,
     payee: PropTypes.shape({
       id: PropTypes.string.isRequired
-    }).isRequired
+    }).isRequired,
+    onSelectMonth: PropTypes.func.isRequired,
+    selectedMonth: PropTypes.string
   };
-
-  state = { selectedMonth: null };
 
   handleSelectMonth = month => {
     this.setState(state => ({
@@ -32,8 +32,7 @@ class Category extends PureComponent {
   };
 
   render() {
-    const { budget, category, payee } = this.props;
-    const { selectedMonth } = this.state;
+    const { budget, category, payee, selectedMonth, onSelectMonth } = this.props;
     const { transactions } = budget;
     const firstMonth = getFirstMonth(budget);
     const transactionsForCategoryAndPayee = transactions.filter(
@@ -48,7 +47,7 @@ class Category extends PureComponent {
           firstMonth={firstMonth}
           transactions={transactionsForCategoryAndPayee}
           selectedMonth={selectedMonth}
-          onSelectMonth={this.handleSelectMonth}
+          onSelectMonth={onSelectMonth}
         />
         <TransactionsForPayeeSection
           payeeName={payee.name}

@@ -40,7 +40,8 @@ class App extends Component {
     settings: {
       categoriesSort: "amount",
       payeesSort: "amount",
-      incomeVsExpensesShowing: "average"
+      incomeVsExpensesShowing: "average",
+      categoriesMonth: null
     }
   };
 
@@ -78,7 +79,14 @@ class App extends Component {
   handleChangeSetting = ({ setting, value }) => {
     this.setState(state => ({
       ...state,
-      settings: { ...state.settings, [setting]: value }
+      settings: {
+        ...state.settings,
+        [setting]:
+          setting === "categoriesMonth" &&
+          state.settings.categoriesMonth === value
+            ? null
+            : value
+      }
     }));
   };
 
@@ -142,6 +150,7 @@ class App extends Component {
                       )}
                       mortgageAccounts={getSetting(MORTGAGE_ACCOUNTS, budgetId)}
                       settings={settings}
+                      onChangeSetting={this.handleChangeSetting}
                       onUpdateAccounts={({ type, value }) => {
                         if (type === "investment") {
                           setSetting(INVESTMENT_ACCOUNTS, budgetId, value);

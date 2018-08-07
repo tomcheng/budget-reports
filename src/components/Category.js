@@ -17,21 +17,13 @@ class Category extends PureComponent {
     }).isRequired,
     category: PropTypes.shape({
       id: PropTypes.string.isRequired
-    }).isRequired
-  };
-
-  state = { selectedMonth: null };
-
-  handleSelectMonth = month => {
-    this.setState(state => ({
-      ...state,
-      selectedMonth: state.selectedMonth === month ? null : month
-    }));
+    }).isRequired,
+    onSelectMonth: PropTypes.func.isRequired,
+    selectedMonth: PropTypes.string
   };
 
   render() {
-    const { category, budget } = this.props;
-    const { selectedMonth } = this.state;
+    const { category, budget, selectedMonth, onSelectMonth } = this.props;
     const { transactions, payeesById, id: budgetId } = budget;
     const firstMonth = getFirstMonth(budget);
     const transactionsForCategory = transactions.filter(
@@ -49,7 +41,7 @@ class Category extends PureComponent {
           firstMonth={firstMonth}
           transactions={transactionsForCategory}
           selectedMonth={selectedMonth}
-          onSelectMonth={this.handleSelectMonth}
+          onSelectMonth={onSelectMonth}
         />
         <GenericEntitiesSection
           entitiesById={payeesById}

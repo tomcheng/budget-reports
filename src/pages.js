@@ -67,7 +67,11 @@ const pages = {
     Component: Group,
     props: (props, params) => ({
       budget: props.budget,
-      categoryGroup: props.budget.categoryGroupsById[params.categoryGroupId]
+      categoryGroup: props.budget.categoryGroupsById[params.categoryGroupId],
+      selectedMonth: props.settings.categoriesMonth,
+      onSelectMonth: month => {
+        props.onChangeSetting({ setting: "categoriesMonth", value: month });
+      }
     }),
     breadcrumbs: ["categories"]
   },
@@ -78,7 +82,11 @@ const pages = {
     props: (props, params) => ({
       budget: props.budget,
       categoryGroup: props.budget.categoryGroupsById[params.categoryGroupId],
-      payee: props.budget.payeesById[params.payeeId]
+      payee: props.budget.payeesById[params.payeeId],
+      selectedMonth: props.settings.categoriesMonth,
+      onSelectMonth: month => {
+        props.onChangeSetting({ setting: "categoriesMonth", value: month });
+      }
     }),
     breadcrumbs: ["categories", "group"]
   },
@@ -88,18 +96,27 @@ const pages = {
     Component: Category,
     props: (props, params) => ({
       budget: props.budget,
-      category: props.budget.categoriesById[params.categoryId]
+      category: props.budget.categoriesById[params.categoryId],
+      selectedMonth: props.settings.categoriesMonth,
+      onSelectMonth: month => {
+        props.onChangeSetting({ setting: "categoriesMonth", value: month });
+      }
     }),
     breadcrumbs: ["categories", "group"]
   },
   categoryPayee: {
-    path: "/budgets/:budgetId/groups/:categoryGroupId/categories/:categoryId/payees/:payeeId",
+    path:
+      "/budgets/:budgetId/groups/:categoryGroupId/categories/:categoryId/payees/:payeeId",
     title: (params, budget) => budget.payeesById[params.payeeId].name,
     Component: CategoryPayee,
     props: (props, params) => ({
       budget: props.budget,
       category: props.budget.categoriesById[params.categoryId],
-      payee: props.budget.payeesById[params.payeeId]
+      payee: props.budget.payeesById[params.payeeId],
+      selectedMonth: props.settings.categoriesMonth,
+      onSelectMonth: month => {
+        props.onChangeSetting({ setting: "categoriesMonth", value: month });
+      }
     }),
     breadcrumbs: ["categories", "group", "category"]
   },
