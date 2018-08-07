@@ -1,9 +1,10 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import compose from "lodash/fp/compose";
 import sortBy from "lodash/fp/sortBy";
 import { getTransactionMonth } from "../utils";
+import AnimateHeight from "react-animate-height-auto";
 import CollapsibleSection from "./CollapsibleSection";
 import { SecondaryText } from "./typeComponents";
 import Transaction from "./Transaction";
@@ -39,10 +40,8 @@ class TransactionsByMonthSection extends Component {
           transaction => getTransactionMonth(transaction) === selectedMonth
         )
     ])(transactions);
-    const topTransactions = showAll
-      ? transactionsForMonth
-      : transactionsForMonth.slice(0, LIMIT);
-    const otherTransactions = showAll ? [] : transactionsForMonth.slice(LIMIT);
+    const topTransactions = transactionsForMonth.slice(0, LIMIT);
+    const otherTransactions = transactionsForMonth.slice(LIMIT);
 
     return (
       <CollapsibleSection
@@ -60,14 +59,28 @@ class TransactionsByMonthSection extends Component {
         ) : (
           <NoTransactions />
         )}
-        {!!otherTransactions.length && (
-          <SecondaryText
-            style={{ textAlign: "center", color: "#999" }}
-            onClick={this.handleClickSeeAll}
-          >
-            see all
-          </SecondaryText>
-        )}
+        <AnimateHeight isExpanded={showAll}>
+          <Fragment>
+            {otherTransactions.map(({ id, date, amount, payeeId }) => (
+              <Transaction
+                key={id}
+                isContinuing
+                amount={amount}
+                payee={payeesById[payeeId]}
+                date={date}
+              />
+            ))}
+          </Fragment>
+        </AnimateHeight>
+        {!!otherTransactions.length &&
+          !showAll && (
+            <SecondaryText
+              style={{ textAlign: "center", color: "#999" }}
+              onClick={this.handleClickSeeAll}
+            >
+              see all
+            </SecondaryText>
+          )}
         {showAll && (
           <SecondaryText
             style={{ textAlign: "center", color: "#999" }}

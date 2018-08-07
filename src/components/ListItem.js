@@ -9,8 +9,8 @@ const ListItem = styled.div`
   border-top: 1px dotted #ddd;
 
   &:first-child {
-    border-top: 0;
-    padding-top: 0;
+    border-top: ${props => !props.isContinuing && 0};
+    padding-top: ${props => !props.isContinuing && 0};
   }
 `;
 

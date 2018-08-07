@@ -12,8 +12,8 @@ const Date = styled(MinorText)`
   margin-top: -4px;
 `;
 
-const Transaction = ({ payee, date, amount, budgetId, linkToPayee }) => (
-  <ListItem>
+const Transaction = ({ payee, date, amount, budgetId, linkToPayee, isContinuing }) => (
+  <ListItem isContinuing={isContinuing}>
     <div>
       <SecondaryText>
         {linkToPayee && payee ? (
@@ -43,6 +43,7 @@ Transaction.propTypes = {
     name: PropTypes.string.isRequired
   }).isRequired,
   budgetId: PropTypes.string,
+  isContinuing: PropTypes.bool,
   linkToPayee: PropTypes.bool
 };
 
