@@ -1,5 +1,6 @@
 import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
+import moment from "moment";
 import compose from "lodash/fp/compose";
 import sortBy from "lodash/fp/sortBy";
 import { getTransactionMonth, getFirstMonth } from "../utils";
@@ -70,7 +71,11 @@ class Group extends PureComponent {
               categoryId
             })
           }
-          title="Categories"
+          title={
+            selectedMonth
+              ? `Categories for ${moment(selectedMonth).format("MMMM YYYY")}`
+              : "Categories"
+          }
           transactions={transactionsInSelectedMonth || transactionsInGroup}
           showTransactionCount={false}
         />
@@ -84,7 +89,11 @@ class Group extends PureComponent {
               payeeId
             })
           }
-          title="Payees"
+          title={
+            selectedMonth
+              ? `Payees for ${moment(selectedMonth).format("MMMM YYYY")}`
+              : "Payees"
+          }
           transactions={transactionsInSelectedMonth || transactionsInGroup}
           showTransactionCount
         />
