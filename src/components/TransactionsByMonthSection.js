@@ -36,8 +36,9 @@ class TransactionsByMonthSection extends Component {
           transaction => getTransactionMonth(transaction) === selectedMonth
         )
     ])(transactions);
-    const topTransactions = transactionsForMonth.slice(0, LIMIT);
-    const otherTransactions = transactionsForMonth.slice(LIMIT);
+    const limitShowing = transactionsForMonth.length > LIMIT + 2;
+    const topTransactions = limitShowing ? transactionsForMonth.slice(0, LIMIT) : transactionsForMonth;
+    const otherTransactions = limitShowing ? transactionsForMonth.slice(LIMIT) : [];
 
     return (
       <CollapsibleSection
