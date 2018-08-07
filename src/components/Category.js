@@ -1,5 +1,6 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
+import moment from "moment";
 import { getFirstMonth, getTransactionMonth } from "../utils";
 import pages, { makeLink } from "../pages";
 import MonthByMonthSection from "./MonthByMonthSection";
@@ -55,9 +56,14 @@ class Category extends PureComponent {
               payeeId
             })
           }
-          title="Payees"
+          title={
+            selectedMonth
+              ? `Payees for ${moment(selectedMonth).format("MMMM YYYY")}`
+              : "Payees"
+          }
           transactions={transactionsForMonth || transactionsForCategory}
           showTransactionCount
+          limitShowing
         />
         <TransactionsByMonthSection
           onSelectMonth={onSelectMonth}

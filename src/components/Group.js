@@ -96,6 +96,7 @@ class Group extends PureComponent {
           }
           transactions={transactionsInSelectedMonth || transactionsInGroup}
           showTransactionCount
+          limitShowing
         />
       </Fragment>
     );

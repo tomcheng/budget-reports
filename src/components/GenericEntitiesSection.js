@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import map from "lodash/fp/map";
@@ -12,66 +12,110 @@ import AmountWithPercentage from "./AmountWithPercentage";
 
 const mapWithKeys = map.convert({ cap: false });
 
-const GenericEntitiesSection = ({
-  entityKey,
-  entitiesById,
-  linkFunction,
-  showTransactionCount,
-  title,
-  transactions
-}) => {
-  let total = 0;
-  const entities = compose([
-    sortBy("amount"),
-    mapWithKeys((transactions, entityId) => {
-      const amount = sumByProp("amount")(transactions);
-      total += amount;
+class GenericEntitiesSection extends Component {
+  static propTypes = {
+    entityKey: PropTypes.string.isRequired,
+    entitiesById: PropTypes.object.isRequired,
+    linkFunction: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired,
+    transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
+    showTransactionCount: PropTypes.bool,
+    limitShowing: PropTypes.bool
+  };
+  static defaultProps = { showTransactionCount: true };
 
-      return {
-        entityId,
-        transactions: transactions.length,
-        amount
-      };
-    }),
-    groupByProp(entityKey)
-  ])(transactions);
+  state = { limit: 10 };
 
-  return (
-    <CollapsibleSection title={title}>
-      {entities.map(({ entityId, transactions, amount }) => (
-        <ListItemLink key={entityId} to={linkFunction(entityId)}>
-          <SecondaryText
-            style={{
-              whiteSpace: "pre",
-              overflow: "hidden",
-              textOverflow: "ellipsis"
-            }}
-          >
-            {showTransactionCount ? (
-              <LabelWithTransactionCount
-                count={transactions}
-                label={entitiesById[entityId].name}
+  handleClickOther = () => {
+    this.setState(state => ({ ...state, limit: state.limit + 10 }));
+  };
+
+  render() {
+    const {
+      entityKey,
+      entitiesById,
+      linkFunction,
+      limitShowing,
+      showTransactionCount,
+      title,
+      transactions
+    } = this.props;
+    const { limit } = this.state;
+    let total = 0;
+    const entities = compose([
+      sortBy("amount"),
+      mapWithKeys((transactions, entityId) => {
+        const amount = sumByProp("amount")(transactions);
+        total += amount;
+
+        return {
+          entityId,
+          transactions: transactions.length,
+          amount
+        };
+      }),
+      groupByProp(entityKey)
+    ])(transactions);
+    const topEntities = entities.slice(0, limit);
+    const otherEntities = entities.slice(limit);
+
+    return (
+      <CollapsibleSection title={title}>
+        {(limitShowing ? topEntities : entities).map(
+          ({ entityId, transactions, amount }) => (
+            <ListItemLink key={entityId} to={linkFunction(entityId)}>
+              <SecondaryText
+                style={{
+                  whiteSpace: "pre",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis"
+                }}
+              >
+                {showTransactionCount ? (
+                  <LabelWithTransactionCount
+                    count={transactions}
+                    label={entitiesById[entityId].name}
+                  />
+                ) : (
+                  entitiesById[entityId].name
+                )}
+              </SecondaryText>
+              <AmountWithPercentage amount={amount} total={total} />
+            </ListItemLink>
+          )
+        )}
+        {!!otherEntities.length &&
+          limitShowing && (
+            <ListItemLink
+              to="/"
+              onClick={evt => {
+                evt.preventDefault();
+                this.handleClickOther();
+              }}
+            >
+              <SecondaryText>
+                {showTransactionCount ? (
+                  <LabelWithTransactionCount
+                    count={sumByProp("transactions")(otherEntities)}
+                    label={`+ ${otherEntities.length} other${
+                      otherEntities.length === 1 ? "" : "s"
+                    }`}
+                  />
+                ) : (
+                  `+ ${otherEntities.length} other${
+                    otherEntities.length === 1 ? "" : "s"
+                  }`
+                )}
+              </SecondaryText>
+              <AmountWithPercentage
+                amount={sumByProp("amount")(otherEntities)}
+                total={total}
               />
-            ) : (
-              entitiesById[entityId].name
-            )}
-          </SecondaryText>
-          <AmountWithPercentage amount={amount} total={total} />
-        </ListItemLink>
-      ))}
-    </CollapsibleSection>
-  );
-};
-
-GenericEntitiesSection.propTypes = {
-  entityKey: PropTypes.string.isRequired,
-  entitiesById: PropTypes.object.isRequired,
-  linkFunction: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  showTransactionCount: PropTypes.bool
-};
-
-GenericEntitiesSection.defaultProps = { showTransactionCount: true };
+            </ListItemLink>
+          )}
+      </CollapsibleSection>
+    );
+  }
+}
 
 export default GenericEntitiesSection;
