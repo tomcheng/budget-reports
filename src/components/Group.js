@@ -6,6 +6,7 @@ import sortBy from "lodash/fp/sortBy";
 import { getTransactionMonth, getFirstMonth } from "../utils";
 import pages, { makeLink } from "../pages";
 import MonthByMonthSection from "./MonthByMonthSection";
+import TransactionsByMonthSection from "./TransactionsByMonthSection";
 import GenericEntitiesSection from "./GenericEntitiesSection";
 
 class Group extends PureComponent {
@@ -61,6 +62,13 @@ class Group extends PureComponent {
           transactions={transactionsInGroup}
           onSelectMonth={onSelectMonth}
         />
+        {selectedMonth && (
+          <TransactionsByMonthSection
+            payeesById={payeesById}
+            selectedMonth={selectedMonth}
+            transactions={transactionsInSelectedMonth}
+          />
+        )}
         <GenericEntitiesSection
           entityKey="categoryId"
           entitiesById={categoriesById}
