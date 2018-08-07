@@ -2,7 +2,7 @@ import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import { getFirstMonth } from "../utils";
 import MonthByMonthSection from "./MonthByMonthSection";
-import TransactionsForPayeeSection from "./TransactionsForPayeeSection";
+import TransactionsByMonth from "./TransactionsByMonth";
 
 class Category extends PureComponent {
   static propTypes = {
@@ -49,7 +49,7 @@ class Category extends PureComponent {
           selectedMonth={selectedMonth}
           onSelectMonth={onSelectMonth}
         />
-        <TransactionsForPayeeSection
+        <TransactionsByMonth
           firstMonth={firstMonth}
           payee={payee}
           selectedMonth={selectedMonth}
