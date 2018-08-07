@@ -6,9 +6,9 @@ import sortBy from "lodash/fp/sortBy";
 import { getTransactionMonth } from "../utils";
 import AnimateHeight from "react-animate-height-auto";
 import CollapsibleSection from "./CollapsibleSection";
-import { SecondaryText } from "./typeComponents";
 import Transaction from "./Transaction";
 import NoTransactions from "./NoTransactions";
+import SeeAll from "./SeeAll";
 
 const LIMIT = 4;
 
@@ -21,12 +21,8 @@ class TransactionsByMonthSection extends Component {
 
   state = { showAll: false };
 
-  handleClickSeeAll = () => {
-    this.setState({ showAll: true });
-  };
-
-  handleClickSeeLess = () => {
-    this.setState({ showAll: false });
+  handleToggleShowAll = () => {
+    this.setState(state => ({ ...state, showAll: !state.showAll }));
   };
 
   render() {
@@ -72,22 +68,8 @@ class TransactionsByMonthSection extends Component {
             ))}
           </Fragment>
         </AnimateHeight>
-        {!!otherTransactions.length &&
-          !showAll && (
-            <SecondaryText
-              style={{ textAlign: "center", color: "#999" }}
-              onClick={this.handleClickSeeAll}
-            >
-              see all
-            </SecondaryText>
-          )}
-        {showAll && (
-          <SecondaryText
-            style={{ textAlign: "center", color: "#999" }}
-            onClick={this.handleClickSeeLess}
-          >
-            see less
-          </SecondaryText>
+        {!!otherTransactions.length && (
+          <SeeAll showAll={showAll} onToggle={this.handleToggleShowAll} />
         )}
       </CollapsibleSection>
     );

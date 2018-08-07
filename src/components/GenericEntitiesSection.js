@@ -1,14 +1,16 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import map from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
 import { groupByProp, sumByProp } from "../optimized";
+import AnimateHeight from "react-animate-height-auto";
 import CollapsibleSection from "./CollapsibleSection";
 import { SecondaryText } from "./typeComponents";
 import { ListItemLink } from "./ListItem";
 import LabelWithTransactionCount from "./LabelWithTransactionCount";
 import AmountWithPercentage from "./AmountWithPercentage";
+import SeeAll from "./SeeAll";
 
 const mapWithKeys = map.convert({ cap: false });
 const LIMIT = 5;
@@ -25,10 +27,10 @@ class GenericEntitiesSection extends Component {
   };
   static defaultProps = { showTransactionCount: true };
 
-  state = { limit: LIMIT };
+  state = { showAll: false };
 
-  handleClickOther = () => {
-    this.setState(state => ({ ...state, limit: state.limit + LIMIT }));
+  handleToggleShowAll = () => {
+    this.setState(state => ({ ...state, showAll: !state.showAll }));
   };
 
   render() {
@@ -36,12 +38,12 @@ class GenericEntitiesSection extends Component {
       entityKey,
       entitiesById,
       linkFunction,
-      limitShowing,
+      limitShowing: limitShowingProp,
       showTransactionCount,
       title,
       transactions
     } = this.props;
-    const { limit } = this.state;
+    const { showAll } = this.state;
     let total = 0;
     const entities = compose([
       sortBy("amount"),
@@ -57,8 +59,10 @@ class GenericEntitiesSection extends Component {
       }),
       groupByProp(entityKey)
     ])(transactions);
-    const topEntities = entities.slice(0, limit);
-    const otherEntities = entities.slice(limit);
+
+    const limitShowing = limitShowingProp && entities.length > LIMIT + 2;
+    const topEntities = entities.slice(0, LIMIT);
+    const otherEntities = entities.slice(LIMIT);
 
     return (
       <CollapsibleSection title={title}>
@@ -90,34 +94,43 @@ class GenericEntitiesSection extends Component {
             </ListItemLink>
           )
         )}
+        <AnimateHeight isExpanded={showAll}>
+          <Fragment>
+            {otherEntities.map(({ entityId, transactions, amount }) => (
+              <ListItemLink
+                key={entityId}
+                to={linkFunction(entityId)}
+                isContinuing
+              >
+                {showTransactionCount ? (
+                  <LabelWithTransactionCount
+                    count={transactions}
+                    label={entitiesById[entityId].name}
+                    style={{
+                      whiteSpace: "pre",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis"
+                    }}
+                  />
+                ) : (
+                  <SecondaryText
+                    style={{
+                      whiteSpace: "pre",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis"
+                    }}
+                  >
+                    {entitiesById[entityId].name}
+                  </SecondaryText>
+                )}
+                <AmountWithPercentage amount={amount} total={total} />
+              </ListItemLink>
+            ))}
+          </Fragment>
+        </AnimateHeight>
         {!!otherEntities.length &&
           limitShowing && (
-            <ListItemLink
-              to="/"
-              onClick={evt => {
-                evt.preventDefault();
-                this.handleClickOther();
-              }}
-            >
-              {showTransactionCount ? (
-                <LabelWithTransactionCount
-                  count={sumByProp("transactions")(otherEntities)}
-                  label={`+ ${otherEntities.length} other${
-                    otherEntities.length === 1 ? "" : "s"
-                  }`}
-                />
-              ) : (
-                <SecondaryText>
-                  {`+ ${otherEntities.length} other${
-                    otherEntities.length === 1 ? "" : "s"
-                  }`}
-                </SecondaryText>
-              )}
-              <AmountWithPercentage
-                amount={sumByProp("amount")(otherEntities)}
-                total={total}
-              />
-            </ListItemLink>
+            <SeeAll showAll={showAll} onToggle={this.handleToggleShowAll} />
           )}
       </CollapsibleSection>
     );
