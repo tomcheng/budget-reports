@@ -11,9 +11,9 @@ import LabelWithTransactionCount from "./LabelWithTransactionCount";
 import Amount from "./Amount";
 import NoTransactions from "./NoTransactions";
 
-const TransactionsByMonth = ({
+const TransactionsByMonthSection = ({
   firstMonth,
-  payee,
+  payeesById,
   selectedMonth,
   transactions,
   onSelectMonth
@@ -29,7 +29,7 @@ const TransactionsByMonth = ({
       <WithSelectedMonth
         transactions={transactions}
         selectedMonth={selectedMonth}
-        payee={payee}
+        payeesById={payeesById}
       />
     ) : (
       <NoSelectedMonth
@@ -41,15 +41,15 @@ const TransactionsByMonth = ({
   </CollapsibleSection>
 );
 
-TransactionsByMonth.propTypes = {
+TransactionsByMonthSection.propTypes = {
   firstMonth: PropTypes.string.isRequired,
-  payee: PropTypes.object.isRequired,
+  payeesById: PropTypes.object.isRequired,
   transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
   onSelectMonth: PropTypes.func.isRequired,
   selectedMonth: PropTypes.string
 };
 
-const WithSelectedMonth = ({ transactions, selectedMonth, payee }) => {
+const WithSelectedMonth = ({ transactions, selectedMonth, payeesById }) => {
   const transactionsForMonth = transactions.filter(
     transaction => getTransactionMonth(transaction) === selectedMonth
   );
@@ -57,8 +57,8 @@ const WithSelectedMonth = ({ transactions, selectedMonth, payee }) => {
   return transactionsForMonth.length ? (
     transactionsForMonth
       .reverse()
-      .map(({ id, date, amount }) => (
-        <Transaction key={id} amount={amount} payee={payee} date={date} />
+      .map(({ id, date, amount, payeeId }) => (
+        <Transaction key={id} amount={amount} payee={payeesById[payeeId]} date={date} />
       ))
   ) : (
     <NoTransactions />
@@ -91,4 +91,4 @@ const NoSelectedMonth = ({ firstMonth, transactions, onSelectMonth }) => {
   ));
 };
 
-export default TransactionsByMonth;
+export default TransactionsByMonthSection;

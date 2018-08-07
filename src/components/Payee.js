@@ -2,7 +2,7 @@ import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import { getFirstMonth } from "../utils";
 import MonthByMonthSection from "./MonthByMonthSection";
-import TransactionsByMonth from "./TransactionsByMonth";
+import TransactionsByMonthSection from "./TransactionsByMonthSection";
 
 class Payee extends PureComponent {
   static propTypes = {
@@ -31,7 +31,7 @@ class Payee extends PureComponent {
   render() {
     const { payee, budget } = this.props;
     const { selectedMonth } = this.state;
-    const { transactions } = budget;
+    const { transactions, payeesById } = budget;
     const transactionsForPayee = transactions.filter(
       transaction => transaction.payeeId === payee.id
     );
@@ -45,9 +45,9 @@ class Payee extends PureComponent {
           transactions={transactionsForPayee}
           onSelectMonth={this.handleSelectMonth}
         />
-        <TransactionsByMonth
+        <TransactionsByMonthSection
           firstMonth={firstMonth}
-          payee={payee}
+          payeesById={payeesById}
           selectedMonth={selectedMonth}
           transactions={transactionsForPayee}
           onSelectMonth={this.handleSelectMonth}

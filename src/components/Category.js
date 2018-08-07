@@ -4,6 +4,7 @@ import { getFirstMonth, getTransactionMonth } from "../utils";
 import pages, { makeLink } from "../pages";
 import MonthByMonthSection from "./MonthByMonthSection";
 import GenericEntitiesSection from "./GenericEntitiesSection";
+import TransactionsByMonthSection from "./TransactionsByMonthSection";
 
 class Category extends PureComponent {
   static propTypes = {
@@ -57,6 +58,13 @@ class Category extends PureComponent {
           title="Payees"
           transactions={transactionsForMonth || transactionsForCategory}
           showTransactionCount
+        />
+        <TransactionsByMonthSection
+          onSelectMonth={onSelectMonth}
+          payeesById={payeesById}
+          transactions={transactionsForCategory}
+          firstMonth={firstMonth}
+          selectedMonth={selectedMonth}
         />
       </Fragment>
     );
