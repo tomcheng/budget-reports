@@ -31,13 +31,14 @@ const MonthByMonthSection = ({
 
   const chartNumbers = selectedMonth
     ? [
+        { amount: total / months.length, label: "avg. spent" },
         {
           amount: selectedMonthTotal,
           label: moment(selectedMonth).format("MMM YYYY")
         }
       ]
     : [
-        { amount: total / months.length, label: "spent/month" },
+        { amount: total / months.length, label: "avg. spent" },
         {
           amount: total,
           label: "total spent"
