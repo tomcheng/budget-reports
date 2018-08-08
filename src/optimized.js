@@ -24,5 +24,4 @@ export const groupByProp = key => arr => {
 export const sumBy = func => arr =>
   arr.reduce((acc, curr) => acc + func(curr), 0);
 
-export const sumByProp = key => arr =>
-  arr.reduce((acc, curr) => acc + curr[key], 0);
+export const sumByProp = key => arr => arr.reduce((acc, curr) => acc + curr[key], 0);
