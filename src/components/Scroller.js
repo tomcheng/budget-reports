@@ -19,6 +19,10 @@ class Scroller extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { action, location } = this.props;
 
+    if (location === prevProps.location) {
+      return;
+    }
+
     if (action === "POP") {
       this.toBeScrolled.scrollTop = this.scrollPositions[location] || 0;
     }
