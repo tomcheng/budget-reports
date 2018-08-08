@@ -4,14 +4,12 @@ import styled from "styled-components";
 import moment from "moment";
 import tinyColor from "tinycolor2";
 import compose from "lodash/fp/compose";
-import groupBy from "lodash/fp/groupBy";
-import head from "lodash/fp/head";
 import isNumber from "lodash/fp/isNumber";
-import last from "lodash/fp/last";
+import padCharsStart from "lodash/fp/padCharsStart";
 import range from "lodash/fp/range";
 import sumBy from "lodash/fp/sumBy";
 import takeWhile from "lodash/fp/takeWhile";
-import { sumByProp } from "../optimized";
+import { groupByProp, sumByProp } from "../optimized";
 import { getTransactionMonth } from "../utils";
 import { primaryColor, plotBandColor } from "../styleVariables";
 import { MinorText } from "./typeComponents";
@@ -24,21 +22,20 @@ const DateLabels = styled.div`
   justify-content: space-between;
 `;
 
-const getData = ({ month, transactions }) => {
-  const today = moment();
-  const transactionsByDate = groupBy("date")(
-    transactions.filter(transaction => transaction.date.slice(0, 7) === month)
-  );
+const getData = ({ month, transactionsByDate }) => {
+  const today = moment().format("YYYY-MM-DD");
   let cumulative = 0;
   return range(-1, moment(month).daysInMonth()).map(numDays => {
-    const date = moment(month).add(numDays, "days");
-    if (date.isAfter(today)) {
+    const date =
+      numDays === -1
+        ? moment(month).add(-1, "days")
+        : `${month}-${padCharsStart("0")(2)(numDays + 1)}`;
+
+    if (date > today) {
       return null;
     }
 
-    cumulative += -sumBy("amount")(
-      transactionsByDate[date.format("YYYY-MM-DD")] || []
-    );
+    cumulative += -sumBy("amount")(transactionsByDate[date] || []);
 
     return cumulative;
   });
@@ -60,26 +57,29 @@ class SpendingChart extends PureComponent {
   render() {
     const { total, transactions, currentMonth, monthsToCompare } = this.props;
 
-    const dates = range(-1, moment(currentMonth).daysInMonth()).map(day =>
-      moment(currentMonth).add(day, "days")
+    const daysInMonth = moment(currentMonth).daysInMonth();
+    const firstDate = moment(currentMonth).add(-1, "days");
+    const lastDate = moment(currentMonth).add(daysInMonth - 1, "days");
+
+    const transactionsByDate = groupByProp("date")(transactions);
+    const data = getData({ month: currentMonth, transactionsByDate });
+    const lineData = range(0, daysInMonth + 1).map(
+      day => (day / daysInMonth) * total
     );
-    const data = getData({ month: currentMonth, transactions });
-    const lineData = dates.map(
-      (_, index) => (index / (dates.length - 1)) * total
-    );
-    const firstDayOfWeek = parseInt(dates[0].format("d"), 10);
+    const firstDayOfWeek = parseInt(firstDate.format("d"), 10);
     const plotBands = range(0, 6).map(num => ({
       color: plotBandColor,
       from: num * 7 - 1.5 - firstDayOfWeek,
       to: num * 7 + 0.5 - firstDayOfWeek
     }));
+
     const comparisonSeries = range(monthsToCompare, 0).map(numMonths => ({
       type: "spline",
       data: getData({
         month: moment(currentMonth)
           .subtract(numMonths, "months")
           .format("YYYY-MM"),
-        transactions
+        transactionsByDate
       }),
       enableMouseTracking: false,
       color:
@@ -94,6 +94,7 @@ class SpendingChart extends PureComponent {
       lineWidth: 1,
       marker: { enabled: false }
     }));
+
     const spent = compose([
       sumByProp("amount"),
       takeWhile(
@@ -139,8 +140,8 @@ class SpendingChart extends PureComponent {
           }}
         />
         <DateLabels>
-          <MinorText>{head(dates).format("MMM D")}</MinorText>
-          <MinorText>{last(dates).format("MMM D")}</MinorText>
+          <MinorText>{firstDate.format("MMM D")}</MinorText>
+          <MinorText>{lastDate.format("MMM D")}</MinorText>
         </DateLabels>
       </Fragment>
     );
