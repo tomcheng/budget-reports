@@ -14,6 +14,7 @@ const LIMIT = 3;
 
 class TransactionsByMonthSection extends Component {
   static propTypes = {
+    categoriesById: PropTypes.object.isRequired,
     payeesById: PropTypes.object.isRequired,
     selectedMonth: PropTypes.string.isRequired,
     transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -29,31 +30,45 @@ class TransactionsByMonthSection extends Component {
   };
 
   render() {
-    const { payeesById, selectedMonth, transactions, limitShowing: limitShowingProp } = this.props;
+    const {
+      categoriesById,
+      payeesById,
+      selectedMonth,
+      transactions,
+      limitShowing: limitShowingProp
+    } = this.props;
     const { showAll } = this.state;
 
     const transactionsForMonth = compose([
-      limitShowingProp ? sortBy("amount") : transactions => transactions.reverse(),
+      limitShowingProp
+        ? sortBy("amount")
+        : transactions => transactions.reverse(),
       transactions =>
         transactions.filter(
           transaction => getTransactionMonth(transaction) === selectedMonth
         )
     ])(transactions);
-    const limitShowing = limitShowingProp && transactionsForMonth.length > LIMIT + 2;
-    const topTransactions = limitShowing ? transactionsForMonth.slice(0, LIMIT) : transactionsForMonth;
-    const otherTransactions = limitShowing ? transactionsForMonth.slice(LIMIT) : [];
+    const limitShowing =
+      limitShowingProp && transactionsForMonth.length > LIMIT + 2;
+    const topTransactions = limitShowing
+      ? transactionsForMonth.slice(0, LIMIT)
+      : transactionsForMonth;
+    const otherTransactions = limitShowing
+      ? transactionsForMonth.slice(LIMIT)
+      : [];
 
     return (
       <CollapsibleSection
         title={`Transactions for ${moment(selectedMonth).format("MMMM")}`}
       >
         {topTransactions.length ? (
-          topTransactions.map(({ id, date, amount, payeeId }) => (
+          topTransactions.map(({ id, date, amount, payeeId, categoryId }) => (
             <Transaction
               key={id}
               amount={amount}
-              payee={payeesById[payeeId]}
+              category={categoriesById[categoryId]}
               date={date}
+              payee={payeesById[payeeId]}
             />
           ))
         ) : (
@@ -61,19 +76,25 @@ class TransactionsByMonthSection extends Component {
         )}
         <AnimateHeight isExpanded={showAll}>
           <Fragment>
-            {otherTransactions.map(({ id, date, amount, payeeId }) => (
+            {otherTransactions.map(({ id, date, amount, payeeId, categoryId }) => (
               <Transaction
                 key={id}
-                isContinuing
                 amount={amount}
-                payee={payeesById[payeeId]}
+                category={categoriesById[categoryId]}
                 date={date}
+                payee={payeesById[payeeId]}
+                isContinuing
               />
             ))}
           </Fragment>
         </AnimateHeight>
         {!!otherTransactions.length && (
-          <SeeAll count={transactionsForMonth.length} pluralizedName="transactions" showAll={showAll} onToggle={this.handleToggleShowAll} />
+          <SeeAll
+            count={transactionsForMonth.length}
+            pluralizedName="transactions"
+            showAll={showAll}
+            onToggle={this.handleToggleShowAll}
+          />
         )}
       </CollapsibleSection>
     );

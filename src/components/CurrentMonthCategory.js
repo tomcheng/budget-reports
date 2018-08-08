@@ -48,7 +48,7 @@ class CurrentMonthCategory extends PureComponent {
           total={spent + available}
         />
         <TransactionsSection
-          budgetId={budgetId}
+          categoriesById={categoriesById}
           payeesById={payeesById}
           transactions={transactionsInCategoryForMonth}
         />

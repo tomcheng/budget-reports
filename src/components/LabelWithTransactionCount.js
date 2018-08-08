@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import { SecondaryText, MinorText } from "./typeComponents";
+import LabelWithMinorText from "./LabelWithMinorText";
 
 class LabelWithTransactionCount extends PureComponent {
   static propTypes = {
@@ -15,21 +15,11 @@ class LabelWithTransactionCount extends PureComponent {
   render() {
     const { label, count, inLink, showCount } = this.props;
     return (
-      <SecondaryText
-        style={{
-          whiteSpace: "pre",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          color: inLink && "inherit"
-        }}
-      >
-        {label}
-        {showCount && (
-          <MinorText style={{ lineHeight: "inherit", display: "inline" }}>
-            &nbsp;&ndash; {count} transaction{count === 1 ? "" : "s"}
-          </MinorText>
-        )}
-      </SecondaryText>
+      <LabelWithMinorText
+        label={label}
+        minorText={showCount && `${count} transaction${count === 1 ? "" : "s"}`}
+        inLink={inLink}
+      />
     );
   }
 }

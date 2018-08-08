@@ -66,7 +66,7 @@ class CurrentMonthGroup extends PureComponent {
           transactions={transactionsInGroupForMonth}
         />
         <TransactionsSection
-          budgetId={budgetId}
+          categoriesById={categoriesById}
           payeesById={payeesById}
           transactions={transactionsInGroupForMonth}
         />

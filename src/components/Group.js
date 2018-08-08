@@ -64,6 +64,7 @@ class Group extends PureComponent {
         />
         {selectedMonth && (
           <TransactionsByMonthSection
+            categoriesById={categoriesById}
             payeesById={payeesById}
             selectedMonth={selectedMonth}
             transactions={transactionsInSelectedMonth}

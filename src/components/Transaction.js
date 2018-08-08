@@ -2,54 +2,35 @@ import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import moment from "moment";
-import { Link } from "react-router-dom";
-import pages, { makeLink } from "../pages";
 import { SecondaryText, MinorText } from "./typeComponents";
 import ListItem from "./ListItem";
 import Amount from "./Amount";
+import LabelWithMinorText from "./LabelWithMinorText";
 
 const Date = styled(MinorText)`
-  margin-top: -4px;
+  margin-top: -3px;
 `;
 
 class Transaction extends PureComponent {
   static propTypes = {
     amount: PropTypes.number.isRequired,
+    category: PropTypes.shape({
+      name: PropTypes.string.isRequired
+    }).isRequired,
     date: PropTypes.string.isRequired,
     payee: PropTypes.shape({
       name: PropTypes.string.isRequired
     }).isRequired,
-    budgetId: PropTypes.string,
-    isContinuing: PropTypes.bool,
-    linkToPayee: PropTypes.bool
+    isContinuing: PropTypes.bool
   };
 
   render() {
-    const {
-      payee,
-      date,
-      amount,
-      budgetId,
-      linkToPayee,
-      isContinuing
-    } = this.props;
+    const { category, payee, date, amount, isContinuing } = this.props;
 
     return (
       <ListItem isContinuing={isContinuing}>
-        <div>
-          <SecondaryText>
-            {linkToPayee && payee ? (
-              <Link
-                to={makeLink(pages.payee.path, { budgetId, payeeId: payee.id })}
-              >
-                {payee.name}
-              </Link>
-            ) : payee ? (
-              payee.name
-            ) : (
-              "(no payee)"
-            )}
-          </SecondaryText>
+        <div style={{ overflow: "hidden" }}>
+          <LabelWithMinorText label={payee.name} minorText={category.name} />
           <Date>{moment(date).format("dddd, MMM D")}</Date>
         </div>
         <SecondaryText>

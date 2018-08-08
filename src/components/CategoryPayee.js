@@ -39,7 +39,7 @@ class Category extends PureComponent {
       selectedMonth,
       onSelectMonth
     } = this.props;
-    const { transactions, payeesById } = budget;
+    const { transactions, categoriesById, payeesById } = budget;
     const firstMonth = getFirstMonth(budget);
     const transactionsForCategoryAndPayee = transactions.filter(
       transaction =>
@@ -57,6 +57,7 @@ class Category extends PureComponent {
         />
         {selectedMonth && (
           <TransactionsByMonthSection
+            categoriesById={categoriesById}
             payeesById={payeesById}
             selectedMonth={selectedMonth}
             transactions={transactionsForCategoryAndPayee}

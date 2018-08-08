@@ -31,7 +31,7 @@ class Payee extends PureComponent {
   render() {
     const { payee, budget } = this.props;
     const { selectedMonth } = this.state;
-    const { transactions, payeesById } = budget;
+    const { transactions, payeesById, categoriesById } = budget;
     const transactionsForPayee = filterTransactions({ budget })(transactions.filter(
       transaction => transaction.payeeId === payee.id
     ));
@@ -47,6 +47,7 @@ class Payee extends PureComponent {
         />
         {selectedMonth && (
           <TransactionsByMonthSection
+            categoriesById={categoriesById}
             payeesById={payeesById}
             selectedMonth={selectedMonth}
             transactions={transactionsForPayee}

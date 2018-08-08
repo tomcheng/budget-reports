@@ -32,7 +32,7 @@ class GroupPayee extends PureComponent {
       selectedMonth,
       onSelectMonth
     } = this.props;
-    const { transactions, categories, payeesById } = budget;
+    const { transactions, categories, categoriesById, payeesById } = budget;
     const firstMonth = getFirstMonth(budget);
 
     const categoriesInGroup = categories.filter(
@@ -55,6 +55,7 @@ class GroupPayee extends PureComponent {
         />
         {selectedMonth && (
           <TransactionsByMonthSection
+            categoriesById={categoriesById}
             payeesById={payeesById}
             selectedMonth={selectedMonth}
             transactions={transactionsForGroupAndPayee}

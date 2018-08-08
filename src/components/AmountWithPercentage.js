@@ -13,9 +13,9 @@ class AmountWithPercentage extends PureComponent {
   render () {
     const { amount, total, faded } = this.props;
     return (
-      <SecondaryText style={{ display: "flex", opacity: faded ? 0.3 : 1 }}>
+      <SecondaryText style={{ display: "flex", alignItems: "baseline", opacity: faded ? 0.3 : 1 }}>
         <Amount amount={amount} />
-        <MinorText style={{ width: 42, textAlign: "right", lineHeight: "inherit" }}>
+        <MinorText style={{ width: 44, textAlign: "right" }}>
           {total ? `${(amount / total * 100).toFixed(1)}%` : `–`}
         </MinorText>
       </SecondaryText>
