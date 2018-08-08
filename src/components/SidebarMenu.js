@@ -42,7 +42,8 @@ class SidebarMenu extends Component {
         styles={{
           sidebar: {
             backgroundColor: "#fff",
-            width: 280
+            width: 280,
+            pointerEvents: !open && "none"
           }
         }}
       >
