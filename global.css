@@ -9,7 +9,7 @@ html, body {
 }
 
 a {
-  color: inherit;
+  color: #1c6995;
   text-decoration: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
