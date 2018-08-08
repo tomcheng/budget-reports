@@ -18,7 +18,7 @@ export const makeLink = (path, params) =>
 
 const pages = {
   currentMonth: {
-    path: "/budgets/:budgetId",
+    path: "/budgets/:budgetId/current",
     title: "Current Month Spending",
     Component: CurrentMonth,
     props: props => ({

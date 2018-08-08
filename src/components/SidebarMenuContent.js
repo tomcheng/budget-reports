@@ -63,7 +63,6 @@ const SidebarMenuContent = ({ budgetId, onCloseSidebar }) => (
           activeStyle={{
             backgroundColor: plotBandColor
           }}
-          exact
           onClick={onCloseSidebar}
         >
           {title}
