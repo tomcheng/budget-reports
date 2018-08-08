@@ -120,11 +120,13 @@ class App extends Component {
             render={props => {
               const { budgetId } = props.match.params;
               const budget = budgetDetails[budgetId];
+
               return (
                 <PageWrapper
                   authorized={authorized}
                   budgetId={budgetId}
                   budgetLoaded={!!budget}
+                  location={props.location.pathname}
                   onAuthorize={this.handleAuthorize}
                   onRequestBudget={this.handleRequestBudget}
                   title={<PageTitle budget={budget} />}

@@ -8,7 +8,8 @@ import SidebarMenuContent from "./SidebarMenuContent";
 class SidebarMenu extends Component {
   static propTypes = {
     budgetId: PropTypes.string.isRequired,
-    children: PropTypes.func.isRequired
+    children: PropTypes.func.isRequired,
+    location: PropTypes.string.isRequired
   };
 
   state = { open: false };
@@ -26,7 +27,7 @@ class SidebarMenu extends Component {
   };
 
   render() {
-    const { budgetId, children } = this.props;
+    const { budgetId, children, location } = this.props;
     const { open } = this.state;
 
     return (
@@ -34,6 +35,7 @@ class SidebarMenu extends Component {
         sidebar={
           <SidebarMenuContent
             budgetId={budgetId}
+            location={location}
             onCloseSidebar={this.handleCloseSidebar}
           />
         }

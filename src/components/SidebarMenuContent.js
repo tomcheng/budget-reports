@@ -1,6 +1,7 @@
-import React, { Fragment } from "react";
+import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import { Link, NavLink } from "react-router-dom";
+import { matchPath } from "react-router";
 import styled from "styled-components";
 import pages, { makeLink } from "../pages";
 import Icon from "./Icon";
@@ -27,55 +28,77 @@ const StyledLink = styled(NavLink)`
   height: 60px;
   padding: 0 20px;
   border-top: 1px solid #eee;
+  background-color: ${props => props.active && selectedPlotBandColor};
   &:last-of-type {
     border-bottom: 1px solid #eee;
   }
 `;
 
-const SidebarMenuContent = ({ budgetId, onCloseSidebar }) => (
-  <Fragment>
-    <Header>
-      <IconWrapper onClick={onCloseSidebar}>
-        <Icon icon="times" />
-      </IconWrapper>
-      <Link
-        to={makeLink(pages.settings.path, { budgetId })}
-        style={{ display: "flex", color: "inherit" }}
-        onClick={onCloseSidebar}
-      >
-        <IconWrapper>
-          <Icon icon="cog" />
+class SidebarMenuContent extends PureComponent {
+  static propTypes = {
+    budgetId: PropTypes.string.isRequired,
+    location: PropTypes.string.isRequired,
+    onCloseSidebar: PropTypes.func.isRequired
+  };
+
+  render() {
+    const { budgetId, onCloseSidebar, location } = this.props;
+
+    return (
+      <Fragment>
+        <PureHeader onCloseSidebar={onCloseSidebar} budgetId={budgetId} />
+        {[
+          "currentMonth",
+          "categories",
+          "payees",
+          "incomeVsExpenses",
+          "netWorth",
+          "projections"
+        ].map(page => {
+          const { path, title } = pages[page];
+
+          return (
+            <PureStyledLink
+              key={path}
+              to={makeLink(path, { budgetId })}
+              active={matchPath(location, { path })}
+              onClick={onCloseSidebar}
+            >
+              {title}
+            </PureStyledLink>
+          );
+        })}
+      </Fragment>
+    );
+  }
+}
+
+class PureHeader extends PureComponent {
+  render() {
+    const { onCloseSidebar, budgetId } = this.props;
+    return (
+      <Header>
+        <IconWrapper onClick={onCloseSidebar}>
+          <Icon icon="times" />
         </IconWrapper>
-      </Link>
-    </Header>
-    {[
-      "currentMonth",
-      "categories",
-      "payees",
-      "incomeVsExpenses",
-      "netWorth",
-      "projections"
-    ].map(page => {
-      const { path, title } = pages[page];
-      return (
-        <StyledLink
-          key={path}
-          to={makeLink(path, { budgetId })}
-          activeStyle={{
-            backgroundColor: selectedPlotBandColor
-          }}
+        <Link
+          to={makeLink(pages.settings.path, { budgetId })}
+          style={{ display: "flex", color: "inherit" }}
           onClick={onCloseSidebar}
         >
-          {title}
-        </StyledLink>
-      );
-    })}
-  </Fragment>
-);
+          <IconWrapper>
+            <Icon icon="cog" />
+          </IconWrapper>
+        </Link>
+      </Header>
+    );
+  }
+}
 
-SidebarMenuContent.propTypes = {
-  budgetId: PropTypes.string.isRequired,
-  onCloseSidebar: PropTypes.func.isRequired
-};
+class PureStyledLink extends PureComponent {
+  render() {
+    return <StyledLink {...this.props} />;
+  }
+}
 
 export default SidebarMenuContent;
