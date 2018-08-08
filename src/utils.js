@@ -15,13 +15,10 @@ import mapValues from "lodash/fp/mapValues";
 import mean from "lodash/fp/mean";
 import pick from "lodash/fp/pick";
 import reject from "lodash/fp/reject";
-import sortBy from "lodash/fp/sortBy";
-import values from "lodash/fp/values";
 import get from "lodash/fp/get";
 
 const map = mapRaw.convert({ cap: false });
 const mapKeys = mapKeysRaw.convert({ cap: false });
-const mapValuesWithKey = mapValues.convert({ cap: false });
 
 const PAYEES_TO_EXCLUDE = [
   "Starting Balance",
@@ -194,44 +191,4 @@ export const getOutliersBy = f => arr => {
   const avg = mean(values);
 
   return filter(item => Math.abs(f(item) - avg) > stdDev)(arr);
-};
-
-const payeesWithMetadata = simpleMemoize(budget => {
-  const { accountsById, payeesById, transactions } = budget;
-  const transactionsByPayee = compose([
-    groupByProp("payeeId"),
-    reject(transaction => {
-      if (!accountsById[transaction.accountId].onBudget) {
-        return true;
-      }
-      if (
-        transaction.transferAccountId &&
-        accountsById[transaction.transferAccountId].onBudget
-      ) {
-        return true;
-      }
-      if (!transaction.payeeId || !payeesById[transaction.payeeId]) {
-        return true;
-      }
-      if (PAYEES_TO_EXCLUDE.includes(payeesById[transaction.payeeId].name)) {
-        return true;
-      }
-      return false;
-    })
-  ])(transactions);
-
-  return mapValuesWithKey((transactions, payeeId) => ({
-    ...payeesById[payeeId],
-    transactions: transactions,
-    transactionCount: transactions.length,
-    amount: sumByProp("amount")(transactions)
-  }))(transactionsByPayee);
-});
-
-export const getProcessedPayees = ({ budget, sort }) => {
-  const sorted = sortBy(sort === "transactions" ? "transactionCount" : sort)(
-    values(payeesWithMetadata(budget))
-  );
-
-  return sort === "transactions" ? sorted.reverse() : sorted;
 };

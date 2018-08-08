@@ -1,6 +1,6 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
-import { getFirstMonth } from "../utils";
+import { getFirstMonth, filterTransactions } from "../utils";
 import MonthByMonthSection from "./MonthByMonthSection";
 import TransactionsByMonthSection from "./TransactionsByMonthSection";
 
@@ -32,9 +32,9 @@ class Payee extends PureComponent {
     const { payee, budget } = this.props;
     const { selectedMonth } = this.state;
     const { transactions, payeesById } = budget;
-    const transactionsForPayee = transactions.filter(
+    const transactionsForPayee = filterTransactions({ budget })(transactions.filter(
       transaction => transaction.payeeId === payee.id
-    );
+    ));
     const firstMonth = getFirstMonth(budget);
 
     return (

@@ -9,34 +9,34 @@ import { SecondaryText } from "./typeComponents";
 import Section from "./Section";
 import Amount from "./Amount";
 
+const getGroupsWithMeta = simpleMemoize(budget => {
+  const { categoryGroups, categories, transactions } = budget;
+
+  const transactionsByCategory = groupByProp("categoryId")(transactions);
+  const categoriesByGroup = groupByProp("categoryGroupId")(categories);
+
+  return categoryGroups.map(group => {
+    const amount = sumBy(category =>
+      sumByProp("amount")(transactionsByCategory[category.id] || [])
+    )(categoriesByGroup[group.id]);
+    const transactions = sumBy(
+      category => (transactionsByCategory[category.id] || []).length
+    )(categoriesByGroup[group.id]);
+
+    return { ...group, amount, transactions };
+  });
+});
+
 class Groups extends PureComponent {
   static propTypes = {
     budget: PropTypes.object.isRequired,
     sort: PropTypes.oneOf(["amount", "name", "transactions"]).isRequired
   };
 
-  getGroupsWithMeta = simpleMemoize(budget => {
-    const { categoryGroups, categories, transactions } = budget;
-
-    const transactionsByCategory = groupByProp("categoryId")(transactions);
-    const categoriesByGroup = groupByProp("categoryGroupId")(categories);
-
-    return categoryGroups.map(group => {
-      const amount = sumBy(category =>
-        sumByProp("amount")(transactionsByCategory[category.id] || [])
-      )(categoriesByGroup[group.id]);
-      const transactions = sumBy(
-        category => (transactionsByCategory[category.id] || []).length
-      )(categoriesByGroup[group.id]);
-
-      return { ...group, amount, transactions };
-    });
-  });
-
   render() {
     const { budget, sort } = this.props;
 
-    const groupsWithMeta = this.getGroupsWithMeta(budget);
+    const groupsWithMeta = getGroupsWithMeta(budget);
     const sortedGroups = sortBy(
       sort === "name" ? group => group.name.replace(/[^a-zA-Z0-9]/g, "") : sort
     )(groupsWithMeta);
