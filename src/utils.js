@@ -1,11 +1,9 @@
 import { utils } from "ynab";
 import moment from "moment";
-import { groupByProp, sumBy, sumByProp } from "./optimized";
-import anyPass from "lodash/fp/anyPass";
+import { groupBy, groupByProp, sumBy, sumByProp } from "./optimized";
 import camelCase from "lodash/fp/camelCase";
 import compose from "lodash/fp/compose";
 import curry from "lodash/fp/curry";
-import difference from "lodash/fp/difference";
 import filter from "lodash/fp/filter";
 import isArray from "lodash/fp/isArray";
 import isObject from "lodash/fp/isObject";
@@ -14,7 +12,6 @@ import mapKeysRaw from "lodash/fp/mapKeys";
 import mapValues from "lodash/fp/mapValues";
 import mean from "lodash/fp/mean";
 import pick from "lodash/fp/pick";
-import reject from "lodash/fp/reject";
 import get from "lodash/fp/get";
 
 const map = mapRaw.convert({ cap: false });
@@ -111,7 +108,7 @@ const isIncome = ({
   );
 };
 
-const isTransfer = ({ accountsById, investmentAccounts }) => transaction => {
+const isTransfer = ({ accountsById, investmentAccounts, transaction }) => {
   const { accountId, transferAccountId } = transaction;
   const account = accountsById[accountId];
 
@@ -136,29 +133,46 @@ const isTransfer = ({ accountsById, investmentAccounts }) => transaction => {
   return false;
 };
 
-export const filterTransactions = ({ budget, investmentAccounts = {} }) =>
-  reject(
-    anyPass([
-      transaction =>
-        PAYEES_TO_EXCLUDE.includes(
-          get([transaction.payeeId, "name"])(budget.payeesById)
-        ),
-      isTransfer({ accountsById: budget.accountsById, investmentAccounts }),
-      transaction => !transaction.categoryId
-    ])
-  );
+export const filterTransactions = ({
+  budget,
+  investmentAccounts = {}
+}) => transactions =>
+  transactions.filter(transaction => {
+    if (
+      PAYEES_TO_EXCLUDE.includes(
+        get([transaction.payeeId, "name"])(budget.payeesById)
+      )
+    ) {
+      return false;
+    }
+    if (
+      isTransfer({
+        accountsById: budget.accountsById,
+        investmentAccounts,
+        transaction
+      })
+    ) {
+      return false;
+    }
+    if (!transaction.categoryId) {
+      return false;
+    }
+    return true;
+  });
 
 export const splitTransactions = ({
   categoryGroupsById,
   categoriesById,
   transactions
 }) => {
-  const incomeTransactions = transactions.filter(
+  const grouped = groupBy(
     isIncome({ categoryGroupsById, categoriesById, transactions })
-  );
-  const expenseTransactions = difference(transactions, incomeTransactions);
+  )(transactions);
 
-  return { incomeTransactions, expenseTransactions };
+  return {
+    incomeTransactions: grouped.true || [],
+    expenseTransactions: grouped.false || []
+  };
 };
 
 export const getTransactionMonth = transaction => transaction.date.slice(0, 7);
