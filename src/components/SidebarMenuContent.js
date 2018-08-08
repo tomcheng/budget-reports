@@ -4,7 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import pages, { makeLink } from "../pages";
 import Icon from "./Icon";
-import { plotBandColor, iconWidth } from "../styleVariables";
+import { selectedPlotBandColor, iconWidth } from "../styleVariables";
 
 const Header = styled.div`
   display: flex;
@@ -21,6 +21,7 @@ const IconWrapper = styled.div`
 `;
 
 const StyledLink = styled(NavLink)`
+  color: inherit;
   display: flex;
   align-items: center;
   height: 60px;
@@ -39,7 +40,7 @@ const SidebarMenuContent = ({ budgetId, onCloseSidebar }) => (
       </IconWrapper>
       <Link
         to={makeLink(pages.settings.path, { budgetId })}
-        style={{ display: "flex" }}
+        style={{ display: "flex", color: "inherit" }}
         onClick={onCloseSidebar}
       >
         <IconWrapper>
@@ -61,7 +62,7 @@ const SidebarMenuContent = ({ budgetId, onCloseSidebar }) => (
           key={path}
           to={makeLink(path, { budgetId })}
           activeStyle={{
-            backgroundColor: plotBandColor
+            backgroundColor: selectedPlotBandColor
           }}
           onClick={onCloseSidebar}
         >

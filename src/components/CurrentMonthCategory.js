@@ -51,7 +51,6 @@ class CurrentMonthCategory extends PureComponent {
           budgetId={budgetId}
           payeesById={payeesById}
           transactions={transactionsInCategoryForMonth}
-          linkToPayee
         />
       </Fragment>
     );

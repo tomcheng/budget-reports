@@ -42,6 +42,7 @@ export const LargeListItemLink = styled(Link)`
   height: 60px;
   padding: 0 20px;
   border-top: 1px solid #eee;
+  color: inherit;
 
   &:first-child {
     border-top: 0;

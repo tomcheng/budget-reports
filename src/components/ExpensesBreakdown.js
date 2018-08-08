@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 import compose from "lodash/fp/compose";
 import concat from "lodash/fp/concat";
 import filter from "lodash/fp/filter";
@@ -12,7 +11,6 @@ import pick from "lodash/fp/pick";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import { getPayeeNodes } from "../utils";
-import pages, { makeLink } from "../pages";
 import CollapsibleSection from "./CollapsibleSection";
 import Breakdown from "./Breakdown";
 import AmountWithPercentage from "./AmountWithPercentage";
@@ -25,24 +23,14 @@ const ExpensesBreakdown = ({
   transactions,
   totalIncome,
   payeesById,
-  divideBy,
-  budgetId
+  divideBy
 }) => {
   const categoryNodes = compose([
     map((transactions, categoryId) => {
       const payeeNodes = getPayeeNodes(
         { payeesById, transactions },
         divideBy
-      ).map(payee => ({
-        ...payee,
-        name: (
-          <Link
-            to={makeLink(pages.payee.path, { budgetId, payeeId: payee.id })}
-          >
-            {payee.name}
-          </Link>
-        )
-      }));
+      );
       return {
         ...pick(["id", "name", "categoryGroupId"])(categoriesById[categoryId]),
         nodes: sortBy("amount")(payeeNodes),
@@ -99,7 +87,6 @@ const ExpensesBreakdown = ({
 };
 
 ExpensesBreakdown.propTypes = {
-  budgetId: PropTypes.string.isRequired,
   categoriesById: PropTypes.objectOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,

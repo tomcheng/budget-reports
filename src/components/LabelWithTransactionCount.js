@@ -6,19 +6,21 @@ class LabelWithTransactionCount extends PureComponent {
   static propTypes = {
     count: PropTypes.number.isRequired,
     label: PropTypes.string.isRequired,
+    inLink: PropTypes.bool,
     showCount: PropTypes.bool
   };
 
   static defaultProps = { showCount: true };
 
   render() {
-    const { label, count, showCount } = this.props;
+    const { label, count, inLink, showCount } = this.props;
     return (
       <SecondaryText
         style={{
           whiteSpace: "pre",
           overflow: "hidden",
-          textOverflow: "ellipsis"
+          textOverflow: "ellipsis",
+          color: inLink && "inherit"
         }}
       >
         {label}

@@ -209,7 +209,6 @@ class IncomeVsExpenses extends PureComponent {
           </Subsection>
         </CollapsibleSection>
         <Breakdowns
-          budgetId={budget.id}
           categoriesById={categoriesById}
           categoryGroupsById={categoryGroupsById}
           payeesById={payeesById}

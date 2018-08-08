@@ -69,7 +69,6 @@ class CurrentMonthGroup extends PureComponent {
           budgetId={budgetId}
           payeesById={payeesById}
           transactions={transactionsInGroupForMonth}
-          linkToPayee
         />
       </Fragment>
     );

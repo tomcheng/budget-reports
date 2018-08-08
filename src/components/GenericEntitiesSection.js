@@ -129,13 +129,14 @@ class GenericItemLink extends PureComponent {
     return (
       <ListItemLink to={to} isContinuing={isContinuing}>
         {showTransactionCount ? (
-          <LabelWithTransactionCount count={transactions} label={name} />
+          <LabelWithTransactionCount count={transactions} label={name} inLink />
         ) : (
           <SecondaryText
             style={{
               whiteSpace: "pre",
               overflow: "hidden",
-              textOverflow: "ellipsis"
+              textOverflow: "ellipsis",
+              color: "inherit"
             }}
           >
             {name}

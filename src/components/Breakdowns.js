@@ -10,13 +10,11 @@ const Breakdowns = ({
   payeesById,
   expenseTransactions,
   incomeTransactions,
-  divideBy,
-  budgetId
+  divideBy
 }) => {
   return (
     <Fragment>
       <ExpensesBreakdown
-        budgetId={budgetId}
         categoriesById={categoriesById}
         categoryGroupsById={categoryGroupsById}
         payeesById={payeesById}
@@ -25,7 +23,6 @@ const Breakdowns = ({
         divideBy={divideBy}
       />
       <IncomeBreakdown
-        budgetId={budgetId}
         payeesById={payeesById}
         transactions={incomeTransactions}
         divideBy={divideBy}
@@ -35,7 +32,6 @@ const Breakdowns = ({
 };
 
 Breakdowns.propTypes = {
-  budgetId: PropTypes.string.isRequired,
   categoriesById: PropTypes.object.isRequired,
   categoryGroupsById: PropTypes.object.isRequired,
   expenseTransactions: PropTypes.array.isRequired,

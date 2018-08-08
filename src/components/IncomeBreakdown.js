@@ -2,24 +2,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
-import { Link } from "react-router-dom";
 import { getPayeeNodes } from "../utils";
-import pages, { makeLink } from "../pages";
 import CollapsibleSection from "./CollapsibleSection";
 import Breakdown from "./Breakdown";
 import AmountWithPercentage from "./AmountWithPercentage";
 
-const IncomeBreakdown = ({ transactions, payeesById, divideBy, budgetId }) => {
-  const nodes = getPayeeNodes({ payeesById, transactions }, divideBy).map(
-    payee => ({
-      ...payee,
-      name: (
-        <Link to={makeLink(pages.payee.path, { budgetId, payeeId: payee.id })}>
-          {payee.name}
-        </Link>
-      )
-    })
-  );
+const IncomeBreakdown = ({ transactions, payeesById, divideBy }) => {
+  const nodes = getPayeeNodes({ payeesById, transactions }, divideBy);
   const total = sumBy("amount")(nodes);
   return (
     <CollapsibleSection title="Income Breakdown">
@@ -33,7 +22,6 @@ const IncomeBreakdown = ({ transactions, payeesById, divideBy, budgetId }) => {
 };
 
 IncomeBreakdown.propTypes = {
-  budgetId: PropTypes.string.isRequired,
   divideBy: PropTypes.number.isRequired,
   payeesById: PropTypes.objectOf(PropTypes.object).isRequired,
   transactions: PropTypes.arrayOf(
