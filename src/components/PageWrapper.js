@@ -5,6 +5,7 @@ import EnsureBudgetLoaded from "./EnsureBudgetLoaded";
 import { PageTitle } from "./typeComponents";
 import { PrimaryButton } from "./Button";
 import SidebarMenu from "./SidebarMenu";
+import Scroller from "./Scroller";
 
 const Container = styled.div`
   height: 100vh;
@@ -36,6 +37,7 @@ const PageWrapper = ({
   authorized,
   budgetId,
   budgetLoaded,
+  historyAction,
   location,
   title,
   actions,
@@ -59,7 +61,9 @@ const PageWrapper = ({
             </div>
             {actions}
           </Header>
-          <Body>{content}</Body>
+          <Scroller action={historyAction} location={location}>
+            {({ ref }) => <Body innerRef={ref}>{content}</Body>}
+          </Scroller>
           {!authorized && (
             <div
               style={{
@@ -89,6 +93,7 @@ PageWrapper.propTypes = {
   budgetId: PropTypes.string.isRequired,
   budgetLoaded: PropTypes.bool.isRequired,
   content: PropTypes.node.isRequired,
+  historyAction: PropTypes.string.isRequired,
   location: PropTypes.string.isRequired,
   title: PropTypes.node.isRequired,
   onAuthorize: PropTypes.func.isRequired,

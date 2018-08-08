@@ -126,6 +126,7 @@ class App extends Component {
                   authorized={authorized}
                   budgetId={budgetId}
                   budgetLoaded={!!budget}
+                  historyAction={props.history.action}
                   location={props.location.pathname}
                   onAuthorize={this.handleAuthorize}
                   onRequestBudget={this.handleRequestBudget}
