@@ -1,7 +1,7 @@
 import CurrentMonth from "./components/CurrentMonth";
 import CurrentMonthGroup from "./components/CurrentMonthGroup";
 import CurrentMonthCategory from "./components/CurrentMonthCategory";
-import Categories from "./components/Categories";
+import Groups from "./components/Groups";
 import Group from "./components/Group";
 import GroupPayee from "./components/GroupPayee";
 import Category from "./components/Category";
@@ -54,7 +54,7 @@ const pages = {
   categories: {
     path: "/budgets/:budgetId/groups",
     title: "Category Groups",
-    Component: Categories,
+    Component: Groups,
     props: props => ({
       budget: props.budget,
       sort: props.settings.categoriesSort
