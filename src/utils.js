@@ -143,7 +143,8 @@ export const filterTransactions = ({ budget, investmentAccounts = {} }) =>
         PAYEES_TO_EXCLUDE.includes(
           get([transaction.payeeId, "name"])(budget.payeesById)
         ),
-      isTransfer({ accountsById: budget.accountsById, investmentAccounts })
+      isTransfer({ accountsById: budget.accountsById, investmentAccounts }),
+      transaction => !transaction.categoryId
     ])
   );
 
