@@ -15,6 +15,7 @@ import prop from "lodash/fp/prop";
 import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
+import { sumByProp } from "../optimized";
 import {
   filterTransactions,
   splitTransactions,
@@ -22,12 +23,12 @@ import {
   getOutliersBy,
   getTransactionMonth
 } from "../utils";
-import IncomeVsExpensesSummary from "./IncomeVsExpensesSummary";
 import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
 import IncomeVsExpensesChartControls from "./IncomeVsExpensesChartControls";
 import Breakdowns from "./Breakdowns";
-import { Subsection, TopSection } from "./Section";
+import { Subsection } from "./Section";
 import CollapsibleSection from "./CollapsibleSection";
+import ChartNumbers from "./ChartNumbers";
 
 const map = mapRaw.convert({ cap: false });
 
@@ -165,17 +166,30 @@ class IncomeVsExpenses extends PureComponent {
       transactions: flatMap(prop("transactions"))(summaries)
     });
 
+    const totalExpenses = sumByProp("amount")(expenseTransactions);
+    const totalIncome = sumByProp("amount")(incomeTransactions);
+    const denominator = showTotals ? 1 : summaries.length;
+
     return (
       <Fragment>
-        <TopSection>
-          <IncomeVsExpensesSummary
-            incomeTransactions={incomeTransactions}
-            expenseTransactions={expenseTransactions}
-            divideBy={showTotals ? 1 : summaries.length}
-          />
-        </TopSection>
         <CollapsibleSection title="Monthly Trend">
           <Subsection>
+            <ChartNumbers
+              numbers={[
+                {
+                  label: "net income",
+                  amount: -(totalExpenses + totalIncome) / denominator
+                },
+                {
+                  label: "expenses",
+                  amount: totalExpenses / denominator
+                },
+                {
+                  label: "income",
+                  amount: -totalIncome / denominator
+                }
+              ]}
+            />
             <IncomeVsExpensesChart
               data={allSummaries}
               excludedMonths={excludedMonths}

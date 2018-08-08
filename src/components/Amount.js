@@ -15,9 +15,10 @@ export const addCommas = nStr => {
   return x1 + x2;
 };
 
-const Amount = ({ amount, amountAfterDecimal, style }) => (
+const Amount = ({ amount, amountAfterDecimal, showCurrencySymbol, style }) => (
   <span style={{ color: amount > 0 && positiveColor, ...style }}>
     {amount > 0 && "+"}
+    {showCurrencySymbol && "$"}
     {addCommas(Math.abs(amount).toFixed(amountAfterDecimal))}
   </span>
 );
@@ -25,6 +26,7 @@ const Amount = ({ amount, amountAfterDecimal, style }) => (
 Amount.propTypes = {
   amount: PropTypes.number.isRequired,
   amountAfterDecimal: PropTypes.number,
+  showCurrencySymbol: PropTypes.bool,
   style: PropTypes.object
 };
 
