@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
@@ -31,64 +31,58 @@ const StyledLink = styled(NavLink)`
   }
 `;
 
-const SidebarMenuContent = ({ budgetId, onCloseSidebar, open }) => (
-  <Fragment>
-    <Header>
-      <IconWrapper onClick={onCloseSidebar}>
-        <Icon icon="times" />
-      </IconWrapper>
-      <Link
-        to={makeLink(pages.settings.path, { budgetId })}
-        style={{ display: "flex" }}
-        onClick={evt => {
-          if (!open) {
-            evt.preventDefault();
-            return;
-          }
-          onCloseSidebar();
-        }}
-      >
-        <IconWrapper>
-          <Icon icon="cog" />
-        </IconWrapper>
-      </Link>
-    </Header>
-    {[
-      "currentMonth",
-      "categories",
-      "payees",
-      "incomeVsExpenses",
-      "netWorth",
-      "projections"
-    ].map(page => {
-      const { path, title } = pages[page];
-      return (
-        <StyledLink
-          key={path}
-          to={makeLink(path, { budgetId })}
-          activeStyle={{
-            backgroundColor: plotBandColor
-          }}
-          exact
-          onClick={evt => {
-            if (!open) {
-              evt.preventDefault();
-              return;
-            }
-            onCloseSidebar();
-          }}
-        >
-          {title}
-        </StyledLink>
-      );
-    })}
-  </Fragment>
-);
+class SidebarMenuContent extends PureComponent {
+  static propTypes = {
+    budgetId: PropTypes.string.isRequired,
+    onCloseSidebar: PropTypes.func.isRequired
+  };
 
-SidebarMenuContent.propTypes = {
-  budgetId: PropTypes.string.isRequired,
-  open: PropTypes.bool.isRequired,
-  onCloseSidebar: PropTypes.func.isRequired
-};
+  render() {
+    const { budgetId, onCloseSidebar } = this.props;
+    return (
+      <Fragment>
+        <Header>
+          <IconWrapper onClick={onCloseSidebar}>
+            <Icon icon="times" />
+          </IconWrapper>
+          <Link
+            to={makeLink(pages.settings.path, { budgetId })}
+            style={{ display: "flex" }}
+            onClick={onCloseSidebar}
+          >
+            <IconWrapper>
+              <Icon icon="cog" />
+            </IconWrapper>
+          </Link>
+        </Header>
+        <div>
+          {[
+            "currentMonth",
+            "categories",
+            "payees",
+            "incomeVsExpenses",
+            "netWorth",
+            "projections"
+          ].map(page => {
+            const { path, title } = pages[page];
+            return (
+              <StyledLink
+                key={path}
+                to={makeLink(path, { budgetId })}
+                activeStyle={{
+                  backgroundColor: plotBandColor
+                }}
+                exact
+                onClick={onCloseSidebar}
+              >
+                {title}
+              </StyledLink>
+            );
+          })}
+        </div>
+      </Fragment>
+    );
+  }
+}
 
 export default SidebarMenuContent;

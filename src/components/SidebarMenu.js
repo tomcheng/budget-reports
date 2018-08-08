@@ -35,7 +35,6 @@ class SidebarMenu extends Component {
           <SidebarMenuContent
             budgetId={budgetId}
             onCloseSidebar={this.handleCloseSidebar}
-            open={open}
           />
         }
         open={open}
