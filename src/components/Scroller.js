@@ -24,6 +24,7 @@ class Scroller extends Component {
     }
 
     if (action === "POP") {
+      this.scrollPositions[prevProps.location] = snapshot.scrollTop;
       this.toBeScrolled.scrollTop = this.scrollPositions[location] || 0;
     }
 
