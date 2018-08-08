@@ -23,22 +23,24 @@ class BreakdownNode extends Component {
     valueRenderer: PropTypes.func
   };
 
-  state = { expanded: false };
+  state = { expanded: false, childrenMounted: false };
 
   handleToggleExpand = () => {
-    this.setState(state => ({ ...state, expanded: !state.expanded }));
+    const { expanded, childrenMounted } = this.state;
+
+    if (childrenMounted) {
+      this.setState({ expanded: !expanded });
+    } else {
+      this.setState({ childrenMounted: true });
+      requestAnimationFrame(() => {
+        this.setState({ expanded: true });
+      });
+    }
   };
 
   render() {
-    const {
-      name,
-      id,
-      amount,
-      nodes,
-      isTopLevel,
-      valueRenderer
-    } = this.props;
-    const { expanded } = this.state;
+    const { name, id, amount, nodes, isTopLevel, valueRenderer } = this.props;
+    const { expanded, childrenMounted } = this.state;
     const hasChildNodes = !!nodes && nodes.length > 0;
 
     return (
@@ -61,14 +63,12 @@ class BreakdownNode extends Component {
           />
         )}
 
-        {hasChildNodes && (
-          <AnimateHeight isExpanded={expanded}>
-            <Nodes
-              nodes={nodes}
-              valueRenderer={valueRenderer}
-            />
-          </AnimateHeight>
-        )}
+        {hasChildNodes &&
+          childrenMounted && (
+            <AnimateHeight isExpanded={expanded}>
+              <Nodes nodes={nodes} valueRenderer={valueRenderer} />
+            </AnimateHeight>
+          )}
       </Container>
     );
   }
@@ -98,7 +98,7 @@ const NodeWrapper = styled.div`
   align-items: center;
   padding: 8px 0;
   user-select: none;
-  
+
   ${ListItem}:first-child > & {
     padding-top: 0;
   }
