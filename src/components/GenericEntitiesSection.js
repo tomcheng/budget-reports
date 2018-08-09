@@ -66,7 +66,7 @@ class GenericEntitiesSection extends Component {
       groupByProp(entityKey)
     ])(transactions);
 
-    const limitShowing = limitShowingProp && entities.length > LIMIT + 2;
+    const limitShowing = limitShowingProp && entities.length > LIMIT + 1;
     const topEntities = entities.slice(0, LIMIT);
     const otherEntities = entities.slice(LIMIT);
 

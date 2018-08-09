@@ -62,14 +62,6 @@ class Group extends PureComponent {
           transactions={transactionsInGroup}
           onSelectMonth={onSelectMonth}
         />
-        {selectedMonth && (
-          <TransactionsByMonthSection
-            categoriesById={categoriesById}
-            payeesById={payeesById}
-            selectedMonth={selectedMonth}
-            transactions={transactionsInSelectedMonth}
-          />
-        )}
         <GenericEntitiesSection
           entityKey="categoryId"
           entitiesById={categoriesById}
@@ -86,7 +78,16 @@ class Group extends PureComponent {
               : "Categories"
           }
           transactions={transactionsInSelectedMonth || transactionsInGroup}
+          limitShowing
         />
+        {selectedMonth && (
+          <TransactionsByMonthSection
+            categoriesById={categoriesById}
+            payeesById={payeesById}
+            selectedMonth={selectedMonth}
+            transactions={transactionsInSelectedMonth}
+          />
+        )}
         <GenericEntitiesSection
           entityKey="payeeId"
           entitiesById={payeesById}
