@@ -33,10 +33,18 @@ class GenericEntitiesSection extends Component {
 
   static defaultProps = { showTransactionCount: true };
 
-  state = { showAll: false };
+  state = { showAll: false, allMounted: false };
 
   handleToggleShowAll = () => {
-    this.setState(state => ({ ...state, showAll: !state.showAll }));
+    const { allMounted, showAll } = this.state;
+    if (allMounted) {
+      this.setState({ showAll: !showAll });
+    } else {
+      this.setState({ allMounted: true });
+      requestAnimationFrame(() => {
+        this.setState({ showAll: true });
+      })
+    }
   };
 
   render() {
@@ -49,7 +57,7 @@ class GenericEntitiesSection extends Component {
       title,
       transactions
     } = this.props;
-    const { showAll } = this.state;
+    const { allMounted, showAll } = this.state;
     let total = 0;
     const entities = compose([
       sortBy("amount"),
@@ -85,22 +93,24 @@ class GenericEntitiesSection extends Component {
             />
           )
         )}
-        <AnimateHeight isExpanded={showAll}>
-          <Fragment>
-            {otherEntities.map(({ entityId, transactions, amount }) => (
-              <GenericItemLink
-                key={entityId}
-                showTransactionCount={showTransactionCount}
-                to={linkFunction(entityId)}
-                transactions={transactions}
-                name={entitiesById[entityId].name}
-                amount={amount}
-                total={total}
-                isContinuing
-              />
-            ))}
-          </Fragment>
-        </AnimateHeight>
+        {allMounted && (
+          <AnimateHeight isExpanded={showAll}>
+            <Fragment>
+              {otherEntities.map(({ entityId, transactions, amount }) => (
+                <GenericItemLink
+                  key={entityId}
+                  showTransactionCount={showTransactionCount}
+                  to={linkFunction(entityId)}
+                  transactions={transactions}
+                  name={entitiesById[entityId].name}
+                  amount={amount}
+                  total={total}
+                  isContinuing
+                />
+              ))}
+            </Fragment>
+          </AnimateHeight>
+        )}
         {!!otherEntities.length &&
           limitShowing && (
             <SeeAll

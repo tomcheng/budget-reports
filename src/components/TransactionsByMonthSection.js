@@ -23,10 +23,19 @@ class TransactionsByMonthSection extends Component {
 
   static defaultProps = { limitShowing: true };
 
-  state = { showAll: false };
+  state = { allMounted: false, showAll: false };
 
   handleToggleShowAll = () => {
-    this.setState(state => ({ ...state, showAll: !state.showAll }));
+    const { allMounted, showAll } = this.state;
+
+    if (allMounted) {
+      this.setState({ showAll: !showAll });
+    } else {
+      this.setState({ allMounted: true });
+      requestAnimationFrame(() => {
+        this.setState({ showAll: true });
+      })
+    }
   };
 
   render() {
@@ -37,7 +46,7 @@ class TransactionsByMonthSection extends Component {
       transactions,
       limitShowing: limitShowingProp
     } = this.props;
-    const { showAll } = this.state;
+    const { allMounted, showAll } = this.state;
 
     const transactionsForMonth = compose([
       limitShowingProp
@@ -74,20 +83,22 @@ class TransactionsByMonthSection extends Component {
         ) : (
           <NoTransactions />
         )}
-        <AnimateHeight isExpanded={showAll}>
-          <Fragment>
-            {otherTransactions.map(({ id, date, amount, payeeId, categoryId }) => (
-              <Transaction
-                key={id}
-                amount={amount}
-                category={categoriesById[categoryId]}
-                date={date}
-                payee={payeesById[payeeId]}
-                isContinuing
-              />
-            ))}
-          </Fragment>
-        </AnimateHeight>
+        {allMounted && (
+          <AnimateHeight isExpanded={showAll}>
+            <Fragment>
+              {otherTransactions.map(({ id, date, amount, payeeId, categoryId }) => (
+                <Transaction
+                  key={id}
+                  amount={amount}
+                  category={categoriesById[categoryId]}
+                  date={date}
+                  payee={payeesById[payeeId]}
+                  isContinuing
+                />
+              ))}
+            </Fragment>
+          </AnimateHeight>
+        )}
         {!!otherTransactions.length && (
           <SeeAll
             count={transactionsForMonth.length}
