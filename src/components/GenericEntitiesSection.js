@@ -16,13 +16,13 @@ const mapWithKeys = map.convert({ cap: false });
 const LIMIT = 5;
 
 const keyToPluralizedName = {
-  categoryId: "categories",
-  payeeId: "payees"
+  category_id: "categories",
+  payee_id: "payees"
 };
 
 class GenericEntitiesSection extends Component {
   static propTypes = {
-    entityKey: PropTypes.string.isRequired,
+    entityKey: PropTypes.oneOf(["category_id", "payee_id"]).isRequired,
     entitiesById: PropTypes.object.isRequired,
     linkFunction: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
