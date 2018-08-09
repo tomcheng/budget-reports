@@ -4,7 +4,7 @@ import compose from "lodash/fp/compose";
 import keys from "lodash/fp/keys";
 import sortBy from "lodash/fp/sortBy";
 import { groupByProp, sumByProp } from "../optimized";
-import { simpleMemoize, filterTransactions } from "../utils";
+import { simpleMemoize, rejectTransferTransactions } from "../utils";
 import PayeeListItem from "./PayeeListItem";
 import Section from "./Section";
 
@@ -12,7 +12,7 @@ export const getPayeesWithMetadata = simpleMemoize(budget => {
   const { payeesById, transactions } = budget;
   const transactionsByPayee = compose([
     groupByProp("payee_id"),
-    filterTransactions({ budget })
+    rejectTransferTransactions({ budget })
   ])(transactions);
 
   return keys(transactionsByPayee).map(id => {
