@@ -63,6 +63,7 @@ class Group extends PureComponent {
           onSelectMonth={onSelectMonth}
         />
         <GenericEntitiesSection
+          key={`categories-${selectedMonth || "all"}`}
           entityKey="categoryId"
           entitiesById={categoriesById}
           linkFunction={categoryId =>
@@ -82,6 +83,7 @@ class Group extends PureComponent {
         />
         {selectedMonth && (
           <TransactionsByMonthSection
+            key={`transactions-${selectedMonth}`}
             categoriesById={categoriesById}
             payeesById={payeesById}
             selectedMonth={selectedMonth}
@@ -89,6 +91,7 @@ class Group extends PureComponent {
           />
         )}
         <GenericEntitiesSection
+          key={`payees-${selectedMonth || "all"}`}
           entityKey="payeeId"
           entitiesById={payeesById}
           linkFunction={payeeId =>

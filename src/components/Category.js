@@ -47,6 +47,7 @@ class Category extends PureComponent {
         />
         {selectedMonth && (
           <TransactionsByMonthSection
+            key={`transactions-${selectedMonth}`}
             categoriesById={categoriesById}
             payeesById={payeesById}
             transactions={transactionsForMonth}
@@ -54,6 +55,7 @@ class Category extends PureComponent {
           />
         )}
         <GenericEntitiesSection
+          key={`payees-${selectedMonth || "all"}`}
           entitiesById={payeesById}
           entityKey="payeeId"
           linkFunction={payeeId =>
