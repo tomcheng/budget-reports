@@ -2,7 +2,7 @@ import * as ynab from "ynab";
 import moment from "moment";
 import get from "lodash/fp/get";
 import matches from "lodash/fp/matches";
-import { camelCaseKeys, getStorage, setStorage } from "./utils";
+import { getStorage, setStorage } from "./utils";
 import { setSetting, getSetting, LAST_UPDATED } from "./uiRepo";
 import { sanitizeBudget, mergeBudgets } from "./repoUtils";
 import { getBudgetDetails, setBudgetDetails } from "./localBudgetCache";
@@ -59,11 +59,11 @@ export const getBudgets = () => {
   const cachedBudgets = getStorage(BUDGETS_STORAGE_KEY);
 
   if (cachedBudgets) {
-    return Promise.resolve(camelCaseKeys(cachedBudgets));
+    return Promise.resolve(cachedBudgets);
   } else {
     return api.budgets.getBudgets().then(({ data }) => {
       setStorage(BUDGETS_STORAGE_KEY, data);
-      return camelCaseKeys(data);
+      return data;
     });
   }
 };

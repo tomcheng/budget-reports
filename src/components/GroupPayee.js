@@ -36,13 +36,13 @@ class GroupPayee extends PureComponent {
     const firstMonth = getFirstMonth(budget);
 
     const categoriesInGroup = categories.filter(
-      category => category.categoryGroupId === categoryGroup.id
+      category => category.category_group_id === categoryGroup.id
     );
     const categoryIds = categoriesInGroup.map(category => category.id);
     const transactionsForGroupAndPayee = transactions.filter(
       transaction =>
-        categoryIds.includes(transaction.categoryId) &&
-        transaction.payeeId === payee.id
+        categoryIds.includes(transaction.category_id) &&
+        transaction.payee_id === payee.id
     );
 
     return (

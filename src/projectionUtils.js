@@ -38,7 +38,7 @@ export const getMortgageRate = (
 
   const transactions = compose([
     sortBy("date"),
-    filter(matches({ accountId: mortgageAccount.id }))
+    filter(matches({ account_id: mortgageAccount.id }))
   ])(allTransactions);
   const lastMonth = compose([t => t.date.slice(0, 7), last])(transactions);
   const lastMonthTransactions = takeRightWhile(
@@ -50,7 +50,7 @@ export const getMortgageRate = (
     takeWhile(t => t.date.slice(0, 7) !== lastMonth)
   ])(transactions);
   const P1 = P - sumBy("amount")(lastMonthTransactions);
-  const c = compose([prop("amount"), find(prop("transferAccountId"))])(
+  const c = compose([prop("amount"), find(prop("transfer_account_id"))])(
     lastMonthTransactions
   );
   const r = (P1 + c) / P - 1;
@@ -82,7 +82,7 @@ export const getCurrentInvestments = (
 
   return compose([
     sumBy("amount"),
-    filter(({ accountId }) => includes(accountId)(investmentAccountIds))
+    filter(({ account_id: accountId }) => includes(accountId)(investmentAccountIds))
   ])(transactions);
 };
 
@@ -97,8 +97,8 @@ export const getReturnOnInvestments = (
 
   const transactionsByMonth = compose([
     groupBy(tr => tr.date.slice(0, 7)),
-    reject(t => includes(t.transferAccountId)(investmentAccountIds)), // remove transfers between investment accounts
-    filter(t => includes(t.accountId)(investmentAccountIds))
+    reject(t => includes(t.transfer_account_id)(investmentAccountIds)), // remove transfers between investment accounts
+    filter(t => includes(t.account_id)(investmentAccountIds))
   ])(allTransactions);
 
   let startForMonth = 0;
@@ -108,9 +108,9 @@ export const getReturnOnInvestments = (
   map(month => transactionsByMonth[month])(months).forEach(trs => {
     const contributions = compose([
       sumBy("amount"),
-      filter(prop("transferAccountId"))
+      filter(prop("transfer_account_id"))
     ])(trs);
-    const gains = reject(prop("transferAccountId"))(trs);
+    const gains = reject(prop("transfer_account_id"))(trs);
     const returns = sumBy("amount")(gains);
 
     if (startForMonth && gains.length) {
@@ -137,10 +137,10 @@ export const getAverageContribution = (
 
   const contributions = compose([
     filter(
-      ({ transferAccountId }) =>
+      ({ transfer_account_id: transferAccountId }) =>
         transferAccountId && !includes(transferAccountId)(investmentAccountIds)
     ),
-    filter(({ accountId }) => includes(accountId)(investmentAccountIds))
+    filter(({ account_id: accountId }) => includes(accountId)(investmentAccountIds))
   ])(allTransactions);
 
   const months = compose([
@@ -195,20 +195,20 @@ export const getAverageExpensesWithoutMortgage = (
     reject(
       tr =>
         tr.amount > 0 &&
-        !tr.transferAccountId &&
-        (!tr.categoryId ||
-          !categoryGroupsById[categoriesById[tr.categoryId].categoryGroupId])
+        !tr.transfer_account_id &&
+        (!tr.category_id ||
+          !categoryGroupsById[categoriesById[tr.category_id].category_group_id])
     ),
     reject(tr =>
-      includes(tr.transferAccountId)(
+      includes(tr.transfer_account_id)(
         concat(mortgageAccountIds, investmentAccountIds)
       )
     ),
     reject(tr =>
-      includes(tr.accountId)(concat(mortgageAccountIds, investmentAccountIds))
+      includes(tr.account_id)(concat(mortgageAccountIds, investmentAccountIds))
     ),
     reject(tr => includes(getTransactionMonth(tr))([head(months), last(months)])),
-    reject(matches({ payeeId: startingBalanceId }))
+    reject(matches({ payee_id: startingBalanceId }))
   ])(transactions);
 
   return -totalExpenses / (months.length - 2);

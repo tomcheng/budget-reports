@@ -34,7 +34,7 @@ class TransactionsByMonthSection extends Component {
       this.setState({ allMounted: true });
       requestAnimationFrame(() => {
         this.setState({ showAll: true });
-      })
+      });
     }
   };
 
@@ -71,31 +71,47 @@ class TransactionsByMonthSection extends Component {
         title={`Transactions for ${moment(selectedMonth).format("MMMM")}`}
       >
         {topTransactions.length ? (
-          topTransactions.map(({ id, date, amount, payeeId, categoryId }) => (
-            <Transaction
-              key={id}
-              amount={amount}
-              category={categoriesById[categoryId]}
-              date={date}
-              payee={payeesById[payeeId]}
-            />
-          ))
+          topTransactions.map(
+            ({
+              id,
+              date,
+              amount,
+              payee_id: payeeId,
+              category_id: categoryId
+            }) => (
+              <Transaction
+                key={id}
+                amount={amount}
+                category={categoriesById[categoryId]}
+                date={date}
+                payee={payeesById[payeeId]}
+              />
+            )
+          )
         ) : (
           <NoTransactions />
         )}
         {allMounted && (
           <AnimateHeight isExpanded={showAll}>
             <Fragment>
-              {otherTransactions.map(({ id, date, amount, payeeId, categoryId }) => (
-                <Transaction
-                  key={id}
-                  amount={amount}
-                  category={categoriesById[categoryId]}
-                  date={date}
-                  payee={payeesById[payeeId]}
-                  isContinuing
-                />
-              ))}
+              {otherTransactions.map(
+                ({
+                  id,
+                  date,
+                  amount,
+                  payee_id: payeeId,
+                  category_id: categoryId
+                }) => (
+                  <Transaction
+                    key={id}
+                    amount={amount}
+                    category={categoriesById[categoryId]}
+                    date={date}
+                    payee={payeesById[payeeId]}
+                    isContinuing
+                  />
+                )
+              )}
             </Fragment>
           </AnimateHeight>
         )}

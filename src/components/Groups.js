@@ -12,8 +12,8 @@ import Amount from "./Amount";
 const getGroupsWithMeta = simpleMemoize(budget => {
   const { categoryGroups, categories, transactions } = budget;
 
-  const transactionsByCategory = groupByProp("categoryId")(transactions);
-  const categoriesByGroup = groupByProp("categoryGroupId")(categories);
+  const transactionsByCategory = groupByProp("category_id")(transactions);
+  const categoriesByGroup = groupByProp("category_group_id")(categories);
 
   return categoryGroups.map(group => {
     const amount = sumBy(category =>

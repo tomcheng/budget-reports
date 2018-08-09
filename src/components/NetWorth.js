@@ -72,7 +72,7 @@ class NetWorth extends PureComponent {
 
   groupByMonthAndAccount = simpleMemoize(
     compose([
-      mapValues(groupBy("accountId")),
+      mapValues(groupBy("account_id")),
       groupBy(({ date }) => date.slice(0, 7))
     ])
   );

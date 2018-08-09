@@ -21,7 +21,7 @@ class CurrentMonthGroupsSection extends PureComponent {
     budget: PropTypes.shape({
       categoriesById: PropTypes.objectOf(
         PropTypes.shape({
-          categoryGroupId: PropTypes.string.isRequired,
+          category_group_id: PropTypes.string.isRequired,
           id: PropTypes.string.isRequired
         })
       ).isRequired,
@@ -35,7 +35,7 @@ class CurrentMonthGroupsSection extends PureComponent {
     transactions: PropTypes.arrayOf(
       PropTypes.shape({
         amount: PropTypes.number.isRequired,
-        categoryId: PropTypes.string.isRequired
+        category_id: PropTypes.string.isRequired
       })
     ).isRequired
   };
@@ -54,7 +54,7 @@ class CurrentMonthGroupsSection extends PureComponent {
         };
       }),
       groupBy(transaction =>
-        get([transaction.categoryId, "categoryGroupId"])(categoriesById)
+        get([transaction.category_id, "category_group_id"])(categoriesById)
       )
     ])(transactions);
     const total = sumByProp("amount")(groups);

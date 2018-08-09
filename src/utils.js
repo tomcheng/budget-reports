@@ -1,7 +1,6 @@
 import { utils } from "ynab";
 import moment from "moment";
 import { groupBy, groupByProp, sumBy, sumByProp } from "./optimized";
-import camelCase from "lodash/fp/camelCase";
 import compose from "lodash/fp/compose";
 import curry from "lodash/fp/curry";
 import filter from "lodash/fp/filter";
@@ -49,8 +48,6 @@ export const mapKeysDeep = curry((iteratee, obj) => {
   }
 });
 
-export const camelCaseKeys = mapKeysDeep((val, key) => camelCase(key));
-
 export const formatCurrency = utils.convertMilliUnitsToCurrencyAmount;
 
 export const getStorage = key => {
@@ -82,7 +79,7 @@ export const getPayeeNodes = ({ payeesById, transactions }, divideBy = 1) =>
         : { id: "no-payee", name: "(no payee)" }),
       amount: sumByProp("amount")(transactions) / divideBy
     })),
-    groupByProp("payeeId")
+    groupByProp("payee_id")
   ])(transactions);
 
 const isIncome = ({
@@ -90,11 +87,11 @@ const isIncome = ({
   categoriesById,
   transactions
 }) => transaction => {
-  const { categoryId, payeeId } = transaction;
+  const { category_id: categoryId, payee_id: payeeId } = transaction;
 
   if (
     categoryId &&
-    categoryGroupsById[categoriesById[categoryId].categoryGroupId]
+    categoryGroupsById[categoriesById[categoryId].category_group_id]
   ) {
     return false;
   }
@@ -103,16 +100,19 @@ const isIncome = ({
     compose([
       sumByProp("amount"),
       transactions =>
-        transactions.filter(transaction => transaction.payeeId === payeeId)
+        transactions.filter(transaction => transaction.payee_id === payeeId)
     ])(transactions) > 0
   );
 };
 
 const isTransfer = ({ accountsById, investmentAccounts, transaction }) => {
-  const { accountId, transferAccountId } = transaction;
+  const {
+    account_id: accountId,
+    transfer_account_id: transferAccountId
+  } = transaction;
   const account = accountsById[accountId];
 
-  if (!account.onBudget) {
+  if (!account.on_budget) {
     return true;
   }
 
@@ -122,7 +122,7 @@ const isTransfer = ({ accountsById, investmentAccounts, transaction }) => {
 
   const transferAccount = accountsById[transferAccountId];
 
-  if (transferAccount.onBudget && account.onBudget) {
+  if (transferAccount.on_budget && account.on_budget) {
     return true;
   }
 
@@ -140,7 +140,7 @@ export const filterTransactions = ({
   transactions.filter(transaction => {
     if (
       PAYEES_TO_EXCLUDE.includes(
-        get([transaction.payeeId, "name"])(budget.payeesById)
+        get([transaction.payee_id, "name"])(budget.payeesById)
       )
     ) {
       return false;
@@ -154,7 +154,7 @@ export const filterTransactions = ({
     ) {
       return false;
     }
-    if (!transaction.categoryId) {
+    if (!transaction.category_id) {
       return false;
     }
     return true;

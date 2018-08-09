@@ -12,7 +12,7 @@ class Category extends PureComponent {
     budget: PropTypes.shape({
       transactions: PropTypes.arrayOf(
         PropTypes.shape({
-          payeeId: PropTypes.string.isRequired
+          payee_id: PropTypes.string.isRequired
         })
       ).isRequired,
       payeesById: PropTypes.object.isRequired
@@ -29,7 +29,7 @@ class Category extends PureComponent {
     const { transactions, categoriesById, payeesById, id: budgetId } = budget;
     const firstMonth = getFirstMonth(budget);
     const transactionsForCategory = transactions.filter(
-      transaction => transaction.categoryId === category.id
+      transaction => transaction.category_id === category.id
     );
     const transactionsForMonth =
       selectedMonth &&
@@ -57,11 +57,11 @@ class Category extends PureComponent {
         <GenericEntitiesSection
           key={`payees-${selectedMonth || "all"}`}
           entitiesById={payeesById}
-          entityKey="payeeId"
+          entityKey="payee_id"
           linkFunction={payeeId =>
             makeLink(pages.categoryPayee.path, {
               budgetId,
-              categoryGroupId: category.categoryGroupId,
+              categoryGroupId: category.category_group_id,
               categoryId: category.id,
               payeeId
             })

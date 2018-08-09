@@ -27,36 +27,35 @@ const ExpensesBreakdown = ({
 }) => {
   const categoryNodes = compose([
     map((transactions, categoryId) => {
-      const payeeNodes = getPayeeNodes(
-        { payeesById, transactions },
-        divideBy
-      );
+      const payeeNodes = getPayeeNodes({ payeesById, transactions }, divideBy);
       return {
-        ...pick(["id", "name", "categoryGroupId"])(categoriesById[categoryId]),
+        ...pick(["id", "name", "category_group_id"])(
+          categoriesById[categoryId]
+        ),
         nodes: sortBy("amount")(payeeNodes),
         amount: sumBy("amount")(payeeNodes)
       };
     }),
-    groupBy("categoryId"),
-    filter(get("categoryId"))
+    groupBy("category_id"),
+    filter(get("category_id"))
   ])(transactions);
 
   const groupNodes = compose([
     map((nodes, categoryGroupId) => {
-      const categoryNodes = map(omit("categoryGroupId"))(nodes);
+      const categoryNodes = map(omit("category_group_id"))(nodes);
       return {
         ...pick(["id", "name"])(categoryGroupsById[categoryGroupId]),
         nodes: sortBy("amount")(categoryNodes),
         amount: sumBy("amount")(categoryNodes)
       };
     }),
-    groupBy("categoryGroupId")
+    groupBy("category_group_id")
   ])(categoryNodes);
 
   const rootPayeeNodes = getPayeeNodes(
     {
       payeesById,
-      transactions: transactions.filter(trans => !trans.categoryId)
+      transactions: transactions.filter(transaction => !transaction.category_id)
     },
     divideBy
   );
@@ -90,7 +89,7 @@ ExpensesBreakdown.propTypes = {
   categoriesById: PropTypes.objectOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
-      categoryGroupId: PropTypes.string.isRequired
+      category_group_id: PropTypes.string.isRequired
     })
   ).isRequired,
   categoryGroupsById: PropTypes.objectOf(
@@ -104,7 +103,7 @@ ExpensesBreakdown.propTypes = {
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       amount: PropTypes.number.isRequired,
-      categoryId: PropTypes.string
+      category_id: PropTypes.string
     })
   ).isRequired
 };

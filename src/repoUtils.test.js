@@ -6,7 +6,7 @@ describe("sanitizeBudget", () => {
       { id: "foo-bar" },
       { id: "starting-balance", name: "Starting Balance" }
     ],
-    categories: [{ id: "cat", activity: 1000, balance: 2000, budgeted: 3000 }],
+    categories: [{ id: "cat", activity: 1000, balance: 5000, budgeted: 3000 }],
     category_groups: [
       { id: "blah", name: "Internal Master Category" },
       { id: "group-1", name: "group 1" }
@@ -64,7 +64,7 @@ describe("sanitizeBudget", () => {
   };
 
   it("sanitizes data", () => {
-    const result = sanitizeBudget(budget, "2018-05");
+    const result = sanitizeBudget(budget);
 
     expect(result.payees).toEqual([
       { id: "foo-bar" },
@@ -75,36 +75,36 @@ describe("sanitizeBudget", () => {
     ]);
     expect(result.categoryGroups).toEqual([{ id: "group-1", name: "group 1" }]);
     expect(result.transactions).toEqual([
-      { id: "trans-5", amount: 1, payeeId: "starting-balance" },
+      { id: "trans-5", amount: 1, payee_id: "starting-balance" },
       {
         id: "trans-3",
         amount: 1,
-        payeeId: "foo-bar",
-        transferAccountId: "foo"
+        payee_id: "foo-bar",
+        transfer_account_id: "foo"
       },
       {
         id: "trans-1",
         amount: 1,
-        payeeId: "foo-bar",
-        categoryId: "cat-1",
+        payee_id: "foo-bar",
+        category_id: "cat-1",
         date: "2018-05-02"
       },
       {
         id: "sub-1",
         amount: 1,
-        payeeId: "foo-bar",
-        categoryId: "cat-3",
+        payee_id: "foo-bar",
+        category_id: "cat-3",
         date: "2018-05-01"
       },
       {
         id: "sub-2",
         amount: 1,
-        payeeId: "foo-bar",
-        categoryId: "cat-4",
+        payee_id: "foo-bar",
+        category_id: "cat-4",
         date: "2018-05-01"
       }
     ]);
-    expect(result.months[0]).toHaveProperty("ageOfMoney", 30);
+    expect(result.months[0]).toHaveProperty("age_of_money", 30);
     expect(result.months.map(({ month }) => month)).toEqual([
       "2018-05-01",
       "2018-06-01"

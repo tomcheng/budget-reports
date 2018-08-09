@@ -11,7 +11,7 @@ import Section from "./Section";
 export const getPayeesWithMetadata = simpleMemoize(budget => {
   const { payeesById, transactions } = budget;
   const transactionsByPayee = compose([
-    groupByProp("payeeId"),
+    groupByProp("payee_id"),
     filterTransactions({ budget })
   ])(transactions);
 

@@ -12,15 +12,17 @@ const TransactionsSection = ({
 }) => (
   <CollapsibleSection title={title}>
     {transactions.length ? (
-      transactions.map(({ id, categoryId, payeeId, date, amount }) => (
-        <Transaction
-          key={id}
-          amount={amount}
-          category={categoriesById[categoryId]}
-          date={date}
-          payee={payeesById[payeeId]}
-        />
-      ))
+      transactions.map(
+        ({ id, category_id: categoryId, payee_id: payeeId, date, amount }) => (
+          <Transaction
+            key={id}
+            amount={amount}
+            category={categoriesById[categoryId]}
+            date={date}
+            payee={payeesById[payeeId]}
+          />
+        )
+      )
     ) : (
       <NoTransactions />
     )}
@@ -33,9 +35,10 @@ TransactionsSection.propTypes = {
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       amount: PropTypes.number.isRequired,
+      category_id: PropTypes.string.isRequired,
       date: PropTypes.string.isRequired,
       id: PropTypes.string.isRequired,
-      payeeId: PropTypes.string.isRequired
+      payee_id: PropTypes.string.isRequired
     })
   ).isRequired,
   title: PropTypes.string

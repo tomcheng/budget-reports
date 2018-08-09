@@ -38,11 +38,11 @@ class Group extends PureComponent {
     const firstMonth = getFirstMonth(budget);
 
     const categoriesInGroup = categories.filter(
-      category => category.categoryGroupId === categoryGroup.id
+      category => category.category_group_id === categoryGroup.id
     );
     const categoryIds = categoriesInGroup.map(category => category.id);
     const transactionsInGroup = transactions.filter(transaction =>
-      categoryIds.includes(transaction.categoryId)
+      categoryIds.includes(transaction.category_id)
     );
     const transactionsInSelectedMonth =
       selectedMonth &&
@@ -64,7 +64,7 @@ class Group extends PureComponent {
         />
         <GenericEntitiesSection
           key={`categories-${selectedMonth || "all"}`}
-          entityKey="categoryId"
+          entityKey="category_id"
           entitiesById={categoriesById}
           linkFunction={categoryId =>
             makeLink(pages.category.path, {
@@ -92,7 +92,7 @@ class Group extends PureComponent {
         )}
         <GenericEntitiesSection
           key={`payees-${selectedMonth || "all"}`}
-          entityKey="payeeId"
+          entityKey="payee_id"
           entitiesById={payeesById}
           linkFunction={payeeId =>
             makeLink(pages.groupPayee.path, {

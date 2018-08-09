@@ -4,12 +4,12 @@ describe("getProcessedPayees", () => {
   it("ignores off budget transactions", () => {
     const budget = {
       accountsById: {
-        off: { onBudget: false }
+        off: { on_budget: false }
       },
       payeesById: {
         foo: { id: "foo" }
       },
-      transactions: [{ payeeId: "foo", amount: -1, accountId: "off" }]
+      transactions: [{ payeeId: "foo", amount: -1, account_id: "off" }]
     };
     const payees = getPayeesWithMetadata(budget);
 
@@ -19,8 +19,8 @@ describe("getProcessedPayees", () => {
   it("ignores transfers to on budget accounts", () => {
     const budget = {
       accountsById: {
-        acc1: { onBudget: true },
-        acc2: { onBudget: true }
+        acc1: { on_budget: true },
+        acc2: { on_budget: true }
       },
       payeesById: {
         foo: { id: "foo" }
@@ -29,8 +29,8 @@ describe("getProcessedPayees", () => {
         {
           payeeId: "foo",
           amount: -1,
-          accountId: "acc1",
-          transferAccountId: "acc2"
+          account_id: "acc1",
+          transfer_account_id: "acc2"
         }
       ]
     };
@@ -42,12 +42,12 @@ describe("getProcessedPayees", () => {
   it("ignores starting balances", () => {
     const budget = {
       accountsById: {
-        acc: { onBudget: true }
+        acc: { on_budget: true }
       },
       payeesById: {
         foo: { id: "foo", name: "Starting Balance" }
       },
-      transactions: [{ payeeId: "foo", amount: 100, accountId: "acc" }]
+      transactions: [{ payeeId: "foo", amount: 100, account_id: "acc" }]
     };
     const payees = getPayeesWithMetadata(budget);
 

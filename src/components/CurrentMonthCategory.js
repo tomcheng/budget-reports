@@ -28,7 +28,7 @@ class CurrentMonthCategory extends PureComponent {
 
     const category = categoriesById[categoryId];
     const transactionsInCategory = allTransactions.filter(
-      transaction => transaction.categoryId === categoryId
+      transaction => transaction.category_id === categoryId
     );
     const transactionsInCategoryForMonth = transactionsInCategory.filter(
       transaction => getTransactionMonth(transaction) === currentMonth

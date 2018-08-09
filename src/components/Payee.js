@@ -9,7 +9,7 @@ class Payee extends PureComponent {
     budget: PropTypes.shape({
       transactions: PropTypes.arrayOf(
         PropTypes.shape({
-          payeeId: PropTypes.string.isRequired
+          payee_id: PropTypes.string.isRequired
         })
       ).isRequired,
       payeesById: PropTypes.object.isRequired
@@ -33,7 +33,7 @@ class Payee extends PureComponent {
     const { selectedMonth } = this.state;
     const { transactions, payeesById, categoriesById } = budget;
     const transactionsForPayee = filterTransactions({ budget })(transactions.filter(
-      transaction => transaction.payeeId === payee.id
+      transaction => transaction.payee_id === payee.id
     ));
     const firstMonth = getFirstMonth(budget);
 

@@ -30,11 +30,11 @@ class CurrentMonthGroup extends PureComponent {
     } = budget;
 
     const categories = allCategories.filter(
-      category => category.categoryGroupId === categoryGroupId
+      category => category.category_group_id === categoryGroupId
     );
     const categoryIds = categories.map(category => category.id);
     const transactionsInGroup = allTransactions.filter(transaction =>
-      categoryIds.includes(transaction.categoryId)
+      categoryIds.includes(transaction.category_id)
     );
     const transactionsInGroupForMonth = transactionsInGroup.filter(
       transaction => getTransactionMonth(transaction) === currentMonth
@@ -53,7 +53,7 @@ class CurrentMonthGroup extends PureComponent {
           total={spent + available}
         />
         <GenericEntitiesSection
-          entityKey="categoryId"
+          entityKey="category_id"
           entitiesById={categoriesById}
           linkFunction={categoryId =>
             makeLink(pages.currentMonthCategory.path, {
