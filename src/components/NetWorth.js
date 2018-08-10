@@ -17,7 +17,7 @@ import sortBy from "lodash/fp/sortBy";
 import sum from "lodash/fp/sum";
 import sumBy from "lodash/fp/sumBy";
 import values from "lodash/fp/values";
-import { simpleMemoize } from "../utils";
+import { simpleMemoize } from "../optimized";
 import { getSetting, setSetting, NET_WORTH_HIDDEN_ACCOUNTS } from "../uiRepo";
 import { TopSection } from "./Section";
 import CollapsibleSection from "./CollapsibleSection";

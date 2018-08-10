@@ -1,8 +1,7 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import sortBy from "lodash/fp/sortBy";
-import { groupByProp, sumByProp, sumBy } from "../optimized";
-import { simpleMemoize } from "../utils";
+import { simpleMemoize, groupByProp, sumByProp, sumBy } from "../optimized";
 import pages, { makeLink } from "../pages";
 import { LargeListItemLink } from "./ListItem";
 import { SecondaryText } from "./typeComponents";

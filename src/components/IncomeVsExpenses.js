@@ -15,11 +15,10 @@ import prop from "lodash/fp/prop";
 import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
-import { sumByProp } from "../optimized";
+import { sumByProp, simpleMemoize } from "../optimized";
 import {
   filterTransactions,
   splitTransactions,
-  simpleMemoize,
   getOutliersBy,
   getTransactionMonth
 } from "../utils";
@@ -90,7 +89,7 @@ class IncomeVsExpenses extends PureComponent {
       sortBy("month"),
       map((transactions, month) => {
         const { incomeTransactions, expenseTransactions } = splitTransactions({
-          ...budget,
+          budget,
           transactions
         });
 
@@ -161,8 +160,7 @@ class IncomeVsExpenses extends PureComponent {
       : reject(propertyIncludedIn("month", excludedMonths))(allSummaries);
 
     const { incomeTransactions, expenseTransactions } = splitTransactions({
-      categoryGroupsById,
-      categoriesById,
+      budget,
       transactions: flatMap(prop("transactions"))(summaries)
     });
 

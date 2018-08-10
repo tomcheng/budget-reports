@@ -8,7 +8,7 @@ import keyBy from "lodash/fp/keyBy";
 import map from "lodash/fp/map";
 import pick from "lodash/fp/pick";
 import range from "lodash/fp/range";
-import { simpleMemoize } from "../utils";
+import { simpleMemoize } from "../optimized";
 import {
   getMortgageRate,
   getReturnOnInvestments,

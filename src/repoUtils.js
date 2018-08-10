@@ -33,12 +33,9 @@ export const sanitizeBudget = budget => {
   }))(budget.categories);
 
   return {
-    ...omit([
-      "categories",
-      "category_groups",
-      "months",
-      "transactions"
-    ])(budget),
+    ...omit(["categories", "category_groups", "months", "transactions"])(
+      budget
+    ),
     accountsById: keyBy("id")(budget.accounts),
     categoryGroups,
     categoryGroupsById: keyBy("id")(categoryGroups),
@@ -62,7 +59,10 @@ export const sanitizeBudget = budget => {
       ),
       reverse,
       sortBy("date"),
-      reject(matchesProperty("amount", 0))
+      transactions =>
+        transactions.filter(
+          transaction => transaction.amount !== 0
+        )
     ])(budget.transactions)
   };
 };

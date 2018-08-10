@@ -18,7 +18,7 @@ class CurrentMonth extends PureComponent {
 
   render() {
     const { budget, currentMonth, investmentAccounts } = this.props;
-    const { expenseTransactions } = splitTransactions(budget);
+    const { expenseTransactions } = splitTransactions({ budget, transactions: budget.transactions });
     const transactions = filterTransactions({ budget, investmentAccounts })(
       expenseTransactions
     );

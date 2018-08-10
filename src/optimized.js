@@ -24,4 +24,25 @@ export const groupByProp = key => arr => {
 export const sumBy = func => arr =>
   arr.reduce((acc, curr) => acc + func(curr), 0);
 
-export const sumByProp = key => arr => arr.reduce((acc, curr) => acc + curr[key], 0);
+export const sumByProp = key => arr =>
+  arr.reduce((acc, curr) => acc + curr[key], 0);
+
+export const simpleMemoize = func => {
+  let lastArgs = null;
+  let lastResult = null;
+  return (...args) => {
+    if (
+      lastArgs !== null &&
+      lastArgs.length === args.length &&
+      args.every((value, index) => value === lastArgs[index])
+    ) {
+      return lastResult;
+    }
+    lastArgs = args;
+    lastResult = func(...args);
+    return lastResult;
+  };
+};
+
+export const notAny = predicates => arg =>
+  predicates.every(predicate => !predicate(arg));
