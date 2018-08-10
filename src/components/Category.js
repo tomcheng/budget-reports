@@ -1,7 +1,7 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { getFirstMonth, getTransactionMonth } from "../utils";
+import { getTransactionMonth, getFirstMonth } from "../budgetUtils";
 import pages, { makeLink } from "../pages";
 import MonthByMonthSection from "./MonthByMonthSection";
 import GenericEntitiesSection from "./GenericEntitiesSection";

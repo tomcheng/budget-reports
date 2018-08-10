@@ -10,7 +10,7 @@ import omit from "lodash/fp/omit";
 import pick from "lodash/fp/pick";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
-import { getPayeeNodes } from "../utils";
+import { getPayeeNodes } from "../budgetUtils";
 import CollapsibleSection from "./CollapsibleSection";
 import Breakdown from "./Breakdown";
 import AmountWithPercentage from "./AmountWithPercentage";

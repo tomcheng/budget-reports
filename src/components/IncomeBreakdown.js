@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
-import { getPayeeNodes } from "../utils";
+import { getPayeeNodes } from "../budgetUtils";
 import CollapsibleSection from "./CollapsibleSection";
 import Breakdown from "./Breakdown";
 import AmountWithPercentage from "./AmountWithPercentage";

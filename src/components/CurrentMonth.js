@@ -1,11 +1,8 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import takeWhile from "lodash/fp/takeWhile";
-import {
-  filterTransactions,
-  splitTransactions,
-  getTransactionMonth
-} from "../utils";
+import { filterTransactions, splitTransactions } from "../utils";
+import { getTransactionMonth } from "../budgetUtils";
 import DayByDaySection from "./DayByDaySection";
 import CurrentMonthGroupsSection from "./CurrentMonthGroupsSection";
 
@@ -18,7 +15,10 @@ class CurrentMonth extends PureComponent {
 
   render() {
     const { budget, currentMonth, investmentAccounts } = this.props;
-    const { expenseTransactions } = splitTransactions({ budget, transactions: budget.transactions });
+    const { expenseTransactions } = splitTransactions({
+      budget,
+      transactions: budget.transactions
+    });
     const transactions = filterTransactions({ budget, investmentAccounts })(
       expenseTransactions
     );

@@ -1,6 +1,6 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
-import { getFirstMonth } from "../utils";
+import { getFirstMonth } from "../budgetUtils";
 import MonthByMonthSection from "./MonthByMonthSection";
 import TransactionsByMonthSection from "./TransactionsByMonthSection";
 

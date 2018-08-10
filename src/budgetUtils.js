@@ -1,4 +1,9 @@
-import { simpleMemoize } from "./optimized";
+import compose from "lodash/fp/compose";
+import pick from "lodash/fp/pick";
+import mapRaw from "lodash/fp/map";
+import { groupByProp, simpleMemoize, sumByProp } from "./optimized";
+
+const map = mapRaw.convert({ cap: false });
 
 export const isStartingBalanceOrReconciliation = simpleMemoize(budget => {
   const startingBalancePayeeId = budget.payees.find(
@@ -23,3 +28,19 @@ export const isIncome = simpleMemoize(budget => {
 export const isTransfer = (investmentAccounts = {}) => transaction =>
   !transaction.category_id ||
   !!investmentAccounts[transaction.transfer_account_id];
+
+export const getTransactionMonth = transaction => transaction.date.slice(0, 7);
+
+export const getFirstMonth = budget =>
+  getTransactionMonth(budget.transactions[budget.transactions.length - 1]);
+
+export const getPayeeNodes = ({ payeesById, transactions }, divideBy = 1) =>
+  compose([
+    map((transactions, payeeId) => ({
+      ...(payeesById[payeeId]
+        ? pick(["id", "name"])(payeesById[payeeId])
+        : { id: "no-payee", name: "(no payee)" }),
+      amount: sumByProp("amount")(transactions) / divideBy
+    })),
+    groupByProp("payee_id")
+  ])(transactions);

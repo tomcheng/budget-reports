@@ -22,7 +22,8 @@ import sumBy from "lodash/fp/sumBy";
 import takeWhile from "lodash/fp/takeWhile";
 import takeRightWhile from "lodash/fp/takeRightWhile";
 import uniq from "lodash/fp/uniq";
-import { getOutliersBy, getTransactionMonth } from "./utils";
+import { getOutliersBy } from "./utils";
+import { getTransactionMonth } from "./budgetUtils";
 
 export const getMortgageRate = (
   { accounts, transactions: allTransactions },
@@ -82,7 +83,9 @@ export const getCurrentInvestments = (
 
   return compose([
     sumBy("amount"),
-    filter(({ account_id: accountId }) => includes(accountId)(investmentAccountIds))
+    filter(({ account_id: accountId }) =>
+      includes(accountId)(investmentAccountIds)
+    )
   ])(transactions);
 };
 
@@ -140,7 +143,9 @@ export const getAverageContribution = (
       ({ transfer_account_id: transferAccountId }) =>
         transferAccountId && !includes(transferAccountId)(investmentAccountIds)
     ),
-    filter(({ account_id: accountId }) => includes(accountId)(investmentAccountIds))
+    filter(({ account_id: accountId }) =>
+      includes(accountId)(investmentAccountIds)
+    )
   ])(allTransactions);
 
   const months = compose([
@@ -178,7 +183,9 @@ export const getAverageExpensesWithoutMortgage = (
     prop("id"),
     find(matches({ name: "Starting Balance" }))
   ])(payees);
-  const months = compose([sortBy(identity), uniq, map(getTransactionMonth)])(transactions);
+  const months = compose([sortBy(identity), uniq, map(getTransactionMonth)])(
+    transactions
+  );
 
   const mortgageAccountIds = compose([
     filter(id => mortgageAccounts[id]),
@@ -207,7 +214,9 @@ export const getAverageExpensesWithoutMortgage = (
     reject(tr =>
       includes(tr.account_id)(concat(mortgageAccountIds, investmentAccountIds))
     ),
-    reject(tr => includes(getTransactionMonth(tr))([head(months), last(months)])),
+    reject(tr =>
+      includes(getTransactionMonth(tr))([head(months), last(months)])
+    ),
     reject(matches({ payee_id: startingBalanceId }))
   ])(transactions);
 

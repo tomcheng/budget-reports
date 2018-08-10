@@ -10,7 +10,7 @@ import range from "lodash/fp/range";
 import sumBy from "lodash/fp/sumBy";
 import takeWhile from "lodash/fp/takeWhile";
 import { groupByProp, sumByProp } from "../optimized";
-import { getTransactionMonth } from "../utils";
+import { getTransactionMonth } from "../budgetUtils";
 import { primaryColor, plotBandColor } from "../styleVariables";
 import { MinorText } from "./typeComponents";
 import Chart from "./Chart";

@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { getTransactionMonth, getMonthsToNow } from "../utils";
+import { getMonthsToNow } from "../utils";
+import { getTransactionMonth } from "../budgetUtils";
 import { groupBy, sumByProp } from "../optimized";
 import { lightPrimaryColor } from "../styleVariables";
 import CollapsibleSection from "./CollapsibleSection";

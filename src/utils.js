@@ -1,16 +1,10 @@
-import { utils } from "ynab";
+import {utils} from "ynab";
 import moment from "moment";
-import { groupBy, groupByProp, notAny, sumBy, sumByProp } from "./optimized";
-import {
-  isTransfer,
-  isIncome,
-  isStartingBalanceOrReconciliation
-} from "./budgetUtils";
-import compose from "lodash/fp/compose";
+import {groupBy, notAny, sumBy} from "./optimized";
+import {isIncome, isStartingBalanceOrReconciliation, isTransfer} from "./budgetUtils";
 import filter from "lodash/fp/filter";
 import mapRaw from "lodash/fp/map";
 import mean from "lodash/fp/mean";
-import pick from "lodash/fp/pick";
 
 const map = mapRaw.convert({ cap: false });
 
@@ -37,17 +31,6 @@ export const upsertBy = (arr, key, obj, updater = (prev, curr) => curr) => {
   return exists ? newArr : newArr.concat(obj);
 };
 
-export const getPayeeNodes = ({ payeesById, transactions }, divideBy = 1) =>
-  compose([
-    map((transactions, payeeId) => ({
-      ...(payeesById[payeeId]
-        ? pick(["id", "name"])(payeesById[payeeId])
-        : { id: "no-payee", name: "(no payee)" }),
-      amount: sumByProp("amount")(transactions) / divideBy
-    })),
-    groupByProp("payee_id")
-  ])(transactions);
-
 export const filterTransactions = ({
   budget,
   investmentAccounts = {}
@@ -67,11 +50,6 @@ export const splitTransactions = ({ budget, transactions }) => {
     expenseTransactions: grouped.false || []
   };
 };
-
-export const getTransactionMonth = transaction => transaction.date.slice(0, 7);
-
-export const getFirstMonth = budget =>
-  getTransactionMonth(budget.transactions[budget.transactions.length - 1]);
 
 export const getMonthsToNow = firstMonth => {
   const currentMonth = moment().format("YYYY-MM");

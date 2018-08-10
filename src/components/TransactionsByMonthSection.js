@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import compose from "lodash/fp/compose";
 import sortBy from "lodash/fp/sortBy";
-import { getTransactionMonth } from "../utils";
+import { getTransactionMonth } from "../budgetUtils";
 import AnimateHeight from "react-animate-height-auto";
 import CollapsibleSection from "./CollapsibleSection";
 import Transaction from "./Transaction";

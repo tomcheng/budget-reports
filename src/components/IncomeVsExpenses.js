@@ -16,12 +16,8 @@ import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import { sumByProp, simpleMemoize } from "../optimized";
-import {
-  filterTransactions,
-  splitTransactions,
-  getOutliersBy,
-  getTransactionMonth
-} from "../utils";
+import { filterTransactions, splitTransactions, getOutliersBy } from "../utils";
+import { getTransactionMonth } from "../budgetUtils";
 import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
 import IncomeVsExpensesChartControls from "./IncomeVsExpensesChartControls";
 import Breakdowns from "./Breakdowns";
