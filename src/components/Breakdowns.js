@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
-import sumBy from "lodash/fp/sumBy";
+import { sumByProp } from "../optimized";
 import ExpensesBreakdown from "./ExpensesBreakdown";
 import IncomeBreakdown from "./IncomeBreakdown";
 
@@ -19,7 +19,7 @@ const Breakdowns = ({
         categoryGroupsById={categoryGroupsById}
         payeesById={payeesById}
         transactions={expenseTransactions}
-        totalIncome={sumBy("amount")(incomeTransactions) / divideBy}
+        totalIncome={sumByProp("amount")(incomeTransactions) / divideBy}
         divideBy={divideBy}
       />
       <IncomeBreakdown

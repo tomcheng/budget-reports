@@ -2,14 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import concat from "lodash/fp/concat";
-import filter from "lodash/fp/filter";
-import get from "lodash/fp/get";
-import groupBy from "lodash/fp/groupBy";
 import mapRaw from "lodash/fp/map";
 import omit from "lodash/fp/omit";
 import pick from "lodash/fp/pick";
 import sortBy from "lodash/fp/sortBy";
-import sumBy from "lodash/fp/sumBy";
+import { sumByProp, groupByProp } from "../optimized";
 import { getPayeeNodes } from "../budgetUtils";
 import CollapsibleSection from "./CollapsibleSection";
 import Breakdown from "./Breakdown";
@@ -33,11 +30,10 @@ const ExpensesBreakdown = ({
           categoriesById[categoryId]
         ),
         nodes: sortBy("amount")(payeeNodes),
-        amount: sumBy("amount")(payeeNodes)
+        amount: sumByProp("amount")(payeeNodes)
       };
     }),
-    groupBy("category_id"),
-    filter(get("category_id"))
+    groupByProp("category_id")
   ])(transactions);
 
   const groupNodes = compose([
@@ -46,10 +42,10 @@ const ExpensesBreakdown = ({
       return {
         ...pick(["id", "name"])(categoryGroupsById[categoryGroupId]),
         nodes: sortBy("amount")(categoryNodes),
-        amount: sumBy("amount")(categoryNodes)
+        amount: sumByProp("amount")(categoryNodes)
       };
     }),
-    groupBy("category_group_id")
+    groupByProp("category_group_id")
   ])(categoryNodes);
 
   const rootPayeeNodes = getPayeeNodes(
@@ -65,7 +61,7 @@ const ExpensesBreakdown = ({
       concat(nodes)([
         {
           id: "net",
-          amount: -totalIncome - sumBy("amount")(nodes),
+          amount: -totalIncome - sumByProp("amount")(nodes),
           name: "Net Income"
         }
       ]),
