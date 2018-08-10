@@ -17,7 +17,7 @@ import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
 import { sumByProp } from "../optimized";
 import {
-  rejectTransferTransactions,
+  filterTransactions,
   splitTransactions,
   simpleMemoize,
   getOutliersBy,
@@ -102,7 +102,7 @@ class IncomeVsExpenses extends PureComponent {
         };
       }),
       groupBy(getTransactionMonth),
-      rejectTransferTransactions({ budget, investmentAccounts })
+      filterTransactions({ budget, investmentAccounts })
     ])(budget.transactions)
   );
 

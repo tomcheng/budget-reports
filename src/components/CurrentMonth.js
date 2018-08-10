@@ -2,7 +2,7 @@ import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import takeWhile from "lodash/fp/takeWhile";
 import {
-  rejectTransferTransactions,
+  filterTransactions,
   splitTransactions,
   getTransactionMonth
 } from "../utils";
@@ -19,7 +19,7 @@ class CurrentMonth extends PureComponent {
   render() {
     const { budget, currentMonth, investmentAccounts } = this.props;
     const { expenseTransactions } = splitTransactions(budget);
-    const transactions = rejectTransferTransactions({ budget, investmentAccounts })(
+    const transactions = filterTransactions({ budget, investmentAccounts })(
       expenseTransactions
     );
     const transactionsThisMonth = takeWhile(

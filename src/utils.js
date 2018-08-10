@@ -11,9 +11,15 @@ import mapKeysRaw from "lodash/fp/mapKeys";
 import mapValues from "lodash/fp/mapValues";
 import mean from "lodash/fp/mean";
 import pick from "lodash/fp/pick";
+import get from "lodash/fp/get";
 
 const map = mapRaw.convert({ cap: false });
 const mapKeys = mapKeysRaw.convert({ cap: false });
+
+const PAYEES_TO_EXCLUDE = [
+  "Starting Balance",
+  "Reconciliation Balance Adjustment"
+];
 
 export const simpleMemoize = func => {
   let lastArgs = null;
@@ -99,15 +105,60 @@ const isIncome = ({
   );
 };
 
-export const rejectTransferTransactions = ({
+const isTransfer = ({ accountsById, investmentAccounts, transaction }) => {
+  const {
+    account_id: accountId,
+    transfer_account_id: transferAccountId
+  } = transaction;
+  const account = accountsById[accountId];
+
+  if (!account.on_budget) {
+    return true;
+  }
+
+  if (!transferAccountId) {
+    return false;
+  }
+
+  const transferAccount = accountsById[transferAccountId];
+
+  if (transferAccount.on_budget && account.on_budget) {
+    return true;
+  }
+
+  if (investmentAccounts[transferAccountId]) {
+    return true;
+  }
+
+  return false;
+};
+
+export const filterTransactions = ({
   budget,
   investmentAccounts = {}
 }) => transactions =>
-  transactions.filter(
-    transaction =>
-      transaction.category_id &&
-      !investmentAccounts[transaction.transfer_account_id]
-  );
+  transactions.filter(transaction => {
+    if (
+      PAYEES_TO_EXCLUDE.includes(
+        get([transaction.payee_id, "name"])(budget.payeesById)
+      )
+    ) {
+      return false;
+    }
+    if (
+      isTransfer({
+        accountsById: budget.accountsById,
+        investmentAccounts,
+        transaction
+      })
+    ) {
+      return false;
+    }
+    if (!transaction.category_id) {
+      return false;
+    }
+    return true;
+  });
 
 export const splitTransactions = ({
   categoryGroupsById,

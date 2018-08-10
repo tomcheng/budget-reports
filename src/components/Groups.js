@@ -9,7 +9,7 @@ import { SecondaryText } from "./typeComponents";
 import Section from "./Section";
 import Amount from "./Amount";
 
-const getGroupsWithMetadata = simpleMemoize(budget => {
+const getGroupsWithMeta = simpleMemoize(budget => {
   const { categoryGroups, categories, transactions } = budget;
 
   const transactionsByCategory = groupByProp("category_id")(transactions);
@@ -36,10 +36,10 @@ class Groups extends PureComponent {
   render() {
     const { budget, sort } = this.props;
 
-    const groupsWithMetadata = getGroupsWithMetadata(budget);
+    const groupsWithMeta = getGroupsWithMeta(budget);
     const sortedGroups = sortBy(
       sort === "name" ? group => group.name.replace(/[^a-zA-Z0-9]/g, "") : sort
-    )(groupsWithMetadata);
+    )(groupsWithMeta);
 
     return (
       <Section noPadding>
