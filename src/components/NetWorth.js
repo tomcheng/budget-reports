@@ -51,7 +51,7 @@ class NetWorth extends PureComponent {
       transactions: PropTypes.arrayOf(
         PropTypes.shape({
           id: PropTypes.string.isRequired,
-          accountId: PropTypes.string.isRequired,
+          account_id: PropTypes.string.isRequired,
           amount: PropTypes.number.isRequired,
           date: PropTypes.string.isRequired
         })
