@@ -1,7 +1,6 @@
-import {utils} from "ynab";
+import { utils } from "ynab";
 import moment from "moment";
-import {groupBy, notAny, sumBy} from "./optimized";
-import {isIncome, isStartingBalanceOrReconciliation, isTransfer} from "./budgetUtils";
+import { sumBy } from "./optimized";
 import filter from "lodash/fp/filter";
 import mapRaw from "lodash/fp/map";
 import mean from "lodash/fp/mean";
@@ -29,26 +28,6 @@ export const upsertBy = (arr, key, obj, updater = (prev, curr) => curr) => {
     return item;
   });
   return exists ? newArr : newArr.concat(obj);
-};
-
-export const filterTransactions = ({
-  budget,
-  investmentAccounts = {}
-}) => transactions =>
-  transactions.filter(
-    notAny([
-      isStartingBalanceOrReconciliation(budget),
-      isTransfer(investmentAccounts)
-    ])
-  );
-
-export const splitTransactions = ({ budget, transactions }) => {
-  const grouped = groupBy(isIncome(budget))(transactions);
-
-  return {
-    incomeTransactions: grouped.true || [],
-    expenseTransactions: grouped.false || []
-  };
 };
 
 export const getMonthsToNow = firstMonth => {

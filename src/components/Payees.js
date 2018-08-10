@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import keys from "lodash/fp/keys";
 import sortBy from "lodash/fp/sortBy";
-import { simpleMemoize, groupByProp, sumByProp } from "../optimized";
-import { filterTransactions } from "../utils";
+import { simpleMemoize, groupByProp, sumByProp, notAny } from "../optimized";
+import { isStartingBalanceOrReconciliation, isTransfer } from "../budgetUtils";
 import PayeeListItem from "./PayeeListItem";
 import Section from "./Section";
 
@@ -12,7 +12,10 @@ export const getPayeesWithMetadata = simpleMemoize(budget => {
   const { payeesById, transactions } = budget;
   const transactionsByPayee = compose([
     groupByProp("payee_id"),
-    filterTransactions({ budget, transactions: budget.transactions })
+    transactions =>
+      transactions.filter(
+        notAny([isStartingBalanceOrReconciliation(budget), isTransfer()])
+      )
   ])(transactions);
 
   return keys(transactionsByPayee).map(id => {

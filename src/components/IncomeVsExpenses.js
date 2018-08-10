@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import find from "lodash/fp/find";
 import flatMap from "lodash/fp/flatMap";
-import groupBy from "lodash/fp/groupBy";
 import identity from "lodash/fp/identity";
 import includes from "lodash/fp/includes";
 import keys from "lodash/fp/keys";
@@ -11,13 +10,16 @@ import last from "lodash/fp/last";
 import mapRaw from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
 import omit from "lodash/fp/omit";
-import prop from "lodash/fp/prop";
 import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
-import sumBy from "lodash/fp/sumBy";
-import { sumByProp, simpleMemoize } from "../optimized";
-import { filterTransactions, splitTransactions, getOutliersBy } from "../utils";
-import { getTransactionMonth } from "../budgetUtils";
+import { sumByProp, groupBy, simpleMemoize, notAny } from "../optimized";
+import { getOutliersBy } from "../utils";
+import {
+  getTransactionMonth,
+  isTransfer,
+  isIncome,
+  isStartingBalanceOrReconciliation
+} from "../budgetUtils";
 import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
 import IncomeVsExpensesChartControls from "./IncomeVsExpensesChartControls";
 import Breakdowns from "./Breakdowns";
@@ -84,20 +86,24 @@ class IncomeVsExpenses extends PureComponent {
     compose([
       sortBy("month"),
       map((transactions, month) => {
-        const { incomeTransactions, expenseTransactions } = splitTransactions({
-          budget,
-          transactions
-        });
+        const grouped = groupBy(isIncome(budget))(transactions);
 
         return {
           month,
-          transactions,
-          income: sumBy("amount")(incomeTransactions),
-          expenses: sumBy("amount")(expenseTransactions)
+          expenseTransactions: grouped.false || [],
+          incomeTransactions: grouped.true || [],
+          income: sumByProp("amount")(grouped.true || []),
+          expenses: sumByProp("amount")(grouped.false || [])
         };
       }),
       groupBy(getTransactionMonth),
-      filterTransactions({ budget, investmentAccounts })
+      transactions =>
+        transactions.filter(
+          notAny([
+            isTransfer(investmentAccounts),
+            isStartingBalanceOrReconciliation(budget)
+          ])
+        )
     ])(budget.transactions)
   );
 
@@ -155,10 +161,8 @@ class IncomeVsExpenses extends PureComponent {
         )
       : reject(propertyIncludedIn("month", excludedMonths))(allSummaries);
 
-    const { incomeTransactions, expenseTransactions } = splitTransactions({
-      budget,
-      transactions: flatMap(prop("transactions"))(summaries)
-    });
+    const incomeTransactions = flatMap(summary => summary.incomeTransactions)(summaries);
+    const expenseTransactions = flatMap(summary => summary.expenseTransactions)(summaries);
 
     const totalExpenses = sumByProp("amount")(expenseTransactions);
     const totalIncome = sumByProp("amount")(incomeTransactions);
