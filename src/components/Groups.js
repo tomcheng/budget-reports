@@ -66,6 +66,7 @@ class Groups extends PureComponent {
           }
           title="Category Groups"
           transactions={transactionsForMonth || filteredTransactions}
+          showTransactionCount={false}
         />
       </Fragment>
     );

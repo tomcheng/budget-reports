@@ -5,9 +5,10 @@ import map from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
 import { groupBy, groupByProp, sumByProp } from "../optimized";
 import AnimateHeight from "react-animate-height-auto";
+import { Link } from "react-router-dom";
 import CollapsibleSection from "./CollapsibleSection";
 import { SecondaryText } from "./typeComponents";
-import { ListItemLink } from "./ListItem";
+import ListItem from "./ListItem";
 import LabelWithTransactionCount from "./LabelWithTransactionCount";
 import AmountWithPercentage from "./AmountWithPercentage";
 import SeeAll from "./SeeAll";
@@ -139,23 +140,25 @@ class GenericItemLink extends PureComponent {
       isContinuing
     } = this.props;
     return (
-      <ListItemLink to={to} isContinuing={isContinuing}>
+      <ListItem isContinuing={isContinuing}>
         {showTransactionCount ? (
-          <LabelWithTransactionCount count={transactions} label={name} inLink />
+          <LabelWithTransactionCount count={transactions} label={name} to={to} />
         ) : (
-          <SecondaryText
-            style={{
-              whiteSpace: "pre",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              color: "inherit"
-            }}
-          >
-            {name}
-          </SecondaryText>
+          <Link to={to}>
+            <SecondaryText
+              style={{
+                whiteSpace: "pre",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                color: "inherit"
+              }}
+            >
+              {name}
+            </SecondaryText>
+          </Link>
         )}
         <AmountWithPercentage amount={amount} total={total} />
-      </ListItemLink>
+      </ListItem>
     );
   }
 }

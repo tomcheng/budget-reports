@@ -50,6 +50,7 @@ const MonthlyChart = ({
     <Chart
       options={{
         chart: {
+          animation: false,
           height: 140,
           type: "column",
           events: {
@@ -80,7 +81,7 @@ const MonthlyChart = ({
             }
           ]
         },
-        plotOptions: { series: { stacking: "normal" } },
+        plotOptions: { series: { animation: false, stacking: "normal" } },
         series: series.map(s => {
           if (s.type === "line") {
             return {
