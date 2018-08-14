@@ -38,7 +38,6 @@ class App extends Component {
     budgetDetails: {},
     currentMonth: moment().format("YYYY-MM"),
     settings: {
-      categoriesSort: "amount",
       payeesSort: "amount",
       incomeVsExpensesShowing: "average"
     }

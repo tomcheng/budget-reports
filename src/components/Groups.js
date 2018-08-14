@@ -16,7 +16,6 @@ class Groups extends PureComponent {
   static propTypes = {
     budget: PropTypes.object.isRequired,
     investmentAccounts: PropTypes.object.isRequired,
-    sort: PropTypes.oneOf(["amount", "name", "transactions"]).isRequired,
     onSelectMonth: PropTypes.func.isRequired,
     selectedMonth: PropTypes.string
   };

@@ -14,22 +14,6 @@ const defaultSortOptions = [
 const PageActions = ({ settings, onChangeSetting }) => (
   <Switch>
     <Route
-      path={pages.categories.path}
-      exact
-      render={() => (
-        <SortDropdown
-          options={[
-            { label: "Amount", value: "amount" },
-            { label: "Name", value: "name" }
-          ]}
-          selected={settings.categoriesSort}
-          onChange={value =>
-            onChangeSetting({ setting: "categoriesSort", value })
-          }
-        />
-      )}
-    />
-    <Route
       path={pages.payees.path}
       exact
       render={() => (
