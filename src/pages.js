@@ -57,6 +57,7 @@ const pages = {
     Component: Groups,
     props: props => ({
       budget: props.budget,
+      investmentAccounts: props.investmentAccounts,
       sort: props.settings.categoriesSort
     })
   },

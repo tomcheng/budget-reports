@@ -1,12 +1,14 @@
-import React, { PureComponent } from "react";
+import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import sortBy from "lodash/fp/sortBy";
-import { simpleMemoize, groupByProp, sumByProp, sumBy } from "../optimized";
+import { simpleMemoize, groupByProp, sumByProp, sumBy, notAny } from "../optimized";
+import { getFirstMonth, isStartingBalanceOrReconciliation, isTransfer, isIncome } from "../budgetUtils";
 import pages, { makeLink } from "../pages";
 import { LargeListItemLink } from "./ListItem";
 import { SecondaryText } from "./typeComponents";
 import Section from "./Section";
 import Amount from "./Amount";
+import MonthByMonthSection from "./MonthByMonthSection";
 
 const getGroupsWithMeta = simpleMemoize(budget => {
   const { categoryGroups, categories, transactions } = budget;
@@ -29,11 +31,20 @@ const getGroupsWithMeta = simpleMemoize(budget => {
 class Groups extends PureComponent {
   static propTypes = {
     budget: PropTypes.object.isRequired,
-    sort: PropTypes.oneOf(["amount", "name", "transactions"]).isRequired
+    investmentAccounts: PropTypes.object.isRequired,
+    sort: PropTypes.oneOf(["amount", "name", "transactions"]).isRequired,
+    onSelectMonth: PropTypes.func.isRequired,
+    selectedMonth: PropTypes.string
   };
 
   render() {
-    const { budget, sort } = this.props;
+    const { budget, investmentAccounts, sort, selectedMonth, onSelectMonth } = this.props;
+    const firstMonth = getFirstMonth(budget);
+    const filteredTransactions = budget.transactions.filter(notAny([
+      isStartingBalanceOrReconciliation(budget),
+      isTransfer(investmentAccounts),
+      isIncome(budget)
+    ]));
 
     const groupsWithMeta = getGroupsWithMeta(budget);
     const sortedGroups = sortBy(
@@ -41,22 +52,30 @@ class Groups extends PureComponent {
     )(groupsWithMeta);
 
     return (
-      <Section noPadding>
-        {sortedGroups.map(group => (
-          <LargeListItemLink
-            key={group.id}
-            to={makeLink(pages.group.path, {
-              budgetId: budget.id,
-              categoryGroupId: group.id
-            })}
-          >
-            <div style={{ whiteSpace: "pre" }}>{group.name}</div>
-            <SecondaryText style={{ textAlign: "right" }}>
-              <Amount amount={group.amount} />
-            </SecondaryText>
-          </LargeListItemLink>
-        ))}
-      </Section>
+      <Fragment>
+        <MonthByMonthSection
+          firstMonth={firstMonth}
+          selectedMonth={selectedMonth}
+          transactions={filteredTransactions}
+          onSelectMonth={onSelectMonth}
+        />
+        <Section noPadding>
+          {sortedGroups.map(group => (
+            <LargeListItemLink
+              key={group.id}
+              to={makeLink(pages.group.path, {
+                budgetId: budget.id,
+                categoryGroupId: group.id
+              })}
+            >
+              <div style={{ whiteSpace: "pre" }}>{group.name}</div>
+              <SecondaryText style={{ textAlign: "right" }}>
+                <Amount amount={group.amount} />
+              </SecondaryText>
+            </LargeListItemLink>
+          ))}
+        </Section>
+      </Fragment>
     );
   }
 }

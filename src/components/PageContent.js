@@ -7,7 +7,7 @@ import { groupBy } from "../optimized";
 import pages, { makeLink } from "../pages";
 import CategoriesState from "./CategoriesState";
 
-const categoryPath = "/budgets/:budgetId/groups/:categoryGroupId";
+const categoryPath = "/budgets/:budgetId/groups";
 const groupedPages = groupBy(
   page => (page.path.startsWith(categoryPath) ? "categoryPages" : "otherPages")
 )(values(pages));

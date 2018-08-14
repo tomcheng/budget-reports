@@ -115,7 +115,7 @@ describe("sanitizeBudget", () => {
 describe("mergeBudgets", () => {
   const budget = {
     accounts: [{ id: "a1", name: "paypal" }],
-    categories: [{ id: "c1", name: "caat1" }, { id: "c2", name: "cat2" }],
+    categories: [{ id: "c1", name: "caat1", balance: 7000 }, { id: "c2", name: "cat2" }],
     category_groups: [{ id: "foo", name: "bar" }],
     currency_format: { foo: "bar" },
     date_format: "blah",
@@ -142,7 +142,7 @@ describe("mergeBudgets", () => {
   };
   const deltas = {
     accounts: [{ id: "a1", name: "paypal 2" }, { id: "a2", name: "foo" }],
-    categories: [{ id: "c1", name: "cat1" }, { id: "c3", name: "cat3" }],
+    categories: [{ id: "c1", name: "cat1", balance: 8000 }, { id: "c3", name: "cat3" }],
     category_groups: [{ id: "foo", name: "foo" }],
     currency_format: { foo: "baz" },
     date_format: "blah2",
@@ -170,7 +170,7 @@ describe("mergeBudgets", () => {
       { id: "a2", name: "foo" }
     ]);
     expect(result.categories).toEqual([
-      { id: "c1", name: "cat1" },
+      { id: "c1", name: "cat1", balance: 8000 },
       { id: "c2", name: "cat2" },
       { id: "c3", name: "cat3" }
     ]);
