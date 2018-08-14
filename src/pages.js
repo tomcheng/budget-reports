@@ -53,7 +53,7 @@ const pages = {
   },
   categories: {
     path: "/budgets/:budgetId/groups",
-    title: "Category Groups",
+    title: "Spending Trend",
     Component: Groups,
     props: props => ({
       budget: props.budget,
