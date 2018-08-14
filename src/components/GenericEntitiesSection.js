@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import map from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
-import { groupByProp, sumByProp } from "../optimized";
+import { groupBy, groupByProp, sumByProp } from "../optimized";
 import AnimateHeight from "react-animate-height-auto";
 import CollapsibleSection from "./CollapsibleSection";
 import { SecondaryText } from "./typeComponents";
@@ -22,11 +22,12 @@ const keyToPluralizedName = {
 
 class GenericEntitiesSection extends Component {
   static propTypes = {
-    entityKey: PropTypes.oneOf(["category_id", "payee_id"]).isRequired,
     entitiesById: PropTypes.object.isRequired,
     linkFunction: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
+    entityKey: PropTypes.oneOf(["category_id", "payee_id"]),
+    entityFunction: PropTypes.func,
     showTransactionCount: PropTypes.bool,
     limitShowing: PropTypes.bool
   };
@@ -43,13 +44,14 @@ class GenericEntitiesSection extends Component {
       this.setState({ allMounted: true });
       requestAnimationFrame(() => {
         this.setState({ showAll: true });
-      })
+      });
     }
   };
 
   render() {
     const {
       entityKey,
+      entityFunction,
       entitiesById,
       linkFunction,
       limitShowing: limitShowingProp,
@@ -71,7 +73,7 @@ class GenericEntitiesSection extends Component {
           amount
         };
       }),
-      groupByProp(entityKey)
+      entityFunction ? groupBy(entityFunction) : groupByProp(entityKey)
     ])(transactions);
 
     const limitShowing = limitShowingProp && entities.length > LIMIT + 1;

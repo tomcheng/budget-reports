@@ -1,32 +1,16 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
-import sortBy from "lodash/fp/sortBy";
-import { simpleMemoize, groupByProp, sumByProp, sumBy, notAny } from "../optimized";
-import { getFirstMonth, isStartingBalanceOrReconciliation, isTransfer, isIncome } from "../budgetUtils";
+import { notAny } from "../optimized";
+import {
+  getFirstMonth,
+  isStartingBalanceOrReconciliation,
+  isTransfer,
+  isIncome,
+  getTransactionMonth
+} from "../budgetUtils";
 import pages, { makeLink } from "../pages";
-import { LargeListItemLink } from "./ListItem";
-import { SecondaryText } from "./typeComponents";
-import Section from "./Section";
-import Amount from "./Amount";
 import MonthByMonthSection from "./MonthByMonthSection";
-
-const getGroupsWithMeta = simpleMemoize(budget => {
-  const { categoryGroups, categories, transactions } = budget;
-
-  const transactionsByCategory = groupByProp("category_id")(transactions);
-  const categoriesByGroup = groupByProp("category_group_id")(categories);
-
-  return categoryGroups.map(group => {
-    const amount = sumBy(category =>
-      sumByProp("amount")(transactionsByCategory[category.id] || [])
-    )(categoriesByGroup[group.id]);
-    const transactions = sumBy(
-      category => (transactionsByCategory[category.id] || []).length
-    )(categoriesByGroup[group.id]);
-
-    return { ...group, amount, transactions };
-  });
-});
+import GenericEntitiesSection from "./GenericEntitiesSection";
 
 class Groups extends PureComponent {
   static propTypes = {
@@ -38,18 +22,32 @@ class Groups extends PureComponent {
   };
 
   render() {
-    const { budget, investmentAccounts, sort, selectedMonth, onSelectMonth } = this.props;
+    const {
+      budget,
+      investmentAccounts,
+      selectedMonth,
+      onSelectMonth
+    } = this.props;
+    const {
+      transactions,
+      categoryGroupsById,
+      categoriesById,
+      id: budgetId
+    } = budget;
     const firstMonth = getFirstMonth(budget);
-    const filteredTransactions = budget.transactions.filter(notAny([
-      isStartingBalanceOrReconciliation(budget),
-      isTransfer(investmentAccounts),
-      isIncome(budget)
-    ]));
+    const filteredTransactions = transactions.filter(
+      notAny([
+        isStartingBalanceOrReconciliation(budget),
+        isTransfer(investmentAccounts),
+        isIncome(budget)
+      ])
+    );
 
-    const groupsWithMeta = getGroupsWithMeta(budget);
-    const sortedGroups = sortBy(
-      sort === "name" ? group => group.name.replace(/[^a-zA-Z0-9]/g, "") : sort
-    )(groupsWithMeta);
+    const transactionsForMonth =
+      selectedMonth &&
+      filteredTransactions.filter(
+        transaction => getTransactionMonth(transaction) === selectedMonth
+      );
 
     return (
       <Fragment>
@@ -59,22 +57,17 @@ class Groups extends PureComponent {
           transactions={filteredTransactions}
           onSelectMonth={onSelectMonth}
         />
-        <Section noPadding>
-          {sortedGroups.map(group => (
-            <LargeListItemLink
-              key={group.id}
-              to={makeLink(pages.group.path, {
-                budgetId: budget.id,
-                categoryGroupId: group.id
-              })}
-            >
-              <div style={{ whiteSpace: "pre" }}>{group.name}</div>
-              <SecondaryText style={{ textAlign: "right" }}>
-                <Amount amount={group.amount} />
-              </SecondaryText>
-            </LargeListItemLink>
-          ))}
-        </Section>
+        <GenericEntitiesSection
+          entityFunction={transaction =>
+            categoriesById[transaction.category_id].category_group_id
+          }
+          entitiesById={categoryGroupsById}
+          linkFunction={categoryGroupId =>
+            makeLink(pages.group.path, { budgetId, categoryGroupId })
+          }
+          title="Category Groups"
+          transactions={transactionsForMonth || filteredTransactions}
+        />
       </Fragment>
     );
   }
