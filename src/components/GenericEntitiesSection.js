@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import CollapsibleSection from "./CollapsibleSection";
 import { SecondaryText } from "./typeComponents";
 import ListItem from "./ListItem";
+import Icon from "./Icon";
 import LabelWithTransactionCount from "./LabelWithTransactionCount";
 import AmountWithPercentage from "./AmountWithPercentage";
 import SeeAll from "./SeeAll";
@@ -30,7 +31,9 @@ class GenericEntitiesSection extends Component {
     entityKey: PropTypes.oneOf(["category_id", "payee_id"]),
     entityFunction: PropTypes.func,
     showTransactionCount: PropTypes.bool,
-    limitShowing: PropTypes.bool
+    limitShowing: PropTypes.bool,
+    selectedEntityId: PropTypes.string,
+    onClickEntity: PropTypes.func
   };
 
   static defaultProps = { showTransactionCount: true };
@@ -56,9 +59,11 @@ class GenericEntitiesSection extends Component {
       entitiesById,
       linkFunction,
       limitShowing: limitShowingProp,
+      selectedEntityId,
       showTransactionCount,
       title,
-      transactions
+      transactions,
+      onClickEntity
     } = this.props;
     const { allMounted, showAll } = this.state;
     let total = 0;
@@ -92,7 +97,10 @@ class GenericEntitiesSection extends Component {
               transactions={transactions}
               name={entitiesById[entityId].name}
               amount={amount}
+              selected={entityId === selectedEntityId}
               total={total}
+              id={entityId}
+              onClick={onClickEntity}
             />
           )
         )}
@@ -107,7 +115,10 @@ class GenericEntitiesSection extends Component {
                   transactions={transactions}
                   name={entitiesById[entityId].name}
                   amount={amount}
+                  selected={entityId === selectedEntityId}
                   total={total}
+                  id={entityId}
+                  onClick={onClickEntity}
                   isContinuing
                 />
               ))}
@@ -137,27 +148,55 @@ class GenericItemLink extends PureComponent {
       name,
       amount,
       total,
+      selected,
+      id,
+      onClick,
       isContinuing
     } = this.props;
     return (
-      <ListItem isContinuing={isContinuing}>
+      <ListItem
+        isContinuing={isContinuing}
+        onClick={onClick && (() => onClick(id))}
+      >
+        {selected && (
+          <Icon
+            icon="chevron-right"
+            style={{
+              flexShrink: 0,
+              fontWeight: 400,
+              color: "#aaa",
+              fontSize: 10,
+              paddingLeft: 8,
+              paddingRight: 8
+            }}
+          />
+        )}
         {showTransactionCount ? (
-          <LabelWithTransactionCount count={transactions} label={name} to={to} />
+          <LabelWithTransactionCount
+            count={transactions}
+            label={name}
+            to={to}
+          />
         ) : (
-          <Link to={to}>
+          <Link to={to} style={{ flexShrink: 0 }}>
             <SecondaryText
               style={{
                 whiteSpace: "pre",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
-                color: "inherit"
+                color: "inherit",
+                fontWeight: selected && 700
               }}
             >
               {name}
             </SecondaryText>
           </Link>
         )}
-        <AmountWithPercentage amount={amount} total={total} />
+        <AmountWithPercentage
+          amount={amount}
+          total={total}
+          selected={selected}
+        />
       </ListItem>
     );
   }
@@ -169,7 +208,9 @@ GenericItemLink.propTypes = {
   to: PropTypes.string.isRequired,
   total: PropTypes.number.isRequired,
   transactions: PropTypes.number.isRequired,
+  id: PropTypes.string,
   isContinuing: PropTypes.bool,
+  selected: PropTypes.bool,
   showTransactionCount: PropTypes.bool
 };
 

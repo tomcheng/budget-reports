@@ -4,7 +4,7 @@ import moment from "moment";
 import { getMonthsToNow } from "../utils";
 import { getTransactionMonth } from "../budgetUtils";
 import { groupBy, sumByProp } from "../optimized";
-import { lightPrimaryColor } from "../styleVariables";
+import { lightPrimaryColor, lighterPrimaryColor } from "../styleVariables";
 import CollapsibleSection from "./CollapsibleSection";
 import ChartNumbers from "./ChartNumbers";
 import MonthlyChart from "./MonthlyChart";
@@ -13,6 +13,7 @@ const MonthByMonthSection = ({
   transactions,
   firstMonth,
   selectedMonth,
+  highlightFunction,
   onSelectMonth
 }) => {
   const months = getMonthsToNow(firstMonth);
@@ -21,13 +22,17 @@ const MonthByMonthSection = ({
 
   const transactionsByMonth = groupBy(getTransactionMonth)(transactions);
   const data = months.map(month => {
-    const amount = sumByProp("amount")(transactionsByMonth[month] || []);
-    total += amount;
+    const grouped = groupBy(highlightFunction || (() => false))(
+      transactionsByMonth[month] || []
+    );
+    const amount = sumByProp("amount")(grouped.false || []);
+    const highlighted = sumByProp("amount")(grouped.true || []);
+    total += amount + highlighted;
     if (month === selectedMonth) {
-      selectedMonthTotal = amount;
+      selectedMonthTotal = amount + highlighted;
     }
 
-    return { month, amount: -amount };
+    return { month, amount: -amount, highlighted: -highlighted };
   });
 
   const chartNumbers = selectedMonth
@@ -45,6 +50,19 @@ const MonthByMonthSection = ({
           label: "total spent"
         }
       ];
+  const series = [
+    {
+      color: highlightFunction ? lightPrimaryColor : lighterPrimaryColor,
+      valueFunction: d => d.amount
+    }
+  ];
+
+  if (highlightFunction) {
+    series.push({
+      color: lighterPrimaryColor,
+      valueFunction: d => d.highlighted
+    });
+  }
 
   return (
     <CollapsibleSection title="Month by Month">
@@ -52,7 +70,7 @@ const MonthByMonthSection = ({
       <MonthlyChart
         data={data}
         average={total / months.length}
-        series={[{ color: lightPrimaryColor, valueFunction: d => d.amount }]}
+        series={series}
         selectedMonths={selectedMonth && [selectedMonth]}
         onSelectMonth={onSelectMonth}
       />
@@ -64,6 +82,7 @@ MonthByMonthSection.propTypes = {
   firstMonth: PropTypes.string.isRequired,
   transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
   onSelectMonth: PropTypes.func.isRequired,
+  highlightFunction: PropTypes.func,
   selectedMonth: PropTypes.string
 };
 

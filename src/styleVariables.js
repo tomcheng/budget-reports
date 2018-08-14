@@ -5,11 +5,15 @@ export const positiveColor = "#2cbc2f";
 export const plotBandColor = "#f2f2f2";
 export const negativeColor = "red";
 export const selectedPlotBandColor = tinyColor(primaryColor)
-  .lighten(32)
+  .lighten(31)
+  .desaturate()
+  .toHexString();
+export const lighterPrimaryColor = tinyColor(primaryColor)
+  .lighten(5)
   .desaturate()
   .toHexString();
 export const lightPrimaryColor = tinyColor(primaryColor)
-  .lighten(25)
+  .lighten(23)
   .desaturate()
   .toHexString();
 export const negativeChartColor = tinyColor(negativeColor)

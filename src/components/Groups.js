@@ -20,6 +20,15 @@ class Groups extends PureComponent {
     selectedMonth: PropTypes.string
   };
 
+  state = { selectedGroupId: null };
+
+  handleClickEntity = groupId => {
+    this.setState(state => ({
+      ...state,
+      selectedGroupId: groupId === state.selectedGroupId ? null : groupId
+    }));
+  };
+
   render() {
     const {
       budget,
@@ -27,6 +36,7 @@ class Groups extends PureComponent {
       selectedMonth,
       onSelectMonth
     } = this.props;
+    const { selectedGroupId } = this.state;
     const {
       transactions,
       categoryGroupsById,
@@ -53,6 +63,12 @@ class Groups extends PureComponent {
         <MonthByMonthSection
           firstMonth={firstMonth}
           selectedMonth={selectedMonth}
+          highlightFunction={
+            selectedGroupId &&
+            (transaction =>
+              categoriesById[transaction.category_id].category_group_id ===
+              selectedGroupId)
+          }
           transactions={filteredTransactions}
           onSelectMonth={onSelectMonth}
         />
@@ -64,9 +80,11 @@ class Groups extends PureComponent {
           linkFunction={categoryGroupId =>
             makeLink(pages.group.path, { budgetId, categoryGroupId })
           }
+          showTransactionCount={false}
+          selectedEntityId={selectedGroupId}
           title="Category Groups"
           transactions={transactionsForMonth || filteredTransactions}
-          showTransactionCount={false}
+          onClickEntity={this.handleClickEntity}
         />
       </Fragment>
     );
