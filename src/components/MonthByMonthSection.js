@@ -27,9 +27,9 @@ const MonthByMonthSection = ({
     );
     const amount = sumByProp("amount")(grouped.false || []);
     const highlighted = sumByProp("amount")(grouped.true || []);
-    total += amount + highlighted;
+    total += highlightFunction ? highlighted : amount;
     if (month === selectedMonth) {
-      selectedMonthTotal = amount + highlighted;
+      selectedMonthTotal = highlightFunction ? highlighted : amount;
     }
 
     return { month, amount: -amount, highlighted: -highlighted };

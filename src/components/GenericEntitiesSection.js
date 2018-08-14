@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 import CollapsibleSection from "./CollapsibleSection";
 import { SecondaryText } from "./typeComponents";
 import ListItem from "./ListItem";
-import Icon from "./Icon";
 import LabelWithTransactionCount from "./LabelWithTransactionCount";
 import AmountWithPercentage from "./AmountWithPercentage";
 import SeeAll from "./SeeAll";
@@ -158,19 +157,6 @@ class GenericItemLink extends PureComponent {
         isContinuing={isContinuing}
         onClick={onClick && (() => onClick(id))}
       >
-        {selected && (
-          <Icon
-            icon="chevron-right"
-            style={{
-              flexShrink: 0,
-              fontWeight: 400,
-              color: "#aaa",
-              fontSize: 10,
-              paddingLeft: 8,
-              paddingRight: 8
-            }}
-          />
-        )}
         {showTransactionCount ? (
           <LabelWithTransactionCount
             count={transactions}
@@ -178,7 +164,7 @@ class GenericItemLink extends PureComponent {
             to={to}
           />
         ) : (
-          <Link to={to} style={{ flexShrink: 0 }}>
+          <Link to={to}>
             <SecondaryText
               style={{
                 whiteSpace: "pre",

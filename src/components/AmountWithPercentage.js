@@ -17,8 +17,6 @@ class AmountWithPercentage extends PureComponent {
       <SecondaryText
         style={{
           display: "flex",
-          justifyContent: "flex-end",
-          flexGrow: 1,
           alignItems: "baseline",
           opacity: faded ? 0.3 : 1,
           fontWeight: selected && 700
