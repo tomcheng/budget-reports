@@ -18,7 +18,11 @@ const PageContent = props =>
       <Route
         path={categoryPath}
         render={({ match }) => (
-          <CategoriesState key={match.params.categoryGroupId}>
+          <CategoriesState
+            key={match.params.categoryGroupId}
+            action={props.historyAction}
+            location={props.location}
+          >
             {({ selectedMonth, onSelectMonth }) => (
               <Switch>
                 {groupedPages.categoryPages.map(
@@ -72,7 +76,9 @@ const PageContent = props =>
 
 PageContent.propTypes = {
   currentMonth: PropTypes.string.isRequired,
+  historyAction: PropTypes.oneOf(["PUSH", "POP", "REPLACE"]).isRequired,
   investmentAccounts: PropTypes.object.isRequired,
+  location: PropTypes.string.isRequired,
   mortgageAccounts: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
   onUpdateAccounts: PropTypes.func.isRequired,

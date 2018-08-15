@@ -147,6 +147,8 @@ class App extends Component {
                       )}
                       mortgageAccounts={getSetting(MORTGAGE_ACCOUNTS, budgetId)}
                       settings={settings}
+                      historyAction={props.history.action}
+                      location={props.location.pathname}
                       onChangeSetting={this.handleChangeSetting}
                       onUpdateAccounts={({ type, value }) => {
                         if (type === "investment") {
