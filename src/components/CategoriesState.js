@@ -1,6 +1,12 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 
+const INITIAL_STATE = {
+  selectedMonth: null,
+  selectedGroupId: null,
+  selectedCategoryId: null
+};
+
 class CategoriesState extends Component {
   static propTypes = {
     action: PropTypes.oneOf(["PUSH", "POP", "REPLACE"]).isRequired,
@@ -8,7 +14,7 @@ class CategoriesState extends Component {
     location: PropTypes.string.isRequired
   };
 
-  state = { selectedMonth: null, selectedGroupId: null };
+  state = INITIAL_STATE;
 
   cachedStates = {};
 
@@ -30,11 +36,11 @@ class CategoriesState extends Component {
 
     if (action === "PUSH") {
       this.cachedStates[prevProps.location] = snapshot;
-      this.setState({ selectedMonth: null, selectedGroupId: null });
+      this.setState(INITIAL_STATE);
     }
 
     if (action === "REPLACE") {
-      this.setState({ selectedMonth: null, selectedGroupId: null });
+      this.setState(INITIAL_STATE);
     }
   }
 
@@ -52,12 +58,20 @@ class CategoriesState extends Component {
     }));
   };
 
+  handleSelectCategory = categoryId => {
+    this.setState(state => ({
+      ...state,
+      selectedCategoryId:
+        state.selectedCategoryId === categoryId ? null : categoryId
+    }));
+  };
+
   render() {
     return this.props.children({
-      selectedMonth: this.state.selectedMonth,
+      ...this.state,
       onSelectMonth: this.handleSelectMonth,
-      selectedGroupId: this.state.selectedGroupId,
-      onSelectGroup: this.handleSelectGroup
+      onSelectGroup: this.handleSelectGroup,
+      onSelectCategory: this.handleSelectCategory
     });
   }
 }

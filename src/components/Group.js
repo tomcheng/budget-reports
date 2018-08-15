@@ -23,19 +23,21 @@ class Group extends PureComponent {
     categoryGroup: PropTypes.shape({
       id: PropTypes.string.isRequired
     }).isRequired,
+    onSelectCategory: PropTypes.func.isRequired,
     onSelectMonth: PropTypes.func.isRequired,
+    selectedCategoryId: PropTypes.string,
     selectedMonth: PropTypes.string
   };
 
-  state = { selectedCategoryId: null };
-
-  handleClickEntity = categoryId => {
-    this.setState({ selectedCategoryId: categoryId });
-  };
-
   render() {
-    const { budget, categoryGroup, selectedMonth, onSelectMonth } = this.props;
-    const { selectedCategoryId } = this.state;
+    const {
+      budget,
+      categoryGroup,
+      selectedMonth,
+      selectedCategoryId,
+      onSelectMonth,
+      onSelectCategory
+    } = this.props;
     const {
       transactions,
       categories,
@@ -93,7 +95,7 @@ class Group extends PureComponent {
           transactions={transactionsInSelectedMonth || transactionsInGroup}
           showTransactionCount={false}
           selectedEntityId={selectedCategoryId}
-          onClickEntity={this.handleClickEntity}
+          onClickEntity={onSelectCategory}
           limitShowing
         />
         {selectedMonth && (
