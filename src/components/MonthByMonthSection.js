@@ -12,7 +12,7 @@ import MonthlyChart from "./MonthlyChart";
 const MonthByMonthSection = ({
   transactions,
   firstMonth,
-  selectedMonth,
+  selectedMonths,
   highlightFunction,
   onSelectMonth
 }) => {
@@ -28,28 +28,32 @@ const MonthByMonthSection = ({
     const amount = sumByProp("amount")(grouped.false || []);
     const highlighted = sumByProp("amount")(grouped.true || []);
     total += highlightFunction ? highlighted : amount;
-    if (month === selectedMonth) {
-      selectedMonthTotal = highlightFunction ? highlighted : amount;
+    if (selectedMonths.includes(month)) {
+      selectedMonthTotal += highlightFunction ? highlighted : amount;
     }
 
     return { month, amount: -amount, highlighted: -highlighted };
   });
 
-  const chartNumbers = selectedMonth
-    ? [
-        { amount: total / months.length, label: "avg. spent" },
-        {
-          amount: selectedMonthTotal,
-          label: moment(selectedMonth).format("MMM YYYY")
-        }
-      ]
-    : [
-        { amount: total / months.length, label: "avg. spent" },
-        {
-          amount: total,
-          label: "total spent"
-        }
-      ];
+  const chartNumbers =
+    selectedMonths.length > 0
+      ? [
+          { amount: total / months.length, label: "avg. spent" },
+          {
+            amount: selectedMonthTotal,
+            label:
+              selectedMonths.length === 1
+                ? moment(selectedMonths[0]).format("MMM YYYY")
+                : `${selectedMonths.length} months`
+          }
+        ]
+      : [
+          { amount: total / months.length, label: "avg. spent" },
+          {
+            amount: total,
+            label: "total spent"
+          }
+        ];
   const series = [
     {
       color: highlightFunction ? lightPrimaryColor : lighterPrimaryColor,
@@ -71,7 +75,7 @@ const MonthByMonthSection = ({
         data={data}
         average={total / months.length}
         series={series}
-        selectedMonths={selectedMonth && [selectedMonth]}
+        selectedMonths={selectedMonths}
         onSelectMonth={onSelectMonth}
       />
     </CollapsibleSection>

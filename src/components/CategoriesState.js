@@ -2,7 +2,7 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 
 const INITIAL_STATE = {
-  selectedMonth: null,
+  selectedMonths: [],
   selectedGroupIds: [],
   selectedCategoryIds: []
 };
@@ -47,7 +47,9 @@ class CategoriesState extends Component {
   handleSelectMonth = month => {
     this.setState(state => ({
       ...state,
-      selectedMonth: state.selectedMonth === month ? null : month
+      selectedMonths: state.selectedMonths.includes(month)
+        ? state.selectedMonths.filter(id => id !== month)
+        : state.selectedMonths.concat(month)
     }));
   };
 
