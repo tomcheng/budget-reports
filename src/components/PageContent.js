@@ -25,8 +25,8 @@ const PageContent = props =>
           >
             {({
               selectedMonth,
-              selectedGroupId,
-              selectedCategoryId,
+              selectedGroupIds,
+              selectedCategoryIds,
               onSelectMonth,
               onSelectGroup,
               onSelectCategory
@@ -42,8 +42,8 @@ const PageContent = props =>
                         <Component
                           {...propsFunction(props, match.params)}
                           selectedMonth={selectedMonth}
-                          selectedGroupId={selectedGroupId}
-                          selectedCategoryId={selectedCategoryId}
+                          selectedGroupIds={selectedGroupIds}
+                          selectedCategoryIds={selectedCategoryIds}
                           onSelectMonth={onSelectMonth}
                           onSelectGroup={onSelectGroup}
                           onSelectCategory={onSelectCategory}

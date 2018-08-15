@@ -17,9 +17,9 @@ class Groups extends PureComponent {
   static propTypes = {
     budget: PropTypes.object.isRequired,
     investmentAccounts: PropTypes.object.isRequired,
+    selectedGroupIds: PropTypes.arrayOf(PropTypes.string).isRequired,
     onSelectGroup: PropTypes.func.isRequired,
     onSelectMonth: PropTypes.func.isRequired,
-    selectedGroupId: PropTypes.string,
     selectedMonth: PropTypes.string
   };
 
@@ -28,7 +28,7 @@ class Groups extends PureComponent {
       budget,
       investmentAccounts,
       selectedMonth,
-      selectedGroupId,
+      selectedGroupIds,
       onSelectGroup,
       onSelectMonth
     } = this.props;
@@ -59,10 +59,12 @@ class Groups extends PureComponent {
           firstMonth={firstMonth}
           selectedMonth={selectedMonth}
           highlightFunction={
-            selectedGroupId &&
-            (transaction =>
-              categoriesById[transaction.category_id].category_group_id ===
-              selectedGroupId)
+            selectedGroupIds.length
+              ? transaction =>
+                  selectedGroupIds.includes(
+                    categoriesById[transaction.category_id].category_group_id
+                  )
+              : null
           }
           transactions={filteredTransactions}
           onSelectMonth={onSelectMonth}
@@ -76,7 +78,7 @@ class Groups extends PureComponent {
             makeLink(pages.group.path, { budgetId, categoryGroupId })
           }
           showTransactionCount={false}
-          selectedEntityId={selectedGroupId}
+          selectedEntityIds={selectedGroupIds}
           title={
             selectedMonth
               ? `Category Groups for ${moment(selectedMonth).format("MMMM")}`

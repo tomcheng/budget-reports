@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 
 const INITIAL_STATE = {
   selectedMonth: null,
-  selectedGroupId: null,
-  selectedCategoryId: null
+  selectedGroupIds: [],
+  selectedCategoryIds: []
 };
 
 class CategoriesState extends Component {
@@ -54,15 +54,18 @@ class CategoriesState extends Component {
   handleSelectGroup = groupId => {
     this.setState(state => ({
       ...state,
-      selectedGroupId: state.selectedGroupId === groupId ? null : groupId
+      selectedGroupIds: state.selectedGroupIds.includes(groupId)
+        ? state.selectedGroupIds.filter(id => id !== groupId)
+        : state.selectedGroupIds.concat(groupId)
     }));
   };
 
   handleSelectCategory = categoryId => {
     this.setState(state => ({
       ...state,
-      selectedCategoryId:
-        state.selectedCategoryId === categoryId ? null : categoryId
+      selectedCategoryIds: state.selectedCategoryIds.includes(categoryId)
+        ? state.selectedCategoryIds.filter(id => id !== categoryId)
+        : state.selectedCategoryIds.concat(categoryId)
     }));
   };
 
