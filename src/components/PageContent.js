@@ -23,7 +23,12 @@ const PageContent = props =>
             action={props.historyAction}
             location={props.location}
           >
-            {({ selectedMonth, onSelectMonth }) => (
+            {({
+              selectedMonth,
+              onSelectMonth,
+              selectedGroupId,
+              onSelectGroup
+            }) => (
               <Switch>
                 {groupedPages.categoryPages.map(
                   ({ path, props: propsFunction, Component }) => (
@@ -35,7 +40,9 @@ const PageContent = props =>
                         <Component
                           {...propsFunction(props, match.params)}
                           selectedMonth={selectedMonth}
+                          selectedGroupId={selectedGroupId}
                           onSelectMonth={onSelectMonth}
+                          onSelectGroup={onSelectGroup}
                         />
                       )}
                     />

@@ -8,7 +8,7 @@ class CategoriesState extends Component {
     location: PropTypes.string.isRequired
   };
 
-  state = { selectedMonth: null };
+  state = { selectedMonth: null, selectedGroupId: null };
 
   cachedStates = {};
 
@@ -30,11 +30,11 @@ class CategoriesState extends Component {
 
     if (action === "PUSH") {
       this.cachedStates[prevProps.location] = snapshot;
-      this.setState({ selectedMonth: null });
+      this.setState({ selectedMonth: null, selectedGroupId: null });
     }
 
     if (action === "REPLACE") {
-      this.setState({ selectedMonth: null });
+      this.setState({ selectedMonth: null, selectedGroupId: null });
     }
   }
 
@@ -45,10 +45,19 @@ class CategoriesState extends Component {
     }));
   };
 
+  handleSelectGroup = groupId => {
+    this.setState(state => ({
+      ...state,
+      selectedGroupId: state.selectedGroupId === groupId ? null : groupId
+    }));
+  };
+
   render() {
     return this.props.children({
       selectedMonth: this.state.selectedMonth,
-      onSelectMonth: this.handleSelectMonth
+      onSelectMonth: this.handleSelectMonth,
+      selectedGroupId: this.state.selectedGroupId,
+      onSelectGroup: this.handleSelectGroup
     });
   }
 }

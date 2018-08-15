@@ -17,17 +17,10 @@ class Groups extends PureComponent {
   static propTypes = {
     budget: PropTypes.object.isRequired,
     investmentAccounts: PropTypes.object.isRequired,
+    onSelectGroup: PropTypes.func.isRequired,
     onSelectMonth: PropTypes.func.isRequired,
+    selectedGroupId: PropTypes.string,
     selectedMonth: PropTypes.string
-  };
-
-  state = { selectedGroupId: null };
-
-  handleClickEntity = groupId => {
-    this.setState(state => ({
-      ...state,
-      selectedGroupId: groupId === state.selectedGroupId ? null : groupId
-    }));
   };
 
   render() {
@@ -35,9 +28,10 @@ class Groups extends PureComponent {
       budget,
       investmentAccounts,
       selectedMonth,
+      selectedGroupId,
+      onSelectGroup,
       onSelectMonth
     } = this.props;
-    const { selectedGroupId } = this.state;
     const {
       transactions,
       categoryGroupsById,
@@ -83,9 +77,13 @@ class Groups extends PureComponent {
           }
           showTransactionCount={false}
           selectedEntityId={selectedGroupId}
-          title={selectedMonth ? `Category Groups for ${moment(selectedMonth).format("MMMM")}` : "Category Groups"}
+          title={
+            selectedMonth
+              ? `Category Groups for ${moment(selectedMonth).format("MMMM")}`
+              : "Category Groups"
+          }
           transactions={transactionsForMonth || filteredTransactions}
-          onClickEntity={this.handleClickEntity}
+          onClickEntity={onSelectGroup}
         />
       </Fragment>
     );

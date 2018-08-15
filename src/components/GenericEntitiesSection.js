@@ -164,7 +164,12 @@ class GenericItemLink extends PureComponent {
             to={to}
           />
         ) : (
-          <Link to={to}>
+          <Link
+            to={to}
+            onClick={evt => {
+              evt.stopPropagation();
+            }}
+          >
             <SecondaryText
               style={{
                 whiteSpace: "pre",
