@@ -27,8 +27,15 @@ class Group extends PureComponent {
     selectedMonth: PropTypes.string
   };
 
+  state = { selectedCategoryId: null };
+
+  handleClickEntity = categoryId => {
+    this.setState({ selectedCategoryId: categoryId });
+  };
+
   render() {
     const { budget, categoryGroup, selectedMonth, onSelectMonth } = this.props;
+    const { selectedCategoryId } = this.state;
     const {
       transactions,
       categories,
@@ -62,6 +69,10 @@ class Group extends PureComponent {
           selectedMonth={selectedMonth}
           transactions={transactionsInGroup}
           onSelectMonth={onSelectMonth}
+          highlightFunction={
+            selectedCategoryId &&
+            (transaction => transaction.category_id === selectedCategoryId)
+          }
         />
         <GenericEntitiesSection
           key={`categories-${selectedMonth || "all"}`}
@@ -80,6 +91,9 @@ class Group extends PureComponent {
               : "Categories"
           }
           transactions={transactionsInSelectedMonth || transactionsInGroup}
+          showTransactionCount={false}
+          selectedEntityId={selectedCategoryId}
+          onClickEntity={this.handleClickEntity}
           limitShowing
         />
         {selectedMonth && (
