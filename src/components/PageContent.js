@@ -24,7 +24,7 @@ const PageContent = props =>
             location={props.location}
           >
             {({
-              selectedMonths,
+              selectedMonth,
               selectedGroupIds,
               selectedCategoryIds,
               onSelectMonth,
@@ -41,7 +41,7 @@ const PageContent = props =>
                       render={({ match }) => (
                         <Component
                           {...propsFunction(props, match.params)}
-                          selectedMonths={selectedMonths}
+                          selectedMonth={selectedMonth}
                           selectedGroupIds={selectedGroupIds}
                           selectedCategoryIds={selectedCategoryIds}
                           onSelectMonth={onSelectMonth}

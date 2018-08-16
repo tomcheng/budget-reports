@@ -18,16 +18,16 @@ class Groups extends PureComponent {
     budget: PropTypes.object.isRequired,
     investmentAccounts: PropTypes.object.isRequired,
     selectedGroupIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-    selectedMonths: PropTypes.arrayOf(PropTypes.string).isRequired,
     onSelectGroup: PropTypes.func.isRequired,
-    onSelectMonth: PropTypes.func.isRequired
+    onSelectMonth: PropTypes.func.isRequired,
+    selectedMonth: PropTypes.string
   };
 
   render() {
     const {
       budget,
       investmentAccounts,
-      selectedMonths,
+      selectedMonth,
       selectedGroupIds,
       onSelectGroup,
       onSelectMonth
@@ -47,17 +47,17 @@ class Groups extends PureComponent {
       ])
     );
 
-    const transactionsForSelectedMonths =
-      selectedMonths.length > 0 &&
-      filteredTransactions.filter(transaction =>
-        selectedMonths.includes(getTransactionMonth(transaction))
+    const transactionsForMonth =
+      selectedMonth &&
+      filteredTransactions.filter(
+        transaction => getTransactionMonth(transaction) === selectedMonth
       );
 
     return (
       <Fragment>
         <MonthByMonthSection
           firstMonth={firstMonth}
-          selectedMonths={selectedMonths}
+          selectedMonth={selectedMonth}
           highlightFunction={
             selectedGroupIds.length
               ? transaction =>
@@ -80,15 +80,11 @@ class Groups extends PureComponent {
           showTransactionCount={false}
           selectedEntityIds={selectedGroupIds}
           title={
-            selectedMonths.length === 1
-              ? `Category Groups for ${moment(selectedMonths[0]).format(
-                  "MMMM"
-                )}`
-              : selectedMonths.length > 1
-                ? `Category Groups for ${selectedMonths.length} Months`
-                : "Category Groups"
+            selectedMonth
+              ? `Category Groups for ${moment(selectedMonth).format("MMMM")}`
+              : "Category Groups"
           }
-          transactions={transactionsForSelectedMonths || filteredTransactions}
+          transactions={transactionsForMonth || filteredTransactions}
           onClickEntity={onSelectGroup}
         />
       </Fragment>
