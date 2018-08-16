@@ -1,7 +1,11 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { getTransactionMonth, getFirstMonth } from "../budgetUtils";
+import {
+  getTransactionMonth,
+  getFirstMonth,
+  sanitizeName
+} from "../budgetUtils";
 import pages, { makeLink } from "../pages";
 import MonthByMonthSection from "./MonthByMonthSection";
 import GenericEntitiesSection from "./GenericEntitiesSection";
@@ -36,6 +40,8 @@ class Category extends PureComponent {
       onSelectPayee
     } = this.props;
     const { transactions, categoriesById, payeesById, id: budgetId } = budget;
+
+    const selectedPayee = selectedPayeeId && payeesById[selectedPayeeId];
     const firstMonth = getFirstMonth(budget);
     const transactionsForCategory = transactions.filter(
       transaction => transaction.category_id === category.id
@@ -57,6 +63,11 @@ class Category extends PureComponent {
             selectedPayeeId &&
             (transaction => transaction.payee_id === selectedPayeeId)
           }
+          title={
+            selectedPayee
+              ? `Month by Month: ${sanitizeName(selectedPayee.name)}`
+              : "Month by Month"
+          }
         />
         <GenericEntitiesSection
           key={`payees-${selectedMonth || "all"}`}
@@ -72,7 +83,7 @@ class Category extends PureComponent {
           }
           title={
             selectedMonth
-              ? `Payees for ${moment(selectedMonth).format("MMMM")}`
+              ? `Payees: ${moment(selectedMonth).format("MMMM")}`
               : "Payees"
           }
           transactions={transactionsForMonth || transactionsForCategory}

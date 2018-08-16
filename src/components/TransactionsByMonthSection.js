@@ -82,10 +82,10 @@ class TransactionsByMonthSection extends Component {
       <CollapsibleSection
         title={
           selectedPayee
-            ? `Transactions for ${selectedPayee.name} in ${month}`
+            ? `Transactions: ${month}, ${selectedPayee.name}`
             : selectedCategory
-              ? `Transactions in ${selectedCategory.name} and ${month}`
-              : `Transactions in ${month}`
+              ? `Transactions: ${month}, ${selectedCategory.name}`
+              : `Transactions: ${month}`
         }
       >
         {topTransactions.length ? (

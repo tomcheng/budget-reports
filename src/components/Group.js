@@ -7,7 +7,8 @@ import { getSetting, setSetting, TRENDS_SHOW_AVERAGE } from "../uiRepo";
 import {
   getFirstMonth,
   getNumMonths,
-  getTransactionMonth
+  getTransactionMonth,
+  sanitizeName
 } from "../budgetUtils";
 import pages, { makeLink } from "../pages";
 import MonthByMonthSection from "./MonthByMonthSection";
@@ -71,8 +72,11 @@ class Group extends PureComponent {
       payeesById,
       id: budgetId
     } = budget;
+
     const firstMonth = getFirstMonth(budget);
     const numMonths = getNumMonths(budget);
+    const selectedCategory =
+      selectedCategoryId && categoriesById[selectedCategoryId];
 
     const categoriesInGroup = categories.filter(
       category => category.category_group_id === categoryGroup.id
@@ -102,6 +106,11 @@ class Group extends PureComponent {
             selectedCategoryId &&
             (transaction => transaction.category_id === selectedCategoryId)
           }
+          title={
+            selectedCategory
+              ? `Month by Month: ${sanitizeName(selectedCategory.name)}`
+              : "Month by Month"
+          }
         />
         <GenericEntitiesSection
           key={`categories-${selectedMonth || "all"}`}
@@ -116,7 +125,7 @@ class Group extends PureComponent {
           }
           title={
             selectedMonth
-              ? `Categories for ${moment(selectedMonth).format("MMMM")}`
+              ? `Categories: ${moment(selectedMonth).format("MMMM")}`
               : "Categories"
           }
           transactions={transactionsInSelectedMonth || transactionsInGroup}

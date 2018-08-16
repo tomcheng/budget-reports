@@ -103,7 +103,7 @@ class GenericEntitiesSection extends Component {
         actions={
           showAverageToggle && (
             <SecondaryText onClick={onToggleAverage}>
-              {showAverage ? "averages" : "totals"}
+              {showAverage ? "average" : "total"}
             </SecondaryText>
           )
         }

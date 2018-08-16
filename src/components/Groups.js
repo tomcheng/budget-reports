@@ -8,7 +8,8 @@ import {
   isStartingBalanceOrReconciliation,
   isTransfer,
   isIncome,
-  getTransactionMonth
+  getTransactionMonth,
+  sanitizeName
 } from "../budgetUtils";
 import { TRENDS_SHOW_AVERAGE, getSetting, setSetting } from "../uiRepo";
 import pages, { makeLink } from "../pages";
@@ -61,6 +62,8 @@ class Groups extends PureComponent {
       categoriesById,
       id: budgetId
     } = budget;
+    const selectedGroup =
+      selectedGroupId && categoryGroupsById[selectedGroupId];
     const firstMonth = getFirstMonth(budget);
     const numMonths = getNumMonths(budget);
     const filteredTransactions = transactions.filter(
@@ -90,6 +93,11 @@ class Groups extends PureComponent {
           }
           transactions={filteredTransactions}
           onSelectMonth={onSelectMonth}
+          title={
+            selectedGroup
+              ? `Month by Month: ${sanitizeName(selectedGroup.name)}`
+              : "Month by Month"
+          }
         />
         <GenericEntitiesSection
           key={selectedMonth || "all"}
@@ -104,7 +112,7 @@ class Groups extends PureComponent {
           selectedEntityId={selectedGroupId}
           title={
             selectedMonth
-              ? `Category Groups for ${moment(selectedMonth).format("MMMM")}`
+              ? `Category Groups: ${moment(selectedMonth).format("MMMM")}`
               : "Category Groups"
           }
           transactions={transactionsForMonth || filteredTransactions}

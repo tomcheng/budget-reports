@@ -12,8 +12,9 @@ import MonthlyChart from "./MonthlyChart";
 const MonthByMonthSection = ({
   transactions,
   firstMonth,
-  selectedMonth,
   highlightFunction,
+  selectedMonth,
+  title,
   onSelectMonth
 }) => {
   const months = getMonthsToNow(firstMonth);
@@ -37,17 +38,17 @@ const MonthByMonthSection = ({
 
   const chartNumbers = selectedMonth
     ? [
-        { amount: total / months.length, label: "avg. spent" },
+        { amount: total / months.length, label: "average" },
         {
           amount: selectedMonthTotal,
           label: moment(selectedMonth).format("MMM YYYY")
         }
       ]
     : [
-        { amount: total / months.length, label: "avg. spent" },
+        { amount: total / months.length, label: "average" },
         {
           amount: total,
-          label: "total spent"
+          label: "total"
         }
       ];
   const series = [
@@ -65,7 +66,7 @@ const MonthByMonthSection = ({
   }
 
   return (
-    <CollapsibleSection title="Month by Month">
+    <CollapsibleSection title={title}>
       <ChartNumbers numbers={chartNumbers} />
       <MonthlyChart
         data={data}
@@ -83,7 +84,10 @@ MonthByMonthSection.propTypes = {
   transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
   onSelectMonth: PropTypes.func.isRequired,
   highlightFunction: PropTypes.func,
-  selectedMonth: PropTypes.string
+  selectedMonth: PropTypes.string,
+  title: PropTypes.string
 };
+
+MonthByMonthSection.defaultProps = { title: "Month by Month" };
 
 export default MonthByMonthSection;

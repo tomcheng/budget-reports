@@ -51,3 +51,5 @@ export const getPayeeNodes = ({ payeesById, transactions }, divideBy = 1) =>
     })),
     groupByProp("payee_id")
   ])(transactions);
+
+export const sanitizeName = name => name.replace(/[^a-zA-Z0-9 ]/g, "").trim();
