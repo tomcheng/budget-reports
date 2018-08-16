@@ -20,33 +20,14 @@ class CurrentMonth extends PureComponent {
 
   render() {
     const { budget, currentMonth, investmentAccounts } = this.props;
-    const { categoryGroupsById, categoriesById } = budget;
 
-    const transactions = budget.transactions
-      .filter(
-        notAny([
-          isIncome(budget),
-          isTransfer(investmentAccounts),
-          isStartingBalanceOrReconciliation(budget)
-        ])
-      )
-      .filter(transaction => {
-        const groupName =
-          categoryGroupsById[
-            categoriesById[transaction.category_id].category_group_id
-          ].name;
-        if (groupName.indexOf("Housing") > -1) {
-          return false;
-        }
-        if (groupName.indexOf("Utilities") > -1) {
-          return false;
-        }
-        if (groupName.indexOf("Subscriptions") > -1) {
-          return false;
-        }
-        return true;
-      });
-
+    const transactions = budget.transactions.filter(
+      notAny([
+        isIncome(budget),
+        isTransfer(investmentAccounts),
+        isStartingBalanceOrReconciliation(budget)
+      ])
+    );
     const transactionsThisMonth = takeWhile(
       transaction => getTransactionMonth(transaction) === currentMonth
     )(transactions);

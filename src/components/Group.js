@@ -23,9 +23,9 @@ class Group extends PureComponent {
     categoryGroup: PropTypes.shape({
       id: PropTypes.string.isRequired
     }).isRequired,
-    selectedCategoryIds: PropTypes.arrayOf(PropTypes.string).isRequired,
     onSelectCategory: PropTypes.func.isRequired,
     onSelectMonth: PropTypes.func.isRequired,
+    selectedCategoryId: PropTypes.string,
     selectedMonth: PropTypes.string
   };
 
@@ -34,7 +34,7 @@ class Group extends PureComponent {
       budget,
       categoryGroup,
       selectedMonth,
-      selectedCategoryIds,
+      selectedCategoryId,
       onSelectMonth,
       onSelectCategory
     } = this.props;
@@ -72,7 +72,8 @@ class Group extends PureComponent {
           transactions={transactionsInGroup}
           onSelectMonth={onSelectMonth}
           highlightFunction={
-            selectedCategoryIds.length ? (transaction => selectedCategoryIds.includes(transaction.category_id)) : null
+            selectedCategoryId &&
+            (transaction => transaction.category_id === selectedCategoryId)
           }
         />
         <GenericEntitiesSection
@@ -93,7 +94,7 @@ class Group extends PureComponent {
           }
           transactions={transactionsInSelectedMonth || transactionsInGroup}
           showTransactionCount={false}
-          selectedEntityIds={selectedCategoryIds}
+          selectedEntityId={selectedCategoryId}
           onClickEntity={onSelectCategory}
           limitShowing
         />

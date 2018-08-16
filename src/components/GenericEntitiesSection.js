@@ -31,7 +31,7 @@ class GenericEntitiesSection extends Component {
     entityFunction: PropTypes.func,
     showTransactionCount: PropTypes.bool,
     limitShowing: PropTypes.bool,
-    selectedEntityIds: PropTypes.arrayOf(PropTypes.string),
+    selectedEntityId: PropTypes.string,
     onClickEntity: PropTypes.func
   };
 
@@ -58,10 +58,10 @@ class GenericEntitiesSection extends Component {
       entitiesById,
       linkFunction,
       limitShowing: limitShowingProp,
+      selectedEntityId,
       showTransactionCount,
       title,
       transactions,
-      selectedEntityIds,
       onClickEntity
     } = this.props;
     const { allMounted, showAll } = this.state;
@@ -96,9 +96,7 @@ class GenericEntitiesSection extends Component {
               transactions={transactions}
               name={entitiesById[entityId].name}
               amount={amount}
-              selected={
-                selectedEntityIds && selectedEntityIds.includes(entityId)
-              }
+              selected={entityId === selectedEntityId}
               total={total}
               id={entityId}
               onClick={onClickEntity}
@@ -116,7 +114,7 @@ class GenericEntitiesSection extends Component {
                   transactions={transactions}
                   name={entitiesById[entityId].name}
                   amount={amount}
-                  selected={selectedEntityIds.includes(entityId)}
+                  selected={entityId === selectedEntityId}
                   total={total}
                   id={entityId}
                   onClick={onClickEntity}
