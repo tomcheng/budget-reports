@@ -11,6 +11,7 @@ const MonthlyChart = ({
   height,
   series,
   selectedMonth,
+  stacked,
   onSelectMonth
 }) => {
   const yearLines = [];
@@ -79,7 +80,9 @@ const MonthlyChart = ({
             }
           ]
         },
-        plotOptions: { series: { animation: false, stacking: "normal" } },
+        plotOptions: {
+          series: { animation: false, stacking: stacked ? "normal" : null }
+        },
         series: series.map(s => {
           if (s.type === "line") {
             return {
@@ -119,9 +122,10 @@ MonthlyChart.propTypes = {
   average: PropTypes.number,
   height: PropTypes.number,
   selectedMonth: PropTypes.string,
+  stacked: PropTypes.bool,
   onSelectMonth: PropTypes.func
 };
 
-MonthlyChart.defaultProps = { height: 140 };
+MonthlyChart.defaultProps = { height: 140, stacked: true };
 
 export default MonthlyChart;

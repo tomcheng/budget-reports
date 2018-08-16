@@ -1,26 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
-import moment from "moment";
-import compose from "lodash/fp/compose";
-import eq from "lodash/fp/eq";
-import findIndex from "lodash/fp/findIndex";
-import get from "lodash/fp/get";
-import identity from "lodash/fp/identity";
 import includes from "lodash/fp/includes";
-import mapRaw from "lodash/fp/map";
-import sortBy from "lodash/fp/sortBy";
 import sumBy from "lodash/fp/sumBy";
+import { groupBy } from "../optimized";
 import {
-  selectedPlotBandColor,
   primaryColor,
   lightPrimaryColor,
   negativeChartColor
 } from "../styleVariables";
-import Chart from "./Chart";
+import MonthlyChart from "./MonthlyChart";
 
-const map = mapRaw.convert({ cap: false });
-
-const FIRST_STACK = "liability";
 const CREDIT_ACCOUNTS = ["mortgage", "creditCard"];
 const getStack = ({ type, id, mortgageAccounts }) => {
   if (mortgageAccounts[id]) {
@@ -37,60 +26,37 @@ const NetWorthChart = ({
   selectedMonth,
   onSelectMonth
 }) => {
-  const categories = map(month => moment(month).format("MMM"))(months);
-  const selectedIndex = findIndex(eq(selectedMonth))(months);
-  const plotBands = selectedMonth
-    ? [
-        {
-          color: selectedPlotBandColor,
-          from: selectedIndex - 0.5,
-          to: selectedIndex + 0.5
-        }
-      ]
-    : [];
-  const netWorthData = map((_, index) => sumBy(get(["data", index]))(data))(
-    months
-  );
+  const groupedData = groupBy(d =>
+    getStack({ type: d.type, id: d.id, mortgageAccounts })
+  )(data);
+  const monthlyData = months.map((month, index) => ({
+    month,
+    assets: sumBy(d => d.data[index])(groupedData.asset),
+    liabilities: sumBy(d => d.data[index])(groupedData.liability)
+  }));
 
   return (
-    <Chart
-      options={{
-        chart: {
-          type: "column",
-          events: {
-            click: event => {
-              onSelectMonth(months[Math.round(event.xAxis[0].value)]);
-            }
-          }
+    <MonthlyChart
+      selectedMonth={selectedMonth}
+      onSelectMonth={onSelectMonth}
+      data={monthlyData}
+      height={160}
+      series={[
+        {
+          color: negativeChartColor,
+          valueFunction: d => Math.max(-d.liabilities, 0)
         },
-        yAxis: { visible: false, endOnTick: false },
-        xAxis: { categories, plotBands },
-        plotOptions: {
-          column: { stacking: "normal" }
+        {
+          color: lightPrimaryColor,
+          valueFunction: d => Math.max(d.assets, 0)
         },
-        series: compose([
-          sortBy(({ stack }) => (stack === FIRST_STACK ? 0 : 1)),
-          map(({ data, id, type }) => {
-            const stack = getStack({ type, id, mortgageAccounts });
-            return {
-              data: map(
-                compose([Math.abs, stack === "liability" ? n => -n : identity])
-              )(data),
-              borderWidth: 0,
-              enableMouseTracking: false,
-              color:
-                stack === "liability" ? negativeChartColor : lightPrimaryColor,
-              stack
-            };
-          })
-        ])(data).concat({
+        {
           color: primaryColor,
-          data: netWorthData,
-          enableMouseTracking: false,
-          name: "Net Income",
-          type: "line"
-        })
-      }}
+          type: "line",
+          valueFunction: d => d.assets + d.liabilities
+        }
+      ]}
+      stacked={false}
     />
   );
 };
