@@ -130,10 +130,12 @@ class Group extends PureComponent {
         />
         {selectedMonth && (
           <TransactionsByMonthSection
-            key={`transactions-${selectedMonth}`}
+            key={`transactions-${selectedMonth || "all"}-${selectedCategoryId ||
+              "all"}`}
             categoriesById={categoriesById}
             payeesById={payeesById}
             selectedMonth={selectedMonth}
+            selectedCategoryId={selectedCategoryId}
             transactions={transactionsInSelectedMonth}
           />
         )}

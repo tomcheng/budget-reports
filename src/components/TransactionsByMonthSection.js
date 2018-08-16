@@ -18,7 +18,8 @@ class TransactionsByMonthSection extends Component {
     payeesById: PropTypes.object.isRequired,
     selectedMonth: PropTypes.string.isRequired,
     transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
-    limitShowing: PropTypes.bool
+    limitShowing: PropTypes.bool,
+    selectedCategoryId: PropTypes.string
   };
 
   static defaultProps = { limitShowing: true };
@@ -42,19 +43,25 @@ class TransactionsByMonthSection extends Component {
     const {
       categoriesById,
       payeesById,
+      selectedCategoryId,
       selectedMonth,
       transactions,
       limitShowing: limitShowingProp
     } = this.props;
     const { allMounted, showAll } = this.state;
 
+    const selectedCategory =
+      selectedCategoryId && categoriesById[selectedCategoryId];
     const transactionsForMonth = compose([
       limitShowingProp
         ? sortBy("amount")
         : transactions => transactions.reverse(),
       transactions =>
         transactions.filter(
-          transaction => getTransactionMonth(transaction) === selectedMonth
+          transaction =>
+            getTransactionMonth(transaction) === selectedMonth &&
+            (!selectedCategoryId ||
+              transaction.category_id === selectedCategoryId)
         )
     ])(transactions);
     const limitShowing =
@@ -68,7 +75,13 @@ class TransactionsByMonthSection extends Component {
 
     return (
       <CollapsibleSection
-        title={`Transactions for ${moment(selectedMonth).format("MMMM")}`}
+        title={
+          selectedCategory
+            ? `Transactions in ${selectedCategory.name} for ${moment(
+                selectedMonth
+              ).format("MMMM")}`
+            : `Transactions for ${moment(selectedMonth).format("MMMM")}`
+        }
       >
         {topTransactions.length ? (
           topTransactions.map(
