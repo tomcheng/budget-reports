@@ -10,9 +10,4 @@ const Section = styled.div`
   border-radius: 2px;
 `;
 
-export const TopSection = styled(Section)`
-  margin: 0;
-  border-width: 0 0 1px;
-`;
-
 export default Section;

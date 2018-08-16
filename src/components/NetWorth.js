@@ -19,9 +19,8 @@ import sumBy from "lodash/fp/sumBy";
 import values from "lodash/fp/values";
 import { simpleMemoize } from "../optimized";
 import { getSetting, setSetting, NET_WORTH_HIDDEN_ACCOUNTS } from "../uiRepo";
-import { TopSection } from "./Section";
 import CollapsibleSection from "./CollapsibleSection";
-import NetWorthSummary from "./NetWorthSummary";
+import ChartNumbers from "./ChartNumbers";
 import NetWorthChart from "./NetWorthChart";
 import NetWorthAccounts from "./NetWorthAccounts";
 
@@ -154,14 +153,18 @@ class NetWorth extends PureComponent {
 
     return (
       <Fragment>
-        <TopSection>
-          <NetWorthSummary
-            liabilities={selectedLiabilities}
-            assets={selectedAssets}
-            netWorth={selectedAssets + selectedLiabilities}
-          />
-        </TopSection>
         <CollapsibleSection title="Monthly Trend">
+          <ChartNumbers
+            numbers={[
+              {
+                amount: -(selectedAssets + selectedLiabilities),
+                label: "Net Worth"
+              },
+              { amount: -selectedAssets, label: "Assets" },
+              { amount: selectedLiabilities, label: "Liabilities" }
+            ]}
+            alwaysRound
+          />
           <NetWorthChart
             data={map(({ id, data }) => ({
               data: hiddenAccounts[id] ? data.map(constant(0)) : data,

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { MinorText, LargeNumber } from "./typeComponents";
 import Amount from "./Amount";
 
-const ChartNumbers = ({ numbers }) => {
+const ChartNumbers = ({ numbers, alwaysRound }) => {
   const smallNumbers = numbers.some(({amount}) => Math.abs(amount) < 100);
   return (
   <div
@@ -21,7 +21,7 @@ const ChartNumbers = ({ numbers }) => {
         <LargeNumber style={{ lineHeight: "16px" }}>
           <Amount
             amount={amount}
-            amountAfterDecimal={smallNumbers ? 2 : 0}
+            amountAfterDecimal={smallNumbers && !alwaysRound ? 2 : 0}
             showCurrencySymbol
           />
         </LargeNumber>
@@ -37,7 +37,8 @@ ChartNumbers.propTypes = {
       amount: PropTypes.number.isRequired,
       label: PropTypes.string.isRequired
     })
-  ).isRequired
+  ).isRequired,
+  alwaysRound: PropTypes.bool,
 };
 
 export default ChartNumbers;
