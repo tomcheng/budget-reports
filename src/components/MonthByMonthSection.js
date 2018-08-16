@@ -71,7 +71,7 @@ const MonthByMonthSection = ({
         data={data}
         average={total / months.length}
         series={series}
-        selectedMonths={selectedMonth && [selectedMonth]}
+        selectedMonth={selectedMonth}
         onSelectMonth={onSelectMonth}
       />
     </CollapsibleSection>

@@ -3,11 +3,8 @@ import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import find from "lodash/fp/find";
 import flatMap from "lodash/fp/flatMap";
-import identity from "lodash/fp/identity";
-import keys from "lodash/fp/keys";
 import mapRaw from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
-import omit from "lodash/fp/omit";
 import sortBy from "lodash/fp/sortBy";
 import { sumByProp, groupBy, simpleMemoize, notAny } from "../optimized";
 import {
@@ -43,7 +40,7 @@ class IncomeVsExpenses extends PureComponent {
     showing: PropTypes.oneOf(["average", "total"]).isRequired
   };
 
-  state = { selectedMonths: {} };
+  state = { selectedMonth: null };
 
   handleToggleExclusion = key => {
     this.setState(state => ({
@@ -55,18 +52,9 @@ class IncomeVsExpenses extends PureComponent {
   handleSelectMonth = month => {
     this.setState(state => ({
       ...state,
-      selectedMonths: state.selectedMonths[month]
-        ? omit(month)(state.selectedMonths)
-        : { ...state.selectedMonths, [month]: true }
+      selectedMonth: state.selectedMonth === month ? null : month
     }));
   };
-
-  handleClearSelectedMonths = () => {
-    this.setState({ selectedMonths: {} });
-  };
-
-  getSelectedMonths = () =>
-    compose([sortBy(identity), keys])(this.state.selectedMonths);
 
   getSummaries = simpleMemoize((budget, investmentAccounts) =>
     compose([
@@ -95,15 +83,13 @@ class IncomeVsExpenses extends PureComponent {
 
   render() {
     const { budget, investmentAccounts, showing } = this.props;
+    const { selectedMonth } = this.state;
     const { categoriesById, categoryGroupsById, payeesById } = budget;
 
     const showTotals = showing === "total";
-    const selectedMonths = this.getSelectedMonths();
     const allSummaries = this.getSummaries(budget, investmentAccounts);
-    const summaries = selectedMonths.length
-      ? selectedMonths.map(month =>
-          find(matchesProperty("month", month))(allSummaries)
-        )
+    const summaries = selectedMonth
+      ? [find(matchesProperty("month", selectedMonth))(allSummaries)]
       : allSummaries;
 
     const incomeTransactions = flatMap(summary => summary.incomeTransactions)(
@@ -138,7 +124,7 @@ class IncomeVsExpenses extends PureComponent {
           />
           <IncomeVsExpensesChart
             data={allSummaries}
-            selectedMonths={selectedMonths}
+            selectedMonth={selectedMonth}
             onSelectMonth={this.handleSelectMonth}
           />
         </CollapsibleSection>

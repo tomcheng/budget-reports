@@ -9,7 +9,7 @@ const MonthlyChart = ({
   average,
   data,
   series,
-  selectedMonths,
+  selectedMonth,
   onSelectMonth
 }) => {
   const yearLines = [];
@@ -17,8 +17,8 @@ const MonthlyChart = ({
   const categories = data.map(d => moment(d.month).format("MMM"));
   let highlights = null;
 
-  if (selectedMonths && selectedMonths.length) {
-    highlights = { months: selectedMonths, color: selectedPlotBandColor };
+  if (selectedMonth) {
+    highlights = { months: [selectedMonth], color: selectedPlotBandColor };
   }
 
   data.forEach(({ month }, index) => {
@@ -116,7 +116,7 @@ MonthlyChart.propTypes = {
     })
   ).isRequired,
   average: PropTypes.number,
-  selectedMonths: PropTypes.arrayOf(PropTypes.string),
+  selectedMonth: PropTypes.string,
   onSelectMonth: PropTypes.func
 };
 
