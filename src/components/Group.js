@@ -3,8 +3,12 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import compose from "lodash/fp/compose";
 import sortBy from "lodash/fp/sortBy";
-import { getTransactionMonth } from "../budgetUtils";
-import { getFirstMonth } from "../budgetUtils";
+import { getSetting, setSetting, TRENDS_SHOW_AVERAGE } from "../uiRepo";
+import {
+  getFirstMonth,
+  getNumMonths,
+  getTransactionMonth
+} from "../budgetUtils";
 import pages, { makeLink } from "../pages";
 import MonthByMonthSection from "./MonthByMonthSection";
 import TransactionsByMonthSection from "./TransactionsByMonthSection";
@@ -29,6 +33,27 @@ class Group extends PureComponent {
     selectedMonth: PropTypes.string
   };
 
+  constructor(props) {
+    super();
+
+    this.state = {
+      showAverage: getSetting(TRENDS_SHOW_AVERAGE, props.budget.id)
+    };
+  }
+
+  handleToggleAverage = () => {
+    this.setState(
+      state => ({ ...state, showAverage: !state.showAverage }),
+      () => {
+        setSetting(
+          TRENDS_SHOW_AVERAGE,
+          this.props.budget.id,
+          this.state.showAverage
+        );
+      }
+    );
+  };
+
   render() {
     const {
       budget,
@@ -38,6 +63,7 @@ class Group extends PureComponent {
       onSelectMonth,
       onSelectCategory
     } = this.props;
+    const { showAverage } = this.state;
     const {
       transactions,
       categories,
@@ -46,6 +72,7 @@ class Group extends PureComponent {
       id: budgetId
     } = budget;
     const firstMonth = getFirstMonth(budget);
+    const numMonths = getNumMonths(budget);
 
     const categoriesInGroup = categories.filter(
       category => category.category_group_id === categoryGroup.id
@@ -96,6 +123,10 @@ class Group extends PureComponent {
           showTransactionCount={false}
           selectedEntityId={selectedCategoryId}
           onClickEntity={onSelectCategory}
+          showAverageToggle={!selectedMonth}
+          showAverage={showAverage && !selectedMonth}
+          numMonths={numMonths}
+          onToggleAverage={this.handleToggleAverage}
           limitShowing
         />
         {selectedMonth && (
