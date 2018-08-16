@@ -27,7 +27,14 @@ class Category extends PureComponent {
   };
 
   render() {
-    const { category, budget, selectedMonth, selectedPayeeId, onSelectMonth, onSelectPayee } = this.props;
+    const {
+      category,
+      budget,
+      selectedMonth,
+      selectedPayeeId,
+      onSelectMonth,
+      onSelectPayee
+    } = this.props;
     const { transactions, categoriesById, payeesById, id: budgetId } = budget;
     const firstMonth = getFirstMonth(budget);
     const transactionsForCategory = transactions.filter(
@@ -51,15 +58,6 @@ class Category extends PureComponent {
             (transaction => transaction.payee_id === selectedPayeeId)
           }
         />
-        {selectedMonth && (
-          <TransactionsByMonthSection
-            key={`transactions-${selectedMonth}`}
-            categoriesById={categoriesById}
-            payeesById={payeesById}
-            transactions={transactionsForMonth}
-            selectedMonth={selectedMonth}
-          />
-        )}
         <GenericEntitiesSection
           key={`payees-${selectedMonth || "all"}`}
           entitiesById={payeesById}
@@ -82,6 +80,15 @@ class Category extends PureComponent {
           onClickEntity={onSelectPayee}
           limitShowing
         />
+        {selectedMonth && (
+          <TransactionsByMonthSection
+            key={`transactions-${selectedMonth}`}
+            categoriesById={categoriesById}
+            payeesById={payeesById}
+            transactions={transactionsForMonth}
+            selectedMonth={selectedMonth}
+          />
+        )}
       </Fragment>
     );
   }
