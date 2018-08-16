@@ -2,28 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import pages from "../pages";
 import { Switch, Route } from "react-router-dom";
-import SortDropdown from "./SortDropdown";
 import { SecondaryText } from "./typeComponents";
-
-const defaultSortOptions = [
-  { label: "Amount", value: "amount" },
-  { label: "Transactions", value: "transactions" },
-  { label: "Name", value: "name" }
-];
 
 const PageActions = ({ settings, onChangeSetting }) => (
   <Switch>
-    <Route
-      path={pages.payees.path}
-      exact
-      render={() => (
-        <SortDropdown
-          options={defaultSortOptions}
-          selected={settings.payeesSort}
-          onChange={value => onChangeSetting({ setting: "payeesSort", value })}
-        />
-      )}
-    />
     <Route
       path={pages.incomeVsExpenses.path}
       exact

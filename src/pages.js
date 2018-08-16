@@ -5,8 +5,6 @@ import Groups from "./components/Groups";
 import Group from "./components/Group";
 import Category from "./components/Category";
 import CategoryPayee from "./components/CategoryPayee";
-import Payees from "./components/Payees";
-import Payee from "./components/Payee";
 import IncomeVsExpenses from "./components/IncomeVsExpenses";
 import NetWorth from "./components/NetWorth";
 import Projections from "./components/Projections";
@@ -91,25 +89,6 @@ const pages = {
       payee: props.budget.payeesById[params.payeeId]
     }),
     breadcrumbs: ["categories", "group", "category"]
-  },
-  payees: {
-    path: "/budgets/:budgetId/payees",
-    title: "Payees",
-    Component: Payees,
-    props: props => ({
-      budget: props.budget,
-      sort: props.settings.payeesSort
-    })
-  },
-  payee: {
-    path: "/budgets/:budgetId/payees/:payeeId",
-    title: (params, budget) => budget.payeesById[params.payeeId].name,
-    Component: Payee,
-    props: (props, params) => ({
-      budget: props.budget,
-      payee: props.budget.payeesById[params.payeeId]
-    }),
-    breadcrumbs: ["payees"]
   },
   incomeVsExpenses: {
     path: "/budgets/:budgetId/income-vs-expenses",
