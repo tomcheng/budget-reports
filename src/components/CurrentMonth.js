@@ -8,8 +8,9 @@ import {
   isIncome
 } from "../budgetUtils";
 import { notAny } from "../optimized";
+import pages, { makeLink } from "../pages";
 import DayByDaySection from "./DayByDaySection";
-import CurrentMonthGroupsSection from "./CurrentMonthGroupsSection";
+import GenericEntitiesSection from "./GenericEntitiesSection";
 
 class CurrentMonth extends PureComponent {
   static propTypes = {
@@ -20,6 +21,7 @@ class CurrentMonth extends PureComponent {
 
   render() {
     const { budget, currentMonth, investmentAccounts } = this.props;
+    const { categoryGroupsById, categoriesById, id: budgetId } = budget;
 
     const transactions = budget.transactions.filter(
       notAny([
@@ -39,9 +41,20 @@ class CurrentMonth extends PureComponent {
           currentMonth={currentMonth}
           transactions={transactions}
         />
-        <CurrentMonthGroupsSection
-          budget={budget}
+        <GenericEntitiesSection
+          entitiesById={categoryGroupsById}
+          entityFunction={transaction =>
+            categoriesById[transaction.category_id].category_group_id
+          }
+          linkFunction={groupId =>
+            makeLink(pages.currentMonthGroup.path, {
+              budgetId,
+              categoryGroupId: groupId
+            })
+          }
+          title="Category Groups"
           transactions={transactionsThisMonth}
+          showTransactionCount
         />
       </Fragment>
     );
