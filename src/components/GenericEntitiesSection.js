@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import CollapsibleSection from "./CollapsibleSection";
 import { SecondaryText } from "./typeComponents";
 import ListItem from "./ListItem";
+import NoTransactions from "./NoTransactions";
 import LabelWithTransactionCount from "./LabelWithTransactionCount";
 import AmountWithPercentage from "./AmountWithPercentage";
 import SeeAll from "./SeeAll";
@@ -28,7 +29,11 @@ class GenericEntitiesSection extends Component {
     linkFunction: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
-    entityKey: PropTypes.oneOf(["category_id", "category_group_id", "payee_id"]),
+    entityKey: PropTypes.oneOf([
+      "category_id",
+      "category_group_id",
+      "payee_id"
+    ]),
     entityFunction: PropTypes.func,
     showTransactionCount: PropTypes.bool,
     limitShowing: PropTypes.bool,
@@ -103,6 +108,7 @@ class GenericEntitiesSection extends Component {
           )
         }
       >
+        {entities.length === 0 && <NoTransactions />}
         {(limitShowing ? topEntities : entities).map(
           ({ entityId, transactions, amount }) => (
             <GenericItemLink
