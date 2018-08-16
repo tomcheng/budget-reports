@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import findIndex from "lodash/fp/findIndex";
-import { plotBandColor, selectedPlotBandColor } from "../styleVariables";
+import { selectedPlotBandColor } from "../styleVariables";
 import Chart from "./Chart";
 
 const MonthlyChart = ({
@@ -10,7 +10,6 @@ const MonthlyChart = ({
   data,
   series,
   selectedMonths,
-  excludedMonths,
   onSelectMonth
 }) => {
   const yearLines = [];
@@ -20,8 +19,6 @@ const MonthlyChart = ({
 
   if (selectedMonths && selectedMonths.length) {
     highlights = { months: selectedMonths, color: selectedPlotBandColor };
-  } else if (excludedMonths && excludedMonths.length) {
-    highlights = { months: excludedMonths, color: plotBandColor };
   }
 
   data.forEach(({ month }, index) => {
@@ -119,7 +116,6 @@ MonthlyChart.propTypes = {
     })
   ).isRequired,
   average: PropTypes.number,
-  excludedMonths: PropTypes.arrayOf(PropTypes.string),
   selectedMonths: PropTypes.arrayOf(PropTypes.string),
   onSelectMonth: PropTypes.func
 };

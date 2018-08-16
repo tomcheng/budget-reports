@@ -9,14 +9,12 @@ import MonthlyChart from "./MonthlyChart";
 
 const IncomeVsExpensesChart = ({
   data,
-  excludedMonths,
   onSelectMonth,
   selectedMonths
 }) => (
   <MonthlyChart
     data={data}
     selectedMonths={selectedMonths}
-    excludedMonths={excludedMonths}
     series={[
       { color: lightPrimaryColor, valueFunction: d => d.income },
       { color: negativeChartColor, valueFunction: d => d.expenses },
@@ -38,7 +36,6 @@ IncomeVsExpensesChart.propTypes = {
       month: PropTypes.string.isRequired
     })
   ).isRequired,
-  excludedMonths: PropTypes.arrayOf(PropTypes.string).isRequired,
   selectedMonths: PropTypes.arrayOf(PropTypes.string).isRequired,
   onSelectMonth: PropTypes.func.isRequired
 };

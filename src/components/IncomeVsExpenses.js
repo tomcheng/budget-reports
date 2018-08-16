@@ -4,16 +4,12 @@ import compose from "lodash/fp/compose";
 import find from "lodash/fp/find";
 import flatMap from "lodash/fp/flatMap";
 import identity from "lodash/fp/identity";
-import includes from "lodash/fp/includes";
 import keys from "lodash/fp/keys";
-import last from "lodash/fp/last";
 import mapRaw from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
 import omit from "lodash/fp/omit";
-import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import { sumByProp, groupBy, simpleMemoize, notAny } from "../optimized";
-import { getOutliersBy } from "../utils";
 import {
   getTransactionMonth,
   isTransfer,
@@ -21,16 +17,11 @@ import {
   isStartingBalanceOrReconciliation
 } from "../budgetUtils";
 import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
-import IncomeVsExpensesChartControls from "./IncomeVsExpensesChartControls";
 import Breakdowns from "./Breakdowns";
-import { Subsection } from "./Section";
 import CollapsibleSection from "./CollapsibleSection";
 import ChartNumbers from "./ChartNumbers";
 
 const map = mapRaw.convert({ cap: false });
-
-const propertyIncludedIn = (property, arr) => obj =>
-  includes(obj[property], arr);
 
 class IncomeVsExpenses extends PureComponent {
   static propTypes = {
@@ -52,12 +43,7 @@ class IncomeVsExpenses extends PureComponent {
     showing: PropTypes.oneOf(["average", "total"]).isRequired
   };
 
-  state = {
-    excludeOutliers: true,
-    excludeFirstMonth: true,
-    excludeCurrentMonth: true,
-    selectedMonths: {}
-  };
+  state = { selectedMonths: {} };
 
   handleToggleExclusion = key => {
     this.setState(state => ({
@@ -107,62 +93,25 @@ class IncomeVsExpenses extends PureComponent {
     ])(budget.transactions)
   );
 
-  getExcludedMonths = summaries => {
-    const {
-      excludeOutliers,
-      excludeFirstMonth,
-      excludeCurrentMonth
-    } = this.state;
-    const selectedMonths = this.getSelectedMonths();
-
-    if (selectedMonths.length) {
-      return [];
-    }
-
-    const excludedMonths = [];
-
-    if (excludeFirstMonth) {
-      excludedMonths.push(summaries[0].month);
-    }
-
-    if (excludeCurrentMonth) {
-      excludedMonths.push(last(summaries).month);
-    }
-
-    if (excludeOutliers) {
-      const remainingSummaries = reject(
-        propertyIncludedIn("month", excludedMonths)
-      )(summaries);
-      const outliers = getOutliersBy(s => s.income + s.expenses)(
-        remainingSummaries
-      );
-      excludedMonths.push(...map("month")(outliers));
-    }
-
-    return excludedMonths;
-  };
-
   render() {
     const { budget, investmentAccounts, showing } = this.props;
-    const {
-      excludeOutliers,
-      excludeFirstMonth,
-      excludeCurrentMonth
-    } = this.state;
     const { categoriesById, categoryGroupsById, payeesById } = budget;
 
     const showTotals = showing === "total";
     const selectedMonths = this.getSelectedMonths();
     const allSummaries = this.getSummaries(budget, investmentAccounts);
-    const excludedMonths = this.getExcludedMonths(allSummaries);
     const summaries = selectedMonths.length
       ? selectedMonths.map(month =>
           find(matchesProperty("month", month))(allSummaries)
         )
-      : reject(propertyIncludedIn("month", excludedMonths))(allSummaries);
+      : allSummaries;
 
-    const incomeTransactions = flatMap(summary => summary.incomeTransactions)(summaries);
-    const expenseTransactions = flatMap(summary => summary.expenseTransactions)(summaries);
+    const incomeTransactions = flatMap(summary => summary.incomeTransactions)(
+      summaries
+    );
+    const expenseTransactions = flatMap(summary => summary.expenseTransactions)(
+      summaries
+    );
 
     const totalExpenses = sumByProp("amount")(expenseTransactions);
     const totalIncome = sumByProp("amount")(incomeTransactions);
@@ -171,54 +120,27 @@ class IncomeVsExpenses extends PureComponent {
     return (
       <Fragment>
         <CollapsibleSection title="Monthly Trend">
-          <Subsection>
-            <ChartNumbers
-              numbers={[
-                {
-                  label: "net income",
-                  amount: -(totalExpenses + totalIncome) / denominator
-                },
-                {
-                  label: "expenses",
-                  amount: totalExpenses / denominator
-                },
-                {
-                  label: "income",
-                  amount: -totalIncome / denominator
-                }
-              ]}
-            />
-            <IncomeVsExpensesChart
-              data={allSummaries}
-              excludedMonths={excludedMonths}
-              selectedMonths={selectedMonths}
-              onSelectMonth={this.handleSelectMonth}
-            />
-          </Subsection>
-          <Subsection>
-            <IncomeVsExpensesChartControls
-              toggles={[
-                {
-                  label: "exclude first",
-                  key: "excludeFirstMonth",
-                  value: excludeFirstMonth
-                },
-                {
-                  label: "exclude last",
-                  key: "excludeCurrentMonth",
-                  value: excludeCurrentMonth
-                },
-                {
-                  label: "exclude outliers",
-                  key: "excludeOutliers",
-                  value: excludeOutliers
-                }
-              ]}
-              onToggle={this.handleToggleExclusion}
-              onClearSelected={this.handleClearSelectedMonths}
-              hasSelection={selectedMonths.length > 0}
-            />
-          </Subsection>
+          <ChartNumbers
+            numbers={[
+              {
+                label: "net income",
+                amount: -(totalExpenses + totalIncome) / denominator
+              },
+              {
+                label: "expenses",
+                amount: totalExpenses / denominator
+              },
+              {
+                label: "income",
+                amount: -totalIncome / denominator
+              }
+            ]}
+          />
+          <IncomeVsExpensesChart
+            data={allSummaries}
+            selectedMonths={selectedMonths}
+            onSelectMonth={this.handleSelectMonth}
+          />
         </CollapsibleSection>
         <Breakdowns
           categoriesById={categoriesById}

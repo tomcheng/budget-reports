@@ -15,10 +15,4 @@ export const TopSection = styled(Section)`
   border-width: 0 0 1px;
 `;
 
-export const Subsection = styled.div`
-  & + & {
-    margin-top: 15px;
-  }
-`;
-
 export default Section;
