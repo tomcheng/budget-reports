@@ -138,25 +138,6 @@ class Group extends PureComponent {
             transactions={transactionsInSelectedMonth}
           />
         )}
-        <GenericEntitiesSection
-          key={`payees-${selectedMonth || "all"}`}
-          entityKey="payee_id"
-          entitiesById={payeesById}
-          linkFunction={payeeId =>
-            makeLink(pages.groupPayee.path, {
-              budgetId,
-              categoryGroupId: categoryGroup.id,
-              payeeId
-            })
-          }
-          title={
-            selectedMonth
-              ? `Payees for ${moment(selectedMonth).format("MMMM")}`
-              : "Payees"
-          }
-          transactions={transactionsInSelectedMonth || transactionsInGroup}
-          limitShowing
-        />
       </Fragment>
     );
   }
