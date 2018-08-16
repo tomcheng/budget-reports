@@ -82,11 +82,13 @@ class Category extends PureComponent {
         />
         {selectedMonth && (
           <TransactionsByMonthSection
-            key={`transactions-${selectedMonth}`}
+            key={`transactions-${selectedMonth || "all"}-${selectedPayeeId ||
+              "all"}`}
             categoriesById={categoriesById}
             payeesById={payeesById}
             transactions={transactionsForMonth}
             selectedMonth={selectedMonth}
+            selectedPayeeId={selectedPayeeId}
           />
         )}
       </Fragment>

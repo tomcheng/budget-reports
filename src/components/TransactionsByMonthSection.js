@@ -19,7 +19,8 @@ class TransactionsByMonthSection extends Component {
     selectedMonth: PropTypes.string.isRequired,
     transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
     limitShowing: PropTypes.bool,
-    selectedCategoryId: PropTypes.string
+    selectedCategoryId: PropTypes.string,
+    selectedPayeeId: PropTypes.string
   };
 
   static defaultProps = { limitShowing: true };
@@ -44,6 +45,7 @@ class TransactionsByMonthSection extends Component {
       categoriesById,
       payeesById,
       selectedCategoryId,
+      selectedPayeeId,
       selectedMonth,
       transactions,
       limitShowing: limitShowingProp
@@ -52,6 +54,8 @@ class TransactionsByMonthSection extends Component {
 
     const selectedCategory =
       selectedCategoryId && categoriesById[selectedCategoryId];
+    const selectedPayee = selectedPayeeId && payeesById[selectedPayeeId];
+    const month = moment(selectedMonth).format("MMMM");
     const transactionsForMonth = compose([
       limitShowingProp
         ? sortBy("amount")
@@ -61,7 +65,8 @@ class TransactionsByMonthSection extends Component {
           transaction =>
             getTransactionMonth(transaction) === selectedMonth &&
             (!selectedCategoryId ||
-              transaction.category_id === selectedCategoryId)
+              transaction.category_id === selectedCategoryId) &&
+            (!selectedPayeeId || transaction.payee_id === selectedPayeeId)
         )
     ])(transactions);
     const limitShowing =
@@ -76,11 +81,11 @@ class TransactionsByMonthSection extends Component {
     return (
       <CollapsibleSection
         title={
-          selectedCategory
-            ? `Transactions in ${selectedCategory.name} for ${moment(
-                selectedMonth
-              ).format("MMMM")}`
-            : `Transactions for ${moment(selectedMonth).format("MMMM")}`
+          selectedPayee
+            ? `Transactions for ${selectedPayee.name} in ${month}`
+            : selectedCategory
+              ? `Transactions in ${selectedCategory.name} and ${month}`
+              : `Transactions in ${month}`
         }
       >
         {topTransactions.length ? (
