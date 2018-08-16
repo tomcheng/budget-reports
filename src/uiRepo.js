@@ -7,6 +7,7 @@ export const MORTGAGE_ACCOUNTS = "mortgageAccounts";
 export const NET_WORTH_HIDDEN_ACCOUNTS = "netWorthHiddenAccounts";
 export const PAYEES_SORT_ORDER = "payeesSortOrder";
 export const SPENDING_MONTHS_TO_COMPARE = "spendingMonthsToCompare";
+export const TRENDS_SHOW_AVERAGE = "trendsShowAverage";
 
 const SETTINGS = {
   [INVESTMENT_ACCOUNTS]: {
@@ -32,6 +33,10 @@ const SETTINGS = {
   [SPENDING_MONTHS_TO_COMPARE]: {
     key: "budget-reports-spending-months-to-compare",
     default: 3
+  },
+  [TRENDS_SHOW_AVERAGE]: {
+    key: "budget-reports-trends-show-average",
+    default: true
   }
 };
 

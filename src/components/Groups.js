@@ -10,6 +10,7 @@ import {
   isIncome,
   getTransactionMonth
 } from "../budgetUtils";
+import { TRENDS_SHOW_AVERAGE, getSetting, setSetting } from "../uiRepo";
 import pages, { makeLink } from "../pages";
 import MonthByMonthSection from "./MonthByMonthSection";
 import GenericEntitiesSection from "./GenericEntitiesSection";
@@ -24,10 +25,24 @@ class Groups extends PureComponent {
     selectedMonth: PropTypes.string
   };
 
-  state = { showAverage: true };
+  constructor(props) {
+    super();
+    this.state = {
+      showAverage: getSetting(TRENDS_SHOW_AVERAGE, props.budget.id)
+    };
+  }
 
   handleToggleGroupAverage = () => {
-    this.setState(state => ({ ...state, showAverage: !state.showAverage }));
+    this.setState(
+      state => ({ ...state, showAverage: !state.showAverage }),
+      () => {
+        setSetting(
+          TRENDS_SHOW_AVERAGE,
+          this.props.budget.id,
+          this.state.showAverage
+        );
+      }
+    );
   };
 
   render() {
