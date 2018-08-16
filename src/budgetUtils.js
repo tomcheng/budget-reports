@@ -1,3 +1,4 @@
+import moment from "moment";
 import compose from "lodash/fp/compose";
 import pick from "lodash/fp/pick";
 import mapRaw from "lodash/fp/map";
@@ -33,6 +34,12 @@ export const getTransactionMonth = transaction => transaction.date.slice(0, 7);
 
 export const getFirstMonth = budget =>
   getTransactionMonth(budget.transactions[budget.transactions.length - 1]);
+
+export const getNumMonths = budget => {
+  const firstMonth = moment(getFirstMonth(budget));
+  const current = moment();
+  return current.diff(firstMonth, "months") + 1;
+};
 
 export const getPayeeNodes = ({ payeesById, transactions }, divideBy = 1) =>
   compose([

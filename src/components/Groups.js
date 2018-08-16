@@ -4,6 +4,7 @@ import moment from "moment";
 import { notAny } from "../optimized";
 import {
   getFirstMonth,
+  getNumMonths,
   isStartingBalanceOrReconciliation,
   isTransfer,
   isIncome,
@@ -23,6 +24,12 @@ class Groups extends PureComponent {
     selectedMonth: PropTypes.string
   };
 
+  state = { showAverage: true };
+
+  handleToggleGroupAverage = () => {
+    this.setState(state => ({ ...state, showAverage: !state.showAverage }));
+  };
+
   render() {
     const {
       budget,
@@ -32,6 +39,7 @@ class Groups extends PureComponent {
       onSelectGroup,
       onSelectMonth
     } = this.props;
+    const { showAverage } = this.state;
     const {
       transactions,
       categoryGroupsById,
@@ -39,6 +47,7 @@ class Groups extends PureComponent {
       id: budgetId
     } = budget;
     const firstMonth = getFirstMonth(budget);
+    const numMonths = getNumMonths(budget);
     const filteredTransactions = transactions.filter(
       notAny([
         isStartingBalanceOrReconciliation(budget),
@@ -68,9 +77,11 @@ class Groups extends PureComponent {
           onSelectMonth={onSelectMonth}
         />
         <GenericEntitiesSection
+          key={selectedMonth || "all"}
           entityFunction={transaction =>
             categoriesById[transaction.category_id].category_group_id
           }
+          entityKey="category_group_id"
           entitiesById={categoryGroupsById}
           linkFunction={categoryGroupId =>
             makeLink(pages.group.path, { budgetId, categoryGroupId })
@@ -84,6 +95,11 @@ class Groups extends PureComponent {
           }
           transactions={transactionsForMonth || filteredTransactions}
           onClickEntity={onSelectGroup}
+          numMonths={numMonths}
+          showAverageToggle={!selectedMonth}
+          showAverage={showAverage && !selectedMonth}
+          onToggleAverage={this.handleToggleGroupAverage}
+          limitShowing
         />
       </Fragment>
     );

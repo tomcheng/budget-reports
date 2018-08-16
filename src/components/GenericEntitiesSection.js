@@ -17,6 +17,7 @@ const mapWithKeys = map.convert({ cap: false });
 const LIMIT = 5;
 
 const keyToPluralizedName = {
+  category_group_id: "category groups",
   category_id: "categories",
   payee_id: "payees"
 };
@@ -27,12 +28,16 @@ class GenericEntitiesSection extends Component {
     linkFunction: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
-    entityKey: PropTypes.oneOf(["category_id", "payee_id"]),
+    entityKey: PropTypes.oneOf(["category_id", "category_group_id", "payee_id"]),
     entityFunction: PropTypes.func,
     showTransactionCount: PropTypes.bool,
     limitShowing: PropTypes.bool,
+    numMonths: PropTypes.number,
     selectedEntityId: PropTypes.string,
-    onClickEntity: PropTypes.func
+    showAverage: PropTypes.bool,
+    showAverageToggle: PropTypes.bool,
+    onClickEntity: PropTypes.func,
+    onToggleAverage: PropTypes.func
   };
 
   static defaultProps = { showTransactionCount: true };
@@ -58,11 +63,15 @@ class GenericEntitiesSection extends Component {
       entitiesById,
       linkFunction,
       limitShowing: limitShowingProp,
+      numMonths,
       selectedEntityId,
+      showAverage,
+      showAverageToggle,
       showTransactionCount,
       title,
       transactions,
-      onClickEntity
+      onClickEntity,
+      onToggleAverage
     } = this.props;
     const { allMounted, showAll } = this.state;
     let total = 0;
@@ -86,7 +95,16 @@ class GenericEntitiesSection extends Component {
     const otherEntities = entities.slice(LIMIT);
 
     return (
-      <CollapsibleSection title={title}>
+      <CollapsibleSection
+        title={title}
+        actions={
+          showAverageToggle && (
+            <SecondaryText onClick={onToggleAverage}>
+              {showAverage ? "averages" : "totals"}
+            </SecondaryText>
+          )
+        }
+      >
         {(limitShowing ? topEntities : entities).map(
           ({ entityId, transactions, amount }) => (
             <GenericItemLink
@@ -95,9 +113,9 @@ class GenericEntitiesSection extends Component {
               to={linkFunction(entityId)}
               transactions={transactions}
               name={entitiesById[entityId].name}
-              amount={amount}
+              amount={showAverage ? amount / numMonths : amount}
               selected={entityId === selectedEntityId}
-              total={total}
+              total={showAverage ? total / numMonths : total}
               id={entityId}
               onClick={onClickEntity}
             />

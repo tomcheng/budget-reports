@@ -42,6 +42,7 @@ class CollapsibleSection extends Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
     title: PropTypes.string.isRequired,
+    actions: PropTypes.node,
     hasSettings: PropTypes.bool,
     noPadding: PropTypes.bool,
     onClickSettings: PropTypes.func
@@ -55,6 +56,7 @@ class CollapsibleSection extends Component {
 
   render() {
     const {
+      actions,
       children,
       hasSettings,
       noPadding,
@@ -84,6 +86,7 @@ class CollapsibleSection extends Component {
                 <StyledIcon icon="cog" />
               </SettingsContainer>
             )}
+          {expanded && actions}
         </Header>
         <AnimateHeight isExpanded={expanded}>
           <Body style={{ padding: noPadding && 0 }}>{children}</Body>
