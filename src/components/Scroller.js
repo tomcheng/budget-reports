@@ -5,7 +5,7 @@ class Scroller extends Component {
   static propTypes = {
     action: PropTypes.string.isRequired,
     children: PropTypes.func.isRequired,
-    location: PropTypes.string.isRequired,
+    location: PropTypes.string.isRequired
   };
 
   toBeScrolled = null;
@@ -25,16 +25,22 @@ class Scroller extends Component {
 
     if (action === "POP") {
       this.scrollPositions[prevProps.location] = snapshot.scrollTop;
-      this.toBeScrolled.scrollTop = this.scrollPositions[location] || 0;
+      requestAnimationFrame(() => {
+        this.toBeScrolled.scrollTop = this.scrollPositions[location] || 0;
+      });
     }
 
     if (action === "PUSH") {
       this.scrollPositions[prevProps.location] = snapshot.scrollTop;
-      this.toBeScrolled.scrollTop = 0;
+      requestAnimationFrame(() => {
+        this.toBeScrolled.scrollTop = 0;
+      });
     }
 
     if (action === "REPLACE") {
-      this.toBeScrolled.scrollTop = 0;
+      requestAnimationFrame(() => {
+        this.toBeScrolled.scrollTop = 0;
+      });
     }
   }
 
