@@ -80,17 +80,18 @@ class Category extends PureComponent {
           onClickEntity={onSelectPayee}
           limitShowing
         />
-        {selectedMonth && (
-          <TransactionsByMonthSection
-            key={`transactions-${selectedMonth || "all"}-${selectedPayeeId ||
-              "all"}`}
-            categoriesById={categoriesById}
-            payeesById={payeesById}
-            transactions={transactionsForMonth}
-            selectedMonth={selectedMonth}
-            selectedPayeeId={selectedPayeeId}
-          />
-        )}
+        {selectedMonth &&
+          transactionsForMonth.length > 0 && (
+            <TransactionsByMonthSection
+              key={`transactions-${selectedMonth || "all"}-${selectedPayeeId ||
+                "all"}`}
+              categoriesById={categoriesById}
+              payeesById={payeesById}
+              transactions={transactionsForMonth}
+              selectedMonth={selectedMonth}
+              selectedPayeeId={selectedPayeeId}
+            />
+          )}
       </Fragment>
     );
   }

@@ -128,17 +128,18 @@ class Group extends PureComponent {
           onToggleAverage={this.handleToggleAverage}
           limitShowing
         />
-        {selectedMonth && (
-          <TransactionsByMonthSection
-            key={`transactions-${selectedMonth || "all"}-${selectedCategoryId ||
-              "all"}`}
-            categoriesById={categoriesById}
-            payeesById={payeesById}
-            selectedMonth={selectedMonth}
-            selectedCategoryId={selectedCategoryId}
-            transactions={transactionsInSelectedMonth}
-          />
-        )}
+        {selectedMonth &&
+          transactionsInSelectedMonth.length > 0 && (
+            <TransactionsByMonthSection
+              key={`transactions-${selectedMonth ||
+                "all"}-${selectedCategoryId || "all"}`}
+              categoriesById={categoriesById}
+              payeesById={payeesById}
+              selectedMonth={selectedMonth}
+              selectedCategoryId={selectedCategoryId}
+              transactions={transactionsInSelectedMonth}
+            />
+          )}
       </Fragment>
     );
   }
