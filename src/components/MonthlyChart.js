@@ -8,6 +8,7 @@ import Chart from "./Chart";
 const MonthlyChart = ({
   average,
   data,
+  height,
   series,
   selectedMonth,
   onSelectMonth
@@ -48,7 +49,7 @@ const MonthlyChart = ({
       options={{
         chart: {
           animation: false,
-          height: 140,
+          height,
           type: "column",
           events: {
             click: event => {
@@ -116,8 +117,11 @@ MonthlyChart.propTypes = {
     })
   ).isRequired,
   average: PropTypes.number,
+  height: PropTypes.number,
   selectedMonth: PropTypes.string,
   onSelectMonth: PropTypes.func
 };
+
+MonthlyChart.defaultProps = { height: 140 };
 
 export default MonthlyChart;
