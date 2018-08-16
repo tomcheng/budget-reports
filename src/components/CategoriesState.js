@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 const INITIAL_STATE = {
   selectedMonth: null,
   selectedGroupId: null,
-  selectedCategoryId: null
+  selectedCategoryId: null,
+  selectedPayeeId: null
 };
 
 class CategoriesState extends Component {
@@ -66,12 +67,21 @@ class CategoriesState extends Component {
     }));
   };
 
+  handleSelectPayee = payeeId => {
+    this.setState(state => ({
+      ...state,
+      selectedPayeeId:
+        state.selectedPayeeId === payeeId ? null : payeeId
+    }));
+  };
+
   render() {
     return this.props.children({
       ...this.state,
       onSelectMonth: this.handleSelectMonth,
       onSelectGroup: this.handleSelectGroup,
-      onSelectCategory: this.handleSelectCategory
+      onSelectCategory: this.handleSelectCategory,
+      onSelectPayee: this.handleSelectPayee
     });
   }
 }

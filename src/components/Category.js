@@ -21,21 +21,13 @@ class Category extends PureComponent {
       id: PropTypes.string.isRequired
     }).isRequired,
     onSelectMonth: PropTypes.func.isRequired,
-    selectedMonth: PropTypes.string
-  };
-
-  state = { selectedPayeeId: null };
-
-  handleClickPayee = payeeId => {
-    this.setState(state => ({
-      ...state,
-      selectedPayeeId: state.selectedPayeeId === payeeId ? null : payeeId
-    }));
+    onSelectPayee: PropTypes.func.isRequired,
+    selectedMonth: PropTypes.string,
+    selectedPayeeId: PropTypes.string
   };
 
   render() {
-    const { category, budget, selectedMonth, onSelectMonth } = this.props;
-    const { selectedPayeeId } = this.state;
+    const { category, budget, selectedMonth, selectedPayeeId, onSelectMonth, onSelectPayee } = this.props;
     const { transactions, categoriesById, payeesById, id: budgetId } = budget;
     const firstMonth = getFirstMonth(budget);
     const transactionsForCategory = transactions.filter(
@@ -87,7 +79,7 @@ class Category extends PureComponent {
           }
           transactions={transactionsForMonth || transactionsForCategory}
           selectedEntityId={selectedPayeeId}
-          onClickEntity={this.handleClickPayee}
+          onClickEntity={onSelectPayee}
           limitShowing
         />
       </Fragment>

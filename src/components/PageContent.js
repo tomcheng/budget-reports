@@ -27,9 +27,11 @@ const PageContent = props =>
               selectedMonth,
               selectedGroupId,
               selectedCategoryId,
+              selectedPayeeId,
               onSelectMonth,
               onSelectGroup,
-              onSelectCategory
+              onSelectCategory,
+              onSelectPayee
             }) => (
               <Switch>
                 {groupedPages.categoryPages.map(
@@ -44,9 +46,11 @@ const PageContent = props =>
                           selectedMonth={selectedMonth}
                           selectedGroupId={selectedGroupId}
                           selectedCategoryId={selectedCategoryId}
+                          selectedPayeeId={selectedPayeeId}
                           onSelectMonth={onSelectMonth}
                           onSelectGroup={onSelectGroup}
                           onSelectCategory={onSelectCategory}
+                          onSelectPayee={onSelectPayee}
                         />
                       )}
                     />
