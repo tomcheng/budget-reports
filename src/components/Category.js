@@ -72,7 +72,6 @@ class Category extends PureComponent {
               : "Payees"
           }
           transactions={transactionsForMonth || transactionsForCategory}
-          showTransactionCount
           limitShowing
         />
       </Fragment>

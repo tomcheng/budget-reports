@@ -64,6 +64,7 @@ class CurrentMonthGroup extends PureComponent {
           }
           title="Categories"
           transactions={transactionsInGroupForMonth}
+          showTransactionCount
         />
         <TransactionsSection
           categoriesById={categoriesById}

@@ -120,7 +120,6 @@ class Group extends PureComponent {
               : "Categories"
           }
           transactions={transactionsInSelectedMonth || transactionsInGroup}
-          showTransactionCount={false}
           selectedEntityId={selectedCategoryId}
           onClickEntity={onSelectCategory}
           showAverageToggle={!selectedMonth}

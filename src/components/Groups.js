@@ -101,7 +101,6 @@ class Groups extends PureComponent {
           linkFunction={categoryGroupId =>
             makeLink(pages.group.path, { budgetId, categoryGroupId })
           }
-          showTransactionCount={false}
           selectedEntityId={selectedGroupId}
           title={
             selectedMonth

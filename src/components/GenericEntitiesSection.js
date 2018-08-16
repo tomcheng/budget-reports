@@ -40,8 +40,6 @@ class GenericEntitiesSection extends Component {
     onToggleAverage: PropTypes.func
   };
 
-  static defaultProps = { showTransactionCount: true };
-
   state = { showAll: false, allMounted: false };
 
   handleToggleShowAll = () => {
