@@ -3,7 +3,7 @@ import moment from "moment";
 import get from "lodash/fp/get";
 import matches from "lodash/fp/matches";
 import { getStorage, setStorage } from "./utils";
-import { setSetting, getSetting, LAST_UPDATED } from "./uiRepo";
+import { setSetting, getSetting } from "./uiRepo";
 import { sanitizeBudget, mergeBudgets } from "./repoUtils";
 import { getBudgetDetails, setBudgetDetails } from "./localBudgetCache";
 import { clientId, redirectUri } from "./ynabConfig";
@@ -75,7 +75,7 @@ const getBudget = id =>
       const { budget, server_knowledge } = data;
 
       setBudgetDetails({ id, budget, server_knowledge });
-      setSetting(LAST_UPDATED, id, moment().valueOf());
+      setSetting("lastUpdated", id, moment().valueOf());
 
       return { budget: sanitizeBudget(budget), authorized: true };
     })
@@ -99,7 +99,7 @@ export const getUpdatedBudget = id => {
   }
 
   if (
-    moment().valueOf() - getSetting(LAST_UPDATED, id) <
+    moment().valueOf() - getSetting("lastUpdated", id) <
     TIME_LIMIT_FOR_FULL_REFRESH
   ) {
     return getBudget(id);
@@ -111,7 +111,7 @@ export const getUpdatedBudget = id => {
       const budget = mergeBudgets(budgetDetails.budget, data.budget);
 
       setBudgetDetails({ id, budget, server_knowledge: data.server_knowledge });
-      setSetting(LAST_UPDATED, id, moment().valueOf());
+      setSetting("lastUpdated", id, moment().valueOf());
 
       return { budget: sanitizeBudget(budget), authorized: true };
     })

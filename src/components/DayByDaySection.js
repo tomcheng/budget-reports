@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
-import { getSetting, setSetting, SPENDING_MONTHS_TO_COMPARE } from "../uiRepo";
+import { getSetting, setSetting } from "../uiRepo";
 import CollapsibleSection from "./CollapsibleSection";
 import SpendingChart from "./SpendingChart";
 import ChartSettingsModal from "./ChartSettingsModal";
@@ -23,7 +23,7 @@ class DayByDaySection extends Component {
 
     this.state = {
       modalOpen: false,
-      monthsToCompare: getSetting(SPENDING_MONTHS_TO_COMPARE, props.budgetId)
+      monthsToCompare: getSetting("spendingMonthsToCompare", props.budgetId)
     };
   }
 
@@ -57,7 +57,7 @@ class DayByDaySection extends Component {
 
   saveSetting = () => {
     setSetting(
-      SPENDING_MONTHS_TO_COMPARE,
+      "spendingMonthsToCompare",
       this.props.budgetId,
       this.state.monthsToCompare
     );

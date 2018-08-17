@@ -11,7 +11,7 @@ import {
   getTransactionMonth,
   sanitizeName
 } from "../budgetUtils";
-import { TRENDS_SHOW_AVERAGE, getSetting, setSetting } from "../uiRepo";
+import { getSetting, setSetting } from "../uiRepo";
 import pages, { makeLink } from "../pages";
 import MonthByMonthSection from "./MonthByMonthSection";
 import GenericEntitiesSection from "./GenericEntitiesSection";
@@ -29,7 +29,7 @@ class Groups extends PureComponent {
   constructor(props) {
     super();
     this.state = {
-      showAverage: getSetting(TRENDS_SHOW_AVERAGE, props.budget.id)
+      showAverage: getSetting("trendsShowAverage", props.budget.id)
     };
   }
 
@@ -38,7 +38,7 @@ class Groups extends PureComponent {
       state => ({ ...state, showAverage: !state.showAverage }),
       () => {
         setSetting(
-          TRENDS_SHOW_AVERAGE,
+          "trendsShowAverage",
           this.props.budget.id,
           this.state.showAverage
         );

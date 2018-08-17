@@ -1,51 +1,53 @@
 import { getStorage, setStorage } from "./utils";
 import get from "lodash/get";
 
-export const INVESTMENT_ACCOUNTS = "investmentAccounts";
-export const LAST_UPDATED = "lastUpdated";
-export const MORTGAGE_ACCOUNTS = "mortgageAccounts";
-export const NET_WORTH_HIDDEN_ACCOUNTS = "netWorthHiddenAccounts";
-export const PAYEES_SORT_ORDER = "payeesSortOrder";
-export const SPENDING_MONTHS_TO_COMPARE = "spendingMonthsToCompare";
-export const TRENDS_SHOW_AVERAGE = "trendsShowAverage";
-
 const SETTINGS = {
-  [INVESTMENT_ACCOUNTS]: {
-    key: "budget-reports-investment-accounts",
+  investmentAccounts: {
+    localStorageKey: "budget-reports-investment-accounts",
     default: {}
   },
-  [LAST_UPDATED]: {
-    key: "budget-reports-last-updated",
+  lastUpdated: {
+    localStorageKey: "budget-reports-last-updated",
     default: null
   },
-  [MORTGAGE_ACCOUNTS]: {
-    key: "budget-reports-mortgage-accounts",
+  mortgageAccounts: {
+    localStorageKey: "budget-reports-mortgage-accounts",
     default: {}
   },
-  [NET_WORTH_HIDDEN_ACCOUNTS]: {
-    key: "budget-reports-networth-hidden-accounts",
+  netWorthHiddenAccounts: {
+    localStorageKey: "budget-reports-networth-hidden-accounts",
     default: {}
   },
-  [PAYEES_SORT_ORDER]: {
-    key: "budget-reports-payees-sort-order",
-    default: "amount"
-  },
-  [SPENDING_MONTHS_TO_COMPARE]: {
-    key: "budget-reports-spending-months-to-compare",
+  spendingMonthsToCompare: {
+    localStorageKey: "budget-reports-spending-months-to-compare",
     default: 3
   },
-  [TRENDS_SHOW_AVERAGE]: {
-    key: "budget-reports-trends-show-average",
+  trendsShowAverage: {
+    localStorageKey: "budget-reports-trends-show-average",
     default: true
   }
 };
 
-export const getSetting = (setting, budgetId) =>
-  get(getStorage(SETTINGS[setting].key), budgetId, SETTINGS[setting].default);
+export const getSetting = (settingsKey, budgetId) => {
+  const setting = SETTINGS[settingsKey];
 
-export const setSetting = (setting, budgetId, value) => {
-  const previousSetting = getStorage(SETTINGS[setting].key);
-  setStorage(SETTINGS[setting].key, {
+  if (!setting) {
+    throw new Error("not a valid settings key");
+  }
+
+  return get(getStorage(setting.localStorageKey), budgetId, setting.default);
+};
+
+export const setSetting = (settingsKey, budgetId, value) => {
+  const setting = SETTINGS[settingsKey];
+
+  if (!setting) {
+    throw new Error("not a valid settings key");
+  }
+
+  const previousSetting = getStorage(setting.localStorageKey);
+
+  setStorage(setting.localStorageKey, {
     ...previousSetting,
     [budgetId]: value
   });

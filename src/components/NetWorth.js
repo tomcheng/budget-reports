@@ -18,7 +18,7 @@ import sum from "lodash/fp/sum";
 import sumBy from "lodash/fp/sumBy";
 import values from "lodash/fp/values";
 import { simpleMemoize } from "../dataUtils";
-import { getSetting, setSetting, NET_WORTH_HIDDEN_ACCOUNTS } from "../uiRepo";
+import { getSetting, setSetting } from "../uiRepo";
 import CollapsibleSection from "./CollapsibleSection";
 import ChartNumbers from "./ChartNumbers";
 import NetWorthChart from "./NetWorthChart";
@@ -64,7 +64,7 @@ class NetWorth extends PureComponent {
     super();
 
     this.state = {
-      hiddenAccounts: getSetting(NET_WORTH_HIDDEN_ACCOUNTS, props.budget.id),
+      hiddenAccounts: getSetting("netWorthHiddenAccounts", props.budget.id),
       selectedMonth: null
     };
   }
@@ -127,7 +127,7 @@ class NetWorth extends PureComponent {
     );
 
     this.setState({ hiddenAccounts: newHiddenAccounts });
-    setSetting(NET_WORTH_HIDDEN_ACCOUNTS, budget.id, newHiddenAccounts);
+    setSetting("netWorthHiddenAccounts", budget.id, newHiddenAccounts);
   };
 
   render() {

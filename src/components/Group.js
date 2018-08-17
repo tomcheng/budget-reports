@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import compose from "lodash/fp/compose";
 import sortBy from "lodash/fp/sortBy";
-import { getSetting, setSetting, TRENDS_SHOW_AVERAGE } from "../uiRepo";
+import { getSetting, setSetting } from "../uiRepo";
 import {
   getFirstMonth,
   getNumMonths,
@@ -38,7 +38,7 @@ class Group extends PureComponent {
     super();
 
     this.state = {
-      showAverage: getSetting(TRENDS_SHOW_AVERAGE, props.budget.id)
+      showAverage: getSetting("trendsShowAverage", props.budget.id)
     };
   }
 
@@ -47,7 +47,7 @@ class Group extends PureComponent {
       state => ({ ...state, showAverage: !state.showAverage }),
       () => {
         setSetting(
-          TRENDS_SHOW_AVERAGE,
+          "trendsShowAverage",
           this.props.budget.id,
           this.state.showAverage
         );

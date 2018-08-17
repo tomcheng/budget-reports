@@ -9,12 +9,7 @@ import {
   AUTHORIZE_URL,
   setLastLocation
 } from "../ynabRepo";
-import {
-  setSetting,
-  getSetting,
-  INVESTMENT_ACCOUNTS,
-  MORTGAGE_ACCOUNTS
-} from "../uiRepo";
+import { setSetting, getSetting } from "../uiRepo";
 import PageWrapper from "./PageWrapper";
 import PageTitle from "./PageTitle";
 import PageBreadcrumbs from "./PageBreadcrumbs";
@@ -142,20 +137,23 @@ class App extends Component {
                       budget={budget}
                       currentMonth={currentMonth}
                       investmentAccounts={getSetting(
-                        INVESTMENT_ACCOUNTS,
+                        "investmentAccounts",
                         budgetId
                       )}
-                      mortgageAccounts={getSetting(MORTGAGE_ACCOUNTS, budgetId)}
+                      mortgageAccounts={getSetting(
+                        "mortgageAccounts",
+                        budgetId
+                      )}
                       settings={settings}
                       historyAction={props.history.action}
                       location={props.location.pathname}
                       onChangeSetting={this.handleChangeSetting}
                       onUpdateAccounts={({ type, value }) => {
                         if (type === "investment") {
-                          setSetting(INVESTMENT_ACCOUNTS, budgetId, value);
+                          setSetting("investmentAccounts", budgetId, value);
                         }
                         if (type === "mortgage") {
-                          setSetting(MORTGAGE_ACCOUNTS, budgetId, value);
+                          setSetting("mortgageAccounts", budgetId, value);
                         }
                         this.forceUpdate();
                       }}
