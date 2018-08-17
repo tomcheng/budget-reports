@@ -1,7 +1,9 @@
 import { utils } from "ynab";
+import moment from "moment";
 import compose from "lodash/fp/compose";
 import flatMap from "lodash/fp/flatMap";
 import filter from "lodash/fp/filter";
+import dropWhile from "lodash/fp/dropWhile";
 import keyBy from "lodash/fp/keyBy";
 import map from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
@@ -20,6 +22,8 @@ const GROUPS_TO_HIDE = [
   "Hidden Categories"
 ];
 
+const MAX_MONTHS_TO_SHOW = 24;
+
 export const sanitizeBudget = budget => {
   const transactionIdsFromSub = uniq(
     map("transaction_id")(budget.subtransactions)
@@ -33,6 +37,9 @@ export const sanitizeBudget = budget => {
     balance: formatCurrency(category.balance),
     budgeted: formatCurrency(category.budgeted)
   }))(budget.categories);
+  const earliestDate = moment()
+    .subtract(MAX_MONTHS_TO_SHOW - 1, "months")
+    .format("YYYY-MM-01");
 
   return {
     ...omit(["categories", "category_groups", "months", "transactions"])(
@@ -60,6 +67,7 @@ export const sanitizeBudget = budget => {
             : transaction
       ),
       reverse,
+      dropWhile(transaction => transaction.date < earliestDate),
       sortBy("date"),
       transactions =>
         transactions.filter(transaction => transaction.amount !== 0)
