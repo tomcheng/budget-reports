@@ -41,6 +41,21 @@ export const getNumMonths = budget => {
   return current.diff(firstMonth, "months") + 1;
 };
 
+export const getMonthsToNow = firstMonth => {
+  const currentMonth = moment().format("YYYY-MM");
+  const months = [firstMonth];
+  let m = firstMonth;
+
+  while (m !== currentMonth) {
+    m = moment(m)
+      .add(1, "months")
+      .format("YYYY-MM");
+    months.push(m);
+  }
+
+  return months;
+};
+
 export const getPayeeNodes = ({ payeesById, transactions }, divideBy = 1) =>
   compose([
     map((transactions, payeeId) => ({

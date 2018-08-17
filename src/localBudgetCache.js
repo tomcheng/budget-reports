@@ -1,5 +1,5 @@
 import get from "lodash/fp/get";
-import { getStorage, setStorage } from "./utils";
+import { getStorage, setStorage } from "./localstorageUtils";
 
 const BUDGET_DETAILS_STORAGE_KEY = "ynab_budget_details";
 

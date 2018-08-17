@@ -1,4 +1,4 @@
-import { getStorage, setStorage } from "./utils";
+import { getStorage, setStorage } from "./localstorageUtils";
 import get from "lodash/get";
 
 const SETTINGS = {

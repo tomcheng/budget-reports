@@ -12,6 +12,7 @@ import keys from "lodash/fp/keys";
 import last from "lodash/fp/last";
 import map from "lodash/fp/map";
 import matches from "lodash/fp/matches";
+import mean from "lodash/fp/mean";
 import multiply from "lodash/fp/multiply";
 import prop from "lodash/fp/prop";
 import range from "lodash/fp/range";
@@ -22,8 +23,20 @@ import sumBy from "lodash/fp/sumBy";
 import takeWhile from "lodash/fp/takeWhile";
 import takeRightWhile from "lodash/fp/takeRightWhile";
 import uniq from "lodash/fp/uniq";
-import { getOutliersBy } from "./utils";
 import { getTransactionMonth } from "./budgetUtils";
+
+const standardDeviation = arr => {
+  const avg = mean(arr);
+  return Math.sqrt(sumBy(num => Math.pow(num - avg, 2))(arr) / arr.length);
+};
+
+const getOutliersBy = f => arr => {
+  const values = map(f)(arr);
+  const stdDev = standardDeviation(values);
+  const avg = mean(values);
+
+  return filter(item => Math.abs(f(item) - avg) > stdDev)(arr);
+};
 
 export const getMortgageRate = (
   { accounts, transactions: allTransactions },

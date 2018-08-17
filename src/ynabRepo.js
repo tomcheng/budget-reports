@@ -2,7 +2,7 @@ import * as ynab from "ynab";
 import moment from "moment";
 import get from "lodash/fp/get";
 import matches from "lodash/fp/matches";
-import { getStorage, setStorage } from "./utils";
+import { getStorage, setStorage } from "./localstorageUtils";
 import { setSetting, getSetting } from "./uiRepo";
 import { sanitizeBudget, mergeBudgets } from "./repoUtils";
 import { getBudgetDetails, setBudgetDetails } from "./localBudgetCache";
