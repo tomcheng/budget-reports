@@ -1,13 +1,10 @@
-import { utils } from "ynab";
 import moment from "moment";
-import { sumBy } from "./optimized";
+import { sumBy } from "./dataUtils";
 import filter from "lodash/fp/filter";
 import mapRaw from "lodash/fp/map";
 import mean from "lodash/fp/mean";
 
 const map = mapRaw.convert({ cap: false });
-
-export const formatCurrency = utils.convertMilliUnitsToCurrencyAmount;
 
 export const getStorage = key => {
   const raw = localStorage.getItem(key);
@@ -16,18 +13,6 @@ export const getStorage = key => {
 
 export const setStorage = (key, obj) => {
   localStorage.setItem(key, JSON.stringify(obj));
-};
-
-export const upsertBy = (arr, key, obj, updater = (prev, curr) => curr) => {
-  let exists = false;
-  const newArr = arr.map(item => {
-    if (item[key] === obj[key]) {
-      exists = true;
-      return updater(item, obj);
-    }
-    return item;
-  });
-  return exists ? newArr : newArr.concat(obj);
 };
 
 export const getMonthsToNow = firstMonth => {

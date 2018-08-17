@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import includes from "lodash/fp/includes";
 import sumBy from "lodash/fp/sumBy";
-import { groupBy } from "../optimized";
+import { groupBy } from "../dataUtils";
 import {
   primaryColor,
   lightPrimaryColor,

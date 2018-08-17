@@ -1,4 +1,4 @@
-import { upsertBy } from "./utils";
+import { upsertBy } from "./dataUtils";
 
 describe("upsertBy", () => {
   it("modifies an existing object", () => {

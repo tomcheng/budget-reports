@@ -1,7 +1,7 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { notAny } from "../optimized";
+import { notAny } from "../dataUtils";
 import {
   getFirstMonth,
   getNumMonths,

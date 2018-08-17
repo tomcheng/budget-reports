@@ -1,3 +1,4 @@
+import { utils } from "ynab";
 import compose from "lodash/fp/compose";
 import flatMap from "lodash/fp/flatMap";
 import filter from "lodash/fp/filter";
@@ -9,8 +10,9 @@ import reject from "lodash/fp/reject";
 import reverse from "lodash/fp/reverse";
 import sortBy from "lodash/fp/sortBy";
 import uniq from "lodash/fp/uniq";
-import { upsertBy } from "./utils";
-import { formatCurrency } from "./utils";
+import { upsertBy } from "./dataUtils";
+
+const formatCurrency = utils.convertMilliUnitsToCurrencyAmount;
 
 const GROUPS_TO_HIDE = [
   "Internal Master Category",
@@ -60,9 +62,7 @@ export const sanitizeBudget = budget => {
       reverse,
       sortBy("date"),
       transactions =>
-        transactions.filter(
-          transaction => transaction.amount !== 0
-        )
+        transactions.filter(transaction => transaction.amount !== 0)
     ])(budget.transactions)
   };
 };

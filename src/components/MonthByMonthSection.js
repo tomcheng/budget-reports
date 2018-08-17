@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import { getMonthsToNow } from "../utils";
 import { getTransactionMonth } from "../budgetUtils";
-import { groupBy, sumByProp } from "../optimized";
+import { groupBy, sumByProp } from "../dataUtils";
 import { lightPrimaryColor, lighterPrimaryColor } from "../styleVariables";
 import CollapsibleSection from "./CollapsibleSection";
 import ChartNumbers from "./ChartNumbers";

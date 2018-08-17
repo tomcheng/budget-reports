@@ -6,7 +6,7 @@ import flatMap from "lodash/fp/flatMap";
 import mapRaw from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
 import sortBy from "lodash/fp/sortBy";
-import { sumByProp, groupBy, simpleMemoize, notAny } from "../optimized";
+import { sumByProp, groupBy, simpleMemoize, notAny } from "../dataUtils";
 import {
   getTransactionMonth,
   isTransfer,

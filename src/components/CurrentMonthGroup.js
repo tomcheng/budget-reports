@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import { getTransactionMonth } from "../budgetUtils";
-import { sumByProp } from "../optimized";
+import { sumByProp } from "../dataUtils";
 import pages, { makeLink } from "../pages";
 import DayByDaySection from "./DayByDaySection";
 import GenericEntitiesSection from "./GenericEntitiesSection";

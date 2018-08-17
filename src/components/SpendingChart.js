@@ -9,7 +9,7 @@ import padCharsStart from "lodash/fp/padCharsStart";
 import range from "lodash/fp/range";
 import sumBy from "lodash/fp/sumBy";
 import takeWhile from "lodash/fp/takeWhile";
-import { groupByProp, sumByProp } from "../optimized";
+import { groupByProp, sumByProp } from "../dataUtils";
 import { getTransactionMonth } from "../budgetUtils";
 import { primaryColor, plotBandColor } from "../styleVariables";
 import { MinorText } from "./typeComponents";

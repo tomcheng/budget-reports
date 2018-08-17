@@ -7,7 +7,7 @@ import {
   isStartingBalanceOrReconciliation,
   isIncome
 } from "../budgetUtils";
-import { notAny } from "../optimized";
+import { notAny } from "../dataUtils";
 import pages, { makeLink } from "../pages";
 import DayByDaySection from "./DayByDaySection";
 import GenericEntitiesSection from "./GenericEntitiesSection";

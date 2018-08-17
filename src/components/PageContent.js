@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { Switch, Route } from "react-router-dom";
 import values from "lodash/fp/values";
-import { groupBy } from "../optimized";
+import { groupBy } from "../dataUtils";
 import pages, { makeLink } from "../pages";
 import CategoriesState from "./CategoriesState";
 

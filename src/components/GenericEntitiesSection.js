@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import map from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
-import { groupBy, groupByProp, sumByProp } from "../optimized";
+import { groupBy, groupByProp, sumByProp } from "../dataUtils";
 import AnimateHeight from "react-animate-height-auto";
 import { Link } from "react-router-dom";
 import CollapsibleSection from "./CollapsibleSection";

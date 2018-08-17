@@ -6,7 +6,7 @@ import mapRaw from "lodash/fp/map";
 import omit from "lodash/fp/omit";
 import pick from "lodash/fp/pick";
 import sortBy from "lodash/fp/sortBy";
-import { sumByProp, groupByProp } from "../optimized";
+import { sumByProp, groupByProp } from "../dataUtils";
 import { getPayeeNodes } from "../budgetUtils";
 import CollapsibleSection from "./CollapsibleSection";
 import Breakdown from "./Breakdown";

@@ -2,7 +2,7 @@ import moment from "moment";
 import compose from "lodash/fp/compose";
 import pick from "lodash/fp/pick";
 import mapRaw from "lodash/fp/map";
-import { groupByProp, simpleMemoize, sumByProp } from "./optimized";
+import { groupByProp, simpleMemoize, sumByProp } from "./dataUtils";
 
 const map = mapRaw.convert({ cap: false });
 

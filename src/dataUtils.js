@@ -46,3 +46,15 @@ export const simpleMemoize = func => {
 
 export const notAny = predicates => arg =>
   predicates.every(predicate => !predicate(arg));
+
+export const upsertBy = (arr, key, obj, updater = (prev, curr) => curr) => {
+  let exists = false;
+  const newArr = arr.map(item => {
+    if (item[key] === obj[key]) {
+      exists = true;
+      return updater(item, obj);
+    }
+    return item;
+  });
+  return exists ? newArr : newArr.concat(obj);
+};
