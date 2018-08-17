@@ -55,18 +55,24 @@ export const initializeYnabApi = token => {
   api = new ynab.api(token);
 };
 
-export const getBudgets = () => {
-  const cachedBudgets = getStorage(BUDGETS_STORAGE_KEY);
-
-  if (cachedBudgets) {
-    return Promise.resolve(cachedBudgets);
-  } else {
-    return api.budgets.getBudgets().then(({ data }) => {
+export const getBudgets = () =>
+  api.budgets
+    .getBudgets()
+    .then(({ data }) => {
       setStorage(BUDGETS_STORAGE_KEY, data);
       return data;
+    })
+    .catch(e => {
+      if (
+        matches({
+          id: "401",
+          name: "unauthorized"
+        })(e.error) ||
+        e.message === "Failed to fetch"
+      ) {
+        return getStorage(BUDGETS_STORAGE_KEY) || { budgets: [] };
+      }
     });
-  }
-};
 
 const getBudget = id =>
   api.budgets
