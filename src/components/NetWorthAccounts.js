@@ -3,14 +3,13 @@ import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import every from "lodash/fp/every";
 import filter from "lodash/fp/filter";
-import find from "lodash/fp/find";
 import groupBy from "lodash/fp/groupBy";
-import includes from "lodash/fp/includes";
 import keyBy from "lodash/fp/keyBy";
 import mapRaw from "lodash/fp/map";
 import propEq from "lodash/fp/propEq";
 import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
+import startCase from "lodash/fp/startCase";
 import sumBy from "lodash/fp/sumBy";
 import values from "lodash/fp/values";
 import CollapsibleSection from "./CollapsibleSection";
@@ -21,38 +20,22 @@ import Icon from "./Icon";
 
 const map = mapRaw.convert({ cap: false });
 
-const GROUP_ORDER = [
-  "Checking Accounts and Cash",
-  "Savings Accounts",
-  "Credit Cards",
-  "Investment Accounts",
-  "Mortgage Accounts",
-  "Other"
-];
-
-const GROUPS = [
-  { name: "Savings Accounts", types: ["savings"] },
-  { name: "Checking Accounts and Cash", types: ["checking", "cash"] },
-  { name: "Credit Cards", types: ["creditCard"] }
-];
-
 const getNodes = ({ accounts, investmentAccounts, mortgageAccounts }) => {
   const accountsByGroup = groupBy(account => {
     if (investmentAccounts[account.id]) {
-      return "Investment Accounts";
+      return "Investments";
     }
 
     if (mortgageAccounts[account.id]) {
-      return "Mortgage Accounts";
+      return "Mortgages";
     }
 
-    const group = find(group => includes(account.type)(group.types))(GROUPS);
-
-    return group ? group.name : "Other";
+    return startCase(account.type);
   })(accounts);
 
   return compose([
-    sortBy(group => GROUP_ORDER.indexOf(group.name)),
+    accounts => accounts.reverse(),
+    sortBy("amount"),
     map((accounts, name) => ({
       name,
       accounts,
