@@ -11,7 +11,7 @@ const PageActions = ({ settings, onChangeSetting }) => (
       exact
       render={({ match }) => (
         <SecondaryText>
-          <Link to={makeLink(pages.group.path, match.params)}>Trends</Link>
+          <Link to={makeLink(pages.group.path, match.params)}>Past Months</Link>
         </SecondaryText>
       )}
     />
@@ -20,7 +20,7 @@ const PageActions = ({ settings, onChangeSetting }) => (
       exact
       render={({ match }) => (
         <SecondaryText>
-          <Link to={makeLink(pages.category.path, match.params)}>Trends</Link>
+          <Link to={makeLink(pages.category.path, match.params)}>Past Months</Link>
         </SecondaryText>
       )}
     />
