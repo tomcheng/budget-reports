@@ -11,7 +11,7 @@ const PageActions = ({ settings, onChangeSetting }) => (
       exact
       render={({ match }) => (
         <SecondaryText>
-          <Link to={makeLink(pages.categories.path, match.params)}>
+          <Link to={makeLink(pages.groups.path, match.params)}>
             Past Months
           </Link>
         </SecondaryText>
@@ -38,7 +38,7 @@ const PageActions = ({ settings, onChangeSetting }) => (
       )}
     />
     <Route
-      path={pages.categories.path}
+      path={pages.groups.path}
       exact
       render={({ match }) => (
         <SecondaryText>

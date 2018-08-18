@@ -7,16 +7,16 @@ import { groupBy } from "../dataUtils";
 import pages, { makeLink } from "../pages";
 import CategoriesState from "./CategoriesState";
 
-const categoryPath = pages.categories.path;
+const trendsPath = pages.groups.path;
 const groupedPages = groupBy(
-  page => (page.path.startsWith(categoryPath) ? "categoryPages" : "otherPages")
+  page => (page.path.startsWith(trendsPath) ? "trendPages" : "otherPages")
 )(values(pages));
 
 const PageContent = props =>
   props.budget && (
     <Switch>
       <Route
-        path={categoryPath}
+        path={trendsPath}
         render={({ match }) => (
           <CategoriesState
             key={match.params.categoryGroupId}
@@ -34,7 +34,7 @@ const PageContent = props =>
               onSelectPayee
             }) => (
               <Switch>
-                {groupedPages.categoryPages.map(
+                {groupedPages.trendPages.map(
                   ({ path, props: propsFunction, Component }) => (
                     <Route
                       key={path}

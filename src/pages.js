@@ -48,7 +48,7 @@ const pages = {
     }),
     breadcrumbs: ["currentMonth", "currentMonthGroup"]
   },
-  categories: {
+  groups: {
     path: "/budgets/:budgetId/groups",
     title: "Spending Trends",
     Component: Groups,
@@ -66,7 +66,7 @@ const pages = {
       budget: props.budget,
       categoryGroup: props.budget.categoryGroupsById[params.categoryGroupId]
     }),
-    breadcrumbs: ["categories"]
+    breadcrumbs: ["groups"]
   },
   category: {
     path: "/budgets/:budgetId/groups/:categoryGroupId/categories/:categoryId",
@@ -76,7 +76,7 @@ const pages = {
       budget: props.budget,
       category: props.budget.categoriesById[params.categoryId]
     }),
-    breadcrumbs: ["categories", "group"]
+    breadcrumbs: ["groups", "group"]
   },
   categoryPayee: {
     path:
@@ -88,7 +88,7 @@ const pages = {
       category: props.budget.categoriesById[params.categoryId],
       payee: props.budget.payeesById[params.payeeId]
     }),
-    breadcrumbs: ["categories", "group", "category"]
+    breadcrumbs: ["groups", "group", "category"]
   },
   incomeVsExpenses: {
     path: "/budgets/:budgetId/income-vs-expenses",

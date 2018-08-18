@@ -49,7 +49,7 @@ class SidebarMenuContent extends PureComponent {
         <PureHeader onCloseSidebar={onCloseSidebar} budgetId={budgetId} />
         {[
           "currentMonth",
-          "categories",
+          "groups",
           "incomeVsExpenses",
           "netWorth",
           "projections"
