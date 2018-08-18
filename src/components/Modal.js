@@ -22,7 +22,9 @@ const Overlay = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
 `;
 
 const ModalContent = styled.div`
@@ -30,18 +32,13 @@ const ModalContent = styled.div`
   padding: 15px 20px;
   background-color: #fff;
   border-radius: 2px;
+  transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
 `;
 
-const CloseButton = styled.div`
-  position: absolute;
-  font-size: 24px;
-  line-height: 12px;
-  color: #fff;
-  top: 0;
-  right: 0;
-  padding: 15px;
-  cursor: pointer;
-`;
+const ensureNextTick = callback =>
+  requestAnimationFrame(() => {
+    requestAnimationFrame(callback);
+  });
 
 class Modal extends Component {
   static propTypes = {
@@ -54,25 +51,63 @@ class Modal extends Component {
   constructor() {
     super();
     this.el = document.createElement("div");
+    this.state = { animationState: "left" };
   }
 
   componentDidMount() {
     document.body.appendChild(this.el);
   }
 
+  componentDidUpdate(prevProps) {
+    if (!prevProps.open && this.props.open) {
+      ensureNextTick(() => {
+        this.setState({ animationState: "entering" });
+      });
+    }
+    if (prevProps.open && !this.props.open) {
+      ensureNextTick(() => {
+        this.setState({ animationState: "leaving" });
+      });
+    }
+  }
+
   componentWillUnmount() {
     document.body.removeChild(this.el);
   }
 
+  handleTransitionEnd = () => {
+    const { animationState } = this.state;
+
+    if (animationState === "entering") {
+      this.setState({ animationState: "entered" });
+    } else if (animationState === "leaving") {
+      this.setState({ animationState: "left" });
+    }
+  };
+
   render() {
-    const { onClose, open, children, title } = this.props;
+    const { open, children, title, onClose } = this.props;
+    const { animationState } = this.state;
+
+    if (!open && animationState === "left") {
+      return null;
+    }
+
+    const shouldShow = ["entering", "entered"].includes(animationState);
 
     return createPortal(
-      <Container style={{ display: !open && "none" }}>
-        <Overlay onClick={onClose}>
-          <CloseButton>&times;</CloseButton>
-        </Overlay>
-        <ModalContent>
+      <Container>
+        <Overlay
+          onClick={onClose}
+          style={{ opacity: shouldShow ? 1 : 0 }}
+          onTransitionEnd={this.handleTransitionEnd}
+        />
+        <ModalContent
+          style={{
+            opacity: shouldShow ? 1 : 0,
+            transform: `translate3d(0, ${shouldShow ? "0" : "20px"}, 0)`
+          }}
+        >
           {title && (
             <StrongText style={{ marginBottom: 10 }}>{title}</StrongText>
           )}
