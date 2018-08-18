@@ -21,7 +21,12 @@ const PageContent = props =>
         path={trendsPath}
         render={({ match }) => (
           <MonthExclusions budget={props.budget}>
-            {({ excludeFirstMonth, excludeLastMonth, onSetExclusion }) => (
+            {({
+              excludeFirstMonth,
+              excludeLastMonth,
+              months,
+              onSetExclusion
+            }) => (
               <FilteredTransactions
                 budget={props.budget}
                 excludeFirstMonth={excludeFirstMonth}
@@ -32,14 +37,9 @@ const PageContent = props =>
                   <CategoriesState
                     key={match.params.categoryGroupId}
                     action={props.historyAction}
-                    budget={props.budget}
-                    excludeFirstMonth={excludeFirstMonth}
-                    excludeLastMonth={excludeLastMonth}
-                    investmentAccounts={props.investmentAccounts}
                     location={props.location}
                   >
                     {({
-                      months,
                       selectedMonth,
                       selectedGroupId,
                       selectedCategoryId,

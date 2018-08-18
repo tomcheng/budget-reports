@@ -1,21 +1,5 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
-import moment from "moment";
-import { getFirstMonth } from "../budgetUtils";
-
-const getMonths = (firstMonth, lastMonth) => {
-  const months = [firstMonth];
-  let m = firstMonth;
-
-  while (m !== lastMonth) {
-    m = moment(m)
-      .add(1, "months")
-      .format("YYYY-MM");
-    months.push(m);
-  }
-
-  return months;
-};
 
 const INITIAL_STATE = {
   selectedMonth: null,
@@ -28,13 +12,7 @@ class CategoriesState extends Component {
   static propTypes = {
     action: PropTypes.oneOf(["PUSH", "POP", "REPLACE"]).isRequired,
     children: PropTypes.func.isRequired,
-    excludeFirstMonth: PropTypes.bool.isRequired,
-    excludeLastMonth: PropTypes.bool.isRequired,
-    investmentAccounts: PropTypes.object.isRequired,
-    location: PropTypes.string.isRequired,
-    budget: PropTypes.shape({
-      transactions: PropTypes.arrayOf(PropTypes.object).isRequired
-    }).isRequired
+    location: PropTypes.string.isRequired
   };
 
   state = INITIAL_STATE;
@@ -97,23 +75,8 @@ class CategoriesState extends Component {
   };
 
   render() {
-    const { budget, excludeFirstMonth, excludeLastMonth } = this.props;
-    const firstBudgetMonth = getFirstMonth(budget);
-    const firstMonth = excludeFirstMonth
-      ? moment(firstBudgetMonth)
-          .add(1, "months")
-          .format("YYYY-MM")
-      : firstBudgetMonth;
-    const lastMonth = excludeLastMonth
-      ? moment()
-          .subtract(1, "months")
-          .format("YYYY-MM")
-      : moment().format("YYYY-MM");
-    const months = getMonths(firstMonth, lastMonth);
-
     return this.props.children({
       ...this.state,
-      months,
       onSelectMonth: this.handleSelectMonth,
       onSelectGroup: this.handleSelectGroup,
       onSelectCategory: this.handleSelectCategory,
