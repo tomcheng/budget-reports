@@ -2,6 +2,14 @@ import { getStorage, setStorage } from "./localstorageUtils";
 import get from "lodash/get";
 
 const SETTINGS = {
+  excludeFirstMonth: {
+    localStorageKey: "budget-reports-exclude-first-month",
+    default: false
+  },
+  excludeLastMonth: {
+    localStorageKey: "budget-reports-exclude-last-month",
+    default: false
+  },
   investmentAccounts: {
     localStorageKey: "budget-reports-investment-accounts",
     default: {}

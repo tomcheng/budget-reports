@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import omit from "lodash/fp/omit";
 import { notAny, simpleMemoize } from "../dataUtils";
+import { getSetting, setSetting } from "../uiRepo";
 import {
   getFirstMonth,
   getTransactionMonth,
@@ -43,11 +44,15 @@ class CategoriesState extends Component {
     }).isRequired
   };
 
-  state = {
-    ...INITIAL_STATE,
-    excludeFirstMonth: false,
-    excludeLastMonth: false
-  };
+  constructor(props) {
+    super();
+
+    this.state = {
+      ...INITIAL_STATE,
+      excludeFirstMonth: getSetting("excludeFirstMonth", props.budget.id),
+      excludeLastMonth: getSetting("excludeLastMonth", props.budget.id)
+    };
+  }
 
   cachedStates = {};
 
@@ -107,9 +112,16 @@ class CategoriesState extends Component {
   };
 
   handleSetExclusion = ({ month, exclude }) => {
-    this.setState({
-      [month === "first" ? "excludeFirstMonth" : "excludeLastMonth"]: exclude
-    });
+    const setting =
+      month === "first" ? "excludeFirstMonth" : "excludeLastMonth";
+    this.setState(
+      {
+        [setting]: exclude
+      },
+      () => {
+        setSetting(setting, this.props.budget.id, this.state[setting]);
+      }
+    );
   };
 
   getFilteredTransactions = simpleMemoize(
