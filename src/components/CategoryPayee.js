@@ -7,11 +7,6 @@ import TransactionsByMonthSection from "./TransactionsByMonthSection";
 class Category extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
-      transactions: PropTypes.arrayOf(
-        PropTypes.shape({
-          payee_id: PropTypes.string.isRequired
-        })
-      ).isRequired,
       payeesById: PropTypes.object.isRequired
     }).isRequired,
     category: PropTypes.shape({
@@ -20,6 +15,11 @@ class Category extends PureComponent {
     payee: PropTypes.shape({
       id: PropTypes.string.isRequired
     }).isRequired,
+    transactions: PropTypes.arrayOf(
+      PropTypes.shape({
+        payee_id: PropTypes.string.isRequired
+      })
+    ).isRequired,
     onSelectMonth: PropTypes.func.isRequired,
     selectedMonth: PropTypes.string
   };
@@ -37,9 +37,10 @@ class Category extends PureComponent {
       category,
       payee,
       selectedMonth,
+      transactions,
       onSelectMonth
     } = this.props;
-    const { transactions, categoriesById, payeesById } = budget;
+    const { categoriesById, payeesById } = budget;
     const firstMonth = getFirstMonth(budget);
     const transactionsForCategoryAndPayee = transactions.filter(
       transaction =>

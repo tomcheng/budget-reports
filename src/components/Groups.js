@@ -1,13 +1,9 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { notAny } from "../dataUtils";
 import {
   getFirstMonth,
   getNumMonths,
-  isStartingBalanceOrReconciliation,
-  isTransfer,
-  isIncome,
   getTransactionMonth,
   sanitizeName
 } from "../budgetUtils";
@@ -19,7 +15,7 @@ import GenericEntitiesSection from "./GenericEntitiesSection";
 class Groups extends PureComponent {
   static propTypes = {
     budget: PropTypes.object.isRequired,
-    investmentAccounts: PropTypes.object.isRequired,
+    transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
     onSelectGroup: PropTypes.func.isRequired,
     onSelectMonth: PropTypes.func.isRequired,
     selectedGroupId: PropTypes.string,
@@ -49,30 +45,19 @@ class Groups extends PureComponent {
   render() {
     const {
       budget,
-      investmentAccounts,
+      transactions,
       selectedMonth,
       selectedGroupId,
       onSelectGroup,
       onSelectMonth
     } = this.props;
     const { showAverage } = this.state;
-    const {
-      transactions,
-      categoryGroupsById,
-      categoriesById,
-      id: budgetId
-    } = budget;
+    const { categoryGroupsById, categoriesById, id: budgetId } = budget;
     const selectedGroup =
       selectedGroupId && categoryGroupsById[selectedGroupId];
     const firstMonth = getFirstMonth(budget);
     const numMonths = getNumMonths(budget);
-    const filteredTransactions = transactions.filter(
-      notAny([
-        isStartingBalanceOrReconciliation(budget),
-        isTransfer(investmentAccounts),
-        isIncome(budget)
-      ])
-    );
+    const filteredTransactions = transactions.filter(t => t);
 
     const transactionsForMonth =
       selectedMonth &&

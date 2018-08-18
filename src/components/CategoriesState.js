@@ -1,5 +1,11 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
+import { notAny, simpleMemoize } from "../dataUtils";
+import {
+  isIncome,
+  isStartingBalanceOrReconciliation,
+  isTransfer
+} from "../budgetUtils";
 
 const INITIAL_STATE = {
   selectedMonth: null,
@@ -12,7 +18,11 @@ class CategoriesState extends Component {
   static propTypes = {
     action: PropTypes.oneOf(["PUSH", "POP", "REPLACE"]).isRequired,
     children: PropTypes.func.isRequired,
-    location: PropTypes.string.isRequired
+    investmentAccounts: PropTypes.object.isRequired,
+    location: PropTypes.string.isRequired,
+    budget: PropTypes.shape({
+      transactions: PropTypes.arrayOf(PropTypes.object).isRequired
+    }).isRequired
   };
 
   state = INITIAL_STATE;
@@ -70,14 +80,30 @@ class CategoriesState extends Component {
   handleSelectPayee = payeeId => {
     this.setState(state => ({
       ...state,
-      selectedPayeeId:
-        state.selectedPayeeId === payeeId ? null : payeeId
+      selectedPayeeId: state.selectedPayeeId === payeeId ? null : payeeId
     }));
   };
 
+  getFilteredTransactions = simpleMemoize((budget, investmentAccounts) =>
+    budget.transactions.filter(
+      notAny([
+        isStartingBalanceOrReconciliation(budget),
+        isTransfer(investmentAccounts),
+        isIncome(budget)
+      ])
+    )
+  );
+
   render() {
+    const { budget, investmentAccounts } = this.props;
+    const filteredTransactions = this.getFilteredTransactions(
+      budget,
+      investmentAccounts
+    );
+
     return this.props.children({
       ...this.state,
+      filteredTransactions,
       onSelectMonth: this.handleSelectMonth,
       onSelectGroup: this.handleSelectGroup,
       onSelectCategory: this.handleSelectCategory,

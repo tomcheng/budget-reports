@@ -28,6 +28,7 @@ class Group extends PureComponent {
     categoryGroup: PropTypes.shape({
       id: PropTypes.string.isRequired
     }).isRequired,
+    transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
     onSelectCategory: PropTypes.func.isRequired,
     onSelectMonth: PropTypes.func.isRequired,
     selectedCategoryId: PropTypes.string,
@@ -61,12 +62,12 @@ class Group extends PureComponent {
       categoryGroup,
       selectedMonth,
       selectedCategoryId,
+      transactions,
       onSelectMonth,
       onSelectCategory
     } = this.props;
     const { showAverage } = this.state;
     const {
-      transactions,
       categories,
       categoriesById,
       payeesById,

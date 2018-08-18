@@ -21,6 +21,8 @@ const PageContent = props =>
           <CategoriesState
             key={match.params.categoryGroupId}
             action={props.historyAction}
+            budget={props.budget}
+            investmentAccounts={props.investmentAccounts}
             location={props.location}
           >
             {({
@@ -31,7 +33,8 @@ const PageContent = props =>
               onSelectMonth,
               onSelectGroup,
               onSelectCategory,
-              onSelectPayee
+              onSelectPayee,
+              filteredTransactions
             }) => (
               <Switch>
                 {groupedPages.trendPages.map(
@@ -43,6 +46,7 @@ const PageContent = props =>
                       render={({ match }) => (
                         <Component
                           {...propsFunction(props, match.params)}
+                          transactions={filteredTransactions}
                           selectedMonth={selectedMonth}
                           selectedGroupId={selectedGroupId}
                           selectedCategoryId={selectedCategoryId}

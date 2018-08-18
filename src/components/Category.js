@@ -24,6 +24,7 @@ class Category extends PureComponent {
     category: PropTypes.shape({
       id: PropTypes.string.isRequired
     }).isRequired,
+    transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
     onSelectMonth: PropTypes.func.isRequired,
     onSelectPayee: PropTypes.func.isRequired,
     selectedMonth: PropTypes.string,
@@ -36,10 +37,11 @@ class Category extends PureComponent {
       budget,
       selectedMonth,
       selectedPayeeId,
+      transactions,
       onSelectMonth,
       onSelectPayee
     } = this.props;
-    const { transactions, categoriesById, payeesById, id: budgetId } = budget;
+    const { categoriesById, payeesById, id: budgetId } = budget;
 
     const selectedPayee = selectedPayeeId && payeesById[selectedPayeeId];
     const firstMonth = getFirstMonth(budget);
