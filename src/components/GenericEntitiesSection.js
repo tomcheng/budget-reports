@@ -135,7 +135,7 @@ class GenericEntitiesSection extends Component {
                   to={linkFunction(entityId)}
                   transactions={transactions}
                   name={entitiesById[entityId].name}
-                  amount={amount}
+                  amount={showAverage ? amount / numMonths : amount}
                   selected={entityId === selectedEntityId}
                   total={total}
                   id={entityId}
