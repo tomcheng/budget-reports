@@ -1,10 +1,6 @@
 import React from "react";
-import { SecondaryText } from "./typeComponents";
+import EmptyText from "./EmptyText";
 
-const NoTransactions = () => (
-  <SecondaryText style={{ textAlign: "center", margin: 10, opacity: 0.5 }}>
-    No transactions this month
-  </SecondaryText>
-);
+const NoTransactions = () => <EmptyText>No transactions this month</EmptyText>;
 
 export default NoTransactions;

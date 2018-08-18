@@ -2,8 +2,9 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import Section from "./Section";
-import { StrongText } from "./typeComponents";
+import { StrongText, MinorText } from "./typeComponents";
 import AccountsSelectionForm from "./AccountsSelectionForm";
+import EmptyText from "./EmptyText";
 import Icon from "./Icon";
 
 const SectionHeader = styled.div`
@@ -51,6 +52,9 @@ class Settings extends Component {
   render() {
     const { budget, investmentAccounts, mortgageAccounts } = this.props;
     const { editing } = this.state;
+    const investmentAccountsList = budget.accounts.filter(
+      ({ id }) => investmentAccounts[id]
+    );
 
     return (
       <Fragment>
@@ -75,9 +79,20 @@ class Settings extends Component {
               onCancel={this.handleCancelEdit}
             />
           ) : (
-            budget.accounts
-              .filter(({ id }) => investmentAccounts[id])
-              .map(({ id, name }) => <div key={id}>{name}</div>)
+            <Fragment>
+              {investmentAccountsList.length ? (
+                investmentAccountsList.map(({ id, name }) => (
+                  <div key={id}>{name}</div>
+                ))
+              ) : (
+                <EmptyText>No Investment Accounts</EmptyText>
+              )}
+              <MinorText style={{ marginTop: 10 }}>
+                Transfers to investment accounts are not counted as spending
+                since it's assumed it's for retirement or some other savings
+                goal.
+              </MinorText>
+            </Fragment>
           )}
         </Section>
         <Section>
