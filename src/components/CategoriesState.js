@@ -26,8 +26,6 @@ const getMonths = (firstMonth, lastMonth) => {
 };
 
 const INITIAL_STATE = {
-  excludeFirstMonth: false,
-  excludeLastMonth: false,
   selectedMonth: null,
   selectedGroupId: null,
   selectedCategoryId: null,
@@ -45,7 +43,11 @@ class CategoriesState extends Component {
     }).isRequired
   };
 
-  state = INITIAL_STATE;
+  state = {
+    ...INITIAL_STATE,
+    excludeFirstMonth: false,
+    excludeLastMonth: false
+  };
 
   cachedStates = {};
 
