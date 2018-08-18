@@ -1,14 +1,8 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
 import omit from "lodash/fp/omit";
 import { PrimaryButton, GhostButton } from "./Button";
-
-const StyledLabel = styled.label`
-  display: flex;
-  align-items: center;
-  padding: 5px 0;
-`;
+import Label from "./Label"
 
 class AccountsSelectionForm extends Component {
   static propTypes = {
@@ -53,7 +47,7 @@ class AccountsSelectionForm extends Component {
     return (
       <Fragment>
         {accounts.map(({ id, name }) => (
-          <StyledLabel key={id}>
+          <Label key={id}>
             <input
               type="checkbox"
               checked={!!value[id]}
@@ -61,7 +55,7 @@ class AccountsSelectionForm extends Component {
               onChange={this.handleChange}
             />&nbsp;
             {name}
-          </StyledLabel>
+          </Label>
         ))}
         <div
           style={{ display: "flex", justifyContent: "flex-end", marginTop: 5 }}

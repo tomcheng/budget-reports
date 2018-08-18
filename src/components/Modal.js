@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { StrongText } from "./typeComponents";
+import { PrimaryButton } from "./Button";
 
 const Container = styled.div`
   position: fixed;
@@ -114,6 +115,15 @@ class Modal extends Component {
             <StrongText style={{ marginBottom: 10 }}>{title}</StrongText>
           )}
           {children}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: 20
+            }}
+          >
+            <PrimaryButton onClick={onClose}>Done</PrimaryButton>
+          </div>
         </ModalContent>
       </Container>,
       this.el
