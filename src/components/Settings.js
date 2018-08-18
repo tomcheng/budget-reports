@@ -67,7 +67,9 @@ class Settings extends Component {
           </SectionHeader>
           {editing === "investment" ? (
             <AccountsSelectionForm
-              accounts={budget.accounts}
+              accounts={budget.accounts.filter(
+                account => account.type === "otherAsset" && !account.on_budget
+              )}
               initialValue={investmentAccounts}
               onSubmit={this.handleSubmit}
               onCancel={this.handleCancelEdit}
