@@ -17,6 +17,8 @@ import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
 import Breakdowns from "./Breakdowns";
 import CollapsibleSection from "./CollapsibleSection";
 import ChartNumbers from "./ChartNumbers";
+import MonthByMonthSettingsModal from "./MonthByMonthSettingsModal";
+import MonthExclusions from "./MonthExclusions";
 
 const map = mapRaw.convert({ cap: false });
 
@@ -40,13 +42,14 @@ class IncomeVsExpenses extends PureComponent {
     showing: PropTypes.oneOf(["average", "total"]).isRequired
   };
 
-  state = { selectedMonth: null };
+  state = { selectedMonth: null, settingsModalOpen: false };
 
-  handleToggleExclusion = key => {
-    this.setState(state => ({
-      ...state,
-      [key]: !state[key]
-    }));
+  handleClickSettings = () => {
+    this.setState({ settingsModalOpen: true });
+  };
+
+  handleCloseSettingsModal = () => {
+    this.setState({ settingsModalOpen: false });
   };
 
   handleSelectMonth = month => {
@@ -83,7 +86,7 @@ class IncomeVsExpenses extends PureComponent {
 
   render() {
     const { budget, investmentAccounts, showing } = this.props;
-    const { selectedMonth } = this.state;
+    const { selectedMonth, settingsModalOpen } = this.state;
     const { categoriesById, categoryGroupsById, payeesById } = budget;
 
     const showTotals = showing === "total";
@@ -105,7 +108,11 @@ class IncomeVsExpenses extends PureComponent {
 
     return (
       <Fragment>
-        <CollapsibleSection title="Monthly Trend">
+        <CollapsibleSection
+          title="Monthly Trend"
+          hasSettings
+          onClickSettings={this.handleClickSettings}
+        >
           <ChartNumbers
             numbers={[
               {
@@ -127,6 +134,17 @@ class IncomeVsExpenses extends PureComponent {
             selectedMonth={selectedMonth}
             onSelectMonth={this.handleSelectMonth}
           />
+          <MonthExclusions budget={budget}>
+            {({ excludeFirstMonth, excludeLastMonth, onSetExclusion }) => (
+              <MonthByMonthSettingsModal
+                excludeFirstMonth={excludeFirstMonth}
+                excludeLastMonth={excludeLastMonth}
+                open={settingsModalOpen}
+                onClose={this.handleCloseSettingsModal}
+                onSetExclusion={onSetExclusion}
+              />
+            )}
+          </MonthExclusions>
         </CollapsibleSection>
         <Breakdowns
           categoriesById={categoriesById}

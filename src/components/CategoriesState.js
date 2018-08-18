@@ -1,9 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import omit from "lodash/fp/omit";
 import { notAny, simpleMemoize } from "../dataUtils";
-import { getSetting, setSetting } from "../uiRepo";
 import {
   getFirstMonth,
   getTransactionMonth,
@@ -37,6 +35,8 @@ class CategoriesState extends Component {
   static propTypes = {
     action: PropTypes.oneOf(["PUSH", "POP", "REPLACE"]).isRequired,
     children: PropTypes.func.isRequired,
+    excludeFirstMonth: PropTypes.bool.isRequired,
+    excludeLastMonth: PropTypes.bool.isRequired,
     investmentAccounts: PropTypes.object.isRequired,
     location: PropTypes.string.isRequired,
     budget: PropTypes.shape({
@@ -44,20 +44,12 @@ class CategoriesState extends Component {
     }).isRequired
   };
 
-  constructor(props) {
-    super();
-
-    this.state = {
-      ...INITIAL_STATE,
-      excludeFirstMonth: getSetting("excludeFirstMonth", props.budget.id),
-      excludeLastMonth: getSetting("excludeLastMonth", props.budget.id)
-    };
-  }
+  state = INITIAL_STATE;
 
   cachedStates = {};
 
   getSnapshotBeforeUpdate() {
-    return omit(["excludeFirstMonth", "excludeLastMonth"])(this.state);
+    return this.state;
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -111,19 +103,6 @@ class CategoriesState extends Component {
     }));
   };
 
-  handleSetExclusion = ({ month, exclude }) => {
-    const setting =
-      month === "first" ? "excludeFirstMonth" : "excludeLastMonth";
-    this.setState(
-      {
-        [setting]: exclude
-      },
-      () => {
-        setSetting(setting, this.props.budget.id, this.state[setting]);
-      }
-    );
-  };
-
   getFilteredTransactions = simpleMemoize(
     (budget, investmentAccounts, excludeFirstMonth, excludeLastMonth) => {
       const firstMonth = getFirstMonth(budget);
@@ -144,8 +123,12 @@ class CategoriesState extends Component {
   );
 
   render() {
-    const { budget, investmentAccounts } = this.props;
-    const { excludeFirstMonth, excludeLastMonth } = this.state;
+    const {
+      budget,
+      excludeFirstMonth,
+      excludeLastMonth,
+      investmentAccounts
+    } = this.props;
     const filteredTransactions = this.getFilteredTransactions(
       budget,
       investmentAccounts,

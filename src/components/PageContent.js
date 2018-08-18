@@ -5,6 +5,7 @@ import { Switch, Route } from "react-router-dom";
 import values from "lodash/fp/values";
 import { groupBy } from "../dataUtils";
 import pages, { makeLink } from "../pages";
+import MonthExclusions from "./MonthExclusions";
 import CategoriesState from "./CategoriesState";
 
 const trendsPath = pages.groups.path;
@@ -18,59 +19,62 @@ const PageContent = props =>
       <Route
         path={trendsPath}
         render={({ match }) => (
-          <CategoriesState
-            key={match.params.categoryGroupId}
-            action={props.historyAction}
-            budget={props.budget}
-            investmentAccounts={props.investmentAccounts}
-            location={props.location}
-          >
-            {({
-              excludeFirstMonth,
-              excludeLastMonth,
-              filteredTransactions,
-              months,
-              selectedMonth,
-              selectedGroupId,
-              selectedCategoryId,
-              selectedPayeeId,
-              onSelectMonth,
-              onSelectGroup,
-              onSelectCategory,
-              onSelectPayee,
-              onSetExclusion
-            }) => (
-              <Switch>
-                {groupedPages.trendPages.map(
-                  ({ path, props: propsFunction, Component }) => (
-                    <Route
-                      key={path}
-                      path={path}
-                      exact
-                      render={({ match }) => (
-                        <Component
-                          {...propsFunction(props, match.params)}
-                          excludeFirstMonth={excludeFirstMonth}
-                          excludeLastMonth={excludeLastMonth}
-                          months={months}
-                          selectedMonth={selectedMonth}
-                          selectedGroupId={selectedGroupId}
-                          selectedCategoryId={selectedCategoryId}
-                          selectedPayeeId={selectedPayeeId}
-                          transactions={filteredTransactions}
-                          onSelectMonth={onSelectMonth}
-                          onSelectGroup={onSelectGroup}
-                          onSelectCategory={onSelectCategory}
-                          onSelectPayee={onSelectPayee}
-                          onSetExclusion={onSetExclusion}
+          <MonthExclusions budget={props.budget}>
+            {({ excludeFirstMonth, excludeLastMonth, onSetExclusion }) => (
+              <CategoriesState
+                key={match.params.categoryGroupId}
+                action={props.historyAction}
+                budget={props.budget}
+                excludeFirstMonth={excludeFirstMonth}
+                excludeLastMonth={excludeLastMonth}
+                investmentAccounts={props.investmentAccounts}
+                location={props.location}
+              >
+                {({
+                  filteredTransactions,
+                  months,
+                  selectedMonth,
+                  selectedGroupId,
+                  selectedCategoryId,
+                  selectedPayeeId,
+                  onSelectMonth,
+                  onSelectGroup,
+                  onSelectCategory,
+                  onSelectPayee
+                }) => (
+                  <Switch>
+                    {groupedPages.trendPages.map(
+                      ({ path, props: propsFunction, Component }) => (
+                        <Route
+                          key={path}
+                          path={path}
+                          exact
+                          render={({ match }) => (
+                            <Component
+                              {...propsFunction(props, match.params)}
+                              excludeFirstMonth={excludeFirstMonth}
+                              excludeLastMonth={excludeLastMonth}
+                              months={months}
+                              selectedMonth={selectedMonth}
+                              selectedGroupId={selectedGroupId}
+                              selectedCategoryId={selectedCategoryId}
+                              selectedPayeeId={selectedPayeeId}
+                              transactions={filteredTransactions}
+                              onSelectMonth={onSelectMonth}
+                              onSelectGroup={onSelectGroup}
+                              onSelectCategory={onSelectCategory}
+                              onSelectPayee={onSelectPayee}
+                              onSetExclusion={onSetExclusion}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                  )
+                      )
+                    )}
+                  </Switch>
                 )}
-              </Switch>
+              </CategoriesState>
             )}
-          </CategoriesState>
+          </MonthExclusions>
         )}
       />
       {groupedPages.otherPages.map(
