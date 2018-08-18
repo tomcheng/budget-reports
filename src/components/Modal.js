@@ -30,6 +30,8 @@ const Overlay = styled.div`
 const ModalContent = styled.div`
   position: relative;
   padding: 15px 20px;
+  margin-left: 20px;
+  margin-right: 20px;
   background-color: #fff;
   border-radius: 2px;
   transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;

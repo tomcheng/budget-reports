@@ -1,6 +1,5 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
-import { getFirstMonth } from "../budgetUtils";
 import MonthByMonthSection from "./MonthByMonthSection";
 import TransactionsByMonthSection from "./TransactionsByMonthSection";
 
@@ -12,6 +11,9 @@ class Category extends PureComponent {
     category: PropTypes.shape({
       id: PropTypes.string.isRequired
     }).isRequired,
+    excludeFirstMonth: PropTypes.bool.isRequired,
+    excludeLastMonth: PropTypes.bool.isRequired,
+    firstMonth: PropTypes.string.isRequired,
     payee: PropTypes.shape({
       id: PropTypes.string.isRequired
     }).isRequired,
@@ -21,6 +23,7 @@ class Category extends PureComponent {
       })
     ).isRequired,
     onSelectMonth: PropTypes.func.isRequired,
+    onSetExclusion: PropTypes.func.isRequired,
     selectedMonth: PropTypes.string
   };
 
@@ -35,13 +38,17 @@ class Category extends PureComponent {
     const {
       budget,
       category,
+      excludeFirstMonth,
+      excludeLastMonth,
+      firstMonth,
       payee,
       selectedMonth,
       transactions,
-      onSelectMonth
+      onSelectMonth,
+      onSetExclusion
     } = this.props;
     const { categoriesById, payeesById } = budget;
-    const firstMonth = getFirstMonth(budget);
+
     const transactionsForCategoryAndPayee = transactions.filter(
       transaction =>
         transaction.category_id === category.id &&
@@ -51,10 +58,13 @@ class Category extends PureComponent {
     return (
       <Fragment>
         <MonthByMonthSection
+          excludeFirstMonth={excludeFirstMonth}
+          excludeLastMonth={excludeLastMonth}
           firstMonth={firstMonth}
-          transactions={transactionsForCategoryAndPayee}
           selectedMonth={selectedMonth}
+          transactions={transactionsForCategoryAndPayee}
           onSelectMonth={onSelectMonth}
+          onSetExclusion={onSetExclusion}
         />
         {selectedMonth && (
           <TransactionsByMonthSection

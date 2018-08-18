@@ -1,11 +1,7 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import {
-  getTransactionMonth,
-  getFirstMonth,
-  sanitizeName
-} from "../budgetUtils";
+import { getTransactionMonth, sanitizeName } from "../budgetUtils";
 import pages, { makeLink } from "../pages";
 import MonthByMonthSection from "./MonthByMonthSection";
 import GenericEntitiesSection from "./GenericEntitiesSection";
@@ -24,9 +20,13 @@ class Category extends PureComponent {
     category: PropTypes.shape({
       id: PropTypes.string.isRequired
     }).isRequired,
+    excludeFirstMonth: PropTypes.bool.isRequired,
+    excludeLastMonth: PropTypes.bool.isRequired,
+    firstMonth: PropTypes.string.isRequired,
     transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
     onSelectMonth: PropTypes.func.isRequired,
     onSelectPayee: PropTypes.func.isRequired,
+    onSetExclusion: PropTypes.func.isRequired,
     selectedMonth: PropTypes.string,
     selectedPayeeId: PropTypes.string
   };
@@ -35,16 +35,19 @@ class Category extends PureComponent {
     const {
       category,
       budget,
+      excludeFirstMonth,
+      excludeLastMonth,
+      firstMonth,
       selectedMonth,
       selectedPayeeId,
       transactions,
       onSelectMonth,
-      onSelectPayee
+      onSelectPayee,
+      onSetExclusion
     } = this.props;
     const { categoriesById, payeesById, id: budgetId } = budget;
 
     const selectedPayee = selectedPayeeId && payeesById[selectedPayeeId];
-    const firstMonth = getFirstMonth(budget);
     const transactionsForCategory = transactions.filter(
       transaction => transaction.category_id === category.id
     );
@@ -58,18 +61,21 @@ class Category extends PureComponent {
       <Fragment>
         <MonthByMonthSection
           firstMonth={firstMonth}
-          transactions={transactionsForCategory}
-          selectedMonth={selectedMonth}
-          onSelectMonth={onSelectMonth}
+          excludeFirstMonth={excludeFirstMonth}
+          excludeLastMonth={excludeLastMonth}
+          onSetExclusion={onSetExclusion}
           highlightFunction={
             selectedPayeeId &&
             (transaction => transaction.payee_id === selectedPayeeId)
           }
+          selectedMonth={selectedMonth}
           title={
             selectedPayee
               ? `Month by Month: ${sanitizeName(selectedPayee.name)}`
               : "Month by Month"
           }
+          transactions={transactionsForCategory}
+          onSelectMonth={onSelectMonth}
         />
         <GenericEntitiesSection
           key={`payees-${selectedMonth || "all"}`}

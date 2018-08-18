@@ -26,6 +26,11 @@ const PageContent = props =>
             location={props.location}
           >
             {({
+              excludeFirstMonth,
+              excludeLastMonth,
+              filteredTransactions,
+              firstMonth,
+              numMonths,
               selectedMonth,
               selectedGroupId,
               selectedCategoryId,
@@ -34,7 +39,7 @@ const PageContent = props =>
               onSelectGroup,
               onSelectCategory,
               onSelectPayee,
-              filteredTransactions
+              onSetExclusion
             }) => (
               <Switch>
                 {groupedPages.trendPages.map(
@@ -46,15 +51,20 @@ const PageContent = props =>
                       render={({ match }) => (
                         <Component
                           {...propsFunction(props, match.params)}
-                          transactions={filteredTransactions}
+                          excludeFirstMonth={excludeFirstMonth}
+                          excludeLastMonth={excludeLastMonth}
+                          firstMonth={firstMonth}
+                          numMonths={numMonths}
                           selectedMonth={selectedMonth}
                           selectedGroupId={selectedGroupId}
                           selectedCategoryId={selectedCategoryId}
                           selectedPayeeId={selectedPayeeId}
+                          transactions={filteredTransactions}
                           onSelectMonth={onSelectMonth}
                           onSelectGroup={onSelectGroup}
                           onSelectCategory={onSelectCategory}
                           onSelectPayee={onSelectPayee}
+                          onSetExclusion={onSetExclusion}
                         />
                       )}
                     />

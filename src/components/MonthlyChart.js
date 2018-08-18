@@ -47,6 +47,7 @@ const MonthlyChart = ({
 
   return (
     <Chart
+      key={data.length}
       options={{
         chart: {
           animation: false,
