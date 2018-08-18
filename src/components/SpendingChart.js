@@ -92,7 +92,8 @@ class SpendingChart extends PureComponent {
           )
           .toHex(),
       lineWidth: 1,
-      marker: { enabled: false }
+      marker: { enabled: false },
+      animation: false
     }));
 
     const spent = compose([
@@ -112,7 +113,7 @@ class SpendingChart extends PureComponent {
         <Chart
           key={monthsToCompare}
           options={{
-            chart: { spacing: [0, 0, 0, 0], height: 140 },
+            chart: { spacing: [0, 0, 0, 0], height: 140, animation: false },
             xAxis: {
               labels: { enabled: false },
               plotBands
@@ -126,7 +127,8 @@ class SpendingChart extends PureComponent {
                 lineWidth: 1,
                 data: lineData,
                 enableMouseTracking: false,
-                marker: { enabled: false }
+                marker: { enabled: false },
+                animation: false
               },
               ...comparisonSeries,
               {
@@ -134,7 +136,8 @@ class SpendingChart extends PureComponent {
                 data,
                 enableMouseTracking: false,
                 color: primaryColor,
-                marker: { enabled: false }
+                marker: { enabled: false },
+                animation: false
               }
             ]
           }}
