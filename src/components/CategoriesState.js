@@ -1,14 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { notAny, simpleMemoize } from "../dataUtils";
-import {
-  getFirstMonth,
-  getTransactionMonth,
-  isIncome,
-  isStartingBalanceOrReconciliation,
-  isTransfer
-} from "../budgetUtils";
+import { getFirstMonth } from "../budgetUtils";
 
 const getMonths = (firstMonth, lastMonth) => {
   const months = [firstMonth];
@@ -103,38 +96,8 @@ class CategoriesState extends Component {
     }));
   };
 
-  getFilteredTransactions = simpleMemoize(
-    (budget, investmentAccounts, excludeFirstMonth, excludeLastMonth) => {
-      const firstMonth = getFirstMonth(budget);
-      const lastMonth = moment().format("YYYY-MM");
-      return budget.transactions.filter(
-        notAny([
-          isStartingBalanceOrReconciliation(budget),
-          isTransfer(investmentAccounts),
-          isIncome(budget),
-          transaction =>
-            excludeFirstMonth &&
-            getTransactionMonth(transaction) === firstMonth,
-          transaction =>
-            excludeLastMonth && getTransactionMonth(transaction) === lastMonth
-        ])
-      );
-    }
-  );
-
   render() {
-    const {
-      budget,
-      excludeFirstMonth,
-      excludeLastMonth,
-      investmentAccounts
-    } = this.props;
-    const filteredTransactions = this.getFilteredTransactions(
-      budget,
-      investmentAccounts,
-      excludeFirstMonth,
-      excludeLastMonth
-    );
+    const { budget, excludeFirstMonth, excludeLastMonth } = this.props;
     const firstBudgetMonth = getFirstMonth(budget);
     const firstMonth = excludeFirstMonth
       ? moment(firstBudgetMonth)
@@ -150,7 +113,6 @@ class CategoriesState extends Component {
 
     return this.props.children({
       ...this.state,
-      filteredTransactions,
       months,
       onSelectMonth: this.handleSelectMonth,
       onSelectGroup: this.handleSelectGroup,
