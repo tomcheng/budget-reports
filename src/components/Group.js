@@ -25,8 +25,7 @@ class Group extends PureComponent {
     }).isRequired,
     excludeFirstMonth: PropTypes.bool.isRequired,
     excludeLastMonth: PropTypes.bool.isRequired,
-    firstMonth: PropTypes.string.isRequired,
-    numMonths: PropTypes.number.isRequired,
+    months: PropTypes.arrayOf(PropTypes.string).isRequired,
     transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
     onSelectCategory: PropTypes.func.isRequired,
     onSelectMonth: PropTypes.func.isRequired,
@@ -62,8 +61,7 @@ class Group extends PureComponent {
       categoryGroup,
       excludeFirstMonth,
       excludeLastMonth,
-      firstMonth,
-      numMonths,
+      months,
       selectedMonth,
       selectedCategoryId,
       transactions,
@@ -99,7 +97,7 @@ class Group extends PureComponent {
         <MonthByMonthSection
           excludeFirstMonth={excludeFirstMonth}
           excludeLastMonth={excludeLastMonth}
-          firstMonth={firstMonth}
+          months={months}
           highlightFunction={
             selectedCategoryId &&
             (transaction => transaction.category_id === selectedCategoryId)
@@ -135,7 +133,7 @@ class Group extends PureComponent {
           onClickEntity={onSelectCategory}
           showAverageToggle={!selectedMonth}
           showAverage={showAverage && !selectedMonth}
-          numMonths={numMonths}
+          numMonths={months.length}
           onToggleAverage={this.handleToggleAverage}
           limitShowing
         />

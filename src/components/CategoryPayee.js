@@ -13,7 +13,7 @@ class Category extends PureComponent {
     }).isRequired,
     excludeFirstMonth: PropTypes.bool.isRequired,
     excludeLastMonth: PropTypes.bool.isRequired,
-    firstMonth: PropTypes.string.isRequired,
+    months: PropTypes.arrayOf(PropTypes.string).isRequired,
     payee: PropTypes.shape({
       id: PropTypes.string.isRequired
     }).isRequired,
@@ -40,7 +40,7 @@ class Category extends PureComponent {
       category,
       excludeFirstMonth,
       excludeLastMonth,
-      firstMonth,
+      months,
       payee,
       selectedMonth,
       transactions,
@@ -60,7 +60,7 @@ class Category extends PureComponent {
         <MonthByMonthSection
           excludeFirstMonth={excludeFirstMonth}
           excludeLastMonth={excludeLastMonth}
-          firstMonth={firstMonth}
+          months={months}
           selectedMonth={selectedMonth}
           transactions={transactionsForCategoryAndPayee}
           onSelectMonth={onSelectMonth}

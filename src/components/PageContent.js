@@ -29,8 +29,7 @@ const PageContent = props =>
               excludeFirstMonth,
               excludeLastMonth,
               filteredTransactions,
-              firstMonth,
-              numMonths,
+              months,
               selectedMonth,
               selectedGroupId,
               selectedCategoryId,
@@ -53,8 +52,7 @@ const PageContent = props =>
                           {...propsFunction(props, match.params)}
                           excludeFirstMonth={excludeFirstMonth}
                           excludeLastMonth={excludeLastMonth}
-                          firstMonth={firstMonth}
-                          numMonths={numMonths}
+                          months={months}
                           selectedMonth={selectedMonth}
                           selectedGroupId={selectedGroupId}
                           selectedCategoryId={selectedCategoryId}

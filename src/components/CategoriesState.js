@@ -11,6 +11,20 @@ import {
   isTransfer
 } from "../budgetUtils";
 
+const getMonths = (firstMonth, lastMonth) => {
+  const months = [firstMonth];
+  let m = firstMonth;
+
+  while (m !== lastMonth) {
+    m = moment(m)
+      .add(1, "months")
+      .format("YYYY-MM");
+    months.push(m);
+  }
+
+  return months;
+};
+
 const INITIAL_STATE = {
   excludeFirstMonth: false,
   excludeLastMonth: false,
@@ -127,17 +141,20 @@ class CategoriesState extends Component {
     const firstBudgetMonth = getFirstMonth(budget);
     const firstMonth = excludeFirstMonth
       ? moment(firstBudgetMonth)
-        .add(1, "months")
-        .format("YYYY-MM")
+          .add(1, "months")
+          .format("YYYY-MM")
       : firstBudgetMonth;
-    const current = moment();
-    const numMonths = current.diff(firstMonth, "months") + 1;
+    const lastMonth = excludeLastMonth
+      ? moment()
+          .subtract(1, "months")
+          .format("YYYY-MM")
+      : moment().format("YYYY-MM");
+    const months = getMonths(firstMonth, lastMonth);
 
     return this.props.children({
       ...this.state,
       filteredTransactions,
-      firstMonth,
-      numMonths,
+      months,
       onSelectMonth: this.handleSelectMonth,
       onSelectGroup: this.handleSelectGroup,
       onSelectCategory: this.handleSelectCategory,

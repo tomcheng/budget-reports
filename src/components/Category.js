@@ -22,7 +22,7 @@ class Category extends PureComponent {
     }).isRequired,
     excludeFirstMonth: PropTypes.bool.isRequired,
     excludeLastMonth: PropTypes.bool.isRequired,
-    firstMonth: PropTypes.string.isRequired,
+    months: PropTypes.arrayOf(PropTypes.string).isRequired,
     transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
     onSelectMonth: PropTypes.func.isRequired,
     onSelectPayee: PropTypes.func.isRequired,
@@ -37,7 +37,7 @@ class Category extends PureComponent {
       budget,
       excludeFirstMonth,
       excludeLastMonth,
-      firstMonth,
+      months,
       selectedMonth,
       selectedPayeeId,
       transactions,
@@ -60,9 +60,9 @@ class Category extends PureComponent {
     return (
       <Fragment>
         <MonthByMonthSection
-          firstMonth={firstMonth}
           excludeFirstMonth={excludeFirstMonth}
           excludeLastMonth={excludeLastMonth}
+          months={months}
           onSetExclusion={onSetExclusion}
           highlightFunction={
             selectedPayeeId &&

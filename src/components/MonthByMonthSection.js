@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { getMonthsToNow, getTransactionMonth } from "../budgetUtils";
+import { getTransactionMonth } from "../budgetUtils";
 import { groupBy, sumByProp } from "../dataUtils";
 import { lightPrimaryColor, lighterPrimaryColor } from "../styleVariables";
 import CollapsibleSection from "./CollapsibleSection";
@@ -11,9 +11,9 @@ import MonthByMonthSettingsModal from "./MonthByMonthSettingsModal";
 
 class MonthByMonthSection extends Component {
   static propTypes = {
-    firstMonth: PropTypes.string.isRequired,
     excludeFirstMonth: PropTypes.bool.isRequired,
     excludeLastMonth: PropTypes.bool.isRequired,
+    months: PropTypes.arrayOf(PropTypes.string).isRequired,
     transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
     onSelectMonth: PropTypes.func.isRequired,
     onSetExclusion: PropTypes.func.isRequired,
@@ -37,8 +37,8 @@ class MonthByMonthSection extends Component {
     const {
       excludeFirstMonth,
       excludeLastMonth,
-      firstMonth,
       highlightFunction,
+      months,
       selectedMonth,
       title,
       transactions,
@@ -47,7 +47,6 @@ class MonthByMonthSection extends Component {
     } = this.props;
     const { settingsModalOpen } = this.state;
 
-    const months = getMonthsToNow(firstMonth);
     let total = 0;
     let selectedMonthTotal = 0;
 
