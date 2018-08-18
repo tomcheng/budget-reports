@@ -6,19 +6,13 @@ import flatMap from "lodash/fp/flatMap";
 import mapRaw from "lodash/fp/map";
 import matchesProperty from "lodash/fp/matchesProperty";
 import sortBy from "lodash/fp/sortBy";
-import { sumByProp, groupBy, simpleMemoize, notAny } from "../dataUtils";
-import {
-  getTransactionMonth,
-  isTransfer,
-  isIncome,
-  isStartingBalanceOrReconciliation
-} from "../budgetUtils";
+import { sumByProp, groupBy, simpleMemoize } from "../dataUtils";
+import { getTransactionMonth, isIncome } from "../budgetUtils";
 import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
 import Breakdowns from "./Breakdowns";
 import CollapsibleSection from "./CollapsibleSection";
 import ChartNumbers from "./ChartNumbers";
 import MonthByMonthSettingsModal from "./MonthByMonthSettingsModal";
-import MonthExclusions from "./MonthExclusions";
 
 const map = mapRaw.convert({ cap: false });
 
@@ -30,16 +24,19 @@ class IncomeVsExpenses extends PureComponent {
         PropTypes.shape({
           month: PropTypes.string.isRequired
         })
-      ).isRequired,
-      transactions: PropTypes.arrayOf(
-        PropTypes.shape({
-          amount: PropTypes.number.isRequired,
-          date: PropTypes.string.isRequired
-        })
       ).isRequired
     }).isRequired,
+    excludeFirstMonth: PropTypes.bool.isRequired,
+    excludeLastMonth: PropTypes.bool.isRequired,
     investmentAccounts: PropTypes.object.isRequired,
-    showing: PropTypes.oneOf(["average", "total"]).isRequired
+    showing: PropTypes.oneOf(["average", "total"]).isRequired,
+    transactions: PropTypes.arrayOf(
+      PropTypes.shape({
+        amount: PropTypes.number.isRequired,
+        date: PropTypes.string.isRequired
+      })
+    ).isRequired,
+    onSetExclusion: PropTypes.func.isRequired
   };
 
   state = { selectedMonth: null, settingsModalOpen: false };
@@ -59,7 +56,7 @@ class IncomeVsExpenses extends PureComponent {
     }));
   };
 
-  getSummaries = simpleMemoize((budget, investmentAccounts) =>
+  getSummaries = simpleMemoize((transactions, investmentAccounts, budget) =>
     compose([
       sortBy("month"),
       map((transactions, month) => {
@@ -73,24 +70,29 @@ class IncomeVsExpenses extends PureComponent {
           expenses: sumByProp("amount")(grouped.false || [])
         };
       }),
-      groupBy(getTransactionMonth),
-      transactions =>
-        transactions.filter(
-          notAny([
-            isTransfer(investmentAccounts),
-            isStartingBalanceOrReconciliation(budget)
-          ])
-        )
-    ])(budget.transactions)
+      groupBy(getTransactionMonth)
+    ])(transactions)
   );
 
   render() {
-    const { budget, investmentAccounts, showing } = this.props;
+    const {
+      budget,
+      excludeFirstMonth,
+      excludeLastMonth,
+      investmentAccounts,
+      showing,
+      transactions,
+      onSetExclusion
+    } = this.props;
     const { selectedMonth, settingsModalOpen } = this.state;
     const { categoriesById, categoryGroupsById, payeesById } = budget;
 
     const showTotals = showing === "total";
-    const allSummaries = this.getSummaries(budget, investmentAccounts);
+    const allSummaries = this.getSummaries(
+      transactions,
+      investmentAccounts,
+      budget
+    );
     const summaries = selectedMonth
       ? [find(matchesProperty("month", selectedMonth))(allSummaries)]
       : allSummaries;
@@ -134,17 +136,13 @@ class IncomeVsExpenses extends PureComponent {
             selectedMonth={selectedMonth}
             onSelectMonth={this.handleSelectMonth}
           />
-          <MonthExclusions budget={budget}>
-            {({ excludeFirstMonth, excludeLastMonth, onSetExclusion }) => (
-              <MonthByMonthSettingsModal
-                excludeFirstMonth={excludeFirstMonth}
-                excludeLastMonth={excludeLastMonth}
-                open={settingsModalOpen}
-                onClose={this.handleCloseSettingsModal}
-                onSetExclusion={onSetExclusion}
-              />
-            )}
-          </MonthExclusions>
+          <MonthByMonthSettingsModal
+            excludeFirstMonth={excludeFirstMonth}
+            excludeLastMonth={excludeLastMonth}
+            open={settingsModalOpen}
+            onClose={this.handleCloseSettingsModal}
+            onSetExclusion={onSetExclusion}
+          />
         </CollapsibleSection>
         <Breakdowns
           categoriesById={categoriesById}
