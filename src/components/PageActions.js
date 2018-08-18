@@ -7,6 +7,17 @@ import { SecondaryText } from "./typeComponents";
 const PageActions = ({ settings, onChangeSetting }) => (
   <Switch>
     <Route
+      path={pages.currentMonth.path}
+      exact
+      render={({ match }) => (
+        <SecondaryText>
+          <Link to={makeLink(pages.categories.path, match.params)}>
+            Past Months
+          </Link>
+        </SecondaryText>
+      )}
+    />
+    <Route
       path={pages.currentMonthGroup.path}
       exact
       render={({ match }) => (
@@ -20,7 +31,20 @@ const PageActions = ({ settings, onChangeSetting }) => (
       exact
       render={({ match }) => (
         <SecondaryText>
-          <Link to={makeLink(pages.category.path, match.params)}>Past Months</Link>
+          <Link to={makeLink(pages.category.path, match.params)}>
+            Past Months
+          </Link>
+        </SecondaryText>
+      )}
+    />
+    <Route
+      path={pages.categories.path}
+      exact
+      render={({ match }) => (
+        <SecondaryText>
+          <Link to={makeLink(pages.currentMonth.path, match.params)}>
+            Current Month
+          </Link>
         </SecondaryText>
       )}
     />
