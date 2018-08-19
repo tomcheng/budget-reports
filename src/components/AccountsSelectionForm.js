@@ -1,8 +1,7 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import omit from "lodash/fp/omit";
-import { PrimaryButton, GhostButton } from "./Button";
-import Label from "./Label"
+import Label from "./Label";
 
 class AccountsSelectionForm extends Component {
   static propTypes = {
@@ -12,37 +11,30 @@ class AccountsSelectionForm extends Component {
         name: PropTypes.string.isRequired
       })
     ).isRequired,
-    initialValue: PropTypes.objectOf(PropTypes.bool).isRequired,
-    onCancel: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired
+    value: PropTypes.objectOf(PropTypes.bool).isRequired,
+    onChange: PropTypes.func.isRequired
   };
-
-  constructor(props) {
-    super();
-    this.state = { value: props.initialValue };
-  }
 
   handleChange = evt => {
     const { name, checked } = evt.target;
+    const { value, onChange } = this.props;
 
-    this.setState(state => ({
-      ...state,
-      value: checked
-        ? {
-            ...state.value,
-            [name]: true
-          }
-        : omit(name)(state.value)
-    }));
-  };
+    let newValue;
 
-  handleClickSubmit = () => {
-    this.props.onSubmit(this.state.value);
+    if (checked) {
+      newValue = {
+        ...value,
+        [name]: true
+      };
+    } else {
+      newValue = omit(name)(value);
+    }
+
+    onChange(newValue);
   };
 
   render() {
-    const { accounts, onCancel } = this.props;
-    const { value } = this.state;
+    const { accounts, value } = this.props;
 
     return (
       <Fragment>
@@ -53,16 +45,11 @@ class AccountsSelectionForm extends Component {
               checked={!!value[id]}
               name={id}
               onChange={this.handleChange}
-            />&nbsp;
+            />
+            &nbsp;
             {name}
           </Label>
         ))}
-        <div
-          style={{ display: "flex", justifyContent: "flex-end", marginTop: 5 }}
-        >
-          <GhostButton onClick={onCancel}>cancel</GhostButton>
-          <PrimaryButton onClick={this.handleClickSubmit}>Submit</PrimaryButton>
-        </div>
       </Fragment>
     );
   }
