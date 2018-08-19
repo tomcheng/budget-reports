@@ -52,6 +52,7 @@ class SidebarMenuContent extends PureComponent {
           "groups",
           "incomeVsExpenses",
           "netWorth",
+          "investments",
           "projections"
         ].map(page => {
           const { path, title } = pages[page];

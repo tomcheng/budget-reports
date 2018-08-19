@@ -26,7 +26,6 @@ const keyToPluralizedName = {
 class GenericEntitiesSection extends Component {
   static propTypes = {
     entitiesById: PropTypes.object.isRequired,
-    linkFunction: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
     entityKey: PropTypes.oneOf([
@@ -35,12 +34,13 @@ class GenericEntitiesSection extends Component {
       "payee_id"
     ]),
     entityFunction: PropTypes.func,
-    showTransactionCount: PropTypes.bool,
+    linkFunction: PropTypes.func,
     limitShowing: PropTypes.bool,
     numMonths: PropTypes.number,
     selectedEntityId: PropTypes.string,
     showAverage: PropTypes.bool,
     showAverageToggle: PropTypes.bool,
+    showTransactionCount: PropTypes.bool,
     onClickEntity: PropTypes.func,
     onToggleAverage: PropTypes.func
   };
@@ -114,7 +114,7 @@ class GenericEntitiesSection extends Component {
             <GenericItemLink
               key={entityId}
               showTransactionCount={showTransactionCount}
-              to={linkFunction(entityId)}
+              to={linkFunction && linkFunction(entityId)}
               transactions={transactions}
               name={entitiesById[entityId].name}
               amount={showAverage ? amount / numMonths : amount}
@@ -132,7 +132,7 @@ class GenericEntitiesSection extends Component {
                 <GenericItemLink
                   key={entityId}
                   showTransactionCount={showTransactionCount}
-                  to={linkFunction(entityId)}
+                  to={linkFunction && linkFunction(entityId)}
                   transactions={transactions}
                   name={entitiesById[entityId].name}
                   amount={showAverage ? amount / numMonths : amount}
@@ -160,6 +160,15 @@ class GenericEntitiesSection extends Component {
   }
 }
 
+const MaybeLink = ({ to, children, ...other }) =>
+  to ? (
+    <Link {...other} to={to}>
+      {children}
+    </Link>
+  ) : (
+    <span {...other}>{children}</span>
+  );
+
 class GenericItemLink extends PureComponent {
   render() {
     const {
@@ -186,11 +195,14 @@ class GenericItemLink extends PureComponent {
             to={to}
           />
         ) : (
-          <Link
+          <MaybeLink
             to={to}
-            onClick={evt => {
-              evt.stopPropagation();
-            }}
+            onClick={
+              to &&
+              (evt => {
+                evt.stopPropagation();
+              })
+            }
           >
             <SecondaryText
               style={{
@@ -203,7 +215,7 @@ class GenericItemLink extends PureComponent {
             >
               {name}
             </SecondaryText>
-          </Link>
+          </MaybeLink>
         )}
         <AmountWithPercentage
           amount={amount}
@@ -218,13 +230,13 @@ class GenericItemLink extends PureComponent {
 GenericItemLink.propTypes = {
   amount: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
-  to: PropTypes.string.isRequired,
   total: PropTypes.number.isRequired,
   transactions: PropTypes.number.isRequired,
   id: PropTypes.string,
   isContinuing: PropTypes.bool,
   selected: PropTypes.bool,
-  showTransactionCount: PropTypes.bool
+  showTransactionCount: PropTypes.bool,
+  to: PropTypes.string
 };
 
 export default GenericEntitiesSection;

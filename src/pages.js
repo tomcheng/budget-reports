@@ -7,6 +7,7 @@ import Category from "./components/Category";
 import CategoryPayee from "./components/CategoryPayee";
 import IncomeVsExpenses from "./components/IncomeVsExpenses";
 import NetWorth from "./components/NetWorth";
+import Investments from "./components/Investments";
 import Projections from "./components/Projections";
 import Settings from "./components/Settings";
 
@@ -106,6 +107,12 @@ const pages = {
       investmentAccounts: props.investmentAccounts,
       mortgageAccounts: props.mortgageAccounts
     })
+  },
+  investments: {
+    path: "/budgets/:budgetId/investments",
+    title: "Investments",
+    Component: Investments,
+    props: props => ({ budget: props.budget, investmentAccounts: props.investmentAccounts })
   },
   projections: {
     path: "/budgets/:budgetId/projections",
