@@ -1,6 +1,6 @@
 import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
-import { getTransactionMonth } from "../budgetUtils";
+import { getTransactionMonth, sanitizeName } from "../budgetUtils";
 import { sumByProp } from "../dataUtils";
 import pages, { makeLink } from "../pages";
 import DayByDaySection from "./DayByDaySection";
@@ -40,6 +40,8 @@ class CurrentMonthGroup extends PureComponent {
       transactions: allTransactions
     } = budget;
 
+    const selectedCategory =
+      selectedCategoryId && categoriesById[selectedCategoryId];
     const categories = allCategories.filter(
       category => category.category_group_id === categoryGroupId
     );
@@ -50,6 +52,11 @@ class CurrentMonthGroup extends PureComponent {
     const transactionsInGroupForMonth = transactionsInGroup.filter(
       transaction => getTransactionMonth(transaction) === currentMonth
     );
+    const highlightedTransactions =
+      selectedCategoryId &&
+      transactionsInGroupForMonth.filter(
+        transaction => transaction.category_id === selectedCategoryId
+      );
 
     const spent = -sumByProp("activity")(categories);
     const available = sumByProp("balance")(categories);
@@ -63,7 +70,11 @@ class CurrentMonthGroup extends PureComponent {
             selectedCategoryId &&
             (transaction => transaction.category_id === selectedCategoryId)
           }
-          title="Day by Day"
+          title={
+            selectedCategory
+              ? `Day by Day: ${sanitizeName(selectedCategory.name)}`
+              : "Day by Day"
+          }
           transactions={transactionsInGroup}
           total={spent + available}
         />
@@ -86,7 +97,12 @@ class CurrentMonthGroup extends PureComponent {
         <TransactionsSection
           categoriesById={categoriesById}
           payeesById={payeesById}
-          transactions={transactionsInGroupForMonth}
+          transactions={highlightedTransactions || transactionsInGroupForMonth}
+          title={
+            selectedCategory
+              ? `Transactions: ${sanitizeName(selectedCategory.name)}`
+              : "Transactions"
+          }
         />
       </Fragment>
     );

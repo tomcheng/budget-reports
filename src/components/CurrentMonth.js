@@ -5,7 +5,8 @@ import {
   getTransactionMonth,
   isTransfer,
   isStartingBalanceOrReconciliation,
-  isIncome
+  isIncome,
+  sanitizeName
 } from "../budgetUtils";
 import { notAny } from "../dataUtils";
 import pages, { makeLink } from "../pages";
@@ -33,6 +34,8 @@ class CurrentMonth extends PureComponent {
     const { selectedGroupId } = this.state;
     const { categoryGroupsById, categoriesById, id: budgetId } = budget;
 
+    const selectedGroup =
+      selectedGroupId && categoryGroupsById[selectedGroupId];
     const transactions = budget.transactions.filter(
       notAny([
         isIncome(budget),
@@ -55,6 +58,11 @@ class CurrentMonth extends PureComponent {
             (transaction =>
               categoriesById[transaction.category_id].category_group_id ===
               selectedGroupId)
+          }
+          title={
+            selectedGroup
+              ? `Day by Day: ${sanitizeName(selectedGroup.name)}`
+              : "Day by Day"
           }
         />
         <GenericEntitiesSection
