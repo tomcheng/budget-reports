@@ -63,14 +63,13 @@ class SpendingChart extends PureComponent {
       monthsToCompare
     } = this.props;
 
-    const highlightedTransactions =
-      highlightFunction && transactions.filter(highlightFunction);
-    const highlightData =
-      highlightedTransactions &&
-      getData({
-        month: currentMonth,
-        transactionsByDate: groupByProp("date")(highlightedTransactions)
-      });
+    const highlightedTransactions = highlightFunction
+      ? transactions.filter(highlightFunction)
+      : [];
+    const highlightData = getData({
+      month: currentMonth,
+      transactionsByDate: groupByProp("date")(highlightedTransactions)
+    });
     const highlightSeries = {
       type: "areaspline",
       data: highlightData,
@@ -135,9 +134,7 @@ class SpendingChart extends PureComponent {
       <Fragment>
         <ChartNumbers numbers={chartNumbers} />
         <Chart
-          key={`${monthsToCompare}-${
-            highlightFunction ? "highlight" : "no-highlight"
-          }`}
+          key={monthsToCompare}
           options={{
             chart: { spacing: [0, 0, 0, 0], height: 140, animation: false },
             xAxis: {
