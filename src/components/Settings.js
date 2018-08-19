@@ -132,6 +132,10 @@ class Settings extends Component {
           ) : (
             <EmptyText>No accounts marked as mortgage</EmptyText>
           )}
+          <MinorText style={{ marginTop: 10 }}>
+            Mortgage accounts are used in the retirement calculator since it's a
+            significant expense you won't have in your retirement presumably.
+          </MinorText>
           <Modal
             open={mortgageModalOpen}
             onClose={this.handleCloseMortgageModal}
