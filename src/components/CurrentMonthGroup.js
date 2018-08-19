@@ -19,8 +19,19 @@ class CurrentMonthGroup extends PureComponent {
     currentMonth: PropTypes.string.isRequired
   };
 
+  state = { selectedCategoryId: null };
+
+  handleSelectCategory = categoryId => {
+    this.setState(state => ({
+      ...state,
+      selectedCategoryId:
+        state.selectedCategoryId === categoryId ? null : categoryId
+    }));
+  };
+
   render() {
     const { budget, categoryGroupId, currentMonth } = this.props;
+    const { selectedCategoryId } = this.state;
     const {
       id: budgetId,
       payeesById,
@@ -48,6 +59,10 @@ class CurrentMonthGroup extends PureComponent {
         <DayByDaySection
           budgetId={budgetId}
           currentMonth={currentMonth}
+          highlightFunction={
+            selectedCategoryId &&
+            (transaction => transaction.category_id === selectedCategoryId)
+          }
           title="Day by Day"
           transactions={transactionsInGroup}
           total={spent + available}
@@ -62,9 +77,11 @@ class CurrentMonthGroup extends PureComponent {
               categoryId
             })
           }
+          selectedEntityId={selectedCategoryId}
           title="Categories"
           transactions={transactionsInGroupForMonth}
           showTransactionCount
+          onClickEntity={this.handleSelectCategory}
         />
         <TransactionsSection
           categoriesById={categoriesById}
