@@ -26,25 +26,23 @@ const ProjectionsSlider = ({
   createPortal(
     <Container>
       <AnimateHeight isExpanded={!!name}>
-        <div style={{ borderTop: "1px solid #bbb" }}>
-          <Section>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              {label}
-              <button
-                onClick={() => {
-                  onReset(name);
-                }}
-              >
-                reset
-              </button>
-            </div>
-            <Range
-              {...rangeOptions}
-              name={name}
-              value={value || 0}
-              onChange={onChange}
-            />
-          </Section>
+        <div style={{ borderTop: "1px solid #bbb", padding: "15px 20px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            {label}
+            <button
+              onClick={() => {
+                onReset(name);
+              }}
+            >
+              reset
+            </button>
+          </div>
+          <Range
+            {...rangeOptions}
+            name={name}
+            value={value || 0}
+            onChange={onChange}
+          />
         </div>
       </AnimateHeight>
     </Container>,
