@@ -21,6 +21,7 @@ import {
 import CollapsibleSection from "./CollapsibleSection";
 import ProjectionsChart from "./ProjectionsChart";
 import ProjectionsSlider from "./ProjectionsSlider";
+import ChartNumbers from "./ChartNumbers";
 
 const YEARS_TO_PROJECT = 50;
 
@@ -60,8 +61,7 @@ const getInitialState = simpleMemoize(
       paymentsLeft: remainingMortgagePayments,
       mortgagePayment,
       principalProjection: mortgageProjection
-    } =
-      getMortgageRate(budget, mortgageAccounts) || {};
+    } = getMortgageRate(budget, mortgageAccounts) || {};
     const returnOnInvestments = getReturnOnInvestments(
       budget,
       investmentAccounts
@@ -90,8 +90,8 @@ const getInitialState = simpleMemoize(
       averageExpenses,
       retirementReturns: 0.04,
       retirementTaxRate: 0.15,
-      maxAverageExpenses: Math.ceil(averageExpenses * 2 / 1000) * 1000,
-      maxAverageContribution: Math.ceil(averageContribution * 2 / 1000) * 1000
+      maxAverageExpenses: Math.ceil((averageExpenses * 2) / 1000) * 1000,
+      maxAverageContribution: Math.ceil((averageContribution * 2) / 1000) * 1000
     };
   }
 );
@@ -227,6 +227,21 @@ class Projections extends PureComponent {
     return (
       <Fragment>
         <CollapsibleSection title="Projection">
+          <ChartNumbers
+            numbers={[
+              {
+                amount: -amountNeededToRetire,
+                label: "needed for retirement",
+                decimalsToRound: 0
+              },
+              {
+                amount: -yearsUntilRetirement,
+                label: "years to retirement",
+                isMoney: false,
+                decimalsToRound: 1
+              }
+            ]}
+          />
           <ProjectionsChart
             investmentsProjection={projectionByYear}
             mortgageProjection={mortgageProjectionByYear}
@@ -235,16 +250,6 @@ class Projections extends PureComponent {
           />
         </CollapsibleSection>
         <CollapsibleSection title="Assumptions">
-          <Entry
-            label="Earliest you can retire"
-            value={yearsUntilRetirement}
-            formatter={val => `${val.toFixed(1)} years`}
-          />
-          <Entry
-            label="Amount needed for retirement"
-            value={amountNeededToRetire}
-            formatter={val => `$${Math.round(val)}`}
-          />
           {adjustableEntries.map(({ label, name, formatter }) => (
             <AdjustableEntry
               key={name}
@@ -294,17 +299,15 @@ const AdjustableEntry = ({
   onSelect,
   isAdjusting
 }) => (
-  <Fragment>
-    <Entry
-      label={label}
-      value={value}
-      formatter={formatter}
-      onClick={() => {
-        onSelect(name);
-      }}
-      highlightValue={isAdjusting}
-    />
-  </Fragment>
+  <Entry
+    label={label}
+    value={value}
+    formatter={formatter}
+    onClick={() => {
+      onSelect(name);
+    }}
+    highlightValue={isAdjusting}
+  />
 );
 
 const Entry = ({
@@ -315,7 +318,7 @@ const Entry = ({
   formatter = a => a
 }) => (
   <div
-    style={{ display: "flex", justifyContent: "space-between" }}
+    style={{ display: "flex", justifyContent: "space-between", padding: "2px 0" }}
     onClick={onClick}
   >
     {label}:
