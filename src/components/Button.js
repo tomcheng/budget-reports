@@ -20,8 +20,4 @@ export const PrimaryButton = styled(Button)`
   color: #fff;
 `;
 
-export const GhostButton = styled(Button)`
-  border-color: transparent;
-`;
-
 export default Button;

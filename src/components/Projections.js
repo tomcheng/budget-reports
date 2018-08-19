@@ -4,11 +4,10 @@ import chunk from "lodash/fp/chunk";
 import compose from "lodash/fp/compose";
 import get from "lodash/fp/get";
 import head from "lodash/fp/head";
-import keyBy from "lodash/fp/keyBy";
 import map from "lodash/fp/map";
 import pick from "lodash/fp/pick";
 import range from "lodash/fp/range";
-import { simpleMemoize } from "../dataUtils";
+import { simpleMemoize, keyByProp } from "../dataUtils";
 import {
   getMortgageRate,
   getReturnOnInvestments,
@@ -53,7 +52,7 @@ const adjustableEntries = [
   }
 ];
 
-const adjustableEntriesByName = keyBy("name")(adjustableEntries);
+const adjustableEntriesByName = keyByProp("name")(adjustableEntries);
 
 const getInitialState = simpleMemoize(
   (budget, investmentAccounts, mortgageAccounts) => {
@@ -283,6 +282,7 @@ class Projections extends PureComponent {
           label={get([adjustingName, "label"])(adjustableEntriesByName)}
           onReset={this.handleResetCalculation}
           onChange={this.handleChange}
+          formatter={get([adjustingName, "formatter"])(adjustableEntriesByName)}
           value={this.state[adjustingName]}
           rangeOptions={nameToRangeOptions[adjustingName]}
         />
@@ -318,7 +318,11 @@ const Entry = ({
   formatter = a => a
 }) => (
   <div
-    style={{ display: "flex", justifyContent: "space-between", padding: "2px 0" }}
+    style={{
+      display: "flex",
+      justifyContent: "space-between",
+      padding: "2px 0"
+    }}
     onClick={onClick}
   >
     {label}:
