@@ -128,6 +128,10 @@ class Projections extends PureComponent {
     }));
   };
 
+  handleClearSelection = () => {
+    this.setState({ adjustingName: null });
+  };
+
   handleResetCalculation = calculation => {
     const { budget, investmentAccounts, mortgageAccounts } = this.props;
     this.setState(
@@ -284,6 +288,7 @@ class Projections extends PureComponent {
           label={get([adjustingName, "label"])(adjustableEntriesByName)}
           onReset={this.handleResetCalculation}
           onChange={this.handleChange}
+          onBlur={this.handleClearSelection}
           formatter={get([adjustingName, "formatter"])(adjustableEntriesByName)}
           value={this.state[adjustingName]}
           rangeOptions={nameToRangeOptions[adjustingName]}

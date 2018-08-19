@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import AnimateHeight from "react-animate-height-auto";
+import ClickOff from "./ClickOff";
 import Button from "./Button";
 
 const bodyEl = document.getElementsByTagName("body")[0];
@@ -20,40 +21,45 @@ const ProjectionsSlider = ({
   formatter,
   label,
   value,
+  onBlur,
   onChange,
   onReset,
   rangeOptions
 }) =>
   createPortal(
-    <Container>
-      <AnimateHeight isExpanded={!!name}>
-        <div style={{ borderTop: "1px solid #bbb", padding: "15px 20px" }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 15
-            }}
-          >
-            {label}: {formatter(value || 0)}
-            <Button
-              onClick={() => {
-                onReset(name);
-              }}
-            >
-              reset
-            </Button>
-          </div>
-          <Range
-            {...rangeOptions}
-            name={name}
-            value={value || 0}
-            onChange={onChange}
-          />
-        </div>
-      </AnimateHeight>
-    </Container>,
+    <ClickOff onClickOff={name && onBlur}>
+      {({ ref }) => (
+        <Container innerRef={ref}>
+          <AnimateHeight isExpanded={!!name}>
+            <div style={{ borderTop: "1px solid #bbb", padding: "15px 20px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: 15
+                }}
+              >
+                {label}: {formatter(value || 0)}
+                <Button
+                  onClick={() => {
+                    onReset(name);
+                  }}
+                >
+                  reset
+                </Button>
+              </div>
+              <Range
+                {...rangeOptions}
+                name={name}
+                value={value || 0}
+                onChange={onChange}
+              />
+            </div>
+          </AnimateHeight>
+        </Container>
+      )}
+    </ClickOff>,
     bodyEl
   );
 
