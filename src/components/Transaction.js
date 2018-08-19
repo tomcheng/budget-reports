@@ -1,15 +1,10 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
 import moment from "moment";
 import { SecondaryText, MinorText } from "./typeComponents";
 import ListItem from "./ListItem";
 import Amount from "./Amount";
 import LabelWithMinorText from "./LabelWithMinorText";
-
-const Date = styled(MinorText)`
-  margin-top: -3px;
-`;
 
 class Transaction extends PureComponent {
   static propTypes = {
@@ -31,7 +26,7 @@ class Transaction extends PureComponent {
       <ListItem isContinuing={isContinuing}>
         <div style={{ overflow: "hidden" }}>
           <LabelWithMinorText label={payee.name} minorText={category.name} />
-          <Date>{moment(date).format("dddd, MMM D")}</Date>
+          <MinorText>{moment(date).format("dddd, MMM D")}</MinorText>
         </div>
         <SecondaryText>
           <Amount amount={amount} />

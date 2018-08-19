@@ -30,7 +30,7 @@ export const SecondaryText = styled.div`
 
 export const MinorText = styled.div`
   font-size: 11px;
-  line-height: 19px;
+  line-height: 16px;
   font-weight: 400;
   color: #999;
 `;

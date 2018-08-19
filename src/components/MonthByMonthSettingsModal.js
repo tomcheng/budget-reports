@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Modal from "./Modal";
 import Label from "./Label";
-import { SecondaryText } from "./typeComponents";
+import { MinorText } from "./typeComponents";
 
 const MonthByMonthSettingsModal = ({
   excludeFirstMonth,
@@ -32,9 +32,9 @@ const MonthByMonthSettingsModal = ({
       />
       &nbsp;Exclude last month
     </Label>
-    <SecondaryText style={{ marginTop: 5 }}>
+    <MinorText style={{ marginTop: 5 }}>
       Excluding incomplete months may lead to more representative averages
-    </SecondaryText>
+    </MinorText>
   </Modal>
 );
 
