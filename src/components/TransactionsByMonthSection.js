@@ -94,6 +94,7 @@ class TransactionsByMonthSection extends Component {
               id,
               date,
               amount,
+              memo,
               payee_id: payeeId,
               category_id: categoryId
             }) => (
@@ -102,6 +103,7 @@ class TransactionsByMonthSection extends Component {
                 amount={amount}
                 category={categoriesById[categoryId]}
                 date={date}
+                memo={memo}
                 payee={payeesById[payeeId]}
               />
             )

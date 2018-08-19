@@ -17,18 +17,19 @@ class Transaction extends PureComponent {
     category: PropTypes.shape({
       name: PropTypes.string.isRequired
     }),
-    isContinuing: PropTypes.bool
+    isContinuing: PropTypes.bool,
+    memo: PropTypes.string,
   };
 
   render() {
-    const { category, payee, date, amount, isContinuing } = this.props;
+    const { category, payee, memo, date, amount, isContinuing } = this.props;
 
     return (
       <ListItem isContinuing={isContinuing}>
         <div style={{ overflow: "hidden" }}>
           <LabelWithMinorText
             label={payee.name}
-            minorText={get("name")(category) || ""}
+            minorText={(get("name")(category) || "") + (memo ? ` (${memo})` : "")}
           />
           <MinorText>{moment(date).format("dddd, MMM D")}</MinorText>
         </div>
