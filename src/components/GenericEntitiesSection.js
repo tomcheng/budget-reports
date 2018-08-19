@@ -192,6 +192,7 @@ class GenericItemLink extends PureComponent {
           <LabelWithTransactionCount
             count={transactions}
             label={name}
+            selected={selected}
             to={to}
           />
         ) : (

@@ -55,8 +55,32 @@ class SpendingChart extends PureComponent {
   };
 
   render() {
-    const { total, transactions, currentMonth, monthsToCompare } = this.props;
+    const {
+      total,
+      transactions,
+      highlightFunction,
+      currentMonth,
+      monthsToCompare
+    } = this.props;
 
+    const highlightedTransactions =
+      highlightFunction && transactions.filter(highlightFunction);
+    const highlightData =
+      highlightedTransactions &&
+      getData({
+        month: currentMonth,
+        transactionsByDate: groupByProp("date")(highlightedTransactions)
+      });
+    const highlightSeries = {
+      type: "areaspline",
+      data: highlightData,
+      enableMouseTracking: false,
+      marker: { enabled: false },
+      animation: false,
+      color: primaryColor,
+      lineWidth: 0,
+      fillOpacity: 0.8
+    };
     const daysInMonth = moment(currentMonth).daysInMonth();
     const firstDate = moment(currentMonth).add(-1, "days");
     const lastDate = moment(currentMonth).add(daysInMonth - 1, "days");
@@ -111,7 +135,9 @@ class SpendingChart extends PureComponent {
       <Fragment>
         <ChartNumbers numbers={chartNumbers} />
         <Chart
-          key={monthsToCompare}
+          key={`${monthsToCompare}-${
+            highlightFunction ? "highlight" : "no-highlight"
+          }`}
           options={{
             chart: { spacing: [0, 0, 0, 0], height: 140, animation: false },
             xAxis: {
@@ -137,8 +163,13 @@ class SpendingChart extends PureComponent {
                 enableMouseTracking: false,
                 color: primaryColor,
                 marker: { enabled: false },
-                animation: false
-              }
+                animation: false,
+                ...(highlightFunction && {
+                  type: "areaspline",
+                  fillOpacity: 0.2
+                })
+              },
+              highlightSeries
             ]
           }}
         />

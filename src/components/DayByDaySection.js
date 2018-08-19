@@ -12,6 +12,7 @@ class DayByDaySection extends Component {
     budgetId: PropTypes.string.isRequired,
     currentMonth: PropTypes.string.isRequired,
     transactions: PropTypes.array.isRequired,
+    highlightFunction: PropTypes.func,
     title: PropTypes.string,
     total: PropTypes.number
   };
@@ -64,7 +65,7 @@ class DayByDaySection extends Component {
   };
 
   render() {
-    const { transactions, budgetId, currentMonth, title, total } = this.props;
+    const { transactions, budgetId, currentMonth, highlightFunction, title, total } = this.props;
     const { modalOpen, monthsToCompare } = this.state;
 
     return (
@@ -75,11 +76,12 @@ class DayByDaySection extends Component {
           onClickSettings={this.handleClickSettings}
         >
           <SpendingChart
-            transactions={transactions}
             budgetId={budgetId}
             currentMonth={currentMonth}
+            highlightFunction={highlightFunction}
             monthsToCompare={monthsToCompare}
             total={total}
+            transactions={transactions}
           />
         </CollapsibleSection>
         <ChartSettingsModal

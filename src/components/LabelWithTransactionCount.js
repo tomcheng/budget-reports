@@ -7,6 +7,7 @@ class LabelWithTransactionCount extends PureComponent {
     count: PropTypes.number.isRequired,
     label: PropTypes.string.isRequired,
     inLink: PropTypes.bool,
+    selected: PropTypes.bool,
     showCount: PropTypes.bool,
     to: PropTypes.string
   };
@@ -14,9 +15,10 @@ class LabelWithTransactionCount extends PureComponent {
   static defaultProps = { showCount: true };
 
   render() {
-    const { label, count, inLink, showCount, to } = this.props;
+    const { label, count, inLink, selected, showCount, to } = this.props;
     return (
       <LabelWithMinorText
+        bold={selected}
         label={label}
         minorText={showCount && `${count} transaction${count === 1 ? "" : "s"}`}
         inLink={inLink}

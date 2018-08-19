@@ -19,8 +19,18 @@ class CurrentMonth extends PureComponent {
     investmentAccounts: PropTypes.object.isRequired
   };
 
+  state = { selectedGroupId: null };
+
+  handleSelectGroup = groupId => {
+    this.setState(state => ({
+      ...state,
+      selectedGroupId: state.selectedGroupId === groupId ? null : groupId
+    }));
+  };
+
   render() {
     const { budget, currentMonth, investmentAccounts } = this.props;
+    const { selectedGroupId } = this.state;
     const { categoryGroupsById, categoriesById, id: budgetId } = budget;
 
     const transactions = budget.transactions.filter(
@@ -40,6 +50,12 @@ class CurrentMonth extends PureComponent {
           budgetId={budget.id}
           currentMonth={currentMonth}
           transactions={transactions}
+          highlightFunction={
+            selectedGroupId &&
+            (transaction =>
+              categoriesById[transaction.category_id].category_group_id ===
+              selectedGroupId)
+          }
         />
         <GenericEntitiesSection
           entitiesById={categoryGroupsById}
@@ -52,9 +68,11 @@ class CurrentMonth extends PureComponent {
               categoryGroupId: groupId
             })
           }
+          selectedEntityId={selectedGroupId}
           title="Category Groups"
           transactions={transactionsThisMonth}
           showTransactionCount
+          onClickEntity={this.handleSelectGroup}
         />
       </Fragment>
     );
