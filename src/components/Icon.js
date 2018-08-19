@@ -40,12 +40,25 @@ const ICONS = {
   times: faTimes
 };
 
-const Icon = ({ icon, ...other }) => (
-  <FontAwesomeIcon {...other} icon={ICONS[icon]} />
+const PRESET_STYLES = {
+  faded: {
+    fontWeight: 400,
+    color: "#aaa",
+    fontSize: 10
+  }
+};
+
+const Icon = ({ icon, style, faded, ...other }) => (
+  <FontAwesomeIcon
+    {...other}
+    icon={ICONS[icon]}
+    style={{ ...style, ...(faded && PRESET_STYLES.faded) }}
+  />
 );
 
 Icon.propTypes = {
-  icon: PropTypes.oneOf(keys(ICONS)).isRequired
+  icon: PropTypes.oneOf(keys(ICONS)).isRequired,
+  faded: PropTypes.bool
 };
 
 export default Icon;

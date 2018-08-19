@@ -8,6 +8,7 @@ import map from "lodash/fp/map";
 import pick from "lodash/fp/pick";
 import range from "lodash/fp/range";
 import { simpleMemoize, keyByProp } from "../dataUtils";
+import { selectedPlotBandColor } from "../styleVariables";
 import {
   getMortgageRate,
   getReturnOnInvestments,
@@ -17,6 +18,7 @@ import {
   getProjection,
   getProjectionWithRetirement
 } from "../projectionUtils";
+import Icon from "./Icon";
 import CollapsibleSection from "./CollapsibleSection";
 import ProjectionsChart from "./ProjectionsChart";
 import ProjectionsSlider from "./ProjectionsSlider";
@@ -307,6 +309,7 @@ const AdjustableEntry = ({
       onSelect(name);
     }}
     highlightValue={isAdjusting}
+    isAdjustable
   />
 );
 
@@ -315,20 +318,30 @@ const Entry = ({
   value,
   onClick,
   highlightValue,
+  isAdjustable,
   formatter = a => a
 }) => (
   <div
     style={{
       display: "flex",
+      alignItems: "center",
       justifyContent: "space-between",
       padding: "2px 0"
     }}
-    onClick={onClick}
   >
     {label}:
-    <strong style={{ backgroundColor: highlightValue ? "#eee" : null }}>
-      {formatter(value)}
-    </strong>
+    <div style={{ display: "flex", alignItems: "center" }} onClick={onClick}>
+      <strong
+        style={{
+          backgroundColor: highlightValue ? selectedPlotBandColor : null,
+          padding: isAdjustable && "0 4px",
+          borderRadius: 2
+        }}
+      >
+        {formatter(value)}
+      </strong>
+      {isAdjustable && <Icon icon="pencil" faded style={{ marginLeft: 4 }} />}
+    </div>
   </div>
 );
 

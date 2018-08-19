@@ -28,12 +28,6 @@ const SettingsContainer = styled.div`
   align-items: center;
 `;
 
-const StyledIcon = styled(Icon)`
-  font-weight: 400;
-  color: #aaa;
-  font-size: 10px;
-`;
-
 const Body = styled.div`
   padding: 0 20px 15px;
 `;
@@ -74,16 +68,17 @@ class CollapsibleSection extends Component {
             onClick={this.handleClickTitle}
           >
             {title}
-            <StyledIcon
+            <Icon
               icon="chevron-right"
               transform={{ rotate: expanded ? 90 : 0 }}
               style={{ marginLeft: 10 }}
+              faded
             />
           </div>
           {hasSettings &&
             expanded && (
               <SettingsContainer onClick={onClickSettings}>
-                <StyledIcon icon="cog" />
+                <Icon icon="cog" faded />
               </SettingsContainer>
             )}
           {expanded && actions}
