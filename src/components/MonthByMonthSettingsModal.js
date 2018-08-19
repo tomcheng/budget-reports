@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Modal from "./Modal";
-import Label from "./Label";
+import ToggleWithLabel from "./ToggleWithLabel";
 import { MinorText } from "./typeComponents";
 
 const MonthByMonthSettingsModal = ({
@@ -11,27 +11,23 @@ const MonthByMonthSettingsModal = ({
   onClose,
   onSetExclusion
 }) => (
-  <Modal open={open} onClose={onClose} title="Chart Settings">
-    <Label>
-      <input
-        type="checkbox"
-        checked={excludeFirstMonth}
-        onChange={() => {
-          onSetExclusion({ month: "first", exclude: !excludeFirstMonth });
-        }}
-      />
-      &nbsp;Exclude first month
-    </Label>
-    <Label>
-      <input
-        type="checkbox"
-        checked={excludeLastMonth}
-        onChange={() => {
-          onSetExclusion({ month: "last", exclude: !excludeLastMonth });
-        }}
-      />
-      &nbsp;Exclude last month
-    </Label>
+  <Modal open={open} onClose={onClose} title="Chart Settings" width={240}>
+    <ToggleWithLabel
+      checked={excludeFirstMonth}
+      label="Exclude first month"
+      name="excludeFirstMonth"
+      onChange={() => {
+        onSetExclusion({ month: "first", exclude: !excludeFirstMonth });
+      }}
+    />
+    <ToggleWithLabel
+      checked={excludeLastMonth}
+      label="Exclude last month"
+      name="excludeLastMonth"
+      onChange={() => {
+        onSetExclusion({ month: "last", exclude: !excludeLastMonth });
+      }}
+    />
     <MinorText style={{ marginTop: 5 }}>
       Excluding incomplete months may lead to more representative averages
     </MinorText>

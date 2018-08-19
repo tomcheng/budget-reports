@@ -49,7 +49,8 @@ class Modal extends Component {
     children: PropTypes.node.isRequired,
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    title: PropTypes.string
+    title: PropTypes.string,
+    width: PropTypes.number
   };
 
   constructor() {
@@ -90,7 +91,7 @@ class Modal extends Component {
   };
 
   render() {
-    const { open, children, title, onClose } = this.props;
+    const { open, children, title, onClose, width } = this.props;
     const { animationState } = this.state;
 
     if (!open && animationState === "left") {
@@ -109,7 +110,8 @@ class Modal extends Component {
         <ModalContent
           style={{
             opacity: shouldShow ? 1 : 0,
-            transform: `translate3d(0, ${shouldShow ? "0" : "20px"}, 0)`
+            transform: `translate3d(0, ${shouldShow ? "0" : "20px"}, 0)`,
+            width
           }}
         >
           {title && (
