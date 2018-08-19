@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import omit from "lodash/fp/omit";
-import Label from "./Label";
+import ToggleWithLabel from "./ToggleWithLabel";
 
 class AccountsSelectionForm extends Component {
   static propTypes = {
@@ -36,22 +36,15 @@ class AccountsSelectionForm extends Component {
   render() {
     const { accounts, value } = this.props;
 
-    return (
-      <Fragment>
-        {accounts.map(({ id, name }) => (
-          <Label key={id}>
-            <input
-              type="checkbox"
-              checked={!!value[id]}
-              name={id}
-              onChange={this.handleChange}
-            />
-            &nbsp;
-            {name}
-          </Label>
-        ))}
-      </Fragment>
-    );
+    return accounts.map(({ id, name }) => (
+      <ToggleWithLabel
+        key={id}
+        checked={!!value[id]}
+        name={id}
+        onChange={this.handleChange}
+        label={name}
+      />
+    ));
   }
 }
 
