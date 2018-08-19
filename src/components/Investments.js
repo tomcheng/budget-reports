@@ -1,5 +1,9 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
+import keys from "lodash/fp/keys";
+import EmptyText from "./EmptyText";
+import { Link } from "react-router-dom";
+import pages, { makeLink } from "../pages";
 import MonthByMonthSection from "./MonthByMonthSection";
 import MonthExclusions from "./MonthExclusions";
 import { getTransactionMonth } from "../budgetUtils";
@@ -49,6 +53,18 @@ class Investments extends PureComponent {
     const { budget, investmentAccounts } = this.props;
     const { selectedMonth, selectedBreakdown } = this.state;
     const { payeesById } = budget;
+
+    if (keys(investmentAccounts).length === 0) {
+      return (
+        <EmptyText>
+          You don't have any accounts marked as investment accounts.{" "}
+          <Link to={makeLink(pages.settings.path, { budgetId: budget.id })}>
+            Go to Settings
+          </Link>
+        </EmptyText>
+      );
+    }
+
     const investmentTransactions = budget.transactions
       .filter(isInvestmentTransaction(investmentAccounts, payeesById))
       .map(transaction => ({ ...transaction, amount: -transaction.amount }));
