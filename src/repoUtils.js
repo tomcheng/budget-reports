@@ -27,12 +27,14 @@ export const sanitizeBudget = budget => {
   const categoryGroups = budget.category_groups.filter(
     group => !GROUPS_TO_HIDE.includes(group.name)
   );
-  const categories = budget.categories.map(category => ({
-    ...category,
-    activity: formatCurrency(category.activity),
-    balance: formatCurrency(category.balance),
-    budgeted: formatCurrency(category.budgeted)
-  }));
+  const categories = budget.categories
+    .filter(category => !category.hidden && !category.deleted)
+    .map(category => ({
+      ...category,
+      activity: formatCurrency(category.activity),
+      balance: formatCurrency(category.balance),
+      budgeted: formatCurrency(category.budgeted)
+    }));
   const earliestDate = moment()
     .subtract(MAX_MONTHS_TO_SHOW - 1, "months")
     .format("YYYY-MM-01");
