@@ -1,17 +1,20 @@
 import compose from "lodash/fp/compose";
 import pick from "lodash/fp/pick";
 import mapRaw from "lodash/fp/map";
+import get from "lodash/fp/get";
 import { groupByProp, simpleMemoize, sumByProp } from "./dataUtils";
 
 const map = mapRaw.convert({ cap: false });
 
 export const isStartingBalanceOrReconciliation = simpleMemoize(budget => {
-  const startingBalancePayeeId = budget.payees.find(
-    payee => payee.name === "Starting Balance"
-  ).id;
-  const reconciliationPayeeId = budget.payees.find(
-    payee => payee.name === "Reconciliation Balance Adjustment"
-  ).id;
+  const startingBalancePayeeId = get("id")(
+    budget.payees.find(payee => payee.name === "Starting Balance")
+  );
+  const reconciliationPayeeId = get("id")(
+    budget.payees.find(
+      payee => payee.name === "Reconciliation Balance Adjustment"
+    )
+  );
 
   return transaction =>
     transaction.payee_id === startingBalancePayeeId ||
@@ -19,9 +22,9 @@ export const isStartingBalanceOrReconciliation = simpleMemoize(budget => {
 });
 
 export const isIncome = simpleMemoize(budget => {
-  const toBeBudgetedId = budget.categories.find(
-    category => category.name === "To be Budgeted"
-  ).id;
+  const toBeBudgetedId = get("id")(
+    budget.categories.find(category => category.name === "To be Budgeted")
+  );
   return transaction => transaction.category_id === toBeBudgetedId;
 });
 

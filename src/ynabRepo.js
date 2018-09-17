@@ -91,7 +91,7 @@ const getBudget = id =>
         e.message === "Failed to fetch"
       ) {
         return {
-          budget: { categories: [] },
+          budget: { categories: [], transactions: [], payees: [] },
           authorized: false
         };
       }
