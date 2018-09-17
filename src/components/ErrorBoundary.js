@@ -1,3 +1,4 @@
+/* global Rollbar */
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ErrorPage from "./ErrorPage";
@@ -14,7 +15,8 @@ class ErrorBoundary extends Component {
 
   state = { hasError: false };
 
-  componentDidCatch() {
+  componentDidCatch(error) {
+    Rollbar.error(error);
     this.setState({ hasError: true });
   }
 
