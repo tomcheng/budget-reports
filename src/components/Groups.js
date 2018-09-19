@@ -58,11 +58,10 @@ class Groups extends PureComponent {
     const { categoryGroupsById, categoriesById, id: budgetId } = budget;
     const selectedGroup =
       selectedGroupId && categoryGroupsById[selectedGroupId];
-    const filteredTransactions = transactions.filter(t => t);
 
     const transactionsForMonth =
       selectedMonth &&
-      filteredTransactions.filter(
+      transactions.filter(
         transaction => getTransactionMonth(transaction) === selectedMonth
       );
 
@@ -84,7 +83,7 @@ class Groups extends PureComponent {
               ? `Month by Month: ${sanitizeName(selectedGroup.name)}`
               : "Month by Month"
           }
-          transactions={filteredTransactions}
+          transactions={transactions}
           onSelectMonth={onSelectMonth}
           onSetExclusion={onSetExclusion}
         />
@@ -104,7 +103,7 @@ class Groups extends PureComponent {
               ? `Category Groups: ${moment(selectedMonth).format("MMMM")}`
               : "Category Groups"
           }
-          transactions={transactionsForMonth || filteredTransactions}
+          transactions={transactionsForMonth || transactions}
           onClickEntity={onSelectGroup}
           numMonths={months.length}
           showAverageToggle={!selectedMonth}

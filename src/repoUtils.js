@@ -12,11 +12,7 @@ import { upsertBy, keyByProp } from "./dataUtils";
 
 const formatCurrency = utils.convertMilliUnitsToCurrencyAmount;
 
-const GROUPS_TO_HIDE = [
-  "Internal Master Category",
-  "Credit Card Payments",
-  "Hidden Categories"
-];
+const GROUPS_TO_HIDE = ["Internal Master Category", "Credit Card Payments"];
 
 const MAX_MONTHS_TO_SHOW = 24;
 
@@ -28,7 +24,7 @@ export const sanitizeBudget = budget => {
     group => !GROUPS_TO_HIDE.includes(group.name)
   );
   const categories = budget.categories
-    .filter(category => !category.hidden && !category.deleted)
+    .filter(category => !category.deleted)
     .map(category => ({
       ...category,
       activity: formatCurrency(category.activity),
