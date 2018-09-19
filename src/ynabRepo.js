@@ -95,6 +95,8 @@ const getBudget = id =>
           authorized: false
         };
       }
+
+      throw(e);
     });
 
 export const getUpdatedBudget = id => {
