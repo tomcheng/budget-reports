@@ -37,12 +37,13 @@ const StyledLink = styled(NavLink)`
 class SidebarMenuContent extends PureComponent {
   static propTypes = {
     budgetId: PropTypes.string.isRequired,
+    hasMultipleBudgets: PropTypes.bool.isRequired,
     location: PropTypes.string.isRequired,
     onCloseSidebar: PropTypes.func.isRequired
   };
 
   render() {
-    const { budgetId, onCloseSidebar, location } = this.props;
+    const { budgetId, hasMultipleBudgets, location, onCloseSidebar } = this.props;
 
     return (
       <Fragment>
@@ -68,6 +69,9 @@ class SidebarMenuContent extends PureComponent {
             </PureStyledLink>
           );
         })}
+        {hasMultipleBudgets && (
+          <PureStyledLink to="/">Switch Budgets</PureStyledLink>
+        )}
       </Fragment>
     );
   }

@@ -120,6 +120,7 @@ class App extends Component {
                   authorized={authorized}
                   budgetId={budgetId}
                   budgetLoaded={!!budget}
+                  hasMultipleBudgets={budgetIds.length > 1}
                   historyAction={props.history.action}
                   location={props.location.pathname}
                   onAuthorize={this.handleAuthorize}

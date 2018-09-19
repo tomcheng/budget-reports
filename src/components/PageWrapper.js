@@ -37,6 +37,7 @@ const PageWrapper = ({
   authorized,
   budgetId,
   budgetLoaded,
+  hasMultipleBudgets,
   historyAction,
   location,
   title,
@@ -50,7 +51,11 @@ const PageWrapper = ({
     budgetLoaded={budgetLoaded}
     onRequestBudget={onRequestBudget}
   >
-    <SidebarMenu budgetId={budgetId} location={location}>
+    <SidebarMenu
+      budgetId={budgetId}
+      location={location}
+      hasMultipleBudgets={hasMultipleBudgets}
+    >
       {({ sidebarTrigger }) => (
         <Container>
           <Header>
@@ -93,6 +98,7 @@ PageWrapper.propTypes = {
   budgetId: PropTypes.string.isRequired,
   budgetLoaded: PropTypes.bool.isRequired,
   content: PropTypes.node.isRequired,
+  hasMultipleBudgets: PropTypes.bool.isRequired,
   historyAction: PropTypes.string.isRequired,
   location: PropTypes.string.isRequired,
   title: PropTypes.node.isRequired,
