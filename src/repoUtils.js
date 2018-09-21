@@ -34,14 +34,18 @@ export const sanitizeBudget = budget => {
   const earliestDate = moment()
     .subtract(MAX_MONTHS_TO_SHOW - 1, "months")
     .format("YYYY-MM-01");
+  const currencyFormat = {
+    symbol: budget.currency_format.currency_symbol
+  };
 
   return {
-    ...omit(["category_groups"])(budget),
+    ...omit(["category_groups", "currency_format"])(budget),
     accountsById: keyByProp("id")(budget.accounts),
     categoryGroups,
     categoryGroupsById: keyByProp("id")(categoryGroups),
     categories,
     categoriesById: keyByProp("id")(categories),
+    currencyFormat,
     payeesById: keyByProp("id")(budget.payees),
     months: sortBy("month")(budget.months),
     transactions: compose([

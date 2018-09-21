@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Route, Switch } from "react-router-dom";
 import moment from "moment";
+import get from "lodash/fp/get";
 import keyBy from "lodash/fp/keyBy";
 import {
   getBudgets,
@@ -19,6 +20,7 @@ import Unauthorized from "./Unauthorized";
 import NotFound from "./NotFound";
 import ErrorBoundary from "./ErrorBoundary";
 import Budgets from "./Budgets";
+import CurrencyContext from "./CurrencyContext";
 
 class App extends Component {
   static propTypes = {
@@ -116,51 +118,53 @@ class App extends Component {
               const budget = budgetDetails[budgetId];
 
               return (
-                <PageWrapper
-                  authorized={authorized}
-                  budgetId={budgetId}
-                  budgetLoaded={!!budget}
-                  hasMultipleBudgets={budgetIds.length > 1}
-                  historyAction={props.history.action}
-                  location={props.location.pathname}
-                  onAuthorize={this.handleAuthorize}
-                  onRequestBudget={this.handleRequestBudget}
-                  title={<PageTitle budget={budget} />}
-                  breadcrumbs={<PageBreadcrumbs budget={budget} />}
-                  actions={
-                    <PageActions
-                      settings={settings}
-                      onChangeSetting={this.handleChangeSetting}
-                    />
-                  }
-                  content={
-                    <PageContent
-                      budget={budget}
-                      currentMonth={currentMonth}
-                      investmentAccounts={getSetting(
-                        "investmentAccounts",
-                        budgetId
-                      )}
-                      mortgageAccounts={getSetting(
-                        "mortgageAccounts",
-                        budgetId
-                      )}
-                      settings={settings}
-                      historyAction={props.history.action}
-                      location={props.location.pathname}
-                      onChangeSetting={this.handleChangeSetting}
-                      onUpdateAccounts={({ type, value }) => {
-                        if (type === "investment") {
-                          setSetting("investmentAccounts", budgetId, value);
-                        }
-                        if (type === "mortgage") {
-                          setSetting("mortgageAccounts", budgetId, value);
-                        }
-                        this.forceUpdate();
-                      }}
-                    />
-                  }
-                />
+                <CurrencyContext.Provider value={get("currencyFormat")(budget)}>
+                  <PageWrapper
+                    authorized={authorized}
+                    budgetId={budgetId}
+                    budgetLoaded={!!budget}
+                    hasMultipleBudgets={budgetIds.length > 1}
+                    historyAction={props.history.action}
+                    location={props.location.pathname}
+                    onAuthorize={this.handleAuthorize}
+                    onRequestBudget={this.handleRequestBudget}
+                    title={<PageTitle budget={budget} />}
+                    breadcrumbs={<PageBreadcrumbs budget={budget} />}
+                    actions={
+                      <PageActions
+                        settings={settings}
+                        onChangeSetting={this.handleChangeSetting}
+                      />
+                    }
+                    content={
+                      <PageContent
+                        budget={budget}
+                        currentMonth={currentMonth}
+                        investmentAccounts={getSetting(
+                          "investmentAccounts",
+                          budgetId
+                        )}
+                        mortgageAccounts={getSetting(
+                          "mortgageAccounts",
+                          budgetId
+                        )}
+                        settings={settings}
+                        historyAction={props.history.action}
+                        location={props.location.pathname}
+                        onChangeSetting={this.handleChangeSetting}
+                        onUpdateAccounts={({ type, value }) => {
+                          if (type === "investment") {
+                            setSetting("investmentAccounts", budgetId, value);
+                          }
+                          if (type === "mortgage") {
+                            setSetting("mortgageAccounts", budgetId, value);
+                          }
+                          this.forceUpdate();
+                        }}
+                      />
+                    }
+                  />
+                </CurrencyContext.Provider>
               );
             }}
           />

@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { positiveColor } from "../styleVariables";
+import CurrencyContext from "./CurrencyContext";
 
 export const addCommas = nStr => {
   nStr += "";
@@ -16,11 +17,15 @@ export const addCommas = nStr => {
 };
 
 const Amount = ({ amount, amountAfterDecimal, showCurrencySymbol, style }) => (
-  <span style={{ color: amount > 0 && positiveColor, ...style }}>
-    {amount > 0 && "+"}
-    {showCurrencySymbol && "$"}
-    {addCommas(Math.abs(amount).toFixed(amountAfterDecimal))}
-  </span>
+  <CurrencyContext.Consumer>
+    {currencyFormat => (
+      <span style={{ color: amount > 0 && positiveColor, ...style }}>
+        {amount > 0 && "+"}
+        {showCurrencySymbol && currencyFormat.symbol}
+        {addCommas(Math.abs(amount).toFixed(amountAfterDecimal))}
+      </span>
+    )}
+  </CurrencyContext.Consumer>
 );
 
 Amount.propTypes = {

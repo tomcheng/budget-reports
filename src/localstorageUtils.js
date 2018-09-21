@@ -15,6 +15,7 @@ export const getStorage = key => {
 
 export const setStorage = (key, obj) => {
   delete cache[key];
+
   try {
     localStorage.setItem(key, JSON.stringify(obj));
   } catch (e) {
