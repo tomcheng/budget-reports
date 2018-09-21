@@ -15,5 +15,9 @@ export const getStorage = key => {
 
 export const setStorage = (key, obj) => {
   delete cache[key];
-  localStorage.setItem(key, JSON.stringify(obj));
+  try {
+    localStorage.setItem(key, JSON.stringify(obj));
+  } catch {
+    // Most likely exceeds storage quota
+  }
 };
