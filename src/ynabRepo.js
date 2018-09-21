@@ -72,6 +72,8 @@ export const getBudgets = () =>
       ) {
         return getStorage(BUDGETS_STORAGE_KEY) || { budgets: [] };
       }
+
+      throw(e);
     });
 
 const getBudget = id =>
