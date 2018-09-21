@@ -1,6 +1,7 @@
 import React, { Component, PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
+import get from "lodash/fp/get";
 import map from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
 import { groupBy, groupByProp, sumByProp } from "../dataUtils";
@@ -114,9 +115,13 @@ class GenericEntitiesSection extends Component {
             <GenericItemLink
               key={entityId}
               showTransactionCount={showTransactionCount}
-              to={linkFunction && linkFunction(entityId)}
+              to={
+                linkFunction && !!entitiesById[entityId]
+                  ? linkFunction(entityId)
+                  : null
+              }
               transactions={transactions}
-              name={entitiesById[entityId].name}
+              name={get("name")(entitiesById[entityId]) || "(no payee)"}
               amount={showAverage ? amount / numMonths : amount}
               selected={entityId === selectedEntityId}
               total={showAverage ? total / numMonths : total}
@@ -132,9 +137,13 @@ class GenericEntitiesSection extends Component {
                 <GenericItemLink
                   key={entityId}
                   showTransactionCount={showTransactionCount}
-                  to={linkFunction && linkFunction(entityId)}
+                  to={
+                    linkFunction && !!entitiesById[entityId]
+                      ? linkFunction(entityId)
+                      : null
+                  }
                   transactions={transactions}
-                  name={entitiesById[entityId].name}
+                  name={get("name")(entitiesById[entityId]) || "(no payee)"}
                   amount={showAverage ? amount / numMonths : amount}
                   selected={entityId === selectedEntityId}
                   total={total}

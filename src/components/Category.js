@@ -12,7 +12,7 @@ class Category extends PureComponent {
     budget: PropTypes.shape({
       transactions: PropTypes.arrayOf(
         PropTypes.shape({
-          payee_id: PropTypes.string.isRequired
+          payee_id: PropTypes.string
         })
       ).isRequired,
       payeesById: PropTypes.object.isRequired

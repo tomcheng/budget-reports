@@ -28,7 +28,7 @@ class Transaction extends PureComponent {
       <ListItem isContinuing={isContinuing}>
         <div style={{ overflow: "hidden" }}>
           <LabelWithMinorText
-            label={payee.name}
+            label={get("name")(payee) || "(no payee)"}
             minorText={(get("name")(category) || "") + (memo ? ` (${memo})` : "")}
           />
           <MinorText>{moment(date).format("dddd, MMM D")}</MinorText>
