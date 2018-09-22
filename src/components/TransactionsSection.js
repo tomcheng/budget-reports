@@ -46,7 +46,7 @@ TransactionsSection.propTypes = {
       category_id: PropTypes.string.isRequired,
       date: PropTypes.string.isRequired,
       id: PropTypes.string.isRequired,
-      payee_id: PropTypes.string.isRequired
+      payee_id: PropTypes.string
     })
   ).isRequired,
   title: PropTypes.string

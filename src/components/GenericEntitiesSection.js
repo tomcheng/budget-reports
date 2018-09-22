@@ -34,6 +34,7 @@ class GenericEntitiesSection extends Component {
       "category_group_id",
       "payee_id"
     ]),
+    emptyName: PropTypes.string,
     entityFunction: PropTypes.func,
     linkFunction: PropTypes.func,
     limitShowing: PropTypes.bool,
@@ -45,6 +46,8 @@ class GenericEntitiesSection extends Component {
     onClickEntity: PropTypes.func,
     onToggleAverage: PropTypes.func
   };
+
+  static defaultProps = { emptyName: "(none)" };
 
   state = { showAll: false, allMounted: false };
 
@@ -62,6 +65,7 @@ class GenericEntitiesSection extends Component {
 
   render() {
     const {
+      emptyName,
       entityKey,
       entityFunction,
       entitiesById,
@@ -121,7 +125,7 @@ class GenericEntitiesSection extends Component {
                   : null
               }
               transactions={transactions}
-              name={get("name")(entitiesById[entityId]) || "(no payee)"}
+              name={get("name")(entitiesById[entityId]) || emptyName}
               amount={showAverage ? amount / numMonths : amount}
               selected={entityId === selectedEntityId}
               total={showAverage ? total / numMonths : total}
@@ -143,7 +147,7 @@ class GenericEntitiesSection extends Component {
                       : null
                   }
                   transactions={transactions}
-                  name={get("name")(entitiesById[entityId]) || "(no payee)"}
+                  name={get("name")(entitiesById[entityId]) || emptyName}
                   amount={showAverage ? amount / numMonths : amount}
                   selected={entityId === selectedEntityId}
                   total={total}

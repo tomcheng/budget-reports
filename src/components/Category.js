@@ -79,6 +79,7 @@ class Category extends PureComponent {
         />
         <GenericEntitiesSection
           key={`payees-${selectedMonth || "all"}`}
+          emptyName="(no payee)"
           entitiesById={payeesById}
           entityKey="payee_id"
           linkFunction={payeeId =>

@@ -11,14 +11,14 @@ class Transaction extends PureComponent {
   static propTypes = {
     amount: PropTypes.number.isRequired,
     date: PropTypes.string.isRequired,
-    payee: PropTypes.shape({
-      name: PropTypes.string.isRequired
-    }).isRequired,
     category: PropTypes.shape({
       name: PropTypes.string.isRequired
     }),
     isContinuing: PropTypes.bool,
     memo: PropTypes.string,
+    payee: PropTypes.shape({
+      name: PropTypes.string.isRequired
+    })
   };
 
   render() {
@@ -29,7 +29,9 @@ class Transaction extends PureComponent {
         <div style={{ overflow: "hidden" }}>
           <LabelWithMinorText
             label={get("name")(payee) || "(no payee)"}
-            minorText={(get("name")(category) || "") + (memo ? ` (${memo})` : "")}
+            minorText={
+              (get("name")(category) || "") + (memo ? ` (${memo})` : "")
+            }
           />
           <MinorText>{moment(date).format("dddd, MMM D")}</MinorText>
         </div>
