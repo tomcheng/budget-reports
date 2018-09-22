@@ -31,6 +31,7 @@ export const sanitizeBudget = budget => {
       balance: formatCurrency(category.balance),
       budgeted: formatCurrency(category.budgeted)
     }));
+  const categoriesById = keyByProp("id")(categories);
   const earliestDate = moment()
     .subtract(MAX_MONTHS_TO_SHOW - 1, "months")
     .format("YYYY-MM-01");
@@ -44,7 +45,7 @@ export const sanitizeBudget = budget => {
     categoryGroups,
     categoryGroupsById: keyByProp("id")(categoryGroups),
     categories,
-    categoriesById: keyByProp("id")(categories),
+    categoriesById,
     currencyFormat,
     payeesById: keyByProp("id")(budget.payees),
     months: sortBy("month")(budget.months),
@@ -54,6 +55,13 @@ export const sanitizeBudget = budget => {
           ...transaction,
           amount: formatCurrency(transaction.amount)
         })),
+      // Not sure how this would happen, but seeing it in production
+      transactions =>
+        transactions.filter(
+          transaction =>
+            !transaction.category_id ||
+            !!categoriesById[transaction.category_id]
+        ),
       flatMap(
         transaction =>
           transactionIdsFromSub.includes(transaction.id)
