@@ -10,6 +10,8 @@ class Scroller extends Component {
 
   toBeScrolled = null;
 
+  raf = null;
+
   scrollPositions = {};
 
   getSnapshotBeforeUpdate() {
@@ -25,23 +27,27 @@ class Scroller extends Component {
 
     if (action === "POP") {
       this.scrollPositions[prevProps.location] = snapshot.scrollTop;
-      requestAnimationFrame(() => {
+      this.raf = requestAnimationFrame(() => {
         this.toBeScrolled.scrollTop = this.scrollPositions[location] || 0;
       });
     }
 
     if (action === "PUSH") {
       this.scrollPositions[prevProps.location] = snapshot.scrollTop;
-      requestAnimationFrame(() => {
+      this.raf = requestAnimationFrame(() => {
         this.toBeScrolled.scrollTop = 0;
       });
     }
 
     if (action === "REPLACE") {
-      requestAnimationFrame(() => {
+      this.raf = requestAnimationFrame(() => {
         this.toBeScrolled.scrollTop = 0;
       });
     }
+  }
+
+  componentWillUnmount() {
+    cancelAnimationFrame(this.raf);
   }
 
   render() {
