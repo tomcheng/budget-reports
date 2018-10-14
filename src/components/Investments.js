@@ -1,6 +1,7 @@
 import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import keys from "lodash/fp/keys";
+import get from "lodash/fp/get";
 import EmptyText from "./EmptyText";
 import { Link } from "react-router-dom";
 import pages, { makeLink } from "../pages";
@@ -17,7 +18,7 @@ const isContribution = investmentAccounts => transaction =>
 const isCapitalGainOrLoss = (investmentAccounts, payeesById) => transaction =>
   !!investmentAccounts[transaction.account_id] &&
   !transaction.transfer_account_id &&
-  payeesById[transaction.payee_id].name !== "Starting Balance";
+  get([transaction.payee_id, "name"])(payeesById) !== "Starting Balance";
 
 const isInvestmentTransaction = (
   investmentAccounts,
