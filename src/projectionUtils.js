@@ -12,7 +12,6 @@ import keys from "lodash/fp/keys";
 import last from "lodash/fp/last";
 import map from "lodash/fp/map";
 import matches from "lodash/fp/matches";
-import mean from "lodash/fp/mean";
 import multiply from "lodash/fp/multiply";
 import prop from "lodash/fp/prop";
 import range from "lodash/fp/range";
@@ -24,19 +23,6 @@ import takeWhile from "lodash/fp/takeWhile";
 import takeRightWhile from "lodash/fp/takeRightWhile";
 import uniq from "lodash/fp/uniq";
 import { getTransactionMonth } from "./budgetUtils";
-
-const standardDeviation = arr => {
-  const avg = mean(arr);
-  return Math.sqrt(sumBy(num => Math.pow(num - avg, 2))(arr) / arr.length);
-};
-
-const getOutliersBy = f => arr => {
-  const values = map(f)(arr);
-  const stdDev = standardDeviation(values);
-  const avg = mean(values);
-
-  return filter(item => Math.abs(f(item) - avg) > stdDev)(arr);
-};
 
 export const getMortgageRate = (
   { accounts, transactions: allTransactions },
@@ -68,12 +54,12 @@ export const getMortgageRate = (
     lastMonthTransactions
   );
   const r = (P1 + c) / P - 1;
-  const N = -Math.log(1 - r * P / c) / Math.log(1 + r);
+  const N = -Math.log(1 - (r * P) / c) / Math.log(1 + r);
 
   const rate = r * 12;
   const paymentsLeft = N - 1;
 
-  const projection = map(n => (1 + r) ** n * P - ((1 + r) ** n - 1) / r * c)(
+  const projection = map(n => (1 + r) ** n * P - (((1 + r) ** n - 1) / r) * c)(
     range(1, N)
   );
 
@@ -168,21 +154,9 @@ export const getAverageContribution = (
     map("date")
   ])(contributions);
 
-  const outliers = getOutliersBy(month =>
-    compose([
-      sumBy("amount"),
-      filter(({ date }) => date.slice(0, 7) === month)
-    ])(contributions)
-  )(months);
-
-  const totalContributions = compose([
-    sumBy("amount"),
-    reject(({ date }) => includes(date.slice(0, 7))(outliers))
-  ])(contributions);
+  const totalContributions = sumBy("amount")(contributions);
   const numMonths =
-    moment(last(months)).diff(moment(head(months)), "months") +
-    1 -
-    outliers.length;
+    moment(last(months)).diff(moment(head(months)), "months") + 1;
 
   return totalContributions / numMonths;
 };
