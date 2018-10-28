@@ -67,7 +67,7 @@ const PageWrapper = ({
             {actions}
           </Header>
           <Scroller action={historyAction} location={location}>
-            {({ ref }) => <Body innerRef={ref}>{content}</Body>}
+            {({ ref }) => <Body ref={ref}>{content}</Body>}
           </Scroller>
           {!authorized && (
             <div
