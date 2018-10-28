@@ -70,6 +70,7 @@ export const getBudgets = () =>
         })(e.error) ||
         e.message === "Failed to fetch"
       ) {
+        localStorage.removeItem(TOKEN_STORAGE_KEY);
         return getStorage(BUDGETS_STORAGE_KEY) || { budgets: [] };
       }
 
@@ -92,6 +93,7 @@ const getBudget = id =>
         matches({ id: "401", name: "unauthorized" })(e.error) ||
         e.message === "Failed to fetch"
       ) {
+        localStorage.removeItem(TOKEN_STORAGE_KEY);
         return {
           budget: { categories: [], transactions: [], payees: [] },
           authorized: false
