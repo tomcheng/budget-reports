@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import { HashRouter } from "react-router-dom";
 import { getAuthorizeToken, initializeYnabApi } from "./ynabRepo";
 import App from "./components/App";
-import registerServiceWorker from "./registerServiceWorker";
 
 const token = getAuthorizeToken();
 
@@ -17,5 +16,3 @@ ReactDOM.render(
   </HashRouter>,
   document.getElementById("root")
 );
-
-registerServiceWorker();
