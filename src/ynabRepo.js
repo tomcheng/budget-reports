@@ -73,7 +73,7 @@ export const getBudgets = () =>
         return getStorage(BUDGETS_STORAGE_KEY) || { budgets: [] };
       }
 
-      throw(e);
+      throw e;
     });
 
 const getBudget = id =>
@@ -98,7 +98,7 @@ const getBudget = id =>
         };
       }
 
-      throw(e);
+      throw e;
     });
 
 export const getUpdatedBudget = id => {
@@ -135,6 +135,8 @@ export const getUpdatedBudget = id => {
           authorized: false
         };
       }
+
+      throw e;
     });
 };
 
