@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import get from "lodash/fp/get";
 import { positiveColor } from "../styleVariables";
 import CurrencyContext from "./CurrencyContext";
 
@@ -21,7 +22,7 @@ const Amount = ({ amount, amountAfterDecimal, showCurrencySymbol, style }) => (
     {currencyFormat => (
       <span style={{ color: amount > 0 && positiveColor, ...style }}>
         {amount > 0 && "+"}
-        {showCurrencySymbol && currencyFormat.symbol}
+        {showCurrencySymbol && (get("symbol")(currencyFormat) || "$")}
         {addCommas(Math.abs(amount).toFixed(amountAfterDecimal))}
       </span>
     )}
