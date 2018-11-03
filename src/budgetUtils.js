@@ -35,7 +35,9 @@ export const isTransfer = (investmentAccounts = {}) => transaction =>
 export const getTransactionMonth = transaction => transaction.date.slice(0, 7);
 
 export const getFirstMonth = budget =>
-  getTransactionMonth(budget.transactions[budget.transactions.length - 1]);
+  budget.transactions.length
+    ? getTransactionMonth(budget.transactions[budget.transactions.length - 1])
+    : undefined;
 
 export const getPayeeNodes = ({ payeesById, transactions }, divideBy = 1) =>
   compose([
