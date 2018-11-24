@@ -7,12 +7,13 @@ class AmountWithPercentage extends PureComponent {
   static propTypes = {
     amount: PropTypes.number.isRequired,
     total: PropTypes.number.isRequired,
+    positiveIsRed: PropTypes.bool,
     faded: PropTypes.bool,
     selected: PropTypes.bool
   };
 
   render() {
-    const { amount, total, faded, selected } = this.props;
+    const { amount, positiveIsRed, total, faded, selected } = this.props;
     return (
       <SecondaryText
         style={{
@@ -22,7 +23,7 @@ class AmountWithPercentage extends PureComponent {
           fontWeight: selected && 700
         }}
       >
-        <Amount amount={amount} />
+        <Amount amount={amount} positiveIsRed={positiveIsRed} />
         <MinorText
           style={{ width: 44, textAlign: "right", fontWeight: selected && 700 }}
         >

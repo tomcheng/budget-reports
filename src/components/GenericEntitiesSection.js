@@ -36,6 +36,7 @@ class GenericEntitiesSection extends Component {
     ]),
     emptyName: PropTypes.string,
     entityFunction: PropTypes.func,
+    positiveIsRed: PropTypes.bool,
     linkFunction: PropTypes.func,
     limitShowing: PropTypes.bool,
     numMonths: PropTypes.number,
@@ -69,6 +70,7 @@ class GenericEntitiesSection extends Component {
       entityKey,
       entityFunction,
       entitiesById,
+      positiveIsRed,
       linkFunction,
       limitShowing: limitShowingProp,
       numMonths,
@@ -127,6 +129,7 @@ class GenericEntitiesSection extends Component {
               transactions={transactions}
               name={get("name")(entitiesById[entityId]) || emptyName}
               amount={showAverage ? amount / numMonths : amount}
+              positiveIsRed={positiveIsRed}
               selected={entityId === selectedEntityId}
               total={showAverage ? total / numMonths : total}
               id={entityId}
@@ -149,6 +152,7 @@ class GenericEntitiesSection extends Component {
                   transactions={transactions}
                   name={get("name")(entitiesById[entityId]) || emptyName}
                   amount={showAverage ? amount / numMonths : amount}
+                  positiveIsRed={positiveIsRed}
                   selected={entityId === selectedEntityId}
                   total={total}
                   id={entityId}
@@ -190,6 +194,7 @@ class GenericItemLink extends PureComponent {
       transactions,
       name,
       amount,
+      positiveIsRed,
       total,
       selected,
       id,
@@ -233,8 +238,9 @@ class GenericItemLink extends PureComponent {
         )}
         <AmountWithPercentage
           amount={amount}
-          total={total}
+          positiveIsRed={positiveIsRed}
           selected={selected}
+          total={total}
         />
       </ListItem>
     );

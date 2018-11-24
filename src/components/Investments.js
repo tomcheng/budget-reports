@@ -118,6 +118,7 @@ class Investments extends PureComponent {
               ? "contribution"
               : "capitalGain"
           }
+          positiveIsRed
         />
       </Fragment>
     );

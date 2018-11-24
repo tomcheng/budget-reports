@@ -30,6 +30,7 @@ const ChartNumbers = ({ numbers, alwaysRound }) => {
                     : 0
               }
               showCurrencySymbol={isMoney}
+              positiveIsRed
             />
           </LargeNumber>
           <MinorText>{label}</MinorText>

@@ -74,7 +74,7 @@ const ExpensesBreakdown = ({
       <Breakdown
         nodes={nodes}
         valueRenderer={node => (
-          <AmountWithPercentage {...node} total={-totalIncome} />
+          <AmountWithPercentage {...node} positiveIsRed total={-totalIncome} />
         )}
       />
     </CollapsibleSection>

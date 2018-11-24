@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import get from "lodash/fp/get";
-import { positiveColor } from "../styleVariables";
+import { positiveColor, negativeColor } from "../styleVariables";
 import CurrencyContext from "./CurrencyContext";
 
 export const addCommas = nStr => {
@@ -17,11 +17,22 @@ export const addCommas = nStr => {
   return x1 + x2;
 };
 
-const Amount = ({ amount, amountAfterDecimal, showCurrencySymbol, style }) => (
+const Amount = ({
+  amount,
+  amountAfterDecimal,
+  positiveIsRed,
+  showCurrencySymbol,
+  style
+}) => (
   <CurrencyContext.Consumer>
     {currencyFormat => (
-      <span style={{ color: amount > 0 && positiveColor, ...style }}>
-        {amount > 0 && "+"}
+      <span
+        style={{
+          ...style,
+          color: amount > 0 && (positiveIsRed ? negativeColor : positiveColor)
+        }}
+      >
+        {amount > 0 && (positiveIsRed ? "-" : "+")}
         {showCurrencySymbol && (get("symbol")(currencyFormat) || "$")}
         {addCommas(Math.abs(amount).toFixed(amountAfterDecimal))}
       </span>
@@ -32,6 +43,7 @@ const Amount = ({ amount, amountAfterDecimal, showCurrencySymbol, style }) => (
 Amount.propTypes = {
   amount: PropTypes.number.isRequired,
   amountAfterDecimal: PropTypes.number,
+  positiveIsRed: PropTypes.bool,
   showCurrencySymbol: PropTypes.bool,
   style: PropTypes.object
 };
