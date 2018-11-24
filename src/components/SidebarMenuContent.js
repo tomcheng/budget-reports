@@ -51,6 +51,7 @@ class SidebarMenuContent extends PureComponent {
         {[
           "currentMonth",
           "groups",
+          "income",
           "incomeVsExpenses",
           "netWorth",
           "investments",

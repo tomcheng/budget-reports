@@ -5,6 +5,7 @@ import Groups from "./components/Groups";
 import Group from "./components/Group";
 import Category from "./components/Category";
 import CategoryPayee from "./components/CategoryPayee";
+import Income from "./components/Income";
 import IncomeVsExpenses from "./components/IncomeVsExpenses";
 import NetWorth from "./components/NetWorth";
 import Investments from "./components/Investments";
@@ -87,6 +88,14 @@ const pages = {
       payee: props.budget.payeesById[params.payeeId]
     }),
     breadcrumbs: ["groups", "group", "category"]
+  },
+  income: {
+    path: "/budgets/:budgetId/income",
+    title: "Income Trends",
+    Component: Income,
+    props: props => ({
+      budget: props.budget
+    })
   },
   incomeVsExpenses: {
     path: "/budgets/:budgetId/income-vs-expenses",

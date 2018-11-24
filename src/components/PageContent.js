@@ -43,6 +43,18 @@ const getFilteredSpendingTransactions = simpleMemoize(
     ).filter(transaction => !isIncome(budget)(transaction))
 );
 
+const getFilteredIncomeTransactions = simpleMemoize(
+  (budget, investmentAccounts, excludeFirstMonth, excludeLastMonth) =>
+    getFilteredTransactions(
+      budget,
+      investmentAccounts,
+      excludeFirstMonth,
+      excludeLastMonth
+    )
+      .filter(transaction => isIncome(budget)(transaction))
+      .map(transaction => ({ ...transaction, amount: -transaction.amount }))
+);
+
 const trendsPath = pages.groups.path;
 const groupedPages = groupBy(
   page => (page.path.startsWith(trendsPath) ? "trendPages" : "otherPages")
@@ -119,6 +131,40 @@ const PageContent = props =>
             }}
           </MonthExclusions>
         )}
+      />
+      <Route
+        path={pages.income.path}
+        exact
+        render={({ match }) => {
+          const { Component } = pages.income;
+          return (
+            <MonthExclusions budget={props.budget}>
+              {({
+                excludeFirstMonth,
+                excludeLastMonth,
+                months,
+                onSetExclusion
+              }) => {
+                const filteredTransactions = getFilteredIncomeTransactions(
+                  props.budget,
+                  props.investmentAccounts,
+                  excludeFirstMonth,
+                  excludeLastMonth
+                );
+                return (
+                  <Component
+                    {...pages.income.props(props, match.params)}
+                    excludeFirstMonth={excludeFirstMonth}
+                    excludeLastMonth={excludeLastMonth}
+                    months={months}
+                    transactions={filteredTransactions}
+                    onSetExclusion={onSetExclusion}
+                  />
+                );
+              }}
+            </MonthExclusions>
+          );
+        }}
       />
       <Route
         path={pages.incomeVsExpenses.path}
