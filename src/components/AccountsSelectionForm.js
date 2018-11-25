@@ -12,18 +12,14 @@ const AccountsSelectionForm = ({ accounts, value, onChange }) =>
       onChange={evt => {
         const { name, checked } = evt.target;
 
-        let newValue;
-
-        if (checked) {
-          newValue = {
-            ...value,
-            [name]: true
-          };
-        } else {
-          newValue = omit(name)(value);
-        }
-
-        onChange(newValue);
+        onChange(
+          checked
+            ? {
+                ...value,
+                [name]: true
+              }
+            : omit(name)(value)
+        );
       }}
       label={name}
     />
