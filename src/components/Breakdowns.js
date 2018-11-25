@@ -11,25 +11,23 @@ const Breakdowns = ({
   expenseTransactions,
   incomeTransactions,
   divideBy
-}) => {
-  return (
-    <Fragment>
-      <ExpensesBreakdown
-        categoriesById={categoriesById}
-        categoryGroupsById={categoryGroupsById}
-        payeesById={payeesById}
-        transactions={expenseTransactions}
-        totalIncome={sumByProp("amount")(incomeTransactions) / divideBy}
-        divideBy={divideBy}
-      />
-      <IncomeBreakdown
-        payeesById={payeesById}
-        transactions={incomeTransactions}
-        divideBy={divideBy}
-      />
-    </Fragment>
-  );
-};
+}) => (
+  <Fragment>
+    <ExpensesBreakdown
+      categoriesById={categoriesById}
+      categoryGroupsById={categoryGroupsById}
+      payeesById={payeesById}
+      transactions={expenseTransactions}
+      totalIncome={sumByProp("amount")(incomeTransactions) / divideBy}
+      divideBy={divideBy}
+    />
+    <IncomeBreakdown
+      payeesById={payeesById}
+      transactions={incomeTransactions}
+      divideBy={divideBy}
+    />
+  </Fragment>
+);
 
 Breakdowns.propTypes = {
   categoriesById: PropTypes.object.isRequired,
