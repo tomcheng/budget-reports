@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import AnimateHeight from "react-animate-height-auto";
@@ -32,63 +32,55 @@ const Body = styled.div`
   padding: 0 20px 15px;
 `;
 
-class CollapsibleSection extends Component {
-  static propTypes = {
-    children: PropTypes.node.isRequired,
-    title: PropTypes.string.isRequired,
-    actions: PropTypes.node,
-    hasSettings: PropTypes.bool,
-    noPadding: PropTypes.bool,
-    onClickSettings: PropTypes.func
-  };
+const CollapsibleSection = ({
+  actions,
+  children,
+  hasSettings,
+  noPadding,
+  title,
+  onClickSettings
+}) => {
+  const [expanded, setExpanded] = useState(true);
 
-  state = { expanded: true };
+  return (
+    <Container>
+      <Header>
+        <div
+          style={{ display: "flex", alignItems: "center" }}
+          onClick={() => {
+            setExpanded(!expanded);
+          }}
+        >
+          {title}
+          <Icon
+            icon="chevron-right"
+            transform={{ rotate: expanded ? 90 : 0 }}
+            style={{ marginLeft: 10 }}
+            faded
+          />
+        </div>
+        {hasSettings &&
+          expanded && (
+            <SettingsContainer onClick={onClickSettings}>
+              <Icon icon="cog" faded />
+            </SettingsContainer>
+          )}
+        {expanded && actions}
+      </Header>
+      <AnimateHeight isExpanded={expanded}>
+        <Body style={{ padding: noPadding && 0 }}>{children}</Body>
+      </AnimateHeight>
+    </Container>
+  );
+};
 
-  handleClickTitle = () => {
-    this.setState(state => ({ ...state, expanded: !state.expanded }));
-  };
-
-  render() {
-    const {
-      actions,
-      children,
-      hasSettings,
-      noPadding,
-      title,
-      onClickSettings
-    } = this.props;
-
-    const { expanded } = this.state;
-
-    return (
-      <Container>
-        <Header>
-          <div
-            style={{ display: "flex", alignItems: "center" }}
-            onClick={this.handleClickTitle}
-          >
-            {title}
-            <Icon
-              icon="chevron-right"
-              transform={{ rotate: expanded ? 90 : 0 }}
-              style={{ marginLeft: 10 }}
-              faded
-            />
-          </div>
-          {hasSettings &&
-            expanded && (
-              <SettingsContainer onClick={onClickSettings}>
-                <Icon icon="cog" faded />
-              </SettingsContainer>
-            )}
-          {expanded && actions}
-        </Header>
-        <AnimateHeight isExpanded={expanded}>
-          <Body style={{ padding: noPadding && 0 }}>{children}</Body>
-        </AnimateHeight>
-      </Container>
-    );
-  }
-}
+CollapsibleSection.propTypes = {
+  children: PropTypes.node.isRequired,
+  title: PropTypes.string.isRequired,
+  actions: PropTypes.node,
+  hasSettings: PropTypes.bool,
+  noPadding: PropTypes.bool,
+  onClickSettings: PropTypes.func
+};
 
 export default CollapsibleSection;

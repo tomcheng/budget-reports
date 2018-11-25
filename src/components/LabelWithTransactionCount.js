@@ -1,31 +1,33 @@
-import React, { PureComponent } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import LabelWithMinorText from "./LabelWithMinorText";
 
-class LabelWithTransactionCount extends PureComponent {
-  static propTypes = {
-    count: PropTypes.number.isRequired,
-    label: PropTypes.string.isRequired,
-    inLink: PropTypes.bool,
-    selected: PropTypes.bool,
-    showCount: PropTypes.bool,
-    to: PropTypes.string
-  };
+const LabelWithTransactionCount = ({
+  label,
+  count,
+  inLink,
+  selected,
+  showCount,
+  to
+}) => (
+  <LabelWithMinorText
+    bold={selected}
+    label={label}
+    minorText={showCount && `${count} transaction${count === 1 ? "" : "s"}`}
+    inLink={inLink}
+    to={to}
+  />
+);
 
-  static defaultProps = { showCount: true };
+LabelWithTransactionCount.propTypes = {
+  count: PropTypes.number.isRequired,
+  label: PropTypes.string.isRequired,
+  inLink: PropTypes.bool,
+  selected: PropTypes.bool,
+  showCount: PropTypes.bool,
+  to: PropTypes.string
+};
 
-  render() {
-    const { label, count, inLink, selected, showCount, to } = this.props;
-    return (
-      <LabelWithMinorText
-        bold={selected}
-        label={label}
-        minorText={showCount && `${count} transaction${count === 1 ? "" : "s"}`}
-        inLink={inLink}
-        to={to}
-      />
-    );
-  }
-}
+LabelWithTransactionCount.defaultProps = { showCount: true };
 
 export default LabelWithTransactionCount;
