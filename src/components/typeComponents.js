@@ -21,6 +21,13 @@ export const StrongText = styled.div`
   color: #222;
 `;
 
+export const ListSectionHeader = styled.div`
+  font-size: 12px;
+  line-height: 21px;
+  font-weight: 700;
+  color: #222;
+`;
+
 export const SecondaryText = styled.div`
   font-size: 13px;
   line-height: 21px;
