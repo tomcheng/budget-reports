@@ -24,6 +24,18 @@ export const useSelectedEntityId = () => {
   return [selectedEntityId, onSelectEntityId];
 };
 
+export const useTrendsShowAverage = budgetId => {
+  const [showAverage, setShowAverage] = useState(
+    getSetting("trendsShowAverage", budgetId)
+  );
+  const onToggleShowAverage = () => {
+    setShowAverage(!showAverage);
+    setSetting("trendsShowAverage", budgetId, !showAverage);
+  };
+
+  return [showAverage, onToggleShowAverage];
+};
+
 const getMonths = (firstMonth, lastMonth) => {
   const months = [firstMonth];
   let m = firstMonth;
