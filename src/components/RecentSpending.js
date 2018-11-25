@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { groupByProp } from "../dataUtils";
 import moment from "moment";
 import range from "lodash/fp/range";
+import values from "lodash/fp/values";
+import { SecondaryText } from "./typeComponents";
 import CollapsibleSection from "./CollapsibleSection";
 import DateSummary from "./DateSummary";
 
@@ -14,7 +16,6 @@ const RecentSpending = ({
   payeesById,
   transactions
 }) => {
-  const [expanded, setExpanded] = useState({});
   const transactionsByDate = groupByProp("date")(transactions);
   const recentDays = range(0, NUM_DAYS)
     .map(n =>
@@ -24,8 +25,30 @@ const RecentSpending = ({
     )
     .filter(date => date.startsWith(currentMonth));
 
+  const [expanded, setExpanded] = useState(
+    recentDays.reduce((acc, date) => ({ ...acc, [date]: false }), {})
+  );
+
+  const isAllExpanded = values(expanded).every(e => e);
+
   return (
-    <CollapsibleSection title="Recent Spending">
+    <CollapsibleSection
+      title="Recent Spending"
+      actions={
+        <SecondaryText
+          onClick={() => {
+            setExpanded(
+              recentDays.reduce(
+                (acc, date) => ({ ...acc, [date]: !isAllExpanded }),
+                {}
+              )
+            );
+          }}
+        >
+          {isAllExpanded ? "collapse all" : "expand all"}
+        </SecondaryText>
+      }
+    >
       {recentDays.map(date => (
         <DateSummary
           key={date}
