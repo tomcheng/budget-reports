@@ -2,15 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import get from "lodash/fp/get";
-import { SecondaryText, MinorText } from "./typeComponents";
+import { SecondaryText } from "./typeComponents";
 import ListItem from "./ListItem";
 import Amount from "./Amount";
 import LabelWithMinorText from "./LabelWithMinorText";
 
 const StyledListItem = styled(ListItem)`
-  &:first-child {
-    border-top: 0;
-  }
+  border-top: 0;
+  padding-bottom: 0;
 `;
 
 const DateSummaryTransaction = ({ category, payee, memo, amount }) => (
@@ -18,7 +17,9 @@ const DateSummaryTransaction = ({ category, payee, memo, amount }) => (
     <div style={{ overflow: "hidden" }}>
       <LabelWithMinorText
         label={get("name")(payee) || "(no payee)"}
-        minorText={get("name")(category) || "(no category)"}
+        minorText={
+          get("name")(category) || "(no category)" + (memo ? ` (${memo})` : "")
+        }
       />
     </div>
     <SecondaryText>

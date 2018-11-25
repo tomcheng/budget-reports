@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { groupByProp } from "../dataUtils";
 import moment from "moment";
@@ -6,7 +6,7 @@ import range from "lodash/fp/range";
 import CollapsibleSection from "./CollapsibleSection";
 import DateSummary from "./DateSummary";
 
-const NUM_DAYS = 7;
+const NUM_DAYS = 5;
 
 const RecentSpending = ({
   categoriesById,
@@ -14,6 +14,7 @@ const RecentSpending = ({
   payeesById,
   transactions
 }) => {
+  const [expanded, setExpanded] = useState({});
   const transactionsByDate = groupByProp("date")(transactions);
   const recentDays = range(0, NUM_DAYS)
     .map(n =>
@@ -30,6 +31,10 @@ const RecentSpending = ({
           key={date}
           categoriesById={categoriesById}
           date={date}
+          expanded={!!expanded[date]}
+          onToggleExpanded={() => {
+            setExpanded({ ...expanded, [date]: !expanded[date] });
+          }}
           payeesById={payeesById}
           transactions={transactionsByDate[date] || []}
         />

@@ -5,6 +5,7 @@ import AnimateHeight from "react-animate-height-auto";
 import { SecondaryText } from "./typeComponents";
 import Amount from "./Amount";
 import ListItem from "./ListItem";
+import ToggleNode from "./ToggleNode";
 import Icon from "./Icon";
 
 const INDENTATION = 18;
@@ -103,42 +104,6 @@ const NodeWrapper = styled.div`
     padding-top: 0;
   }
 `;
-
-const IconWrapper = styled.div`
-  box-sizing: border-box;
-  padding-left: 3px;
-  width: ${INDENTATION}px;
-  font-weight: 400;
-  color: #888;
-  font-size: 10px;
-`;
-
-const ToggleNode = ({
-  expanded,
-  name,
-  id,
-  amount,
-  valueRenderer,
-  onToggle
-}) => (
-  <NodeWrapper onClick={onToggle}>
-    <SecondaryText
-      style={{ whiteSpace: "pre", display: "flex", alignItems: "center" }}
-    >
-      <IconWrapper>
-        <Icon icon="chevron-right" transform={{ rotate: expanded ? 90 : 0 }} />
-      </IconWrapper>
-      {typeof name === "function" ? name({ expanded }) : name}
-    </SecondaryText>
-    {valueRenderer ? (
-      valueRenderer({ amount, id, faded: expanded })
-    ) : (
-      <SecondaryText style={{ opacity: expanded ? 0.3 : 1 }}>
-        <Amount amount={amount} />
-      </SecondaryText>
-    )}
-  </NodeWrapper>
-);
 
 const LeafNode = ({ name, id, amount, valueRenderer }) => (
   <NodeWrapper>
