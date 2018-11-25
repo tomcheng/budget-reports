@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import MonthByMonthSection from "./MonthByMonthSection";
 import { getTransactionMonth, sanitizeName } from "../budgetUtils";
 import moment from "moment";
-import { useSelectedMonth, useSelectedPayeeId } from "../commonHooks";
+import { useSelectedMonth, useSelectedEntityId } from "../commonHooks";
 import GenericEntitiesSection from "./GenericEntitiesSection";
 
 const Income = ({
@@ -15,7 +15,7 @@ const Income = ({
   onSetExclusion
 }) => {
   const [selectedMonth, onSelectMonth] = useSelectedMonth();
-  const [selectedPayeeId, onSelectPayeeId] = useSelectedPayeeId();
+  const [selectedPayeeId, onSelectPayeeId] = useSelectedEntityId();
 
   const { payeesById } = budget;
   const transactionsInSelectedMonth =

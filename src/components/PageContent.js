@@ -12,8 +12,8 @@ import {
   isStartingBalanceOrReconciliation,
   isTransfer
 } from "../budgetUtils";
+import { useMonthExclusions } from "../commonHooks";
 import pages, { makeLink } from "../pages";
-import MonthExclusions from "./MonthExclusions";
 import CategoriesState from "./CategoriesState";
 
 const getFilteredTransactions = simpleMemoize(
@@ -60,109 +60,100 @@ const groupedPages = groupBy(
   page => (page.path.startsWith(trendsPath) ? "trendPages" : "otherPages")
 )(values(pages));
 
-const PageContent = props =>
-  props.budget && (
+const PageContent = props => {
+  if (!props.budget) {
+    return null;
+  }
+
+  const {
+    excludeFirstMonth,
+    excludeLastMonth,
+    months,
+    onSetExclusion
+  } = useMonthExclusions(props.budget);
+
+  return (
     <Switch>
       <Route
         path={trendsPath}
-        render={({ match }) => (
-          <MonthExclusions budget={props.budget}>
-            {({
-              excludeFirstMonth,
-              excludeLastMonth,
-              months,
-              onSetExclusion
-            }) => {
-              const filteredTransactions = getFilteredSpendingTransactions(
-                props.budget,
-                props.investmentAccounts,
-                excludeFirstMonth,
-                excludeLastMonth
-              );
+        render={({ match }) => {
+          const filteredTransactions = getFilteredSpendingTransactions(
+            props.budget,
+            props.investmentAccounts,
+            excludeFirstMonth,
+            excludeLastMonth
+          );
 
-              return (
-                <CategoriesState
-                  key={match.params.categoryGroupId}
-                  action={props.historyAction}
-                  location={props.location}
-                >
-                  {({
-                    selectedMonth,
-                    selectedGroupId,
-                    selectedCategoryId,
-                    selectedPayeeId,
-                    onSelectMonth,
-                    onSelectGroup,
-                    onSelectCategory,
-                    onSelectPayee
-                  }) => (
-                    <Switch>
-                      {groupedPages.trendPages.map(
-                        ({ path, props: propsFunction, Component }) => (
-                          <Route
-                            key={path}
-                            path={path}
-                            exact
-                            render={({ match }) => (
-                              <Component
-                                {...propsFunction(props, match.params)}
-                                excludeFirstMonth={excludeFirstMonth}
-                                excludeLastMonth={excludeLastMonth}
-                                months={months}
-                                selectedMonth={selectedMonth}
-                                selectedGroupId={selectedGroupId}
-                                selectedCategoryId={selectedCategoryId}
-                                selectedPayeeId={selectedPayeeId}
-                                transactions={filteredTransactions}
-                                onSelectMonth={onSelectMonth}
-                                onSelectGroup={onSelectGroup}
-                                onSelectCategory={onSelectCategory}
-                                onSelectPayee={onSelectPayee}
-                                onSetExclusion={onSetExclusion}
-                              />
-                            )}
+          return (
+            <CategoriesState
+              key={match.params.categoryGroupId}
+              action={props.historyAction}
+              location={props.location}
+            >
+              {({
+                selectedMonth,
+                selectedGroupId,
+                selectedCategoryId,
+                selectedPayeeId,
+                onSelectMonth,
+                onSelectGroup,
+                onSelectCategory,
+                onSelectPayee
+              }) => (
+                <Switch>
+                  {groupedPages.trendPages.map(
+                    ({ path, props: propsFunction, Component }) => (
+                      <Route
+                        key={path}
+                        path={path}
+                        exact
+                        render={({ match }) => (
+                          <Component
+                            {...propsFunction(props, match.params)}
+                            excludeFirstMonth={excludeFirstMonth}
+                            excludeLastMonth={excludeLastMonth}
+                            months={months}
+                            selectedMonth={selectedMonth}
+                            selectedGroupId={selectedGroupId}
+                            selectedCategoryId={selectedCategoryId}
+                            selectedPayeeId={selectedPayeeId}
+                            transactions={filteredTransactions}
+                            onSelectMonth={onSelectMonth}
+                            onSelectGroup={onSelectGroup}
+                            onSelectCategory={onSelectCategory}
+                            onSelectPayee={onSelectPayee}
+                            onSetExclusion={onSetExclusion}
                           />
-                        )
-                      )}
-                    </Switch>
+                        )}
+                      />
+                    )
                   )}
-                </CategoriesState>
-              );
-            }}
-          </MonthExclusions>
-        )}
+                </Switch>
+              )}
+            </CategoriesState>
+          );
+        }}
       />
       <Route
         path={pages.income.path}
         exact
         render={({ match }) => {
           const { Component } = pages.income;
+          const filteredTransactions = getFilteredIncomeTransactions(
+            props.budget,
+            props.investmentAccounts,
+            excludeFirstMonth,
+            excludeLastMonth
+          );
           return (
-            <MonthExclusions budget={props.budget}>
-              {({
-                excludeFirstMonth,
-                excludeLastMonth,
-                months,
-                onSetExclusion
-              }) => {
-                const filteredTransactions = getFilteredIncomeTransactions(
-                  props.budget,
-                  props.investmentAccounts,
-                  excludeFirstMonth,
-                  excludeLastMonth
-                );
-                return (
-                  <Component
-                    {...pages.income.props(props, match.params)}
-                    excludeFirstMonth={excludeFirstMonth}
-                    excludeLastMonth={excludeLastMonth}
-                    months={months}
-                    transactions={filteredTransactions}
-                    onSetExclusion={onSetExclusion}
-                  />
-                );
-              }}
-            </MonthExclusions>
+            <Component
+              {...pages.income.props(props, match.params)}
+              excludeFirstMonth={excludeFirstMonth}
+              excludeLastMonth={excludeLastMonth}
+              months={months}
+              transactions={filteredTransactions}
+              onSetExclusion={onSetExclusion}
+            />
           );
         }}
       />
@@ -171,26 +162,20 @@ const PageContent = props =>
         exact
         render={({ match }) => {
           const { Component } = pages.incomeVsExpenses;
+          const filteredTransactions = getFilteredTransactions(
+            props.budget,
+            props.investmentAccounts,
+            excludeFirstMonth,
+            excludeLastMonth
+          );
           return (
-            <MonthExclusions budget={props.budget}>
-              {({ excludeFirstMonth, excludeLastMonth, onSetExclusion }) => {
-                const filteredTransactions = getFilteredTransactions(
-                  props.budget,
-                  props.investmentAccounts,
-                  excludeFirstMonth,
-                  excludeLastMonth
-                );
-                return (
-                  <Component
-                    {...pages.incomeVsExpenses.props(props, match.params)}
-                    excludeFirstMonth={excludeFirstMonth}
-                    excludeLastMonth={excludeLastMonth}
-                    transactions={filteredTransactions}
-                    onSetExclusion={onSetExclusion}
-                  />
-                );
-              }}
-            </MonthExclusions>
+            <Component
+              {...pages.incomeVsExpenses.props(props, match.params)}
+              excludeFirstMonth={excludeFirstMonth}
+              excludeLastMonth={excludeLastMonth}
+              transactions={filteredTransactions}
+              onSetExclusion={onSetExclusion}
+            />
           );
         }}
       />
@@ -221,6 +206,7 @@ const PageContent = props =>
       />
     </Switch>
   );
+};
 
 PageContent.propTypes = {
   currentMonth: PropTypes.string.isRequired,

@@ -1,4 +1,4 @@
-import React, { Fragment, PureComponent } from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import keys from "lodash/fp/keys";
 import get from "lodash/fp/get";
@@ -6,9 +6,13 @@ import EmptyText from "./EmptyText";
 import { Link } from "react-router-dom";
 import pages, { makeLink } from "../pages";
 import MonthByMonthSection from "./MonthByMonthSection";
-import MonthExclusions from "./MonthExclusions";
 import { getTransactionMonth } from "../budgetUtils";
 import GenericEntitiesSection from "./GenericEntitiesSection";
+import {
+  useMonthExclusions,
+  useSelectedEntityId,
+  useSelectedMonth
+} from "../commonHooks";
 
 const isContribution = investmentAccounts => transaction =>
   !!investmentAccounts[transaction.account_id] &&
@@ -27,102 +31,81 @@ const isInvestmentTransaction = (
   isContribution(investmentAccounts)(transaction) ||
   isCapitalGainOrLoss(investmentAccounts, payeesById)(transaction);
 
-class Investments extends PureComponent {
-  static propTypes = {
-    budget: PropTypes.object.isRequired,
-    investmentAccounts: PropTypes.object.isRequired
-  };
+const Investments = ({ budget, investmentAccounts }) => {
+  const {
+    excludeFirstMonth,
+    excludeLastMonth,
+    months,
+    onSetExclusion
+  } = useMonthExclusions(budget);
+  const [selectedMonth, onSelectMonth] = useSelectedMonth();
+  const [selectedBreakdown, onSelectBreakdown] = useSelectedEntityId();
 
-  state = { selectedMonth: null, selectedBreakdown: null };
+  const { payeesById } = budget;
 
-  handleSelectMonth = month => {
-    this.setState(state => ({
-      ...state,
-      selectedMonth: state.selectedMonth === month ? null : month
-    }));
-  };
-
-  handleClickBreakdown = breakdown => {
-    this.setState(state => ({
-      ...state,
-      selectedBreakdown:
-        state.selectedBreakdown === breakdown ? null : breakdown
-    }));
-  };
-
-  render() {
-    const { budget, investmentAccounts } = this.props;
-    const { selectedMonth, selectedBreakdown } = this.state;
-    const { payeesById } = budget;
-
-    if (keys(investmentAccounts).length === 0) {
-      return (
-        <EmptyText>
-          You don't have any accounts marked as investment accounts.{" "}
-          <Link to={makeLink(pages.settings.path, { budgetId: budget.id })}>
-            Go to Settings
-          </Link>
-        </EmptyText>
-      );
-    }
-
-    const investmentTransactions = budget.transactions
-      .filter(isInvestmentTransaction(investmentAccounts, payeesById))
-      .map(transaction => ({ ...transaction, amount: -transaction.amount }));
-    const transactionsInMonth =
-      selectedMonth &&
-      investmentTransactions.filter(
-        transaction => getTransactionMonth(transaction) === selectedMonth
-      );
-
+  if (keys(investmentAccounts).length === 0) {
     return (
-      <Fragment>
-        <MonthExclusions budget={budget}>
-          {({
-            excludeFirstMonth,
-            excludeLastMonth,
-            months,
-            onSetExclusion
-          }) => (
-            <MonthByMonthSection
-              excludeFirstMonth={excludeFirstMonth}
-              excludeLastMonth={excludeLastMonth}
-              highlightFunction={
-                selectedBreakdown &&
-                (transaction =>
-                  selectedBreakdown === "contribution"
-                    ? isContribution(investmentAccounts)(transaction)
-                    : isCapitalGainOrLoss(investmentAccounts, payeesById)(
-                        transaction
-                      ))
-              }
-              months={months}
-              selectedMonth={selectedMonth}
-              transactions={investmentTransactions}
-              onSelectMonth={this.handleSelectMonth}
-              onSetExclusion={onSetExclusion}
-            />
-          )}
-        </MonthExclusions>
-        <GenericEntitiesSection
-          transactions={transactionsInMonth || investmentTransactions}
-          entitiesById={{
-            contribution: { name: "Contributions" },
-            capitalGain: { name: "Capital Gains/Losses" }
-          }}
-          title="Growth Breakdown"
-          onClickEntity={this.handleClickBreakdown}
-          selectedEntityId={selectedBreakdown}
-          entityFunction={transaction =>
-            isContribution(investmentAccounts)(transaction)
-              ? "contribution"
-              : "capitalGain"
-          }
-          positiveIsRed
-        />
-      </Fragment>
+      <EmptyText>
+        You don't have any accounts marked as investment accounts.{" "}
+        <Link to={makeLink(pages.settings.path, { budgetId: budget.id })}>
+          Go to Settings
+        </Link>
+      </EmptyText>
     );
   }
-}
+
+  const investmentTransactions = budget.transactions
+    .filter(isInvestmentTransaction(investmentAccounts, payeesById))
+    .map(transaction => ({ ...transaction, amount: -transaction.amount }));
+  const transactionsInMonth =
+    selectedMonth &&
+    investmentTransactions.filter(
+      transaction => getTransactionMonth(transaction) === selectedMonth
+    );
+
+  return (
+    <Fragment>
+      <MonthByMonthSection
+        excludeFirstMonth={excludeFirstMonth}
+        excludeLastMonth={excludeLastMonth}
+        highlightFunction={
+          selectedBreakdown &&
+          (transaction =>
+            selectedBreakdown === "contribution"
+              ? isContribution(investmentAccounts)(transaction)
+              : isCapitalGainOrLoss(investmentAccounts, payeesById)(
+                  transaction
+                ))
+        }
+        months={months}
+        selectedMonth={selectedMonth}
+        transactions={investmentTransactions}
+        onSelectMonth={onSelectMonth}
+        onSetExclusion={onSetExclusion}
+      />
+      <GenericEntitiesSection
+        transactions={transactionsInMonth || investmentTransactions}
+        entitiesById={{
+          contribution: { name: "Contributions" },
+          capitalGain: { name: "Capital Gains/Losses" }
+        }}
+        title="Growth Breakdown"
+        onClickEntity={onSelectBreakdown}
+        selectedEntityId={selectedBreakdown}
+        entityFunction={transaction =>
+          isContribution(investmentAccounts)(transaction)
+            ? "contribution"
+            : "capitalGain"
+        }
+        positiveIsRed
+      />
+    </Fragment>
+  );
+};
+
+Investments.propTypes = {
+  budget: PropTypes.object.isRequired,
+  investmentAccounts: PropTypes.object.isRequired
+};
 
 export default Investments;
