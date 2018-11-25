@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import omit from "lodash/fp/omit";
 import ToggleWithLabel from "./ToggleWithLabel";
 
-const AccountsSelectionForm = ({ accounts, value }) =>
+const AccountsSelectionForm = ({ accounts, value, onChange }) =>
   accounts.map(({ id, name }) => (
     <ToggleWithLabel
       key={id}
@@ -11,7 +11,6 @@ const AccountsSelectionForm = ({ accounts, value }) =>
       name={id}
       onChange={evt => {
         const { name, checked } = evt.target;
-        const { value, onChange } = this.props;
 
         let newValue;
 
