@@ -20,61 +20,46 @@ const pages = {
     path: "/budgets/:budgetId/current",
     title: "Current Month Spending",
     Component: CurrentMonth,
-    props: props => ({
-      budget: props.budget,
-      currentMonth: props.currentMonth,
-      investmentAccounts: props.investmentAccounts
-    })
+    props: ["budget", "currentMonth", "investmentAccounts"]
   },
   currentMonthGroup: {
     path: "/budgets/:budgetId/current/:categoryGroupId",
     title: (params, budget) =>
       budget.categoryGroupsById[params.categoryGroupId].name,
     Component: CurrentMonthGroup,
-    props: (props, params) => ({
-      budget: props.budget,
-      categoryGroupId: params.categoryGroupId,
-      currentMonth: props.currentMonth
-    }),
+    props: ["budget", "currentMonth"],
+    paramProps: ["categoryGroupId"],
     breadcrumbs: ["currentMonth"]
   },
   currentMonthCategory: {
     path: "/budgets/:budgetId/current/:categoryGroupId/:categoryId",
     title: (params, budget) => budget.categoriesById[params.categoryId].name,
     Component: CurrentMonthCategory,
-    props: (props, params) => ({
-      budget: props.budget,
-      categoryId: params.categoryId,
-      categoryGroupId: params.categoryGroupId,
-      currentMonth: props.currentMonth
-    }),
+    props: ["budget", "currentMonth"],
+    paramProps: ["categoryId", "categoryGroupId"],
     breadcrumbs: ["currentMonth", "currentMonthGroup"]
   },
   groups: {
     path: "/budgets/:budgetId/groups",
     title: "Spending Trends",
     Component: Groups,
-    props: props => ({ budget: props.budget })
+    props: ["budget"]
   },
   group: {
     path: "/budgets/:budgetId/groups/:categoryGroupId",
     title: (params, budget) =>
       budget.categoryGroupsById[params.categoryGroupId].name,
     Component: Group,
-    props: (props, params) => ({
-      budget: props.budget,
-      categoryGroup: props.budget.categoryGroupsById[params.categoryGroupId]
-    }),
+    props: ["budget"],
+    paramProps: ["categoryGroupId"],
     breadcrumbs: ["groups"]
   },
   category: {
     path: "/budgets/:budgetId/groups/:categoryGroupId/categories/:categoryId",
     title: (params, budget) => budget.categoriesById[params.categoryId].name,
     Component: Category,
-    props: (props, params) => ({
-      budget: props.budget,
-      category: props.budget.categoriesById[params.categoryId]
-    }),
+    props: ["budget"],
+    paramProps: ["categoryId"],
     breadcrumbs: ["groups", "group"]
   },
   categoryPayee: {
@@ -82,67 +67,50 @@ const pages = {
       "/budgets/:budgetId/groups/:categoryGroupId/categories/:categoryId/payees/:payeeId",
     title: (params, budget) => budget.payeesById[params.payeeId].name,
     Component: CategoryPayee,
-    props: (props, params) => ({
-      budget: props.budget,
-      category: props.budget.categoriesById[params.categoryId],
-      payee: props.budget.payeesById[params.payeeId]
-    }),
+    props: ["budget"],
+    paramProps: ["categoryId", "payeeId"],
     breadcrumbs: ["groups", "group", "category"]
   },
   income: {
     path: "/budgets/:budgetId/income",
     title: "Income Trends",
     Component: Income,
-    props: props => ({
-      budget: props.budget
-    })
+    props: ["budget"]
   },
   incomeVsExpenses: {
     path: "/budgets/:budgetId/income-vs-expenses",
     title: "Income vs Expenses",
     Component: IncomeVsExpenses,
-    props: props => ({
-      budget: props.budget,
-      investmentAccounts: props.investmentAccounts,
-      showing: props.settings.incomeVsExpensesShowing
-    })
+    props: ["budget", "investmentAccounts"]
   },
   netWorth: {
     path: "/budgets/:budgetId/net-worth",
     title: "Net Worth",
     Component: NetWorth,
-    props: props => ({
-      budget: props.budget,
-      investmentAccounts: props.investmentAccounts,
-      mortgageAccounts: props.mortgageAccounts
-    })
+    props: ["budget", "investmentAccounts", "mortgageAccounts"]
   },
   investments: {
     path: "/budgets/:budgetId/investments",
     title: "Investments",
     Component: Investments,
-    props: props => ({ budget: props.budget, investmentAccounts: props.investmentAccounts })
+    props: ["budget", "investmentAccounts"]
   },
   projections: {
     path: "/budgets/:budgetId/projections",
     title: "Retirement Calculator",
     Component: Projections,
-    props: props => ({
-      budget: props.budget,
-      investmentAccounts: props.investmentAccounts,
-      mortgageAccounts: props.mortgageAccounts
-    })
+    props: ["budget", "investmentAccounts", "mortgageAccounts"]
   },
   settings: {
     path: "/budgets/:budgetId/settings",
     title: "Budget Settings",
     Component: Settings,
-    props: props => ({
-      budget: props.budget,
-      investmentAccounts: props.investmentAccounts,
-      mortgageAccounts: props.mortgageAccounts,
-      onUpdateAccounts: props.onUpdateAccounts
-    })
+    props: [
+      "budget",
+      "investmentAccounts",
+      "mortgageAccounts",
+      "onUpdateAccounts"
+    ]
   }
 };
 

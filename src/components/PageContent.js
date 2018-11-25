@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { Switch, Route } from "react-router-dom";
+import pick from "lodash/fp/pick";
 import values from "lodash/fp/values";
 import moment from "moment";
 import { groupBy, notAny, simpleMemoize } from "../dataUtils";
@@ -102,14 +103,15 @@ const PageContent = props => {
               }) => (
                 <Switch>
                   {groupedPages.trendPages.map(
-                    ({ path, props: propsFunction, Component }) => (
+                    ({ path, props: propsList, paramProps, Component }) => (
                       <Route
                         key={path}
                         path={path}
                         exact
                         render={({ match }) => (
                           <Component
-                            {...propsFunction(props, match.params)}
+                            {...pick(propsList)(props)}
+                            {...pick(paramProps || [])(match.params)}
                             excludeFirstMonth={excludeFirstMonth}
                             excludeLastMonth={excludeLastMonth}
                             months={months}
@@ -137,8 +139,8 @@ const PageContent = props => {
       <Route
         path={pages.income.path}
         exact
-        render={({ match }) => {
-          const { Component } = pages.income;
+        render={() => {
+          const { Component, props: propsList } = pages.income;
           const filteredTransactions = getFilteredIncomeTransactions(
             props.budget,
             props.investmentAccounts,
@@ -147,7 +149,7 @@ const PageContent = props => {
           );
           return (
             <Component
-              {...pages.income.props(props, match.params)}
+              {...pick(propsList)(props)}
               excludeFirstMonth={excludeFirstMonth}
               excludeLastMonth={excludeLastMonth}
               months={months}
@@ -160,8 +162,8 @@ const PageContent = props => {
       <Route
         path={pages.incomeVsExpenses.path}
         exact
-        render={({ match }) => {
-          const { Component } = pages.incomeVsExpenses;
+        render={() => {
+          const { Component, props: propsList } = pages.incomeVsExpenses;
           const filteredTransactions = getFilteredTransactions(
             props.budget,
             props.investmentAccounts,
@@ -170,7 +172,7 @@ const PageContent = props => {
           );
           return (
             <Component
-              {...pages.incomeVsExpenses.props(props, match.params)}
+              {...pick(propsList)(props)}
               excludeFirstMonth={excludeFirstMonth}
               excludeLastMonth={excludeLastMonth}
               transactions={filteredTransactions}
@@ -180,13 +182,16 @@ const PageContent = props => {
         }}
       />
       {groupedPages.otherPages.map(
-        ({ path, props: propsFunction, Component }) => (
+        ({ path, props: propsList, paramProps, Component }) => (
           <Route
             key={path}
             path={path}
             exact
             render={({ match }) => (
-              <Component {...propsFunction(props, match.params)} />
+              <Component
+                {...pick(propsList)(props)}
+                {...pick(paramProps || [])(match.params)}
+              />
             )}
           />
         )
@@ -214,7 +219,6 @@ PageContent.propTypes = {
   investmentAccounts: PropTypes.object.isRequired,
   location: PropTypes.string.isRequired,
   mortgageAccounts: PropTypes.object.isRequired,
-  settings: PropTypes.object.isRequired,
   onUpdateAccounts: PropTypes.func.isRequired,
   budget: PropTypes.object
 };

@@ -12,7 +12,7 @@ import GenericEntitiesSection from "./GenericEntitiesSection";
 
 const Group = ({
   budget,
-  categoryGroup,
+  categoryGroupId,
   excludeFirstMonth,
   excludeLastMonth,
   months,
@@ -25,11 +25,16 @@ const Group = ({
 }) => {
   const [showAverage, onToggleShowAverage] = useTrendsShowAverage(budget.id);
 
-  const { categories, categoriesById, payeesById, id: budgetId } = budget;
-
+  const {
+    categories,
+    categoriesById,
+    categoryGroupsById,
+    payeesById,
+    id: budgetId
+  } = budget;
+  const categoryGroup = categoryGroupsById[categoryGroupId];
   const selectedCategory =
     selectedCategoryId && categoriesById[selectedCategoryId];
-
   const categoriesInGroup = categories.filter(
     category => category.category_group_id === categoryGroup.id
   );
@@ -115,11 +120,14 @@ Group.propTypes = {
         categoryId: PropTypes.string
       })
     ).isRequired,
-    payeesById: PropTypes.object.isRequired
+    payeesById: PropTypes.object.isRequired,
+    categoryGroupsById: PropTypes.objectOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired
+      })
+    ).isRequired
   }).isRequired,
-  categoryGroup: PropTypes.shape({
-    id: PropTypes.string.isRequired
-  }).isRequired,
+  categoryGroupId: PropTypes.string.isRequired,
   excludeFirstMonth: PropTypes.bool.isRequired,
   excludeLastMonth: PropTypes.bool.isRequired,
   months: PropTypes.arrayOf(PropTypes.string).isRequired,

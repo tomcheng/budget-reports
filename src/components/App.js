@@ -33,11 +33,7 @@ class App extends Component {
     budgetIds: [],
     budgets: {},
     budgetDetails: {},
-    currentMonth: moment().format("YYYY-MM"),
-    settings: {
-      payeesSort: "amount",
-      incomeVsExpensesShowing: "average"
-    }
+    currentMonth: moment().format("YYYY-MM")
   };
 
   handleRequestBudgets = callback => {
@@ -71,16 +67,6 @@ class App extends Component {
     window.location.replace(AUTHORIZE_URL);
   };
 
-  handleChangeSetting = ({ setting, value }) => {
-    this.setState(state => ({
-      ...state,
-      settings: {
-        ...state.settings,
-        [setting]: value
-      }
-    }));
-  };
-
   render() {
     const { hasToken } = this.props;
     const {
@@ -89,8 +75,7 @@ class App extends Component {
       budgetIds,
       budgets,
       budgetDetails,
-      currentMonth,
-      settings
+      currentMonth
     } = this.state;
 
     if (!hasToken) {
@@ -130,12 +115,7 @@ class App extends Component {
                     onRequestBudget={this.handleRequestBudget}
                     title={<PageTitle budget={budget} />}
                     breadcrumbs={<PageBreadcrumbs budget={budget} />}
-                    actions={
-                      <PageActions
-                        settings={settings}
-                        onChangeSetting={this.handleChangeSetting}
-                      />
-                    }
+                    actions={<PageActions />}
                     content={
                       <PageContent
                         budget={budget}
@@ -148,10 +128,8 @@ class App extends Component {
                           "mortgageAccounts",
                           budgetId
                         )}
-                        settings={settings}
                         historyAction={props.history.action}
                         location={props.location.pathname}
-                        onChangeSetting={this.handleChangeSetting}
                         onUpdateAccounts={({ type, value }) => {
                           if (type === "investment") {
                             setSetting("investmentAccounts", budgetId, value);

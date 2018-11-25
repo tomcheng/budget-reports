@@ -1,83 +1,76 @@
-import React, { Fragment, PureComponent } from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import MonthByMonthSection from "./MonthByMonthSection";
 import TransactionsByMonthSection from "./TransactionsByMonthSection";
 
-class Category extends PureComponent {
-  static propTypes = {
-    budget: PropTypes.shape({
-      payeesById: PropTypes.object.isRequired
-    }).isRequired,
-    category: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired,
-    excludeFirstMonth: PropTypes.bool.isRequired,
-    excludeLastMonth: PropTypes.bool.isRequired,
-    months: PropTypes.arrayOf(PropTypes.string).isRequired,
-    payee: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired,
-    transactions: PropTypes.arrayOf(
-      PropTypes.shape({
-        payee_id: PropTypes.string.isRequired
-      })
-    ).isRequired,
-    onSelectMonth: PropTypes.func.isRequired,
-    onSetExclusion: PropTypes.func.isRequired,
-    selectedMonth: PropTypes.string
-  };
+const CategoryPayee = ({
+  budget,
+  categoryId,
+  excludeFirstMonth,
+  excludeLastMonth,
+  months,
+  payeeId,
+  selectedMonth,
+  transactions,
+  onSelectMonth,
+  onSetExclusion
+}) => {
+  const { categoriesById, payeesById } = budget;
+  const transactionsForCategoryAndPayee = transactions.filter(
+    transaction =>
+      transaction.category_id === categoryId && transaction.payee_id === payeeId
+  );
 
-  handleSelectMonth = month => {
-    this.setState(state => ({
-      ...state,
-      selectedMonth: state.selectedMonth === month ? null : month
-    }));
-  };
-
-  render() {
-    const {
-      budget,
-      category,
-      excludeFirstMonth,
-      excludeLastMonth,
-      months,
-      payee,
-      selectedMonth,
-      transactions,
-      onSelectMonth,
-      onSetExclusion
-    } = this.props;
-    const { categoriesById, payeesById } = budget;
-
-    const transactionsForCategoryAndPayee = transactions.filter(
-      transaction =>
-        transaction.category_id === category.id &&
-        transaction.payee_id === payee.id
-    );
-
-    return (
-      <Fragment>
-        <MonthByMonthSection
-          excludeFirstMonth={excludeFirstMonth}
-          excludeLastMonth={excludeLastMonth}
-          months={months}
+  return (
+    <Fragment>
+      <MonthByMonthSection
+        excludeFirstMonth={excludeFirstMonth}
+        excludeLastMonth={excludeLastMonth}
+        months={months}
+        selectedMonth={selectedMonth}
+        transactions={transactionsForCategoryAndPayee}
+        onSelectMonth={onSelectMonth}
+        onSetExclusion={onSetExclusion}
+      />
+      {selectedMonth && (
+        <TransactionsByMonthSection
+          categoriesById={categoriesById}
+          payeesById={payeesById}
           selectedMonth={selectedMonth}
           transactions={transactionsForCategoryAndPayee}
-          onSelectMonth={onSelectMonth}
-          onSetExclusion={onSetExclusion}
+          limitShowing={false}
         />
-        {selectedMonth && (
-          <TransactionsByMonthSection
-            categoriesById={categoriesById}
-            payeesById={payeesById}
-            selectedMonth={selectedMonth}
-            transactions={transactionsForCategoryAndPayee}
-            limitShowing={false}
-          />
-        )}
-      </Fragment>
-    );
-  }
-}
+      )}
+    </Fragment>
+  );
+};
 
-export default Category;
+CategoryPayee.propTypes = {
+  budget: PropTypes.shape({
+    payeesById: PropTypes.objectOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired
+      })
+    ).isRequired,
+    categoriesById: PropTypes.objectOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired
+      })
+    ).isRequired
+  }).isRequired,
+  categoryId: PropTypes.string.isRequired,
+  excludeFirstMonth: PropTypes.bool.isRequired,
+  excludeLastMonth: PropTypes.bool.isRequired,
+  months: PropTypes.arrayOf(PropTypes.string).isRequired,
+  payeeId: PropTypes.string.isRequired,
+  transactions: PropTypes.arrayOf(
+    PropTypes.shape({
+      payee_id: PropTypes.string.isRequired
+    })
+  ).isRequired,
+  onSelectMonth: PropTypes.func.isRequired,
+  onSetExclusion: PropTypes.func.isRequired,
+  selectedMonth: PropTypes.string
+};
+
+export default CategoryPayee;

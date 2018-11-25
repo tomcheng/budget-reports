@@ -26,6 +26,7 @@ const SettingsContainer = styled.div`
   align-self: stretch;
   display: flex;
   align-items: center;
+  margin-left: 5px;
 `;
 
 const Body = styled.div`
@@ -59,13 +60,15 @@ const CollapsibleSection = ({
             faded
           />
         </div>
-        {hasSettings &&
-          expanded && (
-            <SettingsContainer onClick={onClickSettings}>
-              <Icon icon="cog" faded />
-            </SettingsContainer>
-          )}
-        {expanded && actions}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          {expanded && actions}
+          {hasSettings &&
+            expanded && (
+              <SettingsContainer onClick={onClickSettings}>
+                <Icon icon="cog" faded />
+              </SettingsContainer>
+            )}
+        </div>
       </Header>
       <AnimateHeight isExpanded={expanded}>
         <Body style={{ padding: noPadding && 0 }}>{children}</Body>

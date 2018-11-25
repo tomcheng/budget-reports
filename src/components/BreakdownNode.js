@@ -6,7 +6,6 @@ import { SecondaryText } from "./typeComponents";
 import Amount from "./Amount";
 import ListItem from "./ListItem";
 import ToggleNode from "./ToggleNode";
-import Icon from "./Icon";
 
 const INDENTATION = 18;
 

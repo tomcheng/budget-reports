@@ -8,6 +8,7 @@ import matchesProperty from "lodash/fp/matchesProperty";
 import sortBy from "lodash/fp/sortBy";
 import { sumByProp, groupBy, simpleMemoize } from "../dataUtils";
 import { getTransactionMonth, isIncome } from "../budgetUtils";
+import { SecondaryText } from "./typeComponents";
 import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
 import Breakdowns from "./Breakdowns";
 import CollapsibleSection from "./CollapsibleSection";
@@ -40,15 +41,14 @@ const IncomeVsExpenses = ({
   excludeFirstMonth,
   excludeLastMonth,
   investmentAccounts,
-  showing,
   transactions,
   onSetExclusion
 }) => {
   const [selectedMonth, onSelectMonth] = useSelectedMonth();
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
+  const [showTotals, setShowTotals] = useState(false);
   const { categoriesById, categoryGroupsById, payeesById } = budget;
 
-  const showTotals = showing === "total";
   const allSummaries = getSummaries(transactions, investmentAccounts, budget);
   const summaries = selectedMonth
     ? [find(matchesProperty("month", selectedMonth))(allSummaries)]
@@ -73,6 +73,15 @@ const IncomeVsExpenses = ({
         onClickSettings={() => {
           setSettingsModalOpen(true);
         }}
+        actions={
+          <SecondaryText
+            onClick={() => {
+              setShowTotals(!showTotals);
+            }}
+          >
+            {showTotals ? "show average" : "show total"}
+          </SecondaryText>
+        }
       >
         <ChartNumbers
           numbers={[
@@ -129,7 +138,6 @@ IncomeVsExpenses.propTypes = {
   excludeFirstMonth: PropTypes.bool.isRequired,
   excludeLastMonth: PropTypes.bool.isRequired,
   investmentAccounts: PropTypes.object.isRequired,
-  showing: PropTypes.oneOf(["average", "total"]).isRequired,
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       amount: PropTypes.number.isRequired,

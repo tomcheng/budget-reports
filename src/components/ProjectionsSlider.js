@@ -29,7 +29,7 @@ const ProjectionsSlider = ({
   createPortal(
     <ClickOff onClickOff={name && onBlur}>
       {({ ref }) => (
-        <Container innerRef={ref}>
+        <Container ref={ref}>
           <AnimateHeight isExpanded={!!name}>
             <div style={{ borderTop: "1px solid #bbb", padding: "15px 20px" }}>
               <div
