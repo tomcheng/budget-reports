@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import find from "lodash/fp/find";
@@ -9,6 +9,7 @@ import sortBy from "lodash/fp/sortBy";
 import { sumByProp, groupBy, simpleMemoize } from "../dataUtils";
 import { getTransactionMonth, isIncome } from "../budgetUtils";
 import { SecondaryText } from "./typeComponents";
+import PageLayout from "./PageLayout";
 import IncomeVsExpensesChart from "./IncomeVsExpensesChart";
 import Breakdowns from "./Breakdowns";
 import CollapsibleSection from "./CollapsibleSection";
@@ -36,12 +37,14 @@ const getSummaries = simpleMemoize((transactions, investmentAccounts, budget) =>
   ])(transactions)
 );
 
-const IncomeVsExpenses = ({
+const IncomeVsExpensesPage = ({
   budget,
   excludeFirstMonth,
   excludeLastMonth,
   investmentAccounts,
+  title,
   transactions,
+  wrapperProps,
   onSetExclusion
 }) => {
   const [selectedMonth, onSelectMonth] = useSelectedMonth();
@@ -66,67 +69,73 @@ const IncomeVsExpenses = ({
   const denominator = showTotals ? 1 : summaries.length;
 
   return (
-    <Fragment>
-      <CollapsibleSection
-        title="Monthly Trend"
-        hasSettings
-        onClickSettings={() => {
-          setSettingsModalOpen(true);
-        }}
-        actions={
-          <SecondaryText
-            onClick={() => {
-              setShowTotals(!showTotals);
-            }}
-          >
-            {showTotals ? "show average" : "show total"}
-          </SecondaryText>
-        }
-      >
-        <ChartNumbers
-          numbers={[
-            {
-              label: "net income",
-              amount: -(totalExpenses + totalIncome) / denominator
-            },
-            {
-              label: "expenses",
-              amount: totalExpenses / denominator
-            },
-            {
-              label: "income",
-              amount: -totalIncome / denominator
-            }
-          ]}
-        />
-        <IncomeVsExpensesChart
-          data={allSummaries}
-          selectedMonth={selectedMonth}
-          onSelectMonth={onSelectMonth}
-        />
-        <MonthByMonthSettingsModal
-          excludeFirstMonth={excludeFirstMonth}
-          excludeLastMonth={excludeLastMonth}
-          open={settingsModalOpen}
-          onClose={() => {
-            setSettingsModalOpen(false);
+    <PageLayout
+      {...wrapperProps}
+      title={title}
+      fixedContent={
+        <CollapsibleSection
+          title="Monthly Trend"
+          hasSettings
+          onClickSettings={() => {
+            setSettingsModalOpen(true);
           }}
-          onSetExclusion={onSetExclusion}
+          actions={
+            <SecondaryText
+              onClick={() => {
+                setShowTotals(!showTotals);
+              }}
+            >
+              {showTotals ? "show average" : "show total"}
+            </SecondaryText>
+          }
+        >
+          <ChartNumbers
+            numbers={[
+              {
+                label: "net income",
+                amount: -(totalExpenses + totalIncome) / denominator
+              },
+              {
+                label: "expenses",
+                amount: totalExpenses / denominator
+              },
+              {
+                label: "income",
+                amount: -totalIncome / denominator
+              }
+            ]}
+          />
+          <IncomeVsExpensesChart
+            data={allSummaries}
+            selectedMonth={selectedMonth}
+            onSelectMonth={onSelectMonth}
+          />
+          <MonthByMonthSettingsModal
+            excludeFirstMonth={excludeFirstMonth}
+            excludeLastMonth={excludeLastMonth}
+            open={settingsModalOpen}
+            onClose={() => {
+              setSettingsModalOpen(false);
+            }}
+            onSetExclusion={onSetExclusion}
+          />
+        </CollapsibleSection>
+      }
+      content={
+        <Breakdowns
+          categoriesById={categoriesById}
+          categoryGroupsById={categoryGroupsById}
+          payeesById={payeesById}
+          expenseTransactions={expenseTransactions}
+          incomeTransactions={incomeTransactions}
+          divideBy={showTotals ? 1 : summaries.length}
         />
-      </CollapsibleSection>
-      <Breakdowns
-        categoriesById={categoriesById}
-        categoryGroupsById={categoryGroupsById}
-        payeesById={payeesById}
-        expenseTransactions={expenseTransactions}
-        incomeTransactions={incomeTransactions}
-        divideBy={showTotals ? 1 : summaries.length}
-      />
-    </Fragment>
+      }
+    />
   );
 };
 
-IncomeVsExpenses.propTypes = {
+IncomeVsExpensesPage.propTypes = {
   budget: PropTypes.shape({
     id: PropTypes.string.isRequired,
     months: PropTypes.arrayOf(
@@ -138,13 +147,15 @@ IncomeVsExpenses.propTypes = {
   excludeFirstMonth: PropTypes.bool.isRequired,
   excludeLastMonth: PropTypes.bool.isRequired,
   investmentAccounts: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired,
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       amount: PropTypes.number.isRequired,
       date: PropTypes.string.isRequired
     })
   ).isRequired,
+  wrapperProps: PropTypes.object.isRequired,
   onSetExclusion: PropTypes.func.isRequired
 };
 
-export default IncomeVsExpenses;
+export default IncomeVsExpensesPage;

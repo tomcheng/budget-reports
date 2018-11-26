@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import constant from "lodash/fp/constant";
@@ -19,6 +19,7 @@ import sumBy from "lodash/fp/sumBy";
 import values from "lodash/fp/values";
 import { simpleMemoize } from "../dataUtils";
 import { getSetting, setSetting } from "../uiRepo";
+import PageLayout from "./PageLayout";
 import CollapsibleSection from "./CollapsibleSection";
 import ChartNumbers from "./ChartNumbers";
 import NetWorthChart from "./NetWorthChart";
@@ -30,7 +31,7 @@ const cumulative = arr =>
     []
   );
 
-class NetWorth extends PureComponent {
+class NetWorthPage extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       accounts: PropTypes.arrayOf(
@@ -57,7 +58,9 @@ class NetWorth extends PureComponent {
       ).isRequired
     }).isRequired,
     investmentAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
-    mortgageAccounts: PropTypes.objectOf(PropTypes.bool).isRequired
+    mortgageAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
+    title: PropTypes.string.isRequired,
+    wrapperProps: PropTypes.object.isRequired
   };
 
   constructor(props) {
@@ -131,7 +134,13 @@ class NetWorth extends PureComponent {
   };
 
   render() {
-    const { budget, investmentAccounts, mortgageAccounts } = this.props;
+    const {
+      budget,
+      investmentAccounts,
+      mortgageAccounts,
+      title,
+      wrapperProps
+    } = this.props;
     const { hiddenAccounts, selectedMonth } = this.state;
 
     const months = this.getMonths(budget);
@@ -152,44 +161,50 @@ class NetWorth extends PureComponent {
     ])(selectedBalances);
 
     return (
-      <Fragment>
-        <CollapsibleSection title="Monthly Trend">
-          <ChartNumbers
-            numbers={[
-              {
-                amount: -(selectedAssets + selectedLiabilities),
-                label: "Net Worth"
-              },
-              { amount: -selectedAssets, label: "Assets" },
-              { amount: selectedLiabilities, label: "Liabilities" }
-            ]}
-            alwaysRound
-          />
-          <NetWorthChart
-            data={map(({ id, data }) => ({
-              data: hiddenAccounts[id] ? data.map(constant(0)) : data,
-              type: budget.accountsById[id].type,
-              id
-            }))(accountSummaries)}
-            months={months}
+      <PageLayout
+        {...wrapperProps}
+        title={title}
+        fixedContent={
+          <CollapsibleSection title="Monthly Trend">
+            <ChartNumbers
+              numbers={[
+                {
+                  amount: -(selectedAssets + selectedLiabilities),
+                  label: "Net Worth"
+                },
+                { amount: -selectedAssets, label: "Assets" },
+                { amount: selectedLiabilities, label: "Liabilities" }
+              ]}
+              alwaysRound
+            />
+            <NetWorthChart
+              data={map(({ id, data }) => ({
+                data: hiddenAccounts[id] ? data.map(constant(0)) : data,
+                type: budget.accountsById[id].type,
+                id
+              }))(accountSummaries)}
+              months={months}
+              mortgageAccounts={mortgageAccounts}
+              selectedMonth={selectedMonth}
+              onSelectMonth={this.handleSelectMonth}
+            />
+          </CollapsibleSection>
+        }
+        content={
+          <NetWorthAccounts
+            accounts={map(account => ({
+              ...account,
+              balance: selectedBalances[account.id]
+            }))(budget.accounts)}
+            hiddenAccounts={hiddenAccounts}
+            investmentAccounts={investmentAccounts}
             mortgageAccounts={mortgageAccounts}
-            selectedMonth={selectedMonth}
-            onSelectMonth={this.handleSelectMonth}
+            onToggleAccounts={this.handleToggleAccounts}
           />
-        </CollapsibleSection>
-        <NetWorthAccounts
-          accounts={map(account => ({
-            ...account,
-            balance: selectedBalances[account.id]
-          }))(budget.accounts)}
-          hiddenAccounts={hiddenAccounts}
-          investmentAccounts={investmentAccounts}
-          mortgageAccounts={mortgageAccounts}
-          onToggleAccounts={this.handleToggleAccounts}
-        />
-      </Fragment>
+        }
+      />
     );
   }
 }
 
-export default NetWorth;
+export default NetWorthPage;

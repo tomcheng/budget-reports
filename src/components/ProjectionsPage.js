@@ -18,6 +18,7 @@ import {
   getProjection,
   getProjectionWithRetirement
 } from "../projectionUtils";
+import PageLayout from "./PageLayout";
 import Icon from "./Icon";
 import CollapsibleSection from "./CollapsibleSection";
 import ProjectionsChart from "./ProjectionsChart";
@@ -97,13 +98,15 @@ const getInitialState = simpleMemoize(
   }
 );
 
-class Projections extends PureComponent {
+class ProjectionsPage extends PureComponent {
   static propTypes = {
     budget: PropTypes.shape({
       transactions: PropTypes.array.isRequired
     }).isRequired,
     investmentAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
-    mortgageAccounts: PropTypes.objectOf(PropTypes.bool).isRequired
+    mortgageAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
+    title: PropTypes.string.isRequired,
+    wrapperProps: PropTypes.object.isRequired
   };
 
   constructor(props) {
@@ -142,6 +145,7 @@ class Projections extends PureComponent {
   };
 
   render() {
+    const { title, wrapperProps } = this.props;
     const {
       mortgagePayment,
       remainingMortgagePayments,
@@ -230,70 +234,78 @@ class Projections extends PureComponent {
     };
 
     return (
-      <Fragment>
-        <CollapsibleSection title="Projection">
-          <ChartNumbers
-            numbers={[
-              {
-                amount: -amountNeededToRetire,
-                label: "needed for retirement",
-                decimalsToRound: 0
-              },
-              {
-                amount: -yearsUntilRetirement,
-                label: "years to retirement",
-                isMoney: false,
-                decimalsToRound: 1
-              }
-            ]}
-          />
-          <ProjectionsChart
-            investmentsProjection={projectionByYear}
-            mortgageProjection={mortgageProjectionByYear}
-            amountNeededToRetire={amountNeededToRetire}
-            yearsUntilRetirement={yearsUntilRetirement}
-          />
-        </CollapsibleSection>
-        <CollapsibleSection title="Assumptions">
-          {adjustableEntries.map(({ label, name, formatter }) => (
-            <AdjustableEntry
-              key={name}
-              label={label}
-              name={name}
-              value={this.state[name]}
-              formatter={formatter}
-              isAdjusting={adjustingName === name}
-              onSelect={this.handleSelectAdjusting}
+      <PageLayout
+        {...wrapperProps}
+        title={title}
+        content={
+          <Fragment>
+            <CollapsibleSection title="Projection">
+              <ChartNumbers
+                numbers={[
+                  {
+                    amount: -amountNeededToRetire,
+                    label: "needed for retirement",
+                    decimalsToRound: 0
+                  },
+                  {
+                    amount: -yearsUntilRetirement,
+                    label: "years to retirement",
+                    isMoney: false,
+                    decimalsToRound: 1
+                  }
+                ]}
+              />
+              <ProjectionsChart
+                investmentsProjection={projectionByYear}
+                mortgageProjection={mortgageProjectionByYear}
+                amountNeededToRetire={amountNeededToRetire}
+                yearsUntilRetirement={yearsUntilRetirement}
+              />
+            </CollapsibleSection>
+            <CollapsibleSection title="Assumptions">
+              {adjustableEntries.map(({ label, name, formatter }) => (
+                <AdjustableEntry
+                  key={name}
+                  label={label}
+                  name={name}
+                  value={this.state[name]}
+                  formatter={formatter}
+                  isAdjusting={adjustingName === name}
+                  onSelect={this.handleSelectAdjusting}
+                  onReset={this.handleResetCalculation}
+                  onChange={this.handleChange}
+                />
+              ))}
+              {hasMortgage && (
+                <Fragment>
+                  <Entry
+                    label="Mortgage payment"
+                    value={mortgagePayment}
+                    formatter={val => `$${val.toFixed(2)}`}
+                  />
+                  <Entry
+                    label="Time remaining on mortgage"
+                    value={remainingMortgagePayments}
+                    formatter={val => `${(val / 12).toFixed(1)} years`}
+                  />
+                </Fragment>
+              )}
+            </CollapsibleSection>
+            <ProjectionsSlider
+              name={adjustingName}
+              label={get([adjustingName, "label"])(adjustableEntriesByName)}
               onReset={this.handleResetCalculation}
               onChange={this.handleChange}
+              onBlur={this.handleClearSelection}
+              formatter={get([adjustingName, "formatter"])(
+                adjustableEntriesByName
+              )}
+              value={this.state[adjustingName]}
+              rangeOptions={nameToRangeOptions[adjustingName]}
             />
-          ))}
-          {hasMortgage && (
-            <Fragment>
-              <Entry
-                label="Mortgage payment"
-                value={mortgagePayment}
-                formatter={val => `$${val.toFixed(2)}`}
-              />
-              <Entry
-                label="Time remaining on mortgage"
-                value={remainingMortgagePayments}
-                formatter={val => `${(val / 12).toFixed(1)} years`}
-              />
-            </Fragment>
-          )}
-        </CollapsibleSection>
-        <ProjectionsSlider
-          name={adjustingName}
-          label={get([adjustingName, "label"])(adjustableEntriesByName)}
-          onReset={this.handleResetCalculation}
-          onChange={this.handleChange}
-          onBlur={this.handleClearSelection}
-          formatter={get([adjustingName, "formatter"])(adjustableEntriesByName)}
-          value={this.state[adjustingName]}
-          rangeOptions={nameToRangeOptions[adjustingName]}
-        />
-      </Fragment>
+          </Fragment>
+        }
+      />
     );
   }
 }
@@ -350,4 +362,4 @@ const Entry = ({
   </div>
 );
 
-export default Projections;
+export default ProjectionsPage;

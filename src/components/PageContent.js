@@ -19,7 +19,13 @@ import {
   isTransfer
 } from "../budgetUtils";
 import { useMonthExclusions } from "../commonHooks";
-import Category from "./Category";
+import CategoryPage from "./CategoryPage";
+import CategoryPayeePage from "./CategoryPayeePage";
+import IncomeVsExpensesPage from "./IncomeVsExpensesPage";
+import NetWorthPage from "./NetWorthPage";
+import InvestmentsPage from "./InvestmentsPage";
+import ProjectionsPage from "./ProjectionsPage";
+import SettingsPage from "./SettingsPage";
 
 const getFilteredTransactions = simpleMemoize(
   (budget, investmentAccounts, excludeFirstMonth, excludeLastMonth) => {
@@ -49,7 +55,14 @@ const getFilteredSpendingTransactions = simpleMemoize(
 );
 
 const PageContent = props => {
-  const { wrapperProps, budget, currentMonth, investmentAccounts } = props;
+  const {
+    wrapperProps,
+    budget,
+    currentMonth,
+    investmentAccounts,
+    mortgageAccounts,
+    onUpdateAccounts
+  } = props;
   const {
     excludeFirstMonth,
     excludeLastMonth,
@@ -104,7 +117,96 @@ const PageContent = props => {
         )}
       />
       <Route
-        page={pages.groups.path}
+        path={pages.income.path}
+        exact
+        render={() => (
+          <IncomePage
+            investmentAccounts={investmentAccounts}
+            budget={budget}
+            title={pages.income.title}
+            wrapperProps={wrapperProps}
+          />
+        )}
+      />
+      <Route
+        path={pages.incomeVsExpenses.path}
+        exact
+        render={() => {
+          const filteredTransactions = getFilteredTransactions(
+            props.budget,
+            props.investmentAccounts,
+            excludeFirstMonth,
+            excludeLastMonth
+          );
+
+          return (
+            <IncomeVsExpensesPage
+              budget={budget}
+              excludeFirstMonth={excludeFirstMonth}
+              excludeLastMonth={excludeLastMonth}
+              investmentAccounts={investmentAccounts}
+              title={pages.incomeVsExpenses.title}
+              transactions={filteredTransactions}
+              wrapperProps={wrapperProps}
+              onSetExclusion={onSetExclusion}
+            />
+          );
+        }}
+      />
+      <Route
+        path={pages.netWorth.path}
+        exact
+        render={() => (
+          <NetWorthPage
+            budget={budget}
+            investmentAccounts={investmentAccounts}
+            mortgageAccounts={mortgageAccounts}
+            title={pages.netWorth.title}
+            wrapperProps={wrapperProps}
+          />
+        )}
+      />
+      <Route
+        path={pages.investments.path}
+        exact
+        render={() => (
+          <InvestmentsPage
+            budget={budget}
+            investmentAccounts={investmentAccounts}
+            title={pages.investments.title}
+            wrapperProps={wrapperProps}
+          />
+        )}
+      />
+      <Route
+        path={pages.projections.path}
+        exact
+        render={() => (
+          <ProjectionsPage
+            budget={budget}
+            investmentAccounts={investmentAccounts}
+            mortgageAccounts={mortgageAccounts}
+            title={pages.projections.title}
+            wrapperProps={wrapperProps}
+          />
+        )}
+      />
+      <Route
+        path={pages.settings.path}
+        exact
+        render={() => (
+          <SettingsPage
+            budget={budget}
+            investmentAccounts={investmentAccounts}
+            mortgageAccounts={mortgageAccounts}
+            title={pages.settings.title}
+            wrapperProps={wrapperProps}
+            onUpdateAccounts={onUpdateAccounts}
+          />
+        )}
+      />
+      <Route
+        path={pages.groups.path}
         render={({ match, history, location }) => {
           const filteredTransactions = getFilteredSpendingTransactions(
             budget,
@@ -174,7 +276,7 @@ const PageContent = props => {
                     path={pages.category.path}
                     exact
                     render={({ match }) => (
-                      <Category
+                      <CategoryPage
                         budget={budget}
                         categoryId={match.params.categoryId}
                         excludeFirstMonth={excludeFirstMonth}
@@ -191,23 +293,31 @@ const PageContent = props => {
                       />
                     )}
                   />
+                  <Route
+                    path={pages.categoryPayee.path}
+                    exact
+                    render={({ match }) => (
+                      <CategoryPayeePage
+                        budget={budget}
+                        categoryId={match.params.categoryId}
+                        excludeFirstMonth={excludeFirstMonth}
+                        excludeLastMonth={excludeLastMonth}
+                        payeeId={match.params.payeeId}
+                        months={months}
+                        selectedMonth={selectedMonth}
+                        title={pages.categoryPayee.title(match.params, budget)}
+                        transactions={filteredTransactions}
+                        wrapperProps={wrapperProps}
+                        onSetExclusion={onSetExclusion}
+                        onSelectMonth={onSelectMonth}
+                      />
+                    )}
+                  />
                 </Switch>
               )}
             </CategoriesState>
           );
         }}
-      />
-      <Route
-        path={pages.income.path}
-        exact
-        render={() => (
-          <IncomePage
-            investmentAccounts={investmentAccounts}
-            budget={budget}
-            title={pages.income.title}
-            wrapperProps={wrapperProps}
-          />
-        )}
       />
       <Route
         render={() => (

@@ -23,7 +23,7 @@ const map = mapRaw.convert({ cap: false });
 const getNodes = ({ accounts, investmentAccounts, mortgageAccounts }) => {
   const accountsByGroup = groupBy(account => {
     if (investmentAccounts[account.id]) {
-      return "Investments";
+      return "InvestmentsPage";
     }
 
     if (mortgageAccounts[account.id]) {

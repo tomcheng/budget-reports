@@ -8,7 +8,7 @@ import MonthByMonthSection from "./MonthByMonthSection";
 import GenericEntitiesSection from "./GenericEntitiesSection";
 import TransactionsByMonthSection from "./TransactionsByMonthSection";
 
-const Category = ({
+const CategoryPage = ({
   categoryId,
   budget,
   excludeFirstMonth,
@@ -103,7 +103,7 @@ const Category = ({
   );
 };
 
-Category.propTypes = {
+CategoryPage.propTypes = {
   budget: PropTypes.shape({
     categoriesById: PropTypes.objectOf(
       PropTypes.shape({
@@ -131,4 +131,4 @@ Category.propTypes = {
   selectedPayeeId: PropTypes.string
 };
 
-export default Category;
+export default CategoryPage;

@@ -1,9 +1,10 @@
-import React, { Fragment } from "react";
+import React from "react";
 import PropTypes from "prop-types";
+import PageLayout from "./PageLayout";
 import MonthByMonthSection from "./MonthByMonthSection";
 import TransactionsByMonthSection from "./TransactionsByMonthSection";
 
-const CategoryPayee = ({
+const CategoryPayeePage = ({
   budget,
   categoryId,
   excludeFirstMonth,
@@ -11,7 +12,9 @@ const CategoryPayee = ({
   months,
   payeeId,
   selectedMonth,
+  title,
   transactions,
+  wrapperProps,
   onSelectMonth,
   onSetExclusion
 }) => {
@@ -22,30 +25,37 @@ const CategoryPayee = ({
   );
 
   return (
-    <Fragment>
-      <MonthByMonthSection
-        excludeFirstMonth={excludeFirstMonth}
-        excludeLastMonth={excludeLastMonth}
-        months={months}
-        selectedMonth={selectedMonth}
-        transactions={transactionsForCategoryAndPayee}
-        onSelectMonth={onSelectMonth}
-        onSetExclusion={onSetExclusion}
-      />
-      {selectedMonth && (
-        <TransactionsByMonthSection
-          categoriesById={categoriesById}
-          payeesById={payeesById}
+    <PageLayout
+      {...wrapperProps}
+      budget={budget}
+      title={title}
+      fixedContent={
+        <MonthByMonthSection
+          excludeFirstMonth={excludeFirstMonth}
+          excludeLastMonth={excludeLastMonth}
+          months={months}
           selectedMonth={selectedMonth}
           transactions={transactionsForCategoryAndPayee}
-          limitShowing={false}
+          onSelectMonth={onSelectMonth}
+          onSetExclusion={onSetExclusion}
         />
-      )}
-    </Fragment>
+      }
+      content={
+        selectedMonth && (
+          <TransactionsByMonthSection
+            categoriesById={categoriesById}
+            payeesById={payeesById}
+            selectedMonth={selectedMonth}
+            transactions={transactionsForCategoryAndPayee}
+            limitShowing={false}
+          />
+        )
+      }
+    />
   );
 };
 
-CategoryPayee.propTypes = {
+CategoryPayeePage.propTypes = {
   budget: PropTypes.shape({
     payeesById: PropTypes.objectOf(
       PropTypes.shape({
@@ -63,14 +73,16 @@ CategoryPayee.propTypes = {
   excludeLastMonth: PropTypes.bool.isRequired,
   months: PropTypes.arrayOf(PropTypes.string).isRequired,
   payeeId: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       payee_id: PropTypes.string.isRequired
     })
   ).isRequired,
+  wrapperProps: PropTypes.object.isRequired,
   onSelectMonth: PropTypes.func.isRequired,
   onSetExclusion: PropTypes.func.isRequired,
   selectedMonth: PropTypes.string
 };
 
-export default CategoryPayee;
+export default CategoryPayeePage;
