@@ -2,10 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import EnsureBudgetLoaded from "./EnsureBudgetLoaded";
-import { PageTitle } from "./typeComponents";
 import { PrimaryButton } from "./Button";
 import SidebarMenu from "./SidebarMenu";
-import Scroller from "./Scroller";
 
 const Container = styled.div`
   height: 100%;
@@ -14,35 +12,14 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const Header = styled.div`
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  height: 60px;
-  padding-left: 0;
-  padding-right: 20px;
-  background-color: #fff;
-  border-bottom: 1px solid #ccc;
-  white-space: pre;
-  user-select: none;
-`;
-
-const Body = styled.div`
-  flex-grow: 1;
-  overflow-y: auto;
-`;
-
 const PageWrapper = ({
-  content,
   authorized,
   budgetId,
   budgetLoaded,
+  children,
   hasMultipleBudgets,
   historyAction,
   location,
-  title,
-  actions,
-  breadcrumbs,
   onAuthorize,
   onRequestBudget
 }) => (
@@ -58,17 +35,7 @@ const PageWrapper = ({
     >
       {({ sidebarTrigger }) => (
         <Container>
-          <Header>
-            {sidebarTrigger}
-            <div style={{ flexGrow: 1 }}>
-              {breadcrumbs}
-              <PageTitle style={{ lineHeight: 1 }}>{title}</PageTitle>
-            </div>
-            {actions}
-          </Header>
-          <Scroller action={historyAction} location={location}>
-            {({ ref }) => <Body ref={ref}>{content}</Body>}
-          </Scroller>
+          {children({ sidebarTrigger, historyAction, location })}
           {!authorized && (
             <div
               style={{
@@ -92,16 +59,13 @@ const PageWrapper = ({
 );
 
 PageWrapper.propTypes = {
-  actions: PropTypes.node.isRequired,
   authorized: PropTypes.bool.isRequired,
-  breadcrumbs: PropTypes.node.isRequired,
   budgetId: PropTypes.string.isRequired,
   budgetLoaded: PropTypes.bool.isRequired,
-  content: PropTypes.node.isRequired,
+  children: PropTypes.func.isRequired,
   hasMultipleBudgets: PropTypes.bool.isRequired,
   historyAction: PropTypes.string.isRequired,
   location: PropTypes.string.isRequired,
-  title: PropTypes.node.isRequired,
   onAuthorize: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired
 };

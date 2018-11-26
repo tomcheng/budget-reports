@@ -76,6 +76,7 @@ const MonthByMonthSection = ({
       onClickSettings={() => {
         setSettingsModalOpen(true);
       }}
+      fullWidth
     >
       <ChartNumbers numbers={chartNumbers} />
       <MonthlyChart

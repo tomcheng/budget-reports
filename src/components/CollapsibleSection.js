@@ -6,9 +6,10 @@ import { StrongText } from "./typeComponents";
 import Icon from "./Icon";
 
 const Container = styled.div`
-  margin: 2px;
+  margin: ${props => (props.fullWidth ? "0" : "2px")};
   background-color: #fff;
-  border: 1px solid #e5e5e5;
+  border: ${props => (props.fullWidth ? "0" : "1px")} solid #e5e5e5;
+  border-bottom-width: 1px;
   border-radius: 2px;
 `;
 
@@ -30,12 +31,13 @@ const SettingsContainer = styled.div`
 `;
 
 const Body = styled.div`
-  padding: 0 20px 15px;
+  padding: 0 ${props => (props.fullWidth ? "22px" : "20px")} 15px;
 `;
 
 const CollapsibleSection = ({
   actions,
   children,
+  fullWidth,
   hasSettings,
   noPadding,
   title,
@@ -44,7 +46,7 @@ const CollapsibleSection = ({
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <Container>
+    <Container fullWidth={fullWidth}>
       <Header>
         <div
           style={{ display: "flex", alignItems: "center" }}
@@ -81,6 +83,7 @@ CollapsibleSection.propTypes = {
   children: PropTypes.node.isRequired,
   title: PropTypes.string.isRequired,
   actions: PropTypes.node,
+  fullWidth: PropTypes.bool,
   hasSettings: PropTypes.bool,
   noPadding: PropTypes.bool,
   onClickSettings: PropTypes.func

@@ -65,7 +65,14 @@ class DayByDaySection extends Component {
   };
 
   render() {
-    const { transactions, budgetId, currentMonth, highlightFunction, title, total } = this.props;
+    const {
+      transactions,
+      budgetId,
+      currentMonth,
+      highlightFunction,
+      title,
+      total
+    } = this.props;
     const { modalOpen, monthsToCompare } = this.state;
 
     return (
@@ -74,6 +81,7 @@ class DayByDaySection extends Component {
           title={title}
           hasSettings
           onClickSettings={this.handleClickSettings}
+          fullWidth
         >
           <SpendingChart
             budgetId={budgetId}

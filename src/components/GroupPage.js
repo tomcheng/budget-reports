@@ -6,11 +6,12 @@ import sortBy from "lodash/fp/sortBy";
 import { getTransactionMonth, sanitizeName } from "../budgetUtils";
 import pages, { makeLink } from "../pages";
 import { useTrendsShowAverage } from "../commonHooks";
+import PageLayout from "./PageLayout";
 import MonthByMonthSection from "./MonthByMonthSection";
 import TransactionsByMonthSection from "./TransactionsByMonthSection";
 import GenericEntitiesSection from "./GenericEntitiesSection";
 
-const Group = ({
+const GroupPage = ({
   budget,
   categoryGroupId,
   excludeFirstMonth,
@@ -18,7 +19,9 @@ const Group = ({
   months,
   selectedMonth,
   selectedCategoryId,
+  title,
   transactions,
+  wrapperProps,
   onSelectMonth,
   onSelectCategory,
   onSetExclusion
@@ -53,67 +56,76 @@ const Group = ({
     ])(transactionsInGroup);
 
   return (
-    <Fragment>
-      <MonthByMonthSection
-        excludeFirstMonth={excludeFirstMonth}
-        excludeLastMonth={excludeLastMonth}
-        months={months}
-        highlightFunction={
-          selectedCategoryId &&
-          (transaction => transaction.category_id === selectedCategoryId)
-        }
-        selectedMonth={selectedMonth}
-        title={
-          selectedCategory
-            ? `Month by Month: ${sanitizeName(selectedCategory.name)}`
-            : "Month by Month"
-        }
-        transactions={transactionsInGroup}
-        onSelectMonth={onSelectMonth}
-        onSetExclusion={onSetExclusion}
-      />
-      <GenericEntitiesSection
-        key={`categories-${selectedMonth || "all"}`}
-        entityKey="category_id"
-        entitiesById={categoriesById}
-        linkFunction={categoryId =>
-          makeLink(pages.category.path, {
-            budgetId,
-            categoryGroupId: categoryGroup.id,
-            categoryId
-          })
-        }
-        title={
-          selectedMonth
-            ? `Categories: ${moment(selectedMonth).format("MMMM")}`
-            : "Categories"
-        }
-        transactions={transactionsInSelectedMonth || transactionsInGroup}
-        selectedEntityId={selectedCategoryId}
-        onClickEntity={onSelectCategory}
-        showAverageToggle={!selectedMonth}
-        showAverage={showAverage && !selectedMonth}
-        numMonths={months.length}
-        onToggleAverage={onToggleShowAverage}
-        limitShowing
-      />
-      {selectedMonth &&
-        transactionsInSelectedMonth.length > 0 && (
-          <TransactionsByMonthSection
-            key={`transactions-${selectedMonth || "all"}-${selectedCategoryId ||
-              "all"}`}
-            categoriesById={categoriesById}
-            payeesById={payeesById}
-            selectedMonth={selectedMonth}
-            selectedCategoryId={selectedCategoryId}
-            transactions={transactionsInSelectedMonth}
+    <PageLayout
+      {...wrapperProps}
+      budget={budget}
+      title={title}
+      fixedContent={
+        <MonthByMonthSection
+          excludeFirstMonth={excludeFirstMonth}
+          excludeLastMonth={excludeLastMonth}
+          months={months}
+          highlightFunction={
+            selectedCategoryId &&
+            (transaction => transaction.category_id === selectedCategoryId)
+          }
+          selectedMonth={selectedMonth}
+          title={
+            selectedCategory
+              ? `Month by Month: ${sanitizeName(selectedCategory.name)}`
+              : "Month by Month"
+          }
+          transactions={transactionsInGroup}
+          onSelectMonth={onSelectMonth}
+          onSetExclusion={onSetExclusion}
+        />
+      }
+      content={
+        <Fragment>
+          <GenericEntitiesSection
+            key={`categories-${selectedMonth || "all"}`}
+            entityKey="category_id"
+            entitiesById={categoriesById}
+            linkFunction={categoryId =>
+              makeLink(pages.category.path, {
+                budgetId,
+                categoryGroupId: categoryGroup.id,
+                categoryId
+              })
+            }
+            title={
+              selectedMonth
+                ? `Categories: ${moment(selectedMonth).format("MMMM")}`
+                : "Categories"
+            }
+            transactions={transactionsInSelectedMonth || transactionsInGroup}
+            selectedEntityId={selectedCategoryId}
+            onClickEntity={onSelectCategory}
+            showAverageToggle={!selectedMonth}
+            showAverage={showAverage && !selectedMonth}
+            numMonths={months.length}
+            onToggleAverage={onToggleShowAverage}
+            limitShowing
           />
-        )}
-    </Fragment>
+          {selectedMonth &&
+            transactionsInSelectedMonth.length > 0 && (
+              <TransactionsByMonthSection
+                key={`transactions-${selectedMonth ||
+                  "all"}-${selectedCategoryId || "all"}`}
+                categoriesById={categoriesById}
+                payeesById={payeesById}
+                selectedMonth={selectedMonth}
+                selectedCategoryId={selectedCategoryId}
+                transactions={transactionsInSelectedMonth}
+              />
+            )}
+        </Fragment>
+      }
+    />
   );
 };
 
-Group.propTypes = {
+GroupPage.propTypes = {
   budget: PropTypes.shape({
     transactions: PropTypes.arrayOf(
       PropTypes.shape({
@@ -131,7 +143,9 @@ Group.propTypes = {
   excludeFirstMonth: PropTypes.bool.isRequired,
   excludeLastMonth: PropTypes.bool.isRequired,
   months: PropTypes.arrayOf(PropTypes.string).isRequired,
+  title: PropTypes.string.isRequired,
   transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  wrapperProps: PropTypes.object.isRequired,
   onSelectCategory: PropTypes.func.isRequired,
   onSelectMonth: PropTypes.func.isRequired,
   onSetExclusion: PropTypes.func.isRequired,
@@ -139,4 +153,4 @@ Group.propTypes = {
   selectedMonth: PropTypes.string
 };
 
-export default Group;
+export default GroupPage;

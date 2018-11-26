@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import { getTransactionMonth, sanitizeName } from "../budgetUtils";
 import pages, { makeLink } from "../pages";
+import PageLayout from "./PageLayout";
 import MonthByMonthSection from "./MonthByMonthSection";
 import GenericEntitiesSection from "./GenericEntitiesSection";
 import TransactionsByMonthSection from "./TransactionsByMonthSection";
@@ -15,7 +16,9 @@ const Category = ({
   months,
   selectedMonth,
   selectedPayeeId,
+  title,
   transactions,
+  wrapperProps,
   onSelectMonth,
   onSelectPayee,
   onSetExclusion
@@ -33,61 +36,70 @@ const Category = ({
     );
 
   return (
-    <Fragment>
-      <MonthByMonthSection
-        excludeFirstMonth={excludeFirstMonth}
-        excludeLastMonth={excludeLastMonth}
-        months={months}
-        onSetExclusion={onSetExclusion}
-        highlightFunction={
-          selectedPayeeId &&
-          (transaction => transaction.payee_id === selectedPayeeId)
-        }
-        selectedMonth={selectedMonth}
-        title={
-          selectedPayee
-            ? `Month by Month: ${sanitizeName(selectedPayee.name)}`
-            : "Month by Month"
-        }
-        transactions={transactionsForCategory}
-        onSelectMonth={onSelectMonth}
-      />
-      <GenericEntitiesSection
-        key={`payees-${selectedMonth || "all"}`}
-        emptyName="(no payee)"
-        entitiesById={payeesById}
-        entityKey="payee_id"
-        linkFunction={payeeId =>
-          makeLink(pages.categoryPayee.path, {
-            budgetId,
-            categoryGroupId: category.category_group_id,
-            categoryId: categoryId,
-            payeeId
-          })
-        }
-        title={
-          selectedMonth
-            ? `Payees: ${moment(selectedMonth).format("MMMM")}`
-            : "Payees"
-        }
-        transactions={transactionsForMonth || transactionsForCategory}
-        selectedEntityId={selectedPayeeId}
-        onClickEntity={onSelectPayee}
-        limitShowing
-      />
-      {selectedMonth &&
-        transactionsForMonth.length > 0 && (
-          <TransactionsByMonthSection
-            key={`transactions-${selectedMonth || "all"}-${selectedPayeeId ||
-              "all"}`}
-            categoriesById={categoriesById}
-            payeesById={payeesById}
-            transactions={transactionsForMonth}
-            selectedMonth={selectedMonth}
-            selectedPayeeId={selectedPayeeId}
+    <PageLayout
+      {...wrapperProps}
+      budget={budget}
+      title={title}
+      fixedContent={
+        <MonthByMonthSection
+          excludeFirstMonth={excludeFirstMonth}
+          excludeLastMonth={excludeLastMonth}
+          months={months}
+          onSetExclusion={onSetExclusion}
+          highlightFunction={
+            selectedPayeeId &&
+            (transaction => transaction.payee_id === selectedPayeeId)
+          }
+          selectedMonth={selectedMonth}
+          title={
+            selectedPayee
+              ? `Month by Month: ${sanitizeName(selectedPayee.name)}`
+              : "Month by Month"
+          }
+          transactions={transactionsForCategory}
+          onSelectMonth={onSelectMonth}
+        />
+      }
+      content={
+        <Fragment>
+          <GenericEntitiesSection
+            key={`payees-${selectedMonth || "all"}`}
+            emptyName="(no payee)"
+            entitiesById={payeesById}
+            entityKey="payee_id"
+            linkFunction={payeeId =>
+              makeLink(pages.categoryPayee.path, {
+                budgetId,
+                categoryGroupId: category.category_group_id,
+                categoryId: categoryId,
+                payeeId
+              })
+            }
+            title={
+              selectedMonth
+                ? `Payees: ${moment(selectedMonth).format("MMMM")}`
+                : "Payees"
+            }
+            transactions={transactionsForMonth || transactionsForCategory}
+            selectedEntityId={selectedPayeeId}
+            onClickEntity={onSelectPayee}
+            limitShowing
           />
-        )}
-    </Fragment>
+          {selectedMonth &&
+            transactionsForMonth.length > 0 && (
+              <TransactionsByMonthSection
+                key={`transactions-${selectedMonth ||
+                  "all"}-${selectedPayeeId || "all"}`}
+                categoriesById={categoriesById}
+                payeesById={payeesById}
+                transactions={transactionsForMonth}
+                selectedMonth={selectedMonth}
+                selectedPayeeId={selectedPayeeId}
+              />
+            )}
+        </Fragment>
+      }
+    />
   );
 };
 
@@ -109,7 +121,9 @@ Category.propTypes = {
   excludeFirstMonth: PropTypes.bool.isRequired,
   excludeLastMonth: PropTypes.bool.isRequired,
   months: PropTypes.arrayOf(PropTypes.string).isRequired,
+  title: PropTypes.string.isRequired,
   transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  wrapperProps: PropTypes.object.isRequired,
   onSelectMonth: PropTypes.func.isRequired,
   onSelectPayee: PropTypes.func.isRequired,
   onSetExclusion: PropTypes.func.isRequired,

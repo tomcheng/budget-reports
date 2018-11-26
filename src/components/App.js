@@ -12,9 +12,6 @@ import {
 } from "../ynabRepo";
 import { setSetting, getSetting } from "../uiRepo";
 import PageWrapper from "./PageWrapper";
-import PageTitle from "./PageTitle";
-import PageBreadcrumbs from "./PageBreadcrumbs";
-import PageActions from "./PageActions";
 import PageContent from "./PageContent";
 import Unauthorized from "./Unauthorized";
 import NotFound from "./NotFound";
@@ -98,26 +95,27 @@ class App extends Component {
           />
           <Route
             path="/budgets/:budgetId"
-            render={props => {
-              const { budgetId } = props.match.params;
+            render={({ match, history, location }) => {
+              const { budgetId } = match.params;
               const budget = budgetDetails[budgetId];
 
               return (
-                <CurrencyContext.Provider value={get("currencyFormat")(budget)}>
-                  <PageWrapper
-                    authorized={authorized}
-                    budgetId={budgetId}
-                    budgetLoaded={!!budget}
-                    hasMultipleBudgets={budgetIds.length > 1}
-                    historyAction={props.history.action}
-                    location={props.location.pathname}
-                    onAuthorize={this.handleAuthorize}
-                    onRequestBudget={this.handleRequestBudget}
-                    title={<PageTitle budget={budget} />}
-                    breadcrumbs={<PageBreadcrumbs budget={budget} />}
-                    actions={<PageActions />}
-                    content={
+                <PageWrapper
+                  authorized={authorized}
+                  budgetId={budgetId}
+                  budgetLoaded={!!budget}
+                  hasMultipleBudgets={budgetIds.length > 1}
+                  historyAction={history.action}
+                  location={location.pathname}
+                  onAuthorize={this.handleAuthorize}
+                  onRequestBudget={this.handleRequestBudget}
+                >
+                  {wrapperProps => (
+                    <CurrencyContext.Provider
+                      value={get("currencyFormat")(budget)}
+                    >
                       <PageContent
+                        wrapperProps={wrapperProps}
                         budget={budget}
                         currentMonth={currentMonth}
                         investmentAccounts={getSetting(
@@ -128,8 +126,6 @@ class App extends Component {
                           "mortgageAccounts",
                           budgetId
                         )}
-                        historyAction={props.history.action}
-                        location={props.location.pathname}
                         onUpdateAccounts={({ type, value }) => {
                           if (type === "investment") {
                             setSetting("investmentAccounts", budgetId, value);
@@ -140,9 +136,9 @@ class App extends Component {
                           this.forceUpdate();
                         }}
                       />
-                    }
-                  />
-                </CurrencyContext.Provider>
+                    </CurrencyContext.Provider>
+                  )}
+                </PageWrapper>
               );
             }}
           />

@@ -17,7 +17,7 @@ const routes = values(pages)
   }));
 
 const PageBreadcrumbs = ({ budget }) =>
-  budget && (
+  budget ? (
     <Switch>
       {routes.map(({ path, breadcrumbs }) => (
         <Route
@@ -52,7 +52,7 @@ const PageBreadcrumbs = ({ budget }) =>
         />
       ))}
     </Switch>
-  );
+  ) : null;
 
 PageBreadcrumbs.propTypes = {
   budget: PropTypes.object
