@@ -121,7 +121,6 @@ const IncomePage = ({
             showAverageToggle={false}
             showAverage={!selectedMonth}
             numMonths={months.length}
-            limitShowing
           />
         </Fragment>
       }

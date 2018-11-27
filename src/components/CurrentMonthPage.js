@@ -81,7 +81,6 @@ const CurrentMonthPage = ({
               categoriesById[transaction.category_id].category_group_id
             }
             entityKey="category_group_id"
-            limitShowing
             linkFunction={groupId =>
               makeLink(pages.currentMonthGroup.path, {
                 budgetId,

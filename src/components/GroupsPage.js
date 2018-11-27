@@ -85,7 +85,6 @@ const GroupsPage = ({
             showAverageToggle={!selectedMonth}
             showAverage={showAverage && !selectedMonth}
             onToggleAverage={onToggleShowAverage}
-            limitShowing
           />
         </Fragment>
       }
