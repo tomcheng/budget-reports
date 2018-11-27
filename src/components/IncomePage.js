@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import {
@@ -48,7 +48,14 @@ const getFilteredIncomeTransactions = simpleMemoize(
       .map(transaction => ({ ...transaction, amount: -transaction.amount }))
 );
 
-const IncomePage = ({ budget, investmentAccounts, title, wrapperProps }) => {
+const IncomePage = ({
+  budget,
+  historyAction,
+  investmentAccounts,
+  location,
+  sidebarTrigger,
+  title
+}) => {
   const {
     excludeFirstMonth,
     excludeLastMonth,
@@ -73,10 +80,12 @@ const IncomePage = ({ budget, investmentAccounts, title, wrapperProps }) => {
 
   return (
     <PageLayout
-      {...wrapperProps}
+      historyAction={historyAction}
+      location={location}
+      sidebarTrigger={sidebarTrigger}
       title={title}
-      fixedContent={
-        budget && (
+      content={
+        <Fragment>
           <MonthByMonthSection
             excludeFirstMonth={excludeFirstMonth}
             excludeLastMonth={excludeLastMonth}
@@ -97,10 +106,6 @@ const IncomePage = ({ budget, investmentAccounts, title, wrapperProps }) => {
             onSelectMonth={onSelectMonth}
             onSetExclusion={onSetExclusion}
           />
-        )
-      }
-      content={
-        budget && (
           <GenericEntitiesSection
             key={`payee-${selectedMonth || "all"}`}
             entityKey="payee_id"
@@ -118,7 +123,7 @@ const IncomePage = ({ budget, investmentAccounts, title, wrapperProps }) => {
             numMonths={months.length}
             limitShowing
           />
-        )
+        </Fragment>
       }
     />
   );
@@ -126,9 +131,11 @@ const IncomePage = ({ budget, investmentAccounts, title, wrapperProps }) => {
 
 IncomePage.propTypes = {
   budget: PropTypes.object.isRequired,
+  historyAction: PropTypes.string.isRequired,
   investmentAccounts: PropTypes.object.isRequired,
-  title: PropTypes.string.isRequired,
-  wrapperProps: PropTypes.object.isRequired
+  location: PropTypes.string.isRequired,
+  sidebarTrigger: PropTypes.node.isRequired,
+  title: PropTypes.string.isRequired
 };
 
 export default IncomePage;

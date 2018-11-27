@@ -105,17 +105,18 @@ class App extends Component {
                   budgetId={budgetId}
                   budgetLoaded={!!budget}
                   hasMultipleBudgets={budgetIds.length > 1}
-                  historyAction={history.action}
                   location={location.pathname}
                   onAuthorize={this.handleAuthorize}
                   onRequestBudget={this.handleRequestBudget}
                 >
-                  {wrapperProps => (
+                  {({ sidebarTrigger }) => (
                     <CurrencyContext.Provider
                       value={get("currencyFormat")(budget)}
                     >
                       <PageContent
-                        wrapperProps={wrapperProps}
+                        sidebarTrigger={sidebarTrigger}
+                        historyAction={history.action}
+                        location={location.pathname}
                         budget={budget}
                         currentMonth={currentMonth}
                         investmentAccounts={getSetting(

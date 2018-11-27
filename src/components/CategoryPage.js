@@ -13,12 +13,14 @@ const CategoryPage = ({
   budget,
   excludeFirstMonth,
   excludeLastMonth,
+  historyAction,
+  location,
   months,
   selectedMonth,
   selectedPayeeId,
+  sidebarTrigger,
   title,
   transactions,
-  wrapperProps,
   onSelectMonth,
   onSelectPayee,
   onSetExclusion
@@ -37,31 +39,31 @@ const CategoryPage = ({
 
   return (
     <PageLayout
-      {...wrapperProps}
+      historyAction={historyAction}
+      location={location}
+      sidebarTrigger={sidebarTrigger}
       budget={budget}
       title={title}
-      fixedContent={
-        <MonthByMonthSection
-          excludeFirstMonth={excludeFirstMonth}
-          excludeLastMonth={excludeLastMonth}
-          months={months}
-          onSetExclusion={onSetExclusion}
-          highlightFunction={
-            selectedPayeeId &&
-            (transaction => transaction.payee_id === selectedPayeeId)
-          }
-          selectedMonth={selectedMonth}
-          title={
-            selectedPayee
-              ? `Month by Month: ${sanitizeName(selectedPayee.name)}`
-              : "Month by Month"
-          }
-          transactions={transactionsForCategory}
-          onSelectMonth={onSelectMonth}
-        />
-      }
       content={
         <Fragment>
+          <MonthByMonthSection
+            excludeFirstMonth={excludeFirstMonth}
+            excludeLastMonth={excludeLastMonth}
+            months={months}
+            onSetExclusion={onSetExclusion}
+            highlightFunction={
+              selectedPayeeId &&
+              (transaction => transaction.payee_id === selectedPayeeId)
+            }
+            selectedMonth={selectedMonth}
+            title={
+              selectedPayee
+                ? `Month by Month: ${sanitizeName(selectedPayee.name)}`
+                : "Month by Month"
+            }
+            transactions={transactionsForCategory}
+            onSelectMonth={onSelectMonth}
+          />
           <GenericEntitiesSection
             key={`payees-${selectedMonth || "all"}`}
             emptyName="(no payee)"
@@ -120,10 +122,12 @@ CategoryPage.propTypes = {
   categoryId: PropTypes.string.isRequired,
   excludeFirstMonth: PropTypes.bool.isRequired,
   excludeLastMonth: PropTypes.bool.isRequired,
+  historyAction: PropTypes.string.isRequired,
+  location: PropTypes.string.isRequired,
   months: PropTypes.arrayOf(PropTypes.string).isRequired,
+  sidebarTrigger: PropTypes.node.isRequired,
   title: PropTypes.string.isRequired,
   transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  wrapperProps: PropTypes.object.isRequired,
   onSelectMonth: PropTypes.func.isRequired,
   onSelectPayee: PropTypes.func.isRequired,
   onSetExclusion: PropTypes.func.isRequired,

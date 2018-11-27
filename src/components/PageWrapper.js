@@ -18,7 +18,6 @@ const PageWrapper = ({
   budgetLoaded,
   children,
   hasMultipleBudgets,
-  historyAction,
   location,
   onAuthorize,
   onRequestBudget
@@ -35,7 +34,7 @@ const PageWrapper = ({
     >
       {({ sidebarTrigger }) => (
         <Container>
-          {children({ sidebarTrigger, historyAction, location })}
+          {children({ sidebarTrigger })}
           {!authorized && (
             <div
               style={{
@@ -64,7 +63,6 @@ PageWrapper.propTypes = {
   budgetLoaded: PropTypes.bool.isRequired,
   children: PropTypes.func.isRequired,
   hasMultipleBudgets: PropTypes.bool.isRequired,
-  historyAction: PropTypes.string.isRequired,
   location: PropTypes.string.isRequired,
   onAuthorize: PropTypes.func.isRequired,
   onRequestBudget: PropTypes.func.isRequired

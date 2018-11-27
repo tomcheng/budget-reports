@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import keys from "lodash/fp/keys";
 import get from "lodash/fp/get";
@@ -32,7 +32,14 @@ const isInvestmentTransaction = (
   isContribution(investmentAccounts)(transaction) ||
   isCapitalGainOrLoss(investmentAccounts, payeesById)(transaction);
 
-const InvestmentsPage = ({ budget, investmentAccounts, title, wrapperProps }) => {
+const InvestmentsPage = ({
+  budget,
+  historyAction,
+  investmentAccounts,
+  location,
+  sidebarTrigger,
+  title
+}) => {
   const {
     excludeFirstMonth,
     excludeLastMonth,
@@ -66,45 +73,47 @@ const InvestmentsPage = ({ budget, investmentAccounts, title, wrapperProps }) =>
 
   return (
     <PageLayout
-      {...wrapperProps}
+      historyAction={historyAction}
+      location={location}
+      sidebarTrigger={sidebarTrigger}
       title={title}
-      fixedContent={
-        <MonthByMonthSection
-          excludeFirstMonth={excludeFirstMonth}
-          excludeLastMonth={excludeLastMonth}
-          highlightFunction={
-            selectedBreakdown &&
-            (transaction =>
-              selectedBreakdown === "contribution"
-                ? isContribution(investmentAccounts)(transaction)
-                : isCapitalGainOrLoss(investmentAccounts, payeesById)(
-                    transaction
-                  ))
-          }
-          months={months}
-          selectedMonth={selectedMonth}
-          transactions={investmentTransactions}
-          onSelectMonth={onSelectMonth}
-          onSetExclusion={onSetExclusion}
-        />
-      }
       content={
-        <GenericEntitiesSection
-          transactions={transactionsInMonth || investmentTransactions}
-          entitiesById={{
-            contribution: { name: "Contributions" },
-            capitalGain: { name: "Capital Gains/Losses" }
-          }}
-          title="Growth Breakdown"
-          onClickEntity={onSelectBreakdown}
-          selectedEntityId={selectedBreakdown}
-          entityFunction={transaction =>
-            isContribution(investmentAccounts)(transaction)
-              ? "contribution"
-              : "capitalGain"
-          }
-          positiveIsRed
-        />
+        <Fragment>
+          <MonthByMonthSection
+            excludeFirstMonth={excludeFirstMonth}
+            excludeLastMonth={excludeLastMonth}
+            highlightFunction={
+              selectedBreakdown &&
+              (transaction =>
+                selectedBreakdown === "contribution"
+                  ? isContribution(investmentAccounts)(transaction)
+                  : isCapitalGainOrLoss(investmentAccounts, payeesById)(
+                      transaction
+                    ))
+            }
+            months={months}
+            selectedMonth={selectedMonth}
+            transactions={investmentTransactions}
+            onSelectMonth={onSelectMonth}
+            onSetExclusion={onSetExclusion}
+          />
+          <GenericEntitiesSection
+            transactions={transactionsInMonth || investmentTransactions}
+            entitiesById={{
+              contribution: { name: "Contributions" },
+              capitalGain: { name: "Capital Gains/Losses" }
+            }}
+            title="Growth Breakdown"
+            onClickEntity={onSelectBreakdown}
+            selectedEntityId={selectedBreakdown}
+            entityFunction={transaction =>
+              isContribution(investmentAccounts)(transaction)
+                ? "contribution"
+                : "capitalGain"
+            }
+            positiveIsRed
+          />
+        </Fragment>
       }
     />
   );
@@ -112,9 +121,11 @@ const InvestmentsPage = ({ budget, investmentAccounts, title, wrapperProps }) =>
 
 InvestmentsPage.propTypes = {
   budget: PropTypes.object.isRequired,
+  historyAction: PropTypes.string.isRequired,
   investmentAccounts: PropTypes.object.isRequired,
-  title: PropTypes.string.isRequired,
-  wrapperProps: PropTypes.object.isRequired
+  location: PropTypes.string.isRequired,
+  sidebarTrigger: PropTypes.node.isRequired,
+  title: PropTypes.string.isRequired
 };
 
 export default InvestmentsPage;

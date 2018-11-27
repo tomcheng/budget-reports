@@ -67,7 +67,7 @@ const pages = {
   },
   investments: {
     path: "/budgets/:budgetId/investments",
-    title: "InvestmentsPage",
+    title: "Investments",
     props: ["budget", "investmentAccounts"]
   },
   projections: {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import PageLayout from "./PageLayout";
 import MonthByMonthSection from "./MonthByMonthSection";
@@ -9,12 +9,14 @@ const CategoryPayeePage = ({
   categoryId,
   excludeFirstMonth,
   excludeLastMonth,
+  historyAction,
+  location,
   months,
   payeeId,
   selectedMonth,
+  sidebarTrigger,
   title,
   transactions,
-  wrapperProps,
   onSelectMonth,
   onSetExclusion
 }) => {
@@ -26,30 +28,32 @@ const CategoryPayeePage = ({
 
   return (
     <PageLayout
-      {...wrapperProps}
+      historyAction={historyAction}
+      location={location}
+      sidebarTrigger={sidebarTrigger}
       budget={budget}
       title={title}
-      fixedContent={
-        <MonthByMonthSection
-          excludeFirstMonth={excludeFirstMonth}
-          excludeLastMonth={excludeLastMonth}
-          months={months}
-          selectedMonth={selectedMonth}
-          transactions={transactionsForCategoryAndPayee}
-          onSelectMonth={onSelectMonth}
-          onSetExclusion={onSetExclusion}
-        />
-      }
       content={
-        selectedMonth && (
-          <TransactionsByMonthSection
-            categoriesById={categoriesById}
-            payeesById={payeesById}
+        <Fragment>
+          <MonthByMonthSection
+            excludeFirstMonth={excludeFirstMonth}
+            excludeLastMonth={excludeLastMonth}
+            months={months}
             selectedMonth={selectedMonth}
             transactions={transactionsForCategoryAndPayee}
-            limitShowing={false}
+            onSelectMonth={onSelectMonth}
+            onSetExclusion={onSetExclusion}
           />
-        )
+          {selectedMonth && (
+            <TransactionsByMonthSection
+              categoriesById={categoriesById}
+              payeesById={payeesById}
+              selectedMonth={selectedMonth}
+              transactions={transactionsForCategoryAndPayee}
+              limitShowing={false}
+            />
+          )}
+        </Fragment>
       }
     />
   );
@@ -71,15 +75,17 @@ CategoryPayeePage.propTypes = {
   categoryId: PropTypes.string.isRequired,
   excludeFirstMonth: PropTypes.bool.isRequired,
   excludeLastMonth: PropTypes.bool.isRequired,
+  historyAction: PropTypes.string.isRequired,
+  location: PropTypes.string.isRequired,
   months: PropTypes.arrayOf(PropTypes.string).isRequired,
   payeeId: PropTypes.string.isRequired,
+  sidebarTrigger: PropTypes.node.isRequired,
   title: PropTypes.string.isRequired,
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       payee_id: PropTypes.string.isRequired
     })
   ).isRequired,
-  wrapperProps: PropTypes.object.isRequired,
   onSelectMonth: PropTypes.func.isRequired,
   onSetExclusion: PropTypes.func.isRequired,
   selectedMonth: PropTypes.string

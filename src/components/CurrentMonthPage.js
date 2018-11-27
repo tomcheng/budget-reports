@@ -17,11 +17,13 @@ import GenericEntitiesSection from "./GenericEntitiesSection";
 import RecentSpending from "./RecentSpending";
 
 const CurrentMonthPage = ({
-  wrapperProps,
-  title,
   budget,
   currentMonth,
-  investmentAccounts
+  historyAction,
+  investmentAccounts,
+  location,
+  sidebarTrigger,
+  title
 }) => {
   const [selectedGroupId, onSelectGroupId] = useSelectedEntityId();
 
@@ -45,28 +47,28 @@ const CurrentMonthPage = ({
 
   return (
     <PageLayout
-      {...wrapperProps}
+      historyAction={historyAction}
+      location={location}
+      sidebarTrigger={sidebarTrigger}
       title={title}
-      fixedContent={
-        <DayByDaySection
-          budgetId={budget.id}
-          currentMonth={currentMonth}
-          transactions={transactions}
-          highlightFunction={
-            selectedGroupId &&
-            (transaction =>
-              categoriesById[transaction.category_id].category_group_id ===
-              selectedGroupId)
-          }
-          title={
-            selectedGroup
-              ? `Day by Day: ${sanitizeName(selectedGroup.name)}`
-              : "Day by Day"
-          }
-        />
-      }
       content={
         <Fragment>
+          <DayByDaySection
+            budgetId={budget.id}
+            currentMonth={currentMonth}
+            transactions={transactions}
+            highlightFunction={
+              selectedGroupId &&
+              (transaction =>
+                categoriesById[transaction.category_id].category_group_id ===
+                selectedGroupId)
+            }
+            title={
+              selectedGroup
+                ? `Day by Day: ${sanitizeName(selectedGroup.name)}`
+                : "Day by Day"
+            }
+          />
           <RecentSpending
             categoriesById={categoriesById}
             currentMonth={currentMonth}
@@ -101,9 +103,11 @@ const CurrentMonthPage = ({
 CurrentMonthPage.propTypes = {
   budget: PropTypes.object.isRequired,
   currentMonth: PropTypes.string.isRequired,
+  historyAction: PropTypes.string.isRequired,
   investmentAccounts: PropTypes.object.isRequired,
-  title: PropTypes.string.isRequired,
-  wrapperProps: PropTypes.object.isRequired
+  location: PropTypes.string.isRequired,
+  sidebarTrigger: PropTypes.node.isRequired,
+  title: PropTypes.string.isRequired
 };
 
 export default CurrentMonthPage;

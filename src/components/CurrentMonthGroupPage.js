@@ -13,8 +13,10 @@ const CurrentMonthGroupPage = ({
   budget,
   categoryGroupId,
   currentMonth,
-  title,
-  wrapperProps
+  historyAction,
+  location,
+  sidebarTrigger,
+  title
 }) => {
   const [selectedCategoryId, onSelectCategoryId] = useSelectedEntityId();
   const {
@@ -48,28 +50,28 @@ const CurrentMonthGroupPage = ({
 
   return (
     <PageLayout
-      {...wrapperProps}
+      location={location}
+      historyAction={historyAction}
+      sidebarTrigger={sidebarTrigger}
       budget={budget}
       title={title}
-      fixedContent={
-        <DayByDaySection
-          budgetId={budgetId}
-          currentMonth={currentMonth}
-          highlightFunction={
-            selectedCategoryId &&
-            (transaction => transaction.category_id === selectedCategoryId)
-          }
-          title={
-            selectedCategory
-              ? `Day by Day: ${sanitizeName(selectedCategory.name)}`
-              : "Day by Day"
-          }
-          transactions={transactionsInGroup}
-          total={spent + available}
-        />
-      }
       content={
         <Fragment>
+          <DayByDaySection
+            budgetId={budgetId}
+            currentMonth={currentMonth}
+            highlightFunction={
+              selectedCategoryId &&
+              (transaction => transaction.category_id === selectedCategoryId)
+            }
+            title={
+              selectedCategory
+                ? `Day by Day: ${sanitizeName(selectedCategory.name)}`
+                : "Day by Day"
+            }
+            transactions={transactionsInGroup}
+            total={spent + available}
+          />
           <GenericEntitiesSection
             entityKey="category_id"
             entitiesById={categoriesById}
@@ -113,8 +115,10 @@ CurrentMonthGroupPage.propTypes = {
   }).isRequired,
   categoryGroupId: PropTypes.string.isRequired,
   currentMonth: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  wrapperProps: PropTypes.object.isRequired
+  historyAction: PropTypes.string.isRequired,
+  location: PropTypes.string.isRequired,
+  sidebarTrigger: PropTypes.node.isRequired,
+  title: PropTypes.string.isRequired
 };
 
 export default CurrentMonthGroupPage;

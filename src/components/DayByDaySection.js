@@ -81,7 +81,6 @@ class DayByDaySection extends Component {
           title={title}
           hasSettings
           onClickSettings={this.handleClickSettings}
-          fullWidth
         >
           <SpendingChart
             budgetId={budgetId}

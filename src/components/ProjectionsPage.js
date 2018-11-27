@@ -103,14 +103,17 @@ class ProjectionsPage extends PureComponent {
     budget: PropTypes.shape({
       transactions: PropTypes.array.isRequired
     }).isRequired,
+    historyAction: PropTypes.string.isRequired,
     investmentAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
+    location: PropTypes.string.isRequired,
     mortgageAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
-    title: PropTypes.string.isRequired,
-    wrapperProps: PropTypes.object.isRequired
+    sidebarTrigger: PropTypes.node.isRequired,
+    title: PropTypes.string.isRequired
   };
 
   constructor(props) {
-    super();
+    super(props);
+
     this.state = {
       ...getInitialState(
         props.budget,
@@ -145,7 +148,7 @@ class ProjectionsPage extends PureComponent {
   };
 
   render() {
-    const { title, wrapperProps } = this.props;
+    const { historyAction, location, sidebarTrigger, title } = this.props;
     const {
       mortgagePayment,
       remainingMortgagePayments,
@@ -235,7 +238,9 @@ class ProjectionsPage extends PureComponent {
 
     return (
       <PageLayout
-        {...wrapperProps}
+        historyAction={historyAction}
+        location={location}
+        sidebarTrigger={sidebarTrigger}
         title={title}
         content={
           <Fragment>

@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import constant from "lodash/fp/constant";
@@ -57,14 +57,16 @@ class NetWorthPage extends PureComponent {
         })
       ).isRequired
     }).isRequired,
+    historyAction: PropTypes.string.isRequired,
     investmentAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
+    location: PropTypes.string.isRequired,
     mortgageAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
-    title: PropTypes.string.isRequired,
-    wrapperProps: PropTypes.object.isRequired
+    sidebarTrigger: PropTypes.node.isRequired,
+    title: PropTypes.string.isRequired
   };
 
   constructor(props) {
-    super();
+    super(props);
 
     this.state = {
       hiddenAccounts: getSetting("netWorthHiddenAccounts", props.budget.id),
@@ -136,10 +138,12 @@ class NetWorthPage extends PureComponent {
   render() {
     const {
       budget,
+      historyAction,
       investmentAccounts,
+      location,
       mortgageAccounts,
-      title,
-      wrapperProps
+      sidebarTrigger,
+      title
     } = this.props;
     const { hiddenAccounts, selectedMonth } = this.state;
 
@@ -162,45 +166,47 @@ class NetWorthPage extends PureComponent {
 
     return (
       <PageLayout
-        {...wrapperProps}
+        historyAction={historyAction}
+        location={location}
+        sidebarTrigger={sidebarTrigger}
         title={title}
-        fixedContent={
-          <CollapsibleSection title="Monthly Trend">
-            <ChartNumbers
-              numbers={[
-                {
-                  amount: -(selectedAssets + selectedLiabilities),
-                  label: "Net Worth"
-                },
-                { amount: -selectedAssets, label: "Assets" },
-                { amount: selectedLiabilities, label: "Liabilities" }
-              ]}
-              alwaysRound
-            />
-            <NetWorthChart
-              data={map(({ id, data }) => ({
-                data: hiddenAccounts[id] ? data.map(constant(0)) : data,
-                type: budget.accountsById[id].type,
-                id
-              }))(accountSummaries)}
-              months={months}
-              mortgageAccounts={mortgageAccounts}
-              selectedMonth={selectedMonth}
-              onSelectMonth={this.handleSelectMonth}
-            />
-          </CollapsibleSection>
-        }
         content={
-          <NetWorthAccounts
-            accounts={map(account => ({
-              ...account,
-              balance: selectedBalances[account.id]
-            }))(budget.accounts)}
-            hiddenAccounts={hiddenAccounts}
-            investmentAccounts={investmentAccounts}
-            mortgageAccounts={mortgageAccounts}
-            onToggleAccounts={this.handleToggleAccounts}
-          />
+          <Fragment>
+            <CollapsibleSection title="Monthly Trend">
+              <ChartNumbers
+                numbers={[
+                  {
+                    amount: -(selectedAssets + selectedLiabilities),
+                    label: "Net Worth"
+                  },
+                  { amount: -selectedAssets, label: "Assets" },
+                  { amount: selectedLiabilities, label: "Liabilities" }
+                ]}
+                alwaysRound
+              />
+              <NetWorthChart
+                data={map(({ id, data }) => ({
+                  data: hiddenAccounts[id] ? data.map(constant(0)) : data,
+                  type: budget.accountsById[id].type,
+                  id
+                }))(accountSummaries)}
+                months={months}
+                mortgageAccounts={mortgageAccounts}
+                selectedMonth={selectedMonth}
+                onSelectMonth={this.handleSelectMonth}
+              />
+            </CollapsibleSection>
+            <NetWorthAccounts
+              accounts={map(account => ({
+                ...account,
+                balance: selectedBalances[account.id]
+              }))(budget.accounts)}
+              hiddenAccounts={hiddenAccounts}
+              investmentAccounts={investmentAccounts}
+              mortgageAccounts={mortgageAccounts}
+              onToggleAccounts={this.handleToggleAccounts}
+            />
+          </Fragment>
         }
       />
     );

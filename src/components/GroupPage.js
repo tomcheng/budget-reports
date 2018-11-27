@@ -16,12 +16,14 @@ const GroupPage = ({
   categoryGroupId,
   excludeFirstMonth,
   excludeLastMonth,
+  historyAction,
+  location,
   months,
   selectedMonth,
   selectedCategoryId,
+  sidebarTrigger,
   title,
   transactions,
-  wrapperProps,
   onSelectMonth,
   onSelectCategory,
   onSetExclusion
@@ -57,31 +59,31 @@ const GroupPage = ({
 
   return (
     <PageLayout
-      {...wrapperProps}
+      historyAction={historyAction}
+      location={location}
+      sidebarTrigger={sidebarTrigger}
       budget={budget}
       title={title}
-      fixedContent={
-        <MonthByMonthSection
-          excludeFirstMonth={excludeFirstMonth}
-          excludeLastMonth={excludeLastMonth}
-          months={months}
-          highlightFunction={
-            selectedCategoryId &&
-            (transaction => transaction.category_id === selectedCategoryId)
-          }
-          selectedMonth={selectedMonth}
-          title={
-            selectedCategory
-              ? `Month by Month: ${sanitizeName(selectedCategory.name)}`
-              : "Month by Month"
-          }
-          transactions={transactionsInGroup}
-          onSelectMonth={onSelectMonth}
-          onSetExclusion={onSetExclusion}
-        />
-      }
       content={
         <Fragment>
+          <MonthByMonthSection
+            excludeFirstMonth={excludeFirstMonth}
+            excludeLastMonth={excludeLastMonth}
+            months={months}
+            highlightFunction={
+              selectedCategoryId &&
+              (transaction => transaction.category_id === selectedCategoryId)
+            }
+            selectedMonth={selectedMonth}
+            title={
+              selectedCategory
+                ? `Month by Month: ${sanitizeName(selectedCategory.name)}`
+                : "Month by Month"
+            }
+            transactions={transactionsInGroup}
+            onSelectMonth={onSelectMonth}
+            onSetExclusion={onSetExclusion}
+          />
           <GenericEntitiesSection
             key={`categories-${selectedMonth || "all"}`}
             entityKey="category_id"
@@ -142,10 +144,12 @@ GroupPage.propTypes = {
   categoryGroupId: PropTypes.string.isRequired,
   excludeFirstMonth: PropTypes.bool.isRequired,
   excludeLastMonth: PropTypes.bool.isRequired,
+  historyAction: PropTypes.string.isRequired,
+  location: PropTypes.string.isRequired,
   months: PropTypes.arrayOf(PropTypes.string).isRequired,
+  sidebarTrigger: PropTypes.node.isRequired,
   title: PropTypes.string.isRequired,
   transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  wrapperProps: PropTypes.object.isRequired,
   onSelectCategory: PropTypes.func.isRequired,
   onSelectMonth: PropTypes.func.isRequired,
   onSetExclusion: PropTypes.func.isRequired,

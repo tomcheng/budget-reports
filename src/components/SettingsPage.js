@@ -28,10 +28,12 @@ class SettingsPage extends Component {
         })
       ).isRequired
     }).isRequired,
+    historyAction: PropTypes.string.isRequired,
     investmentAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
+    location: PropTypes.string.isRequired,
     mortgageAccounts: PropTypes.objectOf(PropTypes.bool).isRequired,
+    sidebarTrigger: PropTypes.node.isRequired,
     title: PropTypes.string.isRequired,
-    wrapperProps: PropTypes.object.isRequired,
     onUpdateAccounts: PropTypes.func.isRequired
   };
 
@@ -68,10 +70,12 @@ class SettingsPage extends Component {
   render() {
     const {
       budget,
+      historyAction,
       investmentAccounts,
+      location,
       mortgageAccounts,
-      title,
-      wrapperProps
+      sidebarTrigger,
+      title
     } = this.props;
     const { investmentModalOpen, mortgageModalOpen } = this.state;
 
@@ -90,7 +94,9 @@ class SettingsPage extends Component {
 
     return (
       <PageLayout
-        {...wrapperProps}
+        historyAction={historyAction}
+        location={location}
+        sidebarTrigger={sidebarTrigger}
         title={title}
         content={
           <Fragment>

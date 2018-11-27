@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { getTransactionMonth } from "../budgetUtils";
 import PageLayout from "./PageLayout";
@@ -9,8 +9,10 @@ const CurrentMonthCategoryPage = ({
   budget,
   currentMonth,
   categoryId,
-  title,
-  wrapperProps
+  historyAction,
+  location,
+  sidebarTrigger,
+  title
 }) => {
   const {
     id: budgetId,
@@ -32,25 +34,27 @@ const CurrentMonthCategoryPage = ({
 
   return (
     <PageLayout
-      {...wrapperProps}
+      historyAction={historyAction}
+      location={location}
+      sidebarTrigger={sidebarTrigger}
       budget={budget}
       title={title}
-      fixedContent={
-        <DayByDaySection
-          key={category ? category.name : "day-by-day"}
-          budgetId={budgetId}
-          currentMonth={currentMonth}
-          title="Day by Day"
-          transactions={transactionsInCategory}
-          total={spent + available}
-        />
-      }
       content={
-        <TransactionsSection
-          categoriesById={categoriesById}
-          payeesById={payeesById}
-          transactions={transactionsInCategoryForMonth}
-        />
+        <Fragment>
+          <DayByDaySection
+            key={category ? category.name : "day-by-day"}
+            budgetId={budgetId}
+            currentMonth={currentMonth}
+            title="Day by Day"
+            transactions={transactionsInCategory}
+            total={spent + available}
+          />
+          <TransactionsSection
+            categoriesById={categoriesById}
+            payeesById={payeesById}
+            transactions={transactionsInCategoryForMonth}
+          />
+        </Fragment>
       }
     />
   );
@@ -66,8 +70,10 @@ CurrentMonthCategoryPage.propTypes = {
   categoryGroupId: PropTypes.string.isRequired,
   categoryId: PropTypes.string.isRequired,
   currentMonth: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  wrapperProps: PropTypes.object.isRequired
+  historyAction: PropTypes.string.isRequired,
+  location: PropTypes.string.isRequired,
+  sidebarTrigger: PropTypes.node.isRequired,
+  title: PropTypes.string.isRequired
 };
 
 export default CurrentMonthCategoryPage;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Switch, Route } from "react-router";
 import moment from "moment";
 import pages, { makeLink } from "../pages";
@@ -56,11 +56,13 @@ const getFilteredSpendingTransactions = simpleMemoize(
 
 const PageContent = props => {
   const {
-    wrapperProps,
     budget,
     currentMonth,
+    historyAction,
     investmentAccounts,
+    location,
     mortgageAccounts,
+    sidebarTrigger,
     onUpdateAccounts
   } = props;
   const {
@@ -84,8 +86,10 @@ const PageContent = props => {
             budget={budget}
             currentMonth={currentMonth}
             investmentAccounts={investmentAccounts}
+            historyAction={historyAction}
+            location={location}
+            sidebarTrigger={sidebarTrigger}
             title={pages.currentMonth.title}
-            wrapperProps={wrapperProps}
           />
         )}
       />
@@ -97,8 +101,10 @@ const PageContent = props => {
             budget={budget}
             categoryGroupId={match.params.categoryGroupId}
             currentMonth={currentMonth}
+            historyAction={historyAction}
+            location={location}
+            sidebarTrigger={sidebarTrigger}
             title={pages.currentMonthGroup.title(match.params, budget)}
-            wrapperProps={wrapperProps}
           />
         )}
       />
@@ -111,8 +117,10 @@ const PageContent = props => {
             budget={budget}
             currentMonth={currentMonth}
             categoryGroupId={match.params.categoryGroupId}
+            historyAction={historyAction}
+            location={location}
+            sidebarTrigger={sidebarTrigger}
             title={pages.currentMonthCategory.title(match.params, budget)}
-            wrapperProps={wrapperProps}
           />
         )}
       />
@@ -123,8 +131,10 @@ const PageContent = props => {
           <IncomePage
             investmentAccounts={investmentAccounts}
             budget={budget}
+            historyAction={historyAction}
+            location={location}
+            sidebarTrigger={sidebarTrigger}
             title={pages.income.title}
-            wrapperProps={wrapperProps}
           />
         )}
       />
@@ -145,9 +155,11 @@ const PageContent = props => {
               excludeFirstMonth={excludeFirstMonth}
               excludeLastMonth={excludeLastMonth}
               investmentAccounts={investmentAccounts}
+              historyAction={historyAction}
+              location={location}
+              sidebarTrigger={sidebarTrigger}
               title={pages.incomeVsExpenses.title}
               transactions={filteredTransactions}
-              wrapperProps={wrapperProps}
               onSetExclusion={onSetExclusion}
             />
           );
@@ -159,10 +171,12 @@ const PageContent = props => {
         render={() => (
           <NetWorthPage
             budget={budget}
+            historyAction={historyAction}
             investmentAccounts={investmentAccounts}
+            location={location}
             mortgageAccounts={mortgageAccounts}
+            sidebarTrigger={sidebarTrigger}
             title={pages.netWorth.title}
-            wrapperProps={wrapperProps}
           />
         )}
       />
@@ -174,7 +188,9 @@ const PageContent = props => {
             budget={budget}
             investmentAccounts={investmentAccounts}
             title={pages.investments.title}
-            wrapperProps={wrapperProps}
+            historyAction={historyAction}
+            location={location}
+            sidebarTrigger={sidebarTrigger}
           />
         )}
       />
@@ -187,7 +203,9 @@ const PageContent = props => {
             investmentAccounts={investmentAccounts}
             mortgageAccounts={mortgageAccounts}
             title={pages.projections.title}
-            wrapperProps={wrapperProps}
+            historyAction={historyAction}
+            location={location}
+            sidebarTrigger={sidebarTrigger}
           />
         )}
       />
@@ -197,17 +215,19 @@ const PageContent = props => {
         render={() => (
           <SettingsPage
             budget={budget}
+            historyAction={historyAction}
             investmentAccounts={investmentAccounts}
+            location={location}
             mortgageAccounts={mortgageAccounts}
+            sidebarTrigger={sidebarTrigger}
             title={pages.settings.title}
-            wrapperProps={wrapperProps}
             onUpdateAccounts={onUpdateAccounts}
           />
         )}
       />
       <Route
         path={pages.groups.path}
-        render={({ match, history, location }) => {
+        render={() => {
           const filteredTransactions = getFilteredSpendingTransactions(
             budget,
             investmentAccounts,
@@ -216,10 +236,7 @@ const PageContent = props => {
           );
 
           return (
-            <CategoriesState
-              action={history.action}
-              location={location.pathname}
-            >
+            <CategoriesState action={historyAction} location={location}>
               {({
                 selectedMonth,
                 selectedGroupId,
@@ -239,12 +256,14 @@ const PageContent = props => {
                         budget={budget}
                         excludeFirstMonth={excludeFirstMonth}
                         excludeLastMonth={excludeLastMonth}
+                        historyAction={historyAction}
+                        location={location}
                         months={months}
                         selectedGroupId={selectedGroupId}
                         selectedMonth={selectedMonth}
+                        sidebarTrigger={sidebarTrigger}
                         title={pages.groups.title}
                         transactions={filteredTransactions}
-                        wrapperProps={wrapperProps}
                         onSelectGroup={onSelectGroup}
                         onSetExclusion={onSetExclusion}
                         onSelectMonth={onSelectMonth}
@@ -260,12 +279,14 @@ const PageContent = props => {
                         categoryGroupId={match.params.categoryGroupId}
                         excludeFirstMonth={excludeFirstMonth}
                         excludeLastMonth={excludeLastMonth}
+                        historyAction={historyAction}
+                        location={location}
                         months={months}
                         selectedMonth={selectedMonth}
                         selectedCategoryId={selectedCategoryId}
+                        sidebarTrigger={sidebarTrigger}
                         title={pages.group.title(match.params, budget)}
                         transactions={filteredTransactions}
-                        wrapperProps={wrapperProps}
                         onSelectCategory={onSelectCategory}
                         onSelectMonth={onSelectMonth}
                         onSetExclusion={onSetExclusion}
@@ -281,12 +302,14 @@ const PageContent = props => {
                         categoryId={match.params.categoryId}
                         excludeFirstMonth={excludeFirstMonth}
                         excludeLastMonth={excludeLastMonth}
+                        historyAction={historyAction}
+                        location={location}
                         months={months}
                         selectedMonth={selectedMonth}
                         selectedPayeeId={selectedPayeeId}
+                        sidebarTrigger={sidebarTrigger}
                         title={pages.category.title(match.params, budget)}
                         transactions={filteredTransactions}
-                        wrapperProps={wrapperProps}
                         onSetExclusion={onSetExclusion}
                         onSelectMonth={onSelectMonth}
                         onSelectPayee={onSelectPayee}
@@ -302,12 +325,14 @@ const PageContent = props => {
                         categoryId={match.params.categoryId}
                         excludeFirstMonth={excludeFirstMonth}
                         excludeLastMonth={excludeLastMonth}
-                        payeeId={match.params.payeeId}
+                        historyAction={historyAction}
+                        location={location}
                         months={months}
+                        payeeId={match.params.payeeId}
                         selectedMonth={selectedMonth}
+                        sidebarTrigger={sidebarTrigger}
                         title={pages.categoryPayee.title(match.params, budget)}
                         transactions={filteredTransactions}
-                        wrapperProps={wrapperProps}
                         onSetExclusion={onSetExclusion}
                         onSelectMonth={onSelectMonth}
                       />
@@ -335,4 +360,15 @@ const PageContent = props => {
     </Switch>
   );
 };
-export default PageContent;
+
+const areEqual = (prevProps, nextProps) =>
+  [
+    "budget",
+    "currentMonth",
+    "historyAction",
+    "investmentAccounts",
+    "location",
+    "mortgageAccounts"
+  ].every(key => prevProps[key] === nextProps[key]);
+
+export default memo(PageContent, areEqual);
