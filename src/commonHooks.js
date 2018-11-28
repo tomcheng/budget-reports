@@ -83,3 +83,17 @@ export const useMonthExclusions = budget => {
 
   return { excludeFirstMonth, excludeLastMonth, months, onSetExclusion };
 };
+
+export const useFlagState = initial => {
+  const [flag, setFlag] = useState(initial);
+
+  return [
+    flag,
+    () => {
+      setFlag(false);
+    },
+    () => {
+      setFlag(true);
+    }
+  ];
+};
