@@ -116,6 +116,9 @@ export const useFlagState = initial => {
     },
     () => {
       setFlag(true);
+    },
+    () => {
+      setFlag(!flag);
     }
   ];
 };

@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import {
+  useFlagState,
   useMonthExclusions,
   useSelectedEntityId,
   useSelectedMonth
@@ -64,6 +65,7 @@ const IncomePage = ({
   } = useMonthExclusions(budget);
   const [selectedMonth, onSelectMonth] = useSelectedMonth();
   const [selectedPayeeId, onSelectPayeeId] = useSelectedEntityId();
+  const [showAverage, _on, _off, onToggleShowAverage] = useFlagState(true);
 
   const { payeesById } = budget;
   const filteredTransactions = getFilteredIncomeTransactions(
@@ -110,6 +112,7 @@ const IncomePage = ({
             key={`payee-${selectedMonth || "all"}`}
             entityKey="payee_id"
             entitiesById={payeesById}
+            numMonths={months.length}
             title={
               selectedMonth
                 ? `Payees: ${moment(selectedMonth).format("MMMM")}`
@@ -117,10 +120,10 @@ const IncomePage = ({
             }
             transactions={transactionsInSelectedMonth || filteredTransactions}
             selectedEntityId={selectedPayeeId}
+            showAverageToggle={!selectedMonth}
+            showAverage={showAverage}
             onClickEntity={onSelectPayeeId}
-            showAverageToggle={false}
-            showAverage={!selectedMonth}
-            numMonths={months.length}
+            onToggleAverage={onToggleShowAverage}
           />
         </Fragment>
       }
