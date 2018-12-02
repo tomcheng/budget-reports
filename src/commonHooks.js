@@ -3,6 +3,8 @@ import moment from "moment";
 import { getSetting, setSetting } from "./uiRepo";
 import { getFirstMonth } from "./budgetUtils";
 
+const MAX_MONTHS_TO_COMPARE = 12;
+
 export const useSelectedMonth = () => {
   const [selectedMonth, setSelectedMonth] = useState(null);
   const selectedMonthRef = useRef(selectedMonth);
@@ -82,6 +84,26 @@ export const useMonthExclusions = budget => {
   };
 
   return { excludeFirstMonth, excludeLastMonth, months, onSetExclusion };
+};
+
+export const useMonthsToCompare = budgetId => {
+  const [monthsToCompare, setMonthsToCompare] = useState(
+    getSetting("spendingMonthsToCompare", budgetId)
+  );
+
+  const onDecrementMonths = () => {
+    const newMonths = Math.max(monthsToCompare - 1, 0);
+    setMonthsToCompare(newMonths);
+    setSetting("spendingMonthsToCompare", budgetId, newMonths);
+  };
+
+  const onIncrementMonths = () => {
+    const newMonths = Math.min(monthsToCompare + 1, MAX_MONTHS_TO_COMPARE);
+    setMonthsToCompare(newMonths);
+    setSetting("spendingMonthsToCompare", budgetId, newMonths);
+  };
+
+  return { monthsToCompare, onDecrementMonths, onIncrementMonths };
 };
 
 export const useFlagState = initial => {
