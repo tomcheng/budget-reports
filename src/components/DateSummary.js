@@ -4,6 +4,7 @@ import styled from "styled-components";
 import AnimateHeight from "react-animate-height-auto";
 import ListItem from "./ListItem";
 import moment from "moment";
+import { MinorText } from "./typeComponents";
 import { sumByProp } from "../dataUtils";
 import EmptyText from "./EmptyText";
 import DateSummaryTransaction from "./DateSummaryTransaction";
@@ -25,14 +26,21 @@ const DateSummary = ({
     <ToggleNode
       amount={sumByProp("amount")(transactions)}
       expanded={expanded}
-      name={moment(date).calendar(null, {
-        sameDay: "[Today]",
-        nextDay: "[Tomorrow]",
-        nextWeek: "dddd",
-        lastDay: "[Yesterday]",
-        lastWeek: "[Last] dddd",
-        sameElse: "DD/MM/YYYY"
-      })}
+      name={
+        <div style={{ display: "flex", alignItems: "baseline" }}>
+          {moment(date).calendar(null, {
+            sameDay: "[Today]",
+            nextDay: "[Tomorrow]",
+            nextWeek: "dddd",
+            lastDay: "[Yesterday]",
+            lastWeek: "dddd",
+            sameElse: "DD/MM/YYYY"
+          })}
+          {!expanded && (
+            <MinorText> &ndash; {transactions.length} transactions</MinorText>
+          )}
+        </div>
+      }
       onToggle={onToggleExpanded}
       isCompact
     />
