@@ -29,26 +29,8 @@ const RecentSpending = ({
     recentDays.reduce((acc, date) => ({ ...acc, [date]: false }), {})
   );
 
-  const isAllExpanded = values(expanded).every(e => e);
-
   return (
-    <CollapsibleSection
-      title="Recent Spending"
-      actions={
-        <SecondaryText
-          onClick={() => {
-            setExpanded(
-              recentDays.reduce(
-                (acc, date) => ({ ...acc, [date]: !isAllExpanded }),
-                {}
-              )
-            );
-          }}
-        >
-          {isAllExpanded ? "collapse all" : "expand all"}
-        </SecondaryText>
-      }
-    >
+    <CollapsibleSection title="Recent Spending">
       {recentDays.map(date => (
         <DateSummary
           key={date}
