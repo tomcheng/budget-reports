@@ -27,11 +27,7 @@ const StyledLink = styled(NavLink)`
   align-items: center;
   height: 60px;
   padding: 0 20px;
-  border-top: 1px solid #eee;
   background-color: ${props => props.active && selectedPlotBandColor};
-  &:last-of-type {
-    border-bottom: 1px solid #eee;
-  }
 `;
 
 class SidebarMenuContent extends PureComponent {
