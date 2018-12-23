@@ -37,7 +37,11 @@ const DateSummary = ({
             sameElse: "DD/MM/YYYY"
           })}
           {!expanded && (
-            <MinorText> &ndash; {transactions.length} transactions</MinorText>
+            <MinorText>
+              {" "}
+              &ndash; {transactions.length} transaction
+              {transactions.length === 1 ? "" : "s"}
+            </MinorText>
           )}
         </div>
       }
