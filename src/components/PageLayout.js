@@ -14,7 +14,8 @@ const Header = styled.div`
   padding-left: 0;
   padding-right: 20px;
   background-color: #fff;
-  border-bottom: 1px solid #ccc;
+  background-clip: padding-box;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
   white-space: pre;
   user-select: none;
 `;

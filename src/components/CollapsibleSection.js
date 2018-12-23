@@ -8,7 +8,8 @@ import Icon from "./Icon";
 const Container = styled.div`
   margin: ${props => (props.fullWidth ? "0" : "2px")};
   background-color: #fff;
-  border: ${props => (props.fullWidth ? "0" : "1px")} solid #e5e5e5;
+  background-clip: padding-box;
+  border: ${props => (props.fullWidth ? "0" : "1px")} solid rgba(0, 0, 0, 0.05);
   border-bottom-width: 1px;
   border-radius: 2px;
 `;
