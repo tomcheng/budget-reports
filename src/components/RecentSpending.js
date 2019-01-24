@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 import { groupByProp } from "../dataUtils";
 import moment from "moment";
 import range from "lodash/fp/range";
-import values from "lodash/fp/values";
-import { SecondaryText } from "./typeComponents";
 import CollapsibleSection from "./CollapsibleSection";
 import DateSummary from "./DateSummary";
 

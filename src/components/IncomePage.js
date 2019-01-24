@@ -65,7 +65,7 @@ const IncomePage = ({
   } = useMonthExclusions(budget);
   const [selectedMonth, onSelectMonth] = useSelectedMonth();
   const [selectedPayeeId, onSelectPayeeId] = useSelectedEntityId();
-  const [showAverage, _on, _off, onToggleShowAverage] = useFlagState(true);
+  const [showAverage, , , onToggleShowAverage] = useFlagState(true);
 
   const { payeesById } = budget;
   const filteredTransactions = getFilteredIncomeTransactions(
