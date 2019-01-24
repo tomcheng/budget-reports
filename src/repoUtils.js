@@ -62,18 +62,21 @@ export const sanitizeBudget = budget => {
             !transaction.category_id ||
             !!categoriesById[transaction.category_id]
         ),
-      flatMap(
-        transaction =>
-          transactionIdsFromSub.includes(transaction.id)
-            ? compose([
-                subs =>
-                  subs.map(sub =>
-                    omit("transaction_id")({ ...transaction, ...sub })
-                  ),
-                subs =>
-                  subs.filter(matchesProperty("transaction_id", transaction.id))
-              ])(budget.subtransactions)
-            : transaction
+      flatMap(transaction =>
+        transactionIdsFromSub.includes(transaction.id)
+          ? compose([
+              subs =>
+                subs.map(sub =>
+                  omit("transaction_id")({
+                    ...transaction,
+                    ...sub,
+                    payee_id: sub.payee_id || transaction.payee_id
+                  })
+                ),
+              subs =>
+                subs.filter(matchesProperty("transaction_id", transaction.id))
+            ])(budget.subtransactions)
+          : transaction
       ),
       reverse,
       dropWhile(transaction => transaction.date < earliestDate),
