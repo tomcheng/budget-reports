@@ -112,7 +112,7 @@ const IncomePage = ({
             key={`payee-${selectedMonth || "all"}`}
             entityKey="payee_id"
             entitiesById={payeesById}
-            numMonths={months.length}
+            numMonths={selectedMonth ? 1 : months.length}
             title={
               selectedMonth
                 ? `Payees: ${moment(selectedMonth).format("MMMM")}`
