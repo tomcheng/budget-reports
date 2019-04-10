@@ -82,7 +82,9 @@ export const sanitizeBudget = budget => {
       dropWhile(transaction => transaction.date < earliestDate),
       sortBy("date"),
       transactions =>
-        transactions.filter(transaction => transaction.amount !== 0)
+        transactions.filter(
+          transaction => transaction.amount !== 0 && !transaction.deleted
+        )
     ])(budget.transactions)
   };
 };
