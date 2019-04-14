@@ -90,7 +90,12 @@ const MonthlyChart = ({
               color: s.color,
               data: data.map(s.valueFunction),
               enableMouseTracking: false,
-              type: "line"
+              type: "line",
+              lineWidth: 1,
+              marker: {
+                radius: 0
+              },
+              zIndex: 3
             };
           }
 

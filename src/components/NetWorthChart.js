@@ -40,7 +40,7 @@ const NetWorthChart = ({
       selectedMonth={selectedMonth}
       onSelectMonth={onSelectMonth}
       data={monthlyData}
-      height={160}
+      height={180}
       series={[
         {
           color: negativeChartColor,

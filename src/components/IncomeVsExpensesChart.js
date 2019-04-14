@@ -10,7 +10,7 @@ import MonthlyChart from "./MonthlyChart";
 const IncomeVsExpensesChart = ({ data, onSelectMonth, selectedMonth }) => (
   <MonthlyChart
     data={data}
-    height={160}
+    height={180}
     selectedMonth={selectedMonth}
     series={[
       { color: lightPrimaryColor, valueFunction: d => d.income },
