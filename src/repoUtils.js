@@ -14,7 +14,7 @@ const formatCurrency = utils.convertMilliUnitsToCurrencyAmount;
 
 const GROUPS_TO_HIDE = ["Internal Master Category", "Credit Card Payments"];
 
-const MAX_MONTHS_TO_SHOW = 24;
+const MAX_MONTHS_TO_SHOW = 240;
 
 export const sanitizeBudget = budget => {
   const transactionIdsFromSub = uniq(
