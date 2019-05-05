@@ -68,8 +68,9 @@ const MonthlyChart = ({
         yAxis: {
           endOnTick: false,
           startOnTick: false,
-          gridLineColor: "transparent",
+          gridLineColor: "#f0f0f0",
           labels: { enabled: false },
+          tickPixelInterval: 30,
           title: { text: null },
           plotLines: average && [
             {
