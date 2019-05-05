@@ -2,6 +2,7 @@ import compose from "lodash/fp/compose";
 import pick from "lodash/fp/pick";
 import mapRaw from "lodash/fp/map";
 import get from "lodash/fp/get";
+import last from "lodash/fp/last";
 import { groupByProp, simpleMemoize, sumByProp } from "./dataUtils";
 
 const map = mapRaw.convert({ cap: false });
@@ -34,9 +35,15 @@ export const isTransfer = (investmentAccounts = {}) => transaction =>
 
 export const getTransactionMonth = transaction => transaction.date.slice(0, 7);
 
+const rejectNonCategoryTransations = simpleMemoize(transactions =>
+  transactions.filter(tran => !!tran.category_id)
+);
+
 export const getFirstMonth = budget =>
   budget.transactions.length
-    ? getTransactionMonth(budget.transactions[budget.transactions.length - 1])
+    ? getTransactionMonth(
+        last(rejectNonCategoryTransations(budget.transactions))
+      )
     : undefined;
 
 export const getPayeeNodes = ({ payeesById, transactions }, divideBy = 1) =>
