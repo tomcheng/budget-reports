@@ -72,7 +72,7 @@ const MonthlyChart = ({
           labels: {
             align: "left",
             x: 0,
-            y: -3,
+            y: -2,
             style: { color: "#bbb", fontSize: "9px" },
             zIndex: 3
           },

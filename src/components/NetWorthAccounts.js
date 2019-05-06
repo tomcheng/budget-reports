@@ -17,6 +17,7 @@ import Breakdown from "./Breakdown";
 import { SecondaryText } from "./typeComponents";
 import Amount from "./Amount";
 import Icon from "./Icon";
+import Toggle from "./Toggle";
 
 const map = mapRaw.convert({ cap: false });
 
@@ -61,39 +62,21 @@ const NetWorthAccounts = ({
   mortgageAccounts
 }) => {
   const accountsById = keyBy("id")(accounts);
-  const visibleNodes = getNodes({
-    accounts: reject(account => hiddenAccounts[account.id])(accounts),
-    investmentAccounts,
-    mortgageAccounts
-  });
-  const hiddenNodes = getNodes({
-    accounts: filter(account => hiddenAccounts[account.id])(accounts),
+  const nodes = getNodes({
+    accounts,
     investmentAccounts,
     mortgageAccounts
   });
 
   return (
-    <Fragment>
-      <CollapsibleSection title="Accounts">
-        <AccountBreakdown
-          accountsById={accountsById}
-          hiddenAccounts={hiddenAccounts}
-          nodes={visibleNodes}
-          onToggleAccounts={onToggleAccounts}
-        />
-      </CollapsibleSection>
-
-      {values(hiddenNodes).length > 0 && (
-        <CollapsibleSection title="Hidden Accounts">
-          <AccountBreakdown
-            accountsById={accountsById}
-            hiddenAccounts={hiddenAccounts}
-            nodes={hiddenNodes}
-            onToggleAccounts={onToggleAccounts}
-          />
-        </CollapsibleSection>
-      )}
-    </Fragment>
+    <CollapsibleSection title="Accounts">
+      <AccountBreakdown
+        accountsById={accountsById}
+        hiddenAccounts={hiddenAccounts}
+        nodes={nodes}
+        onToggleAccounts={onToggleAccounts}
+      />
+    </CollapsibleSection>
   );
 };
 
@@ -127,17 +110,15 @@ const AccountBreakdown = ({
         <SecondaryText style={{ display: "flex", alignItems: "center" }}>
           <Amount amount={amount} />
           <div
-            style={{ width: 36, textAlign: "center" }}
-            onClick={evt => {
-              evt.stopPropagation();
-              onToggleAccounts({ ids: map("id")(accounts) });
-            }}
+            style={{ display: "flex", alignItems: "center", marginLeft: 10 }}
           >
-            {every(account => hiddenAccounts[account.id])(accounts) ? (
-              <Icon icon="eye-slash" />
-            ) : (
-              <Icon icon="eye" />
-            )}
+            <Toggle
+              onClick={evt => {
+                evt.stopPropagation();
+                onToggleAccounts({ ids: map("id")(accounts) });
+              }}
+              on={!every(account => hiddenAccounts[account.id])(accounts)}
+            />
           </div>
         </SecondaryText>
       );
