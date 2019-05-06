@@ -69,7 +69,13 @@ const MonthlyChart = ({
           endOnTick: false,
           startOnTick: false,
           gridLineColor: "#f0f0f0",
-          labels: { enabled: false },
+          labels: {
+            align: "left",
+            x: 0,
+            y: -3,
+            style: { color: "#bbb", fontSize: "9px" },
+            zIndex: 3
+          },
           tickPixelInterval: 30,
           title: { text: null },
           plotLines: average && [
