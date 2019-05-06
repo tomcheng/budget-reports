@@ -12,6 +12,7 @@ import MonthByMonthSettingsModal from "./MonthByMonthSettingsModal";
 const MonthByMonthSection = ({
   excludeFirstMonth,
   excludeLastMonth,
+  expectPositive,
   highlightFunction,
   months,
   selectedMonth,
@@ -37,7 +38,11 @@ const MonthByMonthSection = ({
       selectedMonthTotal = highlightFunction ? highlighted : amount;
     }
 
-    return { month, amount: -amount, highlighted: -highlighted };
+    return {
+      month,
+      amount: expectPositive ? amount : -amount,
+      highlighted: expectPositive ? highlighted : -highlighted
+    };
   });
 
   const chartNumbers = selectedMonth
@@ -77,7 +82,7 @@ const MonthByMonthSection = ({
         setSettingsModalOpen(true);
       }}
     >
-      <ChartNumbers numbers={chartNumbers} />
+      <ChartNumbers numbers={chartNumbers} expectPositive={expectPositive} />
       <MonthlyChart
         data={data}
         average={total / months.length}

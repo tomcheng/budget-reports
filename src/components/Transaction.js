@@ -17,7 +17,7 @@ const Transaction = ({ category, payee, memo, date, amount, isContinuing }) => (
       <MinorText>{moment(date).format("dddd, MMM D")}</MinorText>
     </div>
     <SecondaryText>
-      <Amount amount={amount} />
+      <Amount amount={amount} expectNegative />
     </SecondaryText>
   </ListItem>
 );

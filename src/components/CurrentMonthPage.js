@@ -81,6 +81,7 @@ const CurrentMonthPage = ({
               categoriesById[transaction.category_id].category_group_id
             }
             entityKey="category_group_id"
+            expectNegative
             linkFunction={groupId =>
               makeLink(pages.currentMonthGroup.path, {
                 budgetId,

@@ -4,7 +4,7 @@ import isNumber from "lodash/fp/isNumber";
 import { MinorText, LargeNumber } from "./typeComponents";
 import Amount from "./Amount";
 
-const ChartNumbers = ({ numbers, alwaysRound }) => {
+const ChartNumbers = ({ numbers, alwaysRound, expectPositive }) => {
   const smallNumbers = numbers.some(({ amount }) => Math.abs(amount) < 100);
   return (
     <div
@@ -26,11 +26,12 @@ const ChartNumbers = ({ numbers, alwaysRound }) => {
                 isNumber(decimalsToRound)
                   ? decimalsToRound
                   : smallNumbers && !alwaysRound
-                    ? 2
-                    : 0
+                  ? 2
+                  : 0
               }
               showCurrencySymbol={isMoney}
-              positiveIsRed
+              expectNegative={!expectPositive}
+              expectPositive={expectPositive}
             />
           </LargeNumber>
           <MinorText>{label}</MinorText>
@@ -50,7 +51,8 @@ ChartNumbers.propTypes = {
       isMoney: PropTypes.bool
     })
   ).isRequired,
-  alwaysRound: PropTypes.bool
+  alwaysRound: PropTypes.bool,
+  expectPositive: PropTypes.bool
 };
 
 export default ChartNumbers;

@@ -15,7 +15,9 @@ const IncomeBreakdown = ({ transactions, payeesById, divideBy }) => {
       <Breakdown
         nodes={sortBy("amount")(nodes).reverse()}
         total={total}
-        valueRenderer={node => <AmountWithPercentage {...node} total={total} />}
+        valueRenderer={node => (
+          <AmountWithPercentage {...node} expectPositive total={total} />
+        )}
       />
     </CollapsibleSection>
   );

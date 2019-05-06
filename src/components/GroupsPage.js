@@ -70,6 +70,7 @@ const GroupsPage = ({
             }
             entityKey="category_group_id"
             entitiesById={categoryGroupsById}
+            expectNegative
             linkFunction={categoryGroupId =>
               makeLink(pages.group.path, { budgetId, categoryGroupId })
             }

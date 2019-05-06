@@ -50,7 +50,7 @@ const ToggleNode = ({
       valueRenderer({ amount, id, faded: expanded })
     ) : (
       <SecondaryText style={{ opacity: expanded ? 0.3 : 1 }}>
-        <Amount amount={amount} />
+        <Amount amount={amount} expectNegative />
       </SecondaryText>
     )}
   </NodeWrapper>

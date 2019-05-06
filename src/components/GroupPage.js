@@ -88,6 +88,7 @@ const GroupPage = ({
             key={`categories-${selectedMonth || "all"}`}
             entityKey="category_id"
             entitiesById={categoriesById}
+            expectNegative
             linkFunction={categoryId =>
               makeLink(pages.category.path, {
                 budgetId,
@@ -109,18 +110,17 @@ const GroupPage = ({
             onToggleAverage={onToggleShowAverage}
             limitShowing
           />
-          {selectedMonth &&
-            transactionsInSelectedMonth.length > 0 && (
-              <TransactionsByMonthSection
-                key={`transactions-${selectedMonth ||
-                  "all"}-${selectedCategoryId || "all"}`}
-                categoriesById={categoriesById}
-                payeesById={payeesById}
-                selectedMonth={selectedMonth}
-                selectedCategoryId={selectedCategoryId}
-                transactions={transactionsInSelectedMonth}
-              />
-            )}
+          {selectedMonth && transactionsInSelectedMonth.length > 0 && (
+            <TransactionsByMonthSection
+              key={`transactions-${selectedMonth ||
+                "all"}-${selectedCategoryId || "all"}`}
+              categoriesById={categoriesById}
+              payeesById={payeesById}
+              selectedMonth={selectedMonth}
+              selectedCategoryId={selectedCategoryId}
+              transactions={transactionsInSelectedMonth}
+            />
+          )}
         </Fragment>
       }
     />

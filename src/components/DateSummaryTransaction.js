@@ -23,7 +23,7 @@ const DateSummaryTransaction = ({ category, payee, memo, amount }) => (
       />
     </div>
     <SecondaryText>
-      <Amount amount={amount} />
+      <Amount amount={amount} expectNegative />
     </SecondaryText>
   </StyledListItem>
 );

@@ -44,9 +44,7 @@ const getFilteredIncomeTransactions = simpleMemoize(
       investmentAccounts,
       excludeFirstMonth,
       excludeLastMonth
-    )
-      .filter(transaction => isIncome(budget)(transaction))
-      .map(transaction => ({ ...transaction, amount: -transaction.amount }))
+    ).filter(transaction => isIncome(budget)(transaction))
 );
 
 const IncomePage = ({
@@ -91,6 +89,7 @@ const IncomePage = ({
           <MonthByMonthSection
             excludeFirstMonth={excludeFirstMonth}
             excludeLastMonth={excludeLastMonth}
+            expectPositive
             highlightFunction={
               selectedPayeeId &&
               (transaction => transaction.payee_id === selectedPayeeId)
@@ -113,6 +112,7 @@ const IncomePage = ({
             entityKey="payee_id"
             entitiesById={payeesById}
             numMonths={selectedMonth ? 1 : months.length}
+            reverse
             title={
               selectedMonth
                 ? `Payees: ${moment(selectedMonth).format("MMMM")}`

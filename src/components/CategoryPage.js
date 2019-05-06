@@ -69,6 +69,7 @@ const CategoryPage = ({
             emptyName="(no payee)"
             entitiesById={payeesById}
             entityKey="payee_id"
+            expectNegative
             linkFunction={payeeId =>
               makeLink(pages.categoryPayee.path, {
                 budgetId,

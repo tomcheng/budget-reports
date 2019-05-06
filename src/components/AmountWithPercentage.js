@@ -5,7 +5,8 @@ import Amount from "./Amount";
 
 const AmountWithPercentage = ({
   amount,
-  positiveIsRed,
+  expectNegative,
+  expectPositive,
   total,
   faded,
   selected
@@ -18,7 +19,11 @@ const AmountWithPercentage = ({
       fontWeight: selected && 700
     }}
   >
-    <Amount amount={amount} positiveIsRed={positiveIsRed} />
+    <Amount
+      amount={amount}
+      expectNegative={expectNegative}
+      expectPositive={expectPositive}
+    />
     <MinorText
       style={{ width: 44, textAlign: "right", fontWeight: selected && 700 }}
     >
@@ -30,7 +35,8 @@ const AmountWithPercentage = ({
 AmountWithPercentage.propTypes = {
   amount: PropTypes.number.isRequired,
   total: PropTypes.number.isRequired,
-  positiveIsRed: PropTypes.bool,
+  expectNegative: PropTypes.bool,
+  expectPositive: PropTypes.bool,
   faded: PropTypes.bool,
   selected: PropTypes.bool
 };

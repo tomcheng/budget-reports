@@ -62,9 +62,9 @@ const InvestmentsPage = ({
     );
   }
 
-  const investmentTransactions = budget.transactions
-    .filter(isInvestmentTransaction(investmentAccounts, payeesById))
-    .map(transaction => ({ ...transaction, amount: -transaction.amount }));
+  const investmentTransactions = budget.transactions.filter(
+    isInvestmentTransaction(investmentAccounts, payeesById)
+  );
   const transactionsInMonth =
     selectedMonth &&
     investmentTransactions.filter(
@@ -82,6 +82,7 @@ const InvestmentsPage = ({
           <MonthByMonthSection
             excludeFirstMonth={excludeFirstMonth}
             excludeLastMonth={excludeLastMonth}
+            expectPositive
             highlightFunction={
               selectedBreakdown &&
               (transaction =>
@@ -103,6 +104,7 @@ const InvestmentsPage = ({
               contribution: { name: "Contributions" },
               capitalGain: { name: "Capital Gains/Losses" }
             }}
+            expectPositive
             title="Growth Breakdown"
             onClickEntity={onSelectBreakdown}
             selectedEntityId={selectedBreakdown}

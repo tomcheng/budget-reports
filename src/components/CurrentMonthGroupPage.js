@@ -75,6 +75,7 @@ const CurrentMonthGroupPage = ({
           <GenericEntitiesSection
             entityKey="category_id"
             entitiesById={categoriesById}
+            expectNegative
             linkFunction={categoryId =>
               makeLink(pages.currentMonthCategory.path, {
                 budgetId,

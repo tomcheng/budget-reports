@@ -25,6 +25,7 @@ import CollapsibleSection from "./CollapsibleSection";
 import ChartNumbers from "./ChartNumbers";
 import NetWorthChart from "./NetWorthChart";
 import NetWorthAccounts from "./NetWorthAccounts";
+import NetWorthChanges from "./NetWorthChanges";
 
 const useHiddenAccounts = budget => {
   const [hiddenAccounts, setHiddenAccounts] = useState(
@@ -80,9 +81,8 @@ const getSelectedBalances = simpleMemoize((selectedMonth, budget) => {
   const accountSummaries = getSummaryByAccount(budget);
 
   return compose([
-    mapValues(
-      ({ data }) =>
-        selectedMonthIndex > -1 ? data[selectedMonthIndex] : last(data)
+    mapValues(({ data }) =>
+      selectedMonthIndex > -1 ? data[selectedMonthIndex] : last(data)
     ),
     keyBy("id")
   ])(accountSummaries);
@@ -157,6 +157,11 @@ const NetWorthPage = ({
             investmentAccounts={investmentAccounts}
             mortgageAccounts={mortgageAccounts}
             onToggleAccounts={onToggleHiddenAccounts}
+          />
+          <NetWorthChanges
+            accountSummaries={accountSummaries}
+            hiddenAccounts={hiddenAccounts}
+            months={months}
           />
         </Fragment>
       }

@@ -36,10 +36,12 @@ class GenericEntitiesSection extends Component {
     ]),
     emptyName: PropTypes.string,
     entityFunction: PropTypes.func,
-    positiveIsRed: PropTypes.bool,
+    expectNegative: PropTypes.bool,
+    expectPositive: PropTypes.bool,
     linkFunction: PropTypes.func,
     limitShowing: PropTypes.bool,
     numMonths: PropTypes.number,
+    reverse: PropTypes.bool,
     selectedEntityId: PropTypes.string,
     showAverage: PropTypes.bool,
     showAverageToggle: PropTypes.bool,
@@ -70,10 +72,12 @@ class GenericEntitiesSection extends Component {
       entityKey,
       entityFunction,
       entitiesById,
-      positiveIsRed,
+      expectNegative,
+      expectPositive,
       linkFunction,
       limitShowing: limitShowingProp,
       numMonths,
+      reverse,
       selectedEntityId,
       showAverage,
       showAverageToggle,
@@ -86,7 +90,7 @@ class GenericEntitiesSection extends Component {
     const { allMounted, showAll } = this.state;
     let total = 0;
     const entities = compose([
-      sortBy("amount"),
+      sortBy(e => (reverse ? -e.amount : e.amount)),
       mapWithKeys((transactions, entityId) => {
         const amount = sumByProp("amount")(transactions);
         total += amount;
@@ -129,7 +133,8 @@ class GenericEntitiesSection extends Component {
               transactions={transactions}
               name={get("name")(entitiesById[entityId]) || emptyName}
               amount={showAverage ? amount / numMonths : amount}
-              positiveIsRed={positiveIsRed}
+              expectNegative={expectNegative}
+              expectPositive={expectPositive}
               selected={entityId === selectedEntityId}
               total={showAverage ? total / numMonths : total}
               id={entityId}
@@ -152,7 +157,8 @@ class GenericEntitiesSection extends Component {
                   transactions={transactions}
                   name={get("name")(entitiesById[entityId]) || emptyName}
                   amount={showAverage ? amount / numMonths : amount}
-                  positiveIsRed={positiveIsRed}
+                  expectNegative={expectNegative}
+                  expectPositive={expectPositive}
                   selected={entityId === selectedEntityId}
                   total={total}
                   id={entityId}
@@ -163,15 +169,14 @@ class GenericEntitiesSection extends Component {
             </Fragment>
           </AnimateHeight>
         )}
-        {!!otherEntities.length &&
-          limitShowing && (
-            <SeeAll
-              count={entities.length}
-              pluralizedName={keyToPluralizedName[entityKey]}
-              showAll={showAll}
-              onToggle={this.handleToggleShowAll}
-            />
-          )}
+        {!!otherEntities.length && limitShowing && (
+          <SeeAll
+            count={entities.length}
+            pluralizedName={keyToPluralizedName[entityKey]}
+            showAll={showAll}
+            onToggle={this.handleToggleShowAll}
+          />
+        )}
       </CollapsibleSection>
     );
   }
@@ -194,7 +199,8 @@ class GenericItemLink extends PureComponent {
       transactions,
       name,
       amount,
-      positiveIsRed,
+      expectNegative,
+      expectPositive,
       total,
       selected,
       id,
@@ -238,7 +244,8 @@ class GenericItemLink extends PureComponent {
         )}
         <AmountWithPercentage
           amount={amount}
-          positiveIsRed={positiveIsRed}
+          expectNegative={expectNegative}
+          expectPositive={expectPositive}
           selected={selected}
           total={total}
         />
