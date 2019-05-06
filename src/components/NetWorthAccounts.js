@@ -1,22 +1,18 @@
-import React, { Fragment } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import compose from "lodash/fp/compose";
 import every from "lodash/fp/every";
-import filter from "lodash/fp/filter";
 import groupBy from "lodash/fp/groupBy";
 import keyBy from "lodash/fp/keyBy";
 import mapRaw from "lodash/fp/map";
 import propEq from "lodash/fp/propEq";
-import reject from "lodash/fp/reject";
 import sortBy from "lodash/fp/sortBy";
 import startCase from "lodash/fp/startCase";
 import sumBy from "lodash/fp/sumBy";
-import values from "lodash/fp/values";
 import CollapsibleSection from "./CollapsibleSection";
 import Breakdown from "./Breakdown";
 import { SecondaryText } from "./typeComponents";
 import Amount from "./Amount";
-import Icon from "./Icon";
 import Toggle from "./Toggle";
 
 const map = mapRaw.convert({ cap: false });
