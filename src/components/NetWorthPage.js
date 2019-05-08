@@ -126,15 +126,16 @@ const NetWorthPage = ({
         <Fragment>
           <CollapsibleSection title="Monthly Trend">
             <ChartNumbers
+              alwaysRound
+              expectPositive
               numbers={[
                 {
-                  amount: -(selectedAssets + selectedLiabilities),
+                  amount: selectedAssets + selectedLiabilities,
                   label: "Net Worth"
                 },
-                { amount: -selectedAssets, label: "Assets" },
-                { amount: selectedLiabilities, label: "Liabilities" }
+                { amount: selectedAssets, label: "Assets" },
+                { amount: -selectedLiabilities, label: "Liabilities" }
               ]}
-              alwaysRound
             />
             <NetWorthChart
               data={map(({ id, data }) => ({
