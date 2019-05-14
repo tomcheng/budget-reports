@@ -95,18 +95,19 @@ const IncomeVsExpensesPage = ({
             }
           >
             <ChartNumbers
+              expectPositive
               numbers={[
                 {
                   label: "net income",
-                  amount: -(totalExpenses + totalIncome) / denominator
+                  amount: (totalExpenses + totalIncome) / denominator
                 },
                 {
                   label: "expenses",
-                  amount: totalExpenses / denominator
+                  amount: -totalExpenses / denominator
                 },
                 {
                   label: "income",
-                  amount: -totalIncome / denominator
+                  amount: totalIncome / denominator
                 }
               ]}
             />
