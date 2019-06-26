@@ -120,12 +120,16 @@ export const getUpdatedBudget = id => {
   return api.budgets
     .getBudgetById(id, budgetDetails.server_knowledge)
     .then(({ data }) => {
-      const budget = mergeBudgets(budgetDetails.budget, data.budget);
+      try {
+        const budget = mergeBudgets(budgetDetails.budget, data.budget);
 
-      setBudgetDetails({ id, budget, server_knowledge: data.server_knowledge });
-      setSetting("lastUpdated", id, moment().valueOf());
+        setBudgetDetails({ id, budget, server_knowledge: data.server_knowledge });
+        setSetting("lastUpdated", id, moment().valueOf());
 
-      return { budget: sanitizeBudget(budget), authorized: true };
+        return { budget: sanitizeBudget(budget), authorized: true };
+      } catch (e) {
+        return getBudget(id);
+      }
     })
     .catch(e => {
       if (
