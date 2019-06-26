@@ -39,12 +39,15 @@ const rejectNonCategoryTransations = simpleMemoize(transactions =>
   transactions.filter(tran => !!tran.category_id)
 );
 
-export const getFirstMonth = budget =>
-  budget.transactions.length
-    ? getTransactionMonth(
-        last(rejectNonCategoryTransations(budget.transactions))
-      )
+export const getFirstMonth = budget => {
+  const filteredTransactions = rejectNonCategoryTransations(
+    budget.transactions
+  );
+
+  return filteredTransactions.length
+    ? getTransactionMonth(last(filteredTransactions))
     : undefined;
+};
 
 export const getPayeeNodes = ({ payeesById, transactions }, divideBy = 1) =>
   compose([
