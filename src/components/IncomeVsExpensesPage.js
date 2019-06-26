@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
+import compact from "lodash/fp/compact";
 import compose from "lodash/fp/compose";
 import find from "lodash/fp/find";
 import flatMap from "lodash/fp/flatMap";
@@ -60,10 +61,10 @@ const IncomeVsExpensesPage = ({
     : allSummaries;
 
   const incomeTransactions = flatMap(summary => summary.incomeTransactions)(
-    summaries
+    compact(summaries)
   );
   const expenseTransactions = flatMap(summary => summary.expenseTransactions)(
-    summaries
+    compact(summaries)
   );
 
   const totalExpenses = sumByProp("amount")(expenseTransactions);
