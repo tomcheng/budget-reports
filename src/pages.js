@@ -1,3 +1,5 @@
+import get from "lodash/fp/get";
+
 export const makeLink = (path, params) =>
   path.replace(/:([a-zA-Z]*)/g, (_, part) => params[part]);
 
@@ -45,7 +47,8 @@ const pages = {
   categoryPayee: {
     path:
       "/budgets/:budgetId/groups/:categoryGroupId/categories/:categoryId/payees/:payeeId",
-    title: (params, budget) => budget.payeesById[params.payeeId].name,
+    title: (params, budget) =>
+      get(budget, ["payeesById", params.payeeId, "name"]) || "Payee Not Found",
     props: ["budget"],
     paramProps: ["categoryId", "payeeId"],
     breadcrumbs: ["groups", "group", "category"]
