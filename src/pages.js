@@ -48,7 +48,7 @@ const pages = {
     path:
       "/budgets/:budgetId/groups/:categoryGroupId/categories/:categoryId/payees/:payeeId",
     title: (params, budget) =>
-      get(budget, ["payeesById", params.payeeId, "name"]) || "Payee Not Found",
+      get(["payeesById", params.payeeId, "name"], budget) || "Payee Not Found",
     props: ["budget"],
     paramProps: ["categoryId", "payeeId"],
     breadcrumbs: ["groups", "group", "category"]
