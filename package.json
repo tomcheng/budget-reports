@@ -1,7 +1,7 @@
 {
   "name": "budget-reports",
   "homepage": "https://khaister.github.io/budget-reports",
-  "version": "0.1.1",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome": "1.1.8",
