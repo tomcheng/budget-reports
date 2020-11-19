@@ -53,12 +53,18 @@ const InvestmentsPage = ({
 
   if (keys(investmentAccounts).length === 0) {
     return (
-      <EmptyText>
-        You don't have any accounts marked as investment accounts.{" "}
-        <Link to={makeLink(pages.settings.path, { budgetId: budget.id })}>
-          Go to Settings
-        </Link>
-      </EmptyText>
+      <PageLayout
+        historyAction={historyAction}
+        location={location}
+        sidebarTrigger={sidebarTrigger}
+        title={title}
+        content={<EmptyText>
+          You don't have any accounts marked as investment accounts.{" "}
+          <Link to={makeLink(pages.settings.path, { budgetId: budget.id })}>
+            Go to Settings
+          </Link>
+        </EmptyText>}
+      />
     );
   }
 
