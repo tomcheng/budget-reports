@@ -1,0 +1,25 @@
+name: CI/CD
+
+# Controls when the action will run. Triggers the workflow on push or pull request on
+# the specified branches.
+
+on:
+  push:
+    branches: [ master-khaister ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out the repository under $GITHUB_WORKSPACE, so the build job can access it
+      - uses: actions/checkout@v2
+        
+      - name: Build
+        run: |
+          npm install,
+          npm run build
+      
+      - name: Deploy
+        run: npm run deploy
