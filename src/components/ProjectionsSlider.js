@@ -2,8 +2,8 @@ import React from "react";
 import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import AnimateHeight from "react-animate-height-auto";
 import ClickOff from "./ClickOff";
+import Collapsible from "./Collapsible";
 import Button from "./Button";
 
 const bodyEl = document.getElementsByTagName("body")[0];
@@ -24,20 +24,20 @@ const ProjectionsSlider = ({
   onBlur,
   onChange,
   onReset,
-  rangeOptions
+  rangeOptions,
 }) =>
   createPortal(
     <ClickOff onClickOff={name && onBlur}>
       {({ ref }) => (
         <Container ref={ref}>
-          <AnimateHeight isExpanded={!!name}>
+          <Collapsible open={!!name}>
             <div style={{ borderTop: "1px solid #bbb", padding: "15px 20px" }}>
               <div
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  marginBottom: 15
+                  marginBottom: 15,
                 }}
               >
                 {label}: {formatter(value || 0)}
@@ -56,7 +56,7 @@ const ProjectionsSlider = ({
                 onChange={onChange}
               />
             </div>
-          </AnimateHeight>
+          </Collapsible>
         </Container>
       )}
     </ClickOff>,
@@ -69,11 +69,11 @@ ProjectionsSlider.propTypes = {
   formatter: PropTypes.func,
   label: PropTypes.string,
   name: PropTypes.string,
-  value: PropTypes.number
+  value: PropTypes.number,
 };
 
 ProjectionsSlider.defaultProps = {
-  formatter: val => val
+  formatter: (val) => val,
 };
 
 const Range = ({ name, onReset, ...other }) => (

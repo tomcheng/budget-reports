@@ -1,9 +1,9 @@
 import React, { Component, PureComponent } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import AnimateHeight from "react-animate-height-auto";
 import { SecondaryText } from "./typeComponents";
 import Amount from "./Amount";
+import Collapsible from "./Collapsible";
 import ListItem from "./ListItem";
 import ToggleNode from "./ToggleNode";
 
@@ -17,10 +17,10 @@ class BreakdownNode extends Component {
     name: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
     nodes: PropTypes.arrayOf(
       PropTypes.shape({
-        id: PropTypes.string.isRequired
+        id: PropTypes.string.isRequired,
       })
     ),
-    valueRenderer: PropTypes.func
+    valueRenderer: PropTypes.func,
   };
 
   state = { expanded: false, childrenMounted: false };
@@ -63,12 +63,11 @@ class BreakdownNode extends Component {
           />
         )}
 
-        {hasChildNodes &&
-          childrenMounted && (
-            <AnimateHeight isExpanded={expanded}>
-              <Nodes nodes={nodes} valueRenderer={valueRenderer} />
-            </AnimateHeight>
-          )}
+        {hasChildNodes && childrenMounted && (
+          <Collapsible open={expanded}>
+            <Nodes nodes={nodes} valueRenderer={valueRenderer} />
+          </Collapsible>
+        )}
       </Container>
     );
   }
@@ -79,7 +78,7 @@ class Nodes extends PureComponent {
     const { nodes, valueRenderer } = this.props;
     return (
       <div style={{ paddingLeft: INDENTATION }}>
-        {nodes.map(node => (
+        {nodes.map((node) => (
           <BreakdownNode
             {...node}
             key={node.id}

@@ -5,8 +5,8 @@ import get from "lodash/fp/get";
 import map from "lodash/fp/map";
 import sortBy from "lodash/fp/sortBy";
 import { groupBy, groupByProp, sumByProp } from "../dataUtils";
-import AnimateHeight from "react-animate-height-auto";
 import { Link } from "react-router-dom";
+import Collapsible from "./Collapsible";
 import CollapsibleSection from "./CollapsibleSection";
 import { SecondaryText } from "./typeComponents";
 import ListItem from "./ListItem";
@@ -21,7 +21,7 @@ const LIMIT = 5;
 const keyToPluralizedName = {
   category_group_id: "category groups",
   category_id: "categories",
-  payee_id: "payees"
+  payee_id: "payees",
 };
 
 class GenericEntitiesSection extends Component {
@@ -32,7 +32,7 @@ class GenericEntitiesSection extends Component {
     entityKey: PropTypes.oneOf([
       "category_id",
       "category_group_id",
-      "payee_id"
+      "payee_id",
     ]),
     emptyName: PropTypes.string,
     entityFunction: PropTypes.func,
@@ -47,7 +47,7 @@ class GenericEntitiesSection extends Component {
     showAverageToggle: PropTypes.bool,
     showTransactionCount: PropTypes.bool,
     onClickEntity: PropTypes.func,
-    onToggleAverage: PropTypes.func
+    onToggleAverage: PropTypes.func,
   };
 
   static defaultProps = { emptyName: "(none)" };
@@ -85,12 +85,12 @@ class GenericEntitiesSection extends Component {
       title,
       transactions,
       onClickEntity,
-      onToggleAverage
+      onToggleAverage,
     } = this.props;
     const { allMounted, showAll } = this.state;
     let total = 0;
     const entities = compose([
-      sortBy(e => (reverse ? -e.amount : e.amount)),
+      sortBy((e) => (reverse ? -e.amount : e.amount)),
       mapWithKeys((transactions, entityId) => {
         const amount = sumByProp("amount")(transactions);
         total += amount;
@@ -98,10 +98,10 @@ class GenericEntitiesSection extends Component {
         return {
           entityId,
           transactions: transactions.length,
-          amount
+          amount,
         };
       }),
-      entityFunction ? groupBy(entityFunction) : groupByProp(entityKey)
+      entityFunction ? groupBy(entityFunction) : groupByProp(entityKey),
     ])(transactions);
 
     const limitShowing = limitShowingProp && entities.length > LIMIT + 1;
@@ -143,7 +143,7 @@ class GenericEntitiesSection extends Component {
           )
         )}
         {allMounted && (
-          <AnimateHeight isExpanded={showAll}>
+          <Collapsible open={showAll}>
             <Fragment>
               {otherEntities.map(({ entityId, transactions, amount }) => (
                 <GenericItemLink
@@ -167,7 +167,7 @@ class GenericEntitiesSection extends Component {
                 />
               ))}
             </Fragment>
-          </AnimateHeight>
+          </Collapsible>
         )}
         {!!otherEntities.length && limitShowing && (
           <SeeAll
@@ -205,7 +205,7 @@ class GenericItemLink extends PureComponent {
       selected,
       id,
       onClick,
-      isContinuing
+      isContinuing,
     } = this.props;
     return (
       <ListItem
@@ -224,7 +224,7 @@ class GenericItemLink extends PureComponent {
             to={to}
             onClick={
               to &&
-              (evt => {
+              ((evt) => {
                 evt.stopPropagation();
               })
             }
@@ -235,7 +235,7 @@ class GenericItemLink extends PureComponent {
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 color: "inherit",
-                fontWeight: selected && 700
+                fontWeight: selected && 700,
               }}
             >
               {name}
@@ -263,7 +263,7 @@ GenericItemLink.propTypes = {
   isContinuing: PropTypes.bool,
   selected: PropTypes.bool,
   showTransactionCount: PropTypes.bool,
-  to: PropTypes.string
+  to: PropTypes.string,
 };
 
 export default GenericEntitiesSection;

@@ -4,7 +4,7 @@ import moment from "moment";
 import compose from "lodash/fp/compose";
 import sortBy from "lodash/fp/sortBy";
 import { getTransactionMonth } from "../budgetUtils";
-import AnimateHeight from "react-animate-height-auto";
+import Collapsible from "./Collapsible";
 import CollapsibleSection from "./CollapsibleSection";
 import Transaction from "./Transaction";
 import NoTransactions from "./NoTransactions";
@@ -112,7 +112,7 @@ class TransactionsByMonthSection extends Component {
           <NoTransactions />
         )}
         {allMounted && (
-          <AnimateHeight isExpanded={showAll}>
+          <Collapsible open={showAll}>
             <Fragment>
               {otherTransactions.map(
                 ({
@@ -133,7 +133,7 @@ class TransactionsByMonthSection extends Component {
                 )
               )}
             </Fragment>
-          </AnimateHeight>
+          </Collapsible>
         )}
         {!!otherTransactions.length && (
           <SeeAll

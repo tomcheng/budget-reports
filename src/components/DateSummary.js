@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import AnimateHeight from "react-animate-height-auto";
 import ListItem from "./ListItem";
 import moment from "moment";
 import { MinorText } from "./typeComponents";
 import { sumByProp } from "../dataUtils";
+import Collapsible from "./Collapsible";
 import EmptyText from "./EmptyText";
 import DateSummaryTransaction from "./DateSummaryTransaction";
 import ToggleNode from "./ToggleNode";
@@ -20,7 +20,7 @@ const DateSummary = ({
   expanded,
   payeesById,
   transactions,
-  onToggleExpanded
+  onToggleExpanded,
 }) => (
   <Container>
     <ToggleNode
@@ -34,7 +34,7 @@ const DateSummary = ({
             nextWeek: "dddd",
             lastDay: "[Yesterday]",
             lastWeek: "dddd",
-            sameElse: "DD/MM/YYYY"
+            sameElse: "DD/MM/YYYY",
           })}
           {!expanded && (
             <MinorText>
@@ -48,10 +48,10 @@ const DateSummary = ({
       onToggle={onToggleExpanded}
       isCompact
     />
-    <AnimateHeight isExpanded={expanded}>
+    <Collapsible open={expanded}>
       <div style={{ paddingLeft: 18 }}>
         {transactions.length ? (
-          transactions.map(transaction => (
+          transactions.map((transaction) => (
             <DateSummaryTransaction
               key={transaction.id}
               amount={transaction.amount}
@@ -64,7 +64,7 @@ const DateSummary = ({
           <EmptyText style={{ margin: 0 }}>no transactions</EmptyText>
         )}
       </div>
-    </AnimateHeight>
+    </Collapsible>
   </Container>
 );
 
@@ -78,10 +78,10 @@ DateSummary.propTypes = {
       id: PropTypes.string.isRequired,
       amount: PropTypes.number.isRequired,
       category_id: PropTypes.string,
-      payee_id: PropTypes.string
+      payee_id: PropTypes.string,
     })
   ).isRequired,
-  onToggleExpanded: PropTypes.func.isRequired
+  onToggleExpanded: PropTypes.func.isRequired,
 };
 
 export default DateSummary;

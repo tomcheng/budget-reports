@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import AnimateHeight from "react-animate-height-auto";
+import Collapsible from "./Collapsible";
 import { StrongText } from "./typeComponents";
 import Icon from "./Icon";
 
 const Container = styled.div`
-  margin: ${props => (props.fullWidth ? "0" : "2px")};
+  margin: ${(props) => (props.fullWidth ? "0" : "2px")};
   background-color: #fff;
   background-clip: padding-box;
-  border: ${props => (props.fullWidth ? "0" : "1px")} solid rgba(0, 0, 0, 0.05);
+  border: ${(props) => (props.fullWidth ? "0" : "1px")} solid
+    rgba(0, 0, 0, 0.05);
   border-bottom-width: 1px;
   border-radius: 2px;
 `;
@@ -32,7 +33,7 @@ const SettingsContainer = styled.div`
 `;
 
 const Body = styled.div`
-  padding: 0 ${props => (props.fullWidth ? "22px" : "20px")} 15px;
+  padding: 0 ${(props) => (props.fullWidth ? "22px" : "20px")} 15px;
 `;
 
 const CollapsibleSection = ({
@@ -42,7 +43,7 @@ const CollapsibleSection = ({
   hasSettings,
   noPadding,
   title,
-  onClickSettings
+  onClickSettings,
 }) => {
   const [expanded, setExpanded] = useState(true);
 
@@ -65,17 +66,16 @@ const CollapsibleSection = ({
         </div>
         <div style={{ display: "flex", alignItems: "center" }}>
           {expanded && actions}
-          {hasSettings &&
-            expanded && (
-              <SettingsContainer onClick={onClickSettings}>
-                <Icon icon="cog" faded />
-              </SettingsContainer>
-            )}
+          {hasSettings && expanded && (
+            <SettingsContainer onClick={onClickSettings}>
+              <Icon icon="cog" faded />
+            </SettingsContainer>
+          )}
         </div>
       </Header>
-      <AnimateHeight isExpanded={expanded}>
+      <Collapsible open={expanded}>
         <Body style={{ padding: noPadding && 0 }}>{children}</Body>
-      </AnimateHeight>
+      </Collapsible>
     </Container>
   );
 };
@@ -87,7 +87,7 @@ CollapsibleSection.propTypes = {
   fullWidth: PropTypes.bool,
   hasSettings: PropTypes.bool,
   noPadding: PropTypes.bool,
-  onClickSettings: PropTypes.func
+  onClickSettings: PropTypes.func,
 };
 
 export default CollapsibleSection;
