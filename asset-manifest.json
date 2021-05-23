@@ -1,13 +1,17 @@
 {
   "files": {
-    "main.js": "/budget-reports/static/js/main.68a5e2b5.chunk.js",
-    "main.js.map": "/budget-reports/static/js/main.68a5e2b5.chunk.js.map",
-    "runtime~main.js": "/budget-reports/static/js/runtime~main.eda4e144.js",
-    "runtime~main.js.map": "/budget-reports/static/js/runtime~main.eda4e144.js.map",
-    "static/js/2.0bdf51df.chunk.js": "/budget-reports/static/js/2.0bdf51df.chunk.js",
-    "static/js/2.0bdf51df.chunk.js.map": "/budget-reports/static/js/2.0bdf51df.chunk.js.map",
+    "main.js": "/budget-reports/static/js/main.e102ef4b.chunk.js",
+    "main.js.map": "/budget-reports/static/js/main.e102ef4b.chunk.js.map",
+    "runtime-main.js": "/budget-reports/static/js/runtime-main.bc40b753.js",
+    "runtime-main.js.map": "/budget-reports/static/js/runtime-main.bc40b753.js.map",
+    "static/js/2.0a24291d.chunk.js": "/budget-reports/static/js/2.0a24291d.chunk.js",
+    "static/js/2.0a24291d.chunk.js.map": "/budget-reports/static/js/2.0a24291d.chunk.js.map",
     "index.html": "/budget-reports/index.html",
-    "precache-manifest.2c8a7034c3cf09aecca2750122db5955.js": "/budget-reports/precache-manifest.2c8a7034c3cf09aecca2750122db5955.js",
-    "service-worker.js": "/budget-reports/service-worker.js"
-  }
+    "static/js/2.0a24291d.chunk.js.LICENSE.txt": "/budget-reports/static/js/2.0a24291d.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.bc40b753.js",
+    "static/js/2.0a24291d.chunk.js",
+    "static/js/main.e102ef4b.chunk.js"
+  ]
 }
