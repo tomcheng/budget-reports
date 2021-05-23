@@ -1,6 +1,8 @@
+import localforage from "localforage";
+
 const cache = {};
 
-export const getStorage = key => {
+export const getStorage = (key) => {
   if (cache[key]) {
     return cache[key];
   }
@@ -21,4 +23,12 @@ export const setStorage = (key, obj) => {
   } catch (e) {
     // Most likely exceeds storage quota
   }
+};
+
+export const getBigStorage = async (key) => {
+  return await localforage.getItem(key);
+};
+
+export const setBigStorage = (key, obj) => {
+  localforage.setItem(key, obj);
 };

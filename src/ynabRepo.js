@@ -104,8 +104,8 @@ const getBudget = id =>
       throw e;
     });
 
-export const getUpdatedBudget = id => {
-  const budgetDetails = getBudgetDetails(id);
+export const getUpdatedBudget = async id => {
+  const budgetDetails = await getBudgetDetails(id);
 
   if (!budgetDetails) {
     return getBudget(id);

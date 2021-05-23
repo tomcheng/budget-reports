@@ -10,6 +10,7 @@
     "@fortawesome/react-fontawesome": "0.1.14",
     "highcharts": "9.1.0",
     "highcharts-react-official": "3.0.0",
+    "localforage": "1.9.0",
     "lodash": "4.17.21",
     "moment": "2.29.1",
     "prop-types": "15.7.2",
@@ -32,8 +33,8 @@
     "deploy": "gh-pages -d build"
   },
   "devDependencies": {
-    "gh-pages": "3.1.0",
-    "prettier": "^2.3.0",
+    "gh-pages": "2.0.1",
+    "prettier": "2.3.0",
     "react-scripts": "4.0.3"
   },
   "browserslist": [
