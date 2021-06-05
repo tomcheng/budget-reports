@@ -24,7 +24,7 @@ export const isStartingBalanceOrReconciliation = simpleMemoize(budget => {
 
 export const isIncome = simpleMemoize(budget => {
   const toBeBudgetedId = get("id")(
-    budget.categories.find(category => category.name === "Inflow: To be Budgeted")
+    budget.categories.find(category => category.name.match(/^Inflow: /))
   );
   return transaction => transaction.category_id === toBeBudgetedId;
 });
