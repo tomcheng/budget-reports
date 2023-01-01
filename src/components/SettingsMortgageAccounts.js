@@ -26,7 +26,7 @@ const SettingsMortgageAccounts = ({
   ] = useFlagState(false);
 
   const potentialMortageAccounts = budget.accounts.filter(
-    account => account.type === "otherLiability" && !account.on_budget
+    account => account.type.match(/^(otherLiability|mortgage)$/) && !account.on_budget
   );
   const mortgageAccountList = budget.accounts.filter(
     ({ id }) => mortgageAccounts[id]
